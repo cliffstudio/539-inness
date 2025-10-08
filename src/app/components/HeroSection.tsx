@@ -1,11 +1,22 @@
 import Image from 'next/image'
 import { urlFor } from '../../sanity/utils/imageUrlBuilder'
+import { SanityImageSource } from '@sanity/image-url/lib/types/types'
+
+interface Link {
+  linkType?: 'internal' | 'external'
+  label?: string
+  href?: string
+  pageLink?: {
+    slug?: string
+    title?: string
+  }
+}
 
 interface HeroSectionProps {
   heading?: string
   subheading?: string
-  image?: any
-  cta?: any
+  image?: SanityImageSource
+  cta?: Link
 }
 
 export function HeroSection({ heading, subheading, image, cta }: HeroSectionProps) {

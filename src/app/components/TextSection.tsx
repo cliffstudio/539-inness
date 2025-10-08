@@ -1,8 +1,8 @@
-import { PortableText } from '@portabletext/react'
+import { PortableText, PortableTextBlock } from '@portabletext/react'
 
 interface TextSectionProps {
   heading?: string
-  content?: any
+  content?: PortableTextBlock[]
 }
 
 export function TextSection({ heading, content }: TextSectionProps) {

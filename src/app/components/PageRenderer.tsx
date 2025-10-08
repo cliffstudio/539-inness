@@ -1,8 +1,19 @@
 import { HeroSection } from './HeroSection'
 import { TextSection } from './TextSection'
 
+interface Section {
+  _type: 'heroSection' | 'textSection'
+  _key?: string
+  [key: string]: unknown
+}
+
+interface Page {
+  title?: string
+  sections?: Section[]
+}
+
 interface PageRendererProps {
-  page: any
+  page: Page
 }
 
 export function PageRenderer({ page }: PageRendererProps) {
@@ -17,7 +28,7 @@ export function PageRenderer({ page }: PageRendererProps) {
 
   return (
     <div>
-      {page.sections.map((section: any, index: number) => {
+      {page.sections.map((section: Section, index: number) => {
         switch (section._type) {
           case 'heroSection':
             return <HeroSection key={index} {...section} />
