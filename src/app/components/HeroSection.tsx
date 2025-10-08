@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import { urlFor } from '../sanity/utils/imageUrlBuilder'
+import { urlFor } from '../../sanity/utils/imageUrlBuilder'
 
 interface HeroSectionProps {
   heading?: string

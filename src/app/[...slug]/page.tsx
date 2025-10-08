@@ -1,6 +1,6 @@
 // src/app/[...slug]/page.tsx
-import { client } from '../../sanity.client'
-import { pageSlugsQuery, pageQuery } from '../sanity/lib/queries'
+import { client } from '../../../sanity.client'
+import { pageSlugsQuery, pageQuery } from '../../sanity/lib/queries'
 import { PageRenderer } from '../components/PageRenderer'
 import { notFound } from 'next/navigation'
 

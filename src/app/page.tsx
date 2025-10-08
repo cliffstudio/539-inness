@@ -1,5 +1,5 @@
-import { client } from '../sanity.client'
-import { homepageQuery } from './sanity/lib/queries'
+import { client } from '../../sanity.client'
+import { homepageQuery } from '../sanity/lib/queries'
 import { PageRenderer } from './components/PageRenderer'
 
 export default async function Home() {
