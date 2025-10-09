@@ -10,7 +10,6 @@ export const pageType = defineType({
     defineField({
       name: 'title',
       type: 'string',
-      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'slug',
@@ -21,26 +20,34 @@ export const pageType = defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'sections',
-      title: 'Page Sections',
-      type: 'array',
-      of: [
-        { type: 'heroSection' },
-        { type: 'textSection' },
-      ],
+      name: 'pageType',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Homepage', value: 'homepage' },
+          { title: 'Press', value: 'press' },
+          { title: 'General Page', value: 'general' },
+        ],
+      },
+    }),
+    
+    // Hero section - available for all page types
+    defineField({
+      name: 'hero',
+      title: 'Hero',
+      type: 'heroSection',
     }),
   ],
   preview: {
     select: {
       title: 'title',
-      slug: 'slug.current',
+      pageType: 'pageType',
     },
-    prepare({ title, slug }) {
+    prepare({ title, pageType }) {
       return {
-        title: title || 'Untitled',
-        subtitle: slug ? `/${slug}` : 'No slug',
+        title: title,
+        subtitle: pageType ? `${pageType.charAt(0).toUpperCase() + pageType.slice(1)} Page` : 'Page',
       }
     },
   },
 })
-

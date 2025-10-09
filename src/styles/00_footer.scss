@@ -1,0 +1,88 @@
+@use '00_mixins' as *;
+
+/* COMPONENT -------------------- */
+
+.site-footer {
+  background-color: $colour-burgundy;
+  color: $colour-cream;
+  padding-top: get-rem-desktop(100);
+  @include flex;
+  @include flex-direction(column);
+  row-gap: get-rem-desktop(230);
+  overflow: hidden;
+
+  @media only screen and (max-width: 1366px) {
+    padding-top: get-rem-tablet(50);
+    row-gap: get-rem-tablet(195);
+  }
+  
+  @media only screen and (max-width: 768px) {
+    padding-top: get-rem-mobile(90);
+    row-gap: get-rem-mobile(86);
+
+    .top-row {
+      @include flex;
+      @include flex-direction(column);
+      row-gap: get-rem-mobile(90);
+    }
+  }
+
+  .column-1 {
+    @include flex;
+    @include flex-direction(column);
+    row-gap: get-rem-desktop(20);
+
+    @media only screen and (max-width: 1366px) {
+      row-gap: get-rem-tablet(25);
+    }
+
+    @media only screen and (max-width: 768px) {
+      row-gap: get-rem-mobile(16);
+    }
+
+    .heading {
+      margin-bottom: get-rem-desktop(5);
+
+      @media only screen and (max-width: 1366px) {
+        margin-bottom: get-rem-tablet(8);
+      }
+
+      @media only screen and (max-width: 768px) {
+        margin-bottom: get-rem-mobile(6);
+      }
+    }
+
+    .social-links {
+      @include flex;
+      @include flex-direction(column);
+    }
+  }
+
+  .column-2 {
+    .text-wrap {
+      max-width: get-rem-desktop(256);
+      @include flex;
+      @include flex-direction(column);
+      row-gap: get-rem-desktop(20);
+
+      @media only screen and (max-width: 1366px) {
+        max-width: get-rem-tablet(170);
+        row-gap: get-rem-tablet(20);
+      }
+
+      @media only screen and (max-width: 768px) {
+        max-width: get-rem-mobile(256);
+        row-gap: get-rem-mobile(25);
+      }
+    }
+  }
+
+  svg {
+    fill: $colour-cream;
+    margin-bottom: get-rem-desktop(-16.9);
+
+    @media only screen and (max-width: 768px) {
+      margin-bottom: get-rem-mobile(-5);
+    }
+  }
+}

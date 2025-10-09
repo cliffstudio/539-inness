@@ -1,22 +1,27 @@
-// Documents
+// Global
 import { pageType } from './pageType'
+import { menuType } from './menuType'
+import { footerType } from './footerType'
+import { pressType } from './pressType'
 
 // Objects
 import link from './objects/link'
+import richPortableText from './objects/richPortableText'
 
 // Sections
 import heroSection from './sections/heroSection'
-import textSection from './sections/textSection'
 
 export const schemaTypes = [
-  // Documents
+  // Global
   pageType,
+  menuType,
+  footerType,
+  pressType,
 
   // Objects
   link,
+  richPortableText,
 
   // Sections
-  heroSection,
-  textSection,
+  heroSection
 ]
-

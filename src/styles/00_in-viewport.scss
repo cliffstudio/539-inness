@@ -1,0 +1,11 @@
+@use '00_mixins' as *;
+
+.out-of-view {
+  opacity: 0;
+  will-change: opacity;
+  @include transition(opacity 1000ms cubic-bezier(0.25,0.1,0.25,1) 200ms);
+  
+  &.am-in-view {
+    opacity: 1;
+  }
+}

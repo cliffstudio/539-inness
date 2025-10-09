@@ -6,14 +6,27 @@ export default defineType({
   type: 'object',
   fields: [
     defineField({
+      name: 'layout',
+      title: 'Layout',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Layout 1', value: 'layout-1' },
+          { title: 'Layout 2', value: 'layout-2' },
+        ],
+      },
+      initialValue: 'layout-1',
+    }),
+    defineField({
       name: 'heading',
       title: 'Heading',
       type: 'string',
     }),
     defineField({
-      name: 'subheading',
-      title: 'Subheading',
-      type: 'text',
+      name: 'body',
+      title: 'Body',
+      type: 'array',
+      of: [{ type: 'block' }],
     }),
     defineField({
       name: 'image',
@@ -24,23 +37,26 @@ export default defineType({
       },
     }),
     defineField({
-      name: 'cta',
-      title: 'Call to Action',
+      name: 'specs',
+      title: 'Specs',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            {
+              name: 'body',
+              title: 'Body',
+              type: 'string',
+            },
+          ],
+        },
+      ],
+    }),
+    defineField({
+      name: 'button',
+      title: 'Button',
       type: 'link',
     }),
   ],
-  preview: {
-    select: {
-      title: 'heading',
-      media: 'image',
-    },
-    prepare({ title, media }) {
-      return {
-        title: title || 'Hero Section',
-        subtitle: 'Hero',
-        media,
-      }
-    },
-  },
 })
-
