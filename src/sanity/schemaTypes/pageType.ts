@@ -9,10 +9,12 @@ export const pageType = defineType({
   fields: [
     defineField({
       name: 'title',
+      title: 'Title',
       type: 'string',
     }),
     defineField({
       name: 'slug',
+      title: 'Slug',
       type: 'slug',
       options: {
         source: 'title',
@@ -21,21 +23,23 @@ export const pageType = defineType({
     }),
     defineField({
       name: 'pageType',
+      title: 'Page Type',
       type: 'string',
       options: {
         list: [
           { title: 'Homepage', value: 'homepage' },
-          { title: 'Press', value: 'press' },
           { title: 'General Page', value: 'general' },
         ],
       },
     }),
-    
-    // Hero section - available for all page types
+
+    // Flexible content blocks
     defineField({
-      name: 'hero',
-      title: 'Hero',
-      type: 'heroSection',
+      name: 'contentBlocks',
+      title: 'Content Blocks',
+      type: 'flexibleContent',
+      description: 'Add and arrange content blocks to build your page',
+      hidden: ({ document }) => document?.pageType !== 'general',
     }),
   ],
   preview: {

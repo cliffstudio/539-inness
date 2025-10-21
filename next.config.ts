@@ -22,13 +22,30 @@ const nextConfig: NextConfig = {
       };
     }
     
-    // Ensure proper module resolution for Sanity and React 19 compatibility
+    // Ensure proper module resolution for Sanity
     config.resolve.alias = {
       ...config.resolve.alias,
     };
     
     // Fix for React 19 useMemoCache issues
     config.resolve.symlinks = false;
+    
+    // Fix for Sanity vendor chunks
+    config.optimization = {
+      ...config.optimization,
+      splitChunks: {
+        ...config.optimization.splitChunks,
+        cacheGroups: {
+          ...config.optimization.splitChunks?.cacheGroups,
+          sanity: {
+            test: /[\\/]node_modules[\\/](sanity|@sanity)[\\/]/,
+            name: 'sanity',
+            chunks: 'all',
+            priority: 10,
+          },
+        },
+      },
+    };
     
     return config;
   },

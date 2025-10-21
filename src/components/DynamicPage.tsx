@@ -5,7 +5,7 @@ import { pageQuery } from '../sanity/lib/queries'
 import { notFound } from 'next/navigation'
 import { SanityImage, SanityVideo, PortableTextBlock } from '../types/sanity'
 import BodyClassProvider from './BodyClassProvider'
-import HeroSection from './HeroSection'
+import FlexibleContent from './FlexibleContent'
 
 interface PageProps {
   params: Promise<{
@@ -28,7 +28,7 @@ export default async function DynamicPage({ params }: PageProps) {
         slug={page.slug?.current} 
       />
       
-      {page.hero && <HeroSection {...page.hero} />}
+      <FlexibleContent contentBlocks={page.contentBlocks || []} />
     </>
   )
 }

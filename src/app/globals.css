@@ -1,24 +1,18 @@
 @import "tailwindcss";
 
 @font-face {
-  font-family: 'Dia';
-  src: url('./fonts/Dia.woff') format('woff');
-  font-weight: normal;
+  font-family: 'ABC Arizona Flare';
+  src: url('./fonts/ABCArizonaFlare-Thin-Trial.woff') format('woff'),
+       url('./fonts/ABCArizonaFlare-Thin-Trial.woff2') format('woff2');
+  font-weight: 100;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'Millionaire-Roman';
-  src: url('./fonts/Millionaire-Roman.woff') format('woff'),
-       url('./fonts/Millionaire-Roman.woff2') format('woff2');
-  font-weight: normal;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Millionaire-Script';
-  src: url('./fonts/MillionaireTrial-Script.otf') format('opentype');
-  font-weight: normal;
+  font-family: 'ABC Arizona Flare';
+  src: url('./fonts/ABCArizonaFlare-Light-Trial.woff') format('woff'),
+       url('./fonts/ABCArizonaFlare-Light-Trial.woff2') format('woff2');
+  font-weight: 300;
   font-style: normal;
 }
 

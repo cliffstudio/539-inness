@@ -6,11 +6,11 @@ export const structure: StructureResolver = (S) =>
     .title('Inness')
     .items([
       S.documentTypeListItem('page').title('Pages'),
-      S.documentTypeListItem('press').title('Press'),
+      S.documentTypeListItem('room').title('Rooms'),
       S.documentTypeListItem('menu').title('Menus'),
       S.documentTypeListItem('footer').title('Footer'),
       S.divider(),
       ...S.documentTypeListItems().filter(
-        (item) => item.getId() && !['page', 'press', 'menu', 'footer'].includes(item.getId()!),
+        (item) => item.getId() && !['page', 'room', 'menu', 'footer'].includes(item.getId()!),
       ),
     ])

@@ -1,10 +1,10 @@
 import { notFound } from 'next/navigation'
 import { client } from '../../../../../sanity.client'
-import { pressPostQuery, pressPostsQuery } from '../../../../sanity/lib/queries'
-import PressPost from '../../../../components/PressPost'
+import { roomPostQuery, roomPostsQuery } from '../../../../sanity/lib/queries'
+import RoomPost from '../../../../components/RoomPost'
 import BodyClassProvider from '../../../../components/BodyClassProvider'
 
-interface PressPostPageProps {
+interface RoomPostPageProps {
   params: Promise<{
     slug: string
   }>
@@ -12,7 +12,7 @@ interface PressPostPageProps {
 
 export async function generateStaticParams() {
   const posts = await client.fetch(`
-    *[_type == "press"] {
+    *[_type == "room"] {
       "slug": slug.current
     }
   `)
@@ -22,13 +22,13 @@ export async function generateStaticParams() {
   }))
 }
 
-export default async function PressPostPage({ params }: PressPostPageProps) {
+export default async function RoomPostPage({ params }: RoomPostPageProps) {
   const resolvedParams = await params
   
   // Fetch the current post and all posts to determine navigation
   const [post, allPosts] = await Promise.all([
-    client.fetch(pressPostQuery, { slug: resolvedParams.slug }),
-    client.fetch(pressPostsQuery)
+    client.fetch(roomPostQuery, { slug: resolvedParams.slug }),
+    client.fetch(roomPostsQuery)
   ])
 
   if (!post) {
@@ -44,10 +44,10 @@ export default async function PressPostPage({ params }: PressPostPageProps) {
   return (
     <>
       <BodyClassProvider 
-        pageType="press-post" 
+        pageType="room-post" 
         slug={post.slug?.current} 
       />
-      <PressPost 
+      <RoomPost 
         {...post} 
         nextPostSlug={nextPost?.slug?.current}
         nextPostTitle={nextPost?.title}

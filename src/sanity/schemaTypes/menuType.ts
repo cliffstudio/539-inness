@@ -18,79 +18,20 @@ export const menuType = defineType({
         {
           type: 'object',
           fields: [
-            defineField({ 
-              name: 'itemType', 
-              title: 'Item Type', 
-              type: 'string',
-              options: {
-                list: [
-                  { title: 'Page Link', value: 'pageLink' },
-                  { title: 'Title with Sub-items', value: 'titleWithSubItems' }
-                ]
-              },
-            }),
             defineField({
               name: 'pageLink',
               type: 'reference',
               to: [{ type: 'page' }],
-              hidden: ({ parent }) => parent?.itemType !== 'pageLink'
-            }),
-            defineField({
-              name: 'heading',
-              title: 'Heading',
-              type: 'string',
-              hidden: ({ parent }) => parent?.itemType !== 'titleWithSubItems'
-            }),
-            defineField({
-              name: 'subItems',
-              title: 'Sub-items',
-              type: 'array',
-              of: [
-                {
-                  type: 'object',
-                  fields: [
-                    defineField({
-                      name: 'pageLink',
-                      type: 'reference',
-                      to: [{ type: 'page' }],
-                    }),
-                  ],
-                  preview: {
-                    select: {
-                      title: 'pageLink.title',
-                    },
-                    prepare(selection) {
-                      const { title } = selection
-                      return {
-                        title: title || 'Untitled',
-                      }
-                    },
-                  },
-                },
-              ],
-              hidden: ({ parent }) => parent?.itemType !== 'titleWithSubItems'
             }),
           ],
           preview: {
             select: {
               title: 'pageLink.title',
-              itemType: 'itemType',
-              heading: 'heading',
             },
             prepare(selection) {
-              const { title, itemType, heading } = selection
-              if (itemType === 'pageLink') {
-                return {
-                  title: title || 'Untitled',
-                }
-              }
-              if (itemType === 'titleWithSubItems') {
-                return {
-                  title: heading || 'Untitled',
-                }
-              }
+              const { title } = selection
               return {
-                title: 'Untitled',
+                title: title || 'Untitled',
               }
             },
           },

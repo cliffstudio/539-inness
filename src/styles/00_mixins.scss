@@ -2,22 +2,18 @@
 VARIABLES --------------------
 */
 
-$colour-black: #000000;
-$colour-cream: #FFF9F2;
-$colour-burgundy: #581B25;
-$colour-light-purple: #E3DDE7;
-$colour-green: #C4C7B2;
-$colour-white: #FFFFFF;
+$colour-black: #26241E;
+$colour-cream: #FFF9EC;
+$colour-orange: #D74F36;
+$colour-orange-hover: #B84935;
+$colour-beige: #DFD9C6;
+$colour-green: #3A481B;
 
 /*
 VW SIZING FUNCTION --------------------
 */
 
 @function get-rem-desktop($target) { 
-	@return calc($target/16) + rem;
-}
-
-@function get-rem-tablet($target) { 
 	@return calc($target/16) + rem;
 }
 
@@ -30,62 +26,31 @@ FONT SIZE MIXIN FUNCTION --------------------
 */
 
 // default font scale bounding
-$font-lock-min:  393px !default; 
-$font-lock-max: 1920px !default;
-$font-lock-tablet: 1366px !default;
+$font-lock-min:  390px !default; 
+$font-lock-max: 1728px !default;
 
 // font-size 
 @mixin font-size(
-	$mobile,
-	$tablet: null,
-	$desktop: null,
+	$min,
+	$max: null,
 	$lock-min: $font-lock-min,
-	$lock-max: $font-lock-max,
-	$lock-tablet: $font-lock-tablet
+	$lock-max: $font-lock-max
 ) {
 	& {
-		font-size: $mobile;
+		font-size: $min;
 	}
-	
-	// If tablet parameter is provided, create three-stage scaling
-	@if $tablet {
-		// Mobile to tablet scaling
-		@media (min-width: $lock-min) and (max-width: #{$lock-tablet - 1px}) {
-			& {
-				font-size: calc(#{$mobile} + #{num($tablet) - num($mobile)} * (100vw - #{$lock-min}) / #{num($lock-tablet) - num($lock-min)});
-			}
-		}
-		
-		// Tablet to desktop scaling
-		@media (min-width: $lock-tablet) {
-			& {
-				font-size: calc(
-					#{$tablet} + #{num($desktop) - num($tablet)} * (100vw - #{$lock-tablet}) /
-						#{num($lock-max) - num($lock-tablet)}
-				);
-			}
-		}
-		
-		// Desktop max size
-		@media (min-width: $lock-max) {
-			& {
-				font-size: $desktop;
-			}
-		}
-	}
-	// Fallback to original two-stage scaling if no tablet parameter
-	@else if $desktop {
+	@if $max {
 		@media (min-width: $lock-min) {
 			& {
 				font-size: calc(
-					#{$mobile} + #{num($desktop) - num($mobile)} * (100vw - #{$lock-min}) /
+					#{$min} + #{num($max) - num($min)} * (100vw - #{$lock-min}) /
 						#{num($lock-max) - num($lock-min)}
 				);
 			}
 		}
 		@media (min-width: $lock-max) {
 			& {
-				font-size: $desktop;
+				font-size: $max;
 			}
 		}
 	}

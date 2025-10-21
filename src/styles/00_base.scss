@@ -17,22 +17,19 @@ html, html a {
 }
 
 body {
-  font-family: 'Dia';
-  line-height: 140%;
+  font-family: 'ABC Arizona Flare';
+  font-weight: 300;
+  @include font-size(16px, 16px);
+  line-height: calc(24 / 16) + em;
   background: #FFF9F2;
   color: #581B25;
   text-rendering: optimizeLegibility;
 	margin: 0;
 	padding: 0;
-  @include font-size(15px, 15px, 19px);
 }
 
 p, ul, ol {
   margin-bottom: get-rem-desktop(26.6);
-
-  @media only screen and (max-width: 1366px) {
-    margin-bottom: get-rem-tablet(21);
-  }
 
   @media only screen and (max-width: 768px) {
     margin-bottom: get-rem-mobile(21);
@@ -54,7 +51,7 @@ a {
 
 // ::selection {
 //   background-color: $colour-cream;
-//   color: $colour-burgundy;
+//   color: $colour-orange;
 // }
 
 /*
@@ -117,7 +114,7 @@ LOADING OVERLAY(S) ------------------
 	top: 0;
 	left: 0;
 	z-index: 10;
-	background-color: $colour-burgundy; 
+	background-color: $colour-orange; 
 	@include transition(opacity 400ms cubic-bezier(0.25,0.1,0.25,1));
 	will-change: opacity;
 	

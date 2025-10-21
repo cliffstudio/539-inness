@@ -26,7 +26,6 @@ const linkFragment = groq`{
   linkType,
   label,
   href,
-  jumpLink,
   pageLink {
     _ref,
     _type,
@@ -46,6 +45,11 @@ const heroSectionFragment = groq`{
   button ${linkFragment}
 }`
 
+const flexibleContentFragment = groq`{
+  _type,
+  ...select(_type == "heroSection" => ${heroSectionFragment})
+}`
+
 // Main page query
 export const pageQuery = groq`
   *[_type == "page" && slug.current == $slug][0] {
@@ -54,7 +58,7 @@ export const pageQuery = groq`
     title,
     slug,
     pageType,
-    hero ${heroSectionFragment}
+    contentBlocks[] ${flexibleContentFragment}
   }
 `
 
@@ -73,7 +77,7 @@ export const homepageQuery = groq`
     title,
     slug,
     pageType,
-    hero ${heroSectionFragment}
+    contentBlocks[] ${flexibleContentFragment}
   }
 `
 
@@ -92,7 +96,6 @@ export const footerQuery = groq`
         linkType,
         label,
         href,
-        jumpLink,
         "isExternal": linkType == "external",
         pageLink-> {
           title,
@@ -104,7 +107,6 @@ export const footerQuery = groq`
       linkType,
       label,
       href,
-      jumpLink,
       "isExternal": linkType == "external",
       pageLink-> {
         title,
@@ -114,88 +116,36 @@ export const footerQuery = groq`
   }
 `
 
-export const leftMenuQuery = groq`
-  *[_type == "menu" && title == "Left Menu"][0] {
+export const menuQuery = groq`
+  *[_type == "menu"][0] {
     _id,
     title,
     items[] {
-      itemType,
       pageLink-> {
         _id,
         title,
         "slug": slug.current
-      },
-      heading,
-      subItems[] {
-        pageLink-> {
-          _id,
-          title,
-          "slug": slug.current
-        }
       }
     }
   }
 `
 
-export const rightMenuQuery = groq`
-  *[_type == "menu" && title == "Right Menu"][0] {
-    _id,
-    title,
-    items[] {
-      itemType,
-      pageLink-> {
-        _id,
-        title,
-        "slug": slug.current
-      },
-      heading,
-      subItems[] {
-        pageLink-> {
-          _id,
-          title,
-          "slug": slug.current
-        }
-      }
-    }
-  }
-`
-
-// Press queries
-export const pressPostsQuery = groq`
-  *[_type == "press"] | order(publishedAt desc) {
+// Room queries
+export const roomPostsQuery = groq`
+  *[_type == "room"] | order(title asc) {
     _id,
     title,
     slug,
-    publishedAt,
-    thumbnailType,
-    thumbnailImage ${imageFragment},
-    thumbnailLogo ${imageFragment},
-    thumbnailBackgroundColour,
-    excerpt,
-    featuredImage ${imageFragment},
-    content,
-    source,
-    sourceUrl,
-    layout
+    contentBlocks[] ${flexibleContentFragment}
   }
 `
 
-export const pressPostQuery = groq`
-  *[_type == "press" && slug.current == $slug][0] {
+export const roomPostQuery = groq`
+  *[_type == "room" && slug.current == $slug][0] {
     _id,
     title,
     slug,
-    publishedAt,
-    thumbnailType,
-    thumbnailImage ${imageFragment},
-    thumbnailLogo ${imageFragment},
-    thumbnailBackgroundColour,
-    excerpt,
-    featuredImage ${imageFragment},
-    content,
-    source,
-    sourceUrl,
-    layout
+    contentBlocks[] ${flexibleContentFragment}
   }
 `
 

@@ -2,11 +2,12 @@
 import { pageType } from './pageType'
 import { menuType } from './menuType'
 import { footerType } from './footerType'
-import { pressType } from './pressType'
+import { roomType } from './roomType'
 
 // Objects
 import link from './objects/link'
 import richPortableText from './objects/richPortableText'
+import flexibleContent from './objects/flexibleContent'
 
 // Sections
 import heroSection from './sections/heroSection'
@@ -16,11 +17,12 @@ export const schemaTypes = [
   pageType,
   menuType,
   footerType,
-  pressType,
+  roomType,
 
   // Objects
   link,
   richPortableText,
+  flexibleContent,
 
   // Sections
   heroSection

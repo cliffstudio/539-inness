@@ -11,7 +11,7 @@ export default defineType({
       type: 'string',
       initialValue: 'internal',
       options: { 
-        list: ['internal','external', 'jump'] 
+        list: ['internal','external'] 
       }
     }),
     defineField({ 
@@ -31,14 +31,7 @@ export default defineType({
       title: 'Page Link',
       type: 'reference',
       to: [{ type: 'page' }],
-      hidden: ({ parent }) => parent?.linkType === 'external' || parent?.linkType === 'jump'
-    }),
-    defineField({
-      name: 'jumpLink',
-      title: 'Jump Link',
-      type: 'string',
-      description: 'The ID of the element to jump to eg. #spaces',
-      hidden: ({ parent }) => parent?.linkType !== 'jump'
+      hidden: ({ parent }) => parent?.linkType === 'external'
     }),
   ]
 })

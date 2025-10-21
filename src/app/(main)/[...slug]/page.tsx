@@ -15,8 +15,8 @@ export async function generateStaticParams() {
   
   return pages
     .filter((page: { slug: { current: string } }) => {
-      // Exclude press posts from this route since they have their own dedicated route
-      return !page.slug.current.startsWith('press/') || page.slug.current === 'press'
+      // Exclude room posts from this route since they have their own dedicated route
+      return !page.slug.current.startsWith('rooms/') || page.slug.current === 'rooms'
     })
     .map((page: { slug: { current: string } }) => ({
       slug: page.slug.current.split('/'),
@@ -28,9 +28,9 @@ export default async function Page({ params }: PageProps) {
   const resolvedParams = await params
   const slug = resolvedParams.slug.join('/')
   
-  // Check if this is a press post route and redirect to not found
-  // since press posts should be handled by the dedicated press/[slug] route
-  if (slug.startsWith('press/') && slug !== 'press') {
+  // Check if this is a room post route and redirect to not found
+  // since room posts should be handled by the dedicated rooms/[slug] route
+  if (slug.startsWith('rooms/') && slug !== 'rooms') {
     return notFound()
   }
   

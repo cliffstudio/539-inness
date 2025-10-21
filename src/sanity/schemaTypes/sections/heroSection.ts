@@ -40,6 +40,7 @@ export default defineType({
       name: 'specs',
       title: 'Specs',
       type: 'array',
+      hidden: ({ parent }) => parent?.layout !== 'layout-2',
       of: [
         {
           type: 'object',
@@ -57,6 +58,18 @@ export default defineType({
       name: 'button',
       title: 'Button',
       type: 'link',
+      hidden: ({ parent }) => parent?.layout !== 'layout-2',
     }),
   ],
+  preview: {
+    select: {
+      media: 'image',
+    },
+    prepare({ media }) {
+      return {
+        title: 'Hero Section',
+        media: media
+      }
+    }
+  }
 })
