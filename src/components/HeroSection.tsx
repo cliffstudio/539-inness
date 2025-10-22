@@ -9,8 +9,9 @@ interface Spec {
   body?: string
 }
 
-interface HeroSectionProps {
-  layout?: 'layout-1' | 'layout-2'
+interface HeroProps {
+  id?: string
+  layout?: 'full-bleed' | 'split'
   heading?: string
   body?: PortableTextBlock[]
   image?: SanityImageSource
@@ -18,17 +19,17 @@ interface HeroSectionProps {
   button?: Link
 }
 
-export default function HeroSection({ layout = 'layout-1', heading, body, image, specs, button }: HeroSectionProps) {
+export default function Hero({ id, layout = 'full-bleed', heading, body, image, specs, button }: HeroProps) {
   return (
     <>
-      {layout === 'layout-1' && (
-        <section className="hero-section layout-1 relative">
+      {layout === 'full-bleed' && (
+        <section id={id} className="hero-section layout-1 relative">
           {image && (
             <div className="fill-space-image-wrap media-wrap">
               <img 
                 data-src={urlFor(image).url()} 
                 alt="" 
-                className="lazy full-bleed-image desktop"
+                className="lazy full-bleed-image"
               />
               <div className="loading-overlay" />
             </div>
@@ -53,15 +54,15 @@ export default function HeroSection({ layout = 'layout-1', heading, body, image,
         </section>
       )}
 
-      {layout === 'layout-2' && (
-        <section className="hero-section layout-2 h-pad">
+      {layout === 'split' && (
+        <section id={id} className="hero-section layout-2 h-pad">
           {image && (
             <div className="hero-image relative">
               <div className="fill-space-image-wrap media-wrap">
                 <img 
                   data-src={urlFor(image).url()} 
                   alt="" 
-                  className="lazy full-bleed-image desktop"
+                  className="lazy full-bleed-image"
                 />
                 <div className="loading-overlay" />
               </div>
@@ -95,12 +96,12 @@ export default function HeroSection({ layout = 'layout-1', heading, body, image,
                 
                 {button && (() => {
                   const linkInfo = getLinkInfo(button)
-                  // Only render if we have both text and href
                   if (!linkInfo.text || !linkInfo.href) return null
                   return (
                     <a 
                       href={linkInfo.href}
                       className="button button--outline"
+                      {...(button.linkType === 'external' && { target: '_blank', rel: 'noopener noreferrer' })}
                     >
                       {linkInfo.text}
                     </a>

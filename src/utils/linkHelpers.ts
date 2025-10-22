@@ -5,6 +5,8 @@ export const getLinkInfo = (cta?: Link) => {
   
   if (cta.linkType === 'external') {
     return { text: cta.label || '', href: cta.href || '' }
+  } else if (cta.linkType === 'jump') {
+    return { text: cta.label || '', href: cta.jumpLink ? `#${cta.jumpLink}` : '' }
   } else {
     return { text: cta.pageLink?.title || '', href: cta.pageLink?.slug ? `/${cta.pageLink.slug}` : '' }
   }

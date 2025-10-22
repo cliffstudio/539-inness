@@ -8,6 +8,14 @@ export default defineType({
     {
       type: 'heroSection',
       title: 'Hero Section'
+    },
+    {
+      type: 'mediaTextSection',
+      title: 'Media & Text Section'
+    },
+    {
+      type: 'breakSection',
+      title: 'Break Section'
     }
   ],
   validation: (Rule) => Rule.max(20).error('Maximum 20 content blocks allowed'),

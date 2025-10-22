@@ -1,8 +1,8 @@
 import { defineType, defineField } from 'sanity'
 
 export default defineType({
-  name: 'heroSection',
-  title: 'Hero Section',
+  name: 'breakSection',
+  title: 'Break Section',
   type: 'object',
   fields: [
     defineField({
@@ -23,6 +23,11 @@ export default defineType({
       initialValue: 'full-bleed',
     }),
     defineField({
+      name: 'subHeading',
+      title: 'Sub Heading',
+      type: 'string',
+    }),
+    defineField({
       name: 'heading',
       title: 'Heading',
       type: 'string',
@@ -39,27 +44,23 @@ export default defineType({
       type: 'image',
     }),
     defineField({
-      name: 'specs',
-      title: 'Specs',
-      type: 'array',
-      hidden: ({ parent }) => parent?.layout !== 'split',
-      of: [
-        {
-          type: 'object',
-          fields: [
-            {
-              name: 'body',
-              title: 'Body',
-              type: 'string',
-            },
-          ],
-        },
-      ],
-    }),
-    defineField({
       name: 'button',
       title: 'Button',
       type: 'link',
+      hidden: ({ parent }) => parent?.layout !== 'split',
+    }),
+    defineField({
+      name: 'backgroundColour',
+      title: 'Background Colour',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Black', value: 'black' },
+          { title: 'Green', value: 'green' },
+          { title: 'Orange', value: 'orange' },
+        ],
+      },
+      initialValue: 'black',
       hidden: ({ parent }) => parent?.layout !== 'split',
     }),
   ],
@@ -69,7 +70,7 @@ export default defineType({
     },
     prepare({ media }) {
       return {
-        title: 'Hero Section',
+        title: 'Break Section',
         media: media
       }
     }

@@ -1,21 +1,13 @@
 # Flexible Content System
 
-This project now includes a flexible content system similar to Advanced Custom Fields' flexible content field. This allows you to dynamically add and arrange different types of content blocks on any page.
-
-## Available Content Blocks
-
-### Hero Section (`heroSection`)
-- **Fields**: Layout, Heading, Body (rich text), Image, Specs, Button
-- **Use case**: Large banner sections with customizable layouts
-
 ## How to Use
 
 ### In Sanity Studio
 1. Edit any page in Sanity Studio
 2. Scroll to the "Content Blocks" section
 3. Click "Add item" to add a new content block
-4. Choose "Hero Section" from the dropdown
-5. Fill in the fields for the hero section
+4. Choose from available content blocks (Hero Section, Media & Text Section, etc.)
+5. Fill in the fields for your chosen section
 6. Reorder blocks by dragging them up or down
 
 ### In Your Frontend Components
@@ -30,17 +22,18 @@ import FlexibleContent from './components/FlexibleContent'
 
 ## Adding New Content Block Types
 
-To add a new content block type:
+To add a new content block type, follow these steps:
 
 1. **Create the schema** in `src/sanity/schemaTypes/sections/yourBlock.ts`
 2. **Add to flexible content** in `src/sanity/schemaTypes/objects/flexibleContent.ts`
 3. **Register in schema index** in `src/sanity/schemaTypes/index.ts`
 4. **Add query fragment** in `src/sanity/lib/queries.ts`
-5. **Add render case** in `src/components/FlexibleContent.tsx`
+5. **Create the React component** in `src/components/YourBlock.tsx`
+6. **Add render case** in `src/components/FlexibleContent.tsx`
 
 ## Example: Adding a Text Block
 
-1. Create `src/sanity/schemaTypes/sections/textBlock.ts`:
+1. **Create the schema** `src/sanity/schemaTypes/sections/textBlock.ts`:
 ```typescript
 import { defineType, defineField } from 'sanity'
 
@@ -64,7 +57,7 @@ export default defineType({
 })
 ```
 
-2. Add to `flexibleContent.ts`:
+2. **Add to flexible content** in `src/sanity/schemaTypes/objects/flexibleContent.ts`:
 ```typescript
 {
   type: 'textBlock',
@@ -72,21 +65,61 @@ export default defineType({
 }
 ```
 
-3. Add render case in `FlexibleContent.tsx`:
+3. **Register in schema index** in `src/sanity/schemaTypes/index.ts`:
 ```typescript
-case 'textBlock':
-  return (
-    <div key={index} className="text-block">
-      {block.heading && <h2>{block.heading}</h2>}
-      {block.content && <PortableText value={block.content} />}
-    </div>
-  )
+import textBlock from './sections/textBlock'
+
+export const schemaTypes = [
+  // ... existing types
+  textBlock
+]
 ```
 
-## Benefits
+4. **Add query fragment** in `src/sanity/lib/queries.ts`:
+```typescript
+const textBlockFragment = groq`{
+  heading,
+  content
+}`
 
-- **Flexible**: Add any combination of content blocks to any page
-- **Reusable**: Content blocks can be used across different page types
-- **Maintainable**: Easy to add new block types without touching existing code
-- **User-friendly**: Non-technical users can build complex page layouts
-- **Type-safe**: Full TypeScript support for all content block types
+// Update the flexibleContentFragment to include your new block:
+const flexibleContentFragment = groq`{
+  _type,
+  ...select(_type == "heroSection" => ${heroSectionFragment})
+  ...select(_type == "mediaTextSection" => ${mediaTextSectionFragment})
+  ...select(_type == "textBlock" => ${textBlockFragment})
+}`
+```
+
+5. **Create the React component** `src/components/TextBlock.tsx`:
+```typescript
+import { PortableText, PortableTextBlock } from '@portabletext/react'
+
+interface TextBlockProps {
+  heading?: string
+  content?: PortableTextBlock[]
+}
+
+export default function TextBlock({ heading, content }: TextBlockProps) {
+  return (
+    <section className="text-block">
+      {heading && <h2>{heading}</h2>}
+      {content && <PortableText value={content} />}
+    </section>
+  )
+}
+```
+
+6. **Add render case** in `src/components/FlexibleContent.tsx`:
+```typescript
+import TextBlock from './TextBlock'
+
+// In the switch statement:
+case 'textBlock':
+  return <TextBlock key={index} {...block} />
+```
+
+## Current Available Content Blocks
+
+- **Hero Section** (`heroSection`) - Full-width hero with image, heading, body, and optional button
+- **Media & Text Section** (`mediaTextSection`) - Flexible layout with image and text content

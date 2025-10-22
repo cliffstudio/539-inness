@@ -1,7 +1,7 @@
 import { PortableTextBlock } from './sanity'
 
 export type Link = {
-  linkType: 'internal' | 'external'
+  linkType: 'internal' | 'external' | 'jump'
   label?: string
   href?: string
   isExternal?: boolean
@@ -9,6 +9,7 @@ export type Link = {
     title?: string
     slug?: string
   }
+  jumpLink?: string
 }
 
 export type Header = {

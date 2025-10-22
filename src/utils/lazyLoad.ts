@@ -1,15 +1,16 @@
-import LazyLoad from 'vanilla-lazyload'
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let lazyLoadInstance: any = null
 
-export default function mediaLazyloading() {
+export default async function mediaLazyloading() {
   if (lazyLoadInstance) {
     // Re-observe elements to catch any new lazy-loaded content
     lazyLoadInstance.update()
     return lazyLoadInstance
   }
 
+  // Dynamically import LazyLoad only on client side
+  const { default: LazyLoad } = await import('vanilla-lazyload')
+  
   lazyLoadInstance = new LazyLoad({
     threshold: 500,
     callback_loaded: (el: HTMLElement) => {

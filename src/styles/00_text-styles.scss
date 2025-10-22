@@ -80,6 +80,7 @@ h6 {
   @include font-size(14px, 14px);
   line-height: normal;
   text-transform: uppercase;
+  text-align: center;
 }
 
 .nav-wrap {
@@ -88,4 +89,11 @@ h6 {
   @include font-size(14px, 14px);
   line-height: normal;
   text-transform: uppercase;
+}
+
+.body-bigger {
+  font-family: 'ABC Arizona Flare';
+  font-weight: 100;
+  @include font-size(20px, 20px);
+  line-height: normal;
 }

@@ -26,6 +26,7 @@ const linkFragment = groq`{
   linkType,
   label,
   href,
+  jumpLink,
   pageLink {
     _ref,
     _type,
@@ -35,6 +36,7 @@ const linkFragment = groq`{
 }`
 
 const heroSectionFragment = groq`{
+  id,
   layout,
   heading,
   body,
@@ -45,9 +47,34 @@ const heroSectionFragment = groq`{
   button ${linkFragment}
 }`
 
+const mediaTextSectionFragment = groq`{
+  id,
+  layout,
+  heading,
+  body,
+  buttons[] ${linkFragment},
+  mediaType,
+  images[] ${imageFragment},
+  video ${videoFragment},
+  videoPlaceholder ${imageFragment},
+  mediaAlignment
+}`
+
+const breakSectionFragment = groq`{
+  id,
+  layout,
+  subHeading,
+  heading,
+  body,
+  image ${imageFragment},
+  button ${linkFragment}
+}`
+
 const flexibleContentFragment = groq`{
   _type,
-  ...select(_type == "heroSection" => ${heroSectionFragment})
+  ...select(_type == "heroSection" => ${heroSectionFragment}),
+  ...select(_type == "mediaTextSection" => ${mediaTextSectionFragment}),
+  ...select(_type == "breakSection" => ${breakSectionFragment})
 }`
 
 // Main page query
@@ -96,6 +123,7 @@ export const footerQuery = groq`
         linkType,
         label,
         href,
+        jumpLink,
         "isExternal": linkType == "external",
         pageLink-> {
           title,
@@ -107,6 +135,7 @@ export const footerQuery = groq`
       linkType,
       label,
       href,
+      jumpLink,
       "isExternal": linkType == "external",
       pageLink-> {
         title,

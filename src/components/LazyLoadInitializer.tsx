@@ -9,14 +9,14 @@ export default function LazyLoadInitializer() {
 
   useEffect(() => {
     // Initialize lazy loading on mount
-    mediaLazyloading()
+    mediaLazyloading().catch(console.error)
   }, [])
 
   useEffect(() => {
     // Re-initialize lazy loading when route changes
     // Small delay to ensure DOM is updated
     const timer = setTimeout(() => {
-      mediaLazyloading()
+      mediaLazyloading().catch(console.error)
     }, 100)
     
     return () => clearTimeout(timer)

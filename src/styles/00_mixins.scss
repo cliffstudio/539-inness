@@ -8,6 +8,7 @@ $colour-orange: #D74F36;
 $colour-orange-hover: #B84935;
 $colour-beige: #DFD9C6;
 $colour-green: #3A481B;
+$colour-tan: #E9E0D3;
 
 /*
 VW SIZING FUNCTION --------------------
@@ -66,7 +67,7 @@ $font-lock-max: 1728px !default;
 GRID SIZING --------------------
 */
 
-$gutter_lg: get-rem-desktop(15);
+$gutter_lg: get-rem-desktop(20);
 $gutter_sm: get-rem-mobile(10);
 
 @mixin grid-generator($grid-columns, $grid-gutter-width, $grid-size) {
