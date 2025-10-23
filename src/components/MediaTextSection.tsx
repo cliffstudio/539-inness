@@ -7,7 +7,7 @@ import { SanityImage, SanityVideo } from '../types/sanity'
 import { PortableText, PortableTextBlock } from '@portabletext/react'
 import { Link } from '../types/footerSettings'
 import { getLinkInfo } from '../utils/linkHelpers'
-import FlickityCarousel from './FlickityCarousel'
+import SplideCarousel from './SplideCarousel'
 
 interface mediaTextSectionProps {
   id?: string
@@ -99,7 +99,7 @@ export default function MediaTextSection({
                     className="lazy full-bleed-image"
                   />
                 ) : (
-                  <FlickityCarousel 
+                  <SplideCarousel 
                     images={images.map(image => ({ url: urlFor(image).url(), alt: "" }))}
                     onPrevious={() => {}}
                     onNext={() => {}}
@@ -173,7 +173,7 @@ export default function MediaTextSection({
                     className="lazy full-bleed-image"
                   />
                 ) : (
-                  <FlickityCarousel 
+                  <SplideCarousel 
                     images={images.map(image => ({ url: urlFor(image).url(), alt: "" }))}
                     onPrevious={() => {}}
                     onNext={() => {}}

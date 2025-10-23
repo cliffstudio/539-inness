@@ -11,7 +11,7 @@ interface SplideCarouselProps {
 }
 
 export default function SplideCarousel({ images, onPrevious, onNext }: SplideCarouselProps) {
-  const splideRef = useRef<any>(null)
+  const splideRef = useRef<{ go: (direction: string) => void } | null>(null)
 
   const handlePrevious = () => {
     if (splideRef.current) {
@@ -28,11 +28,11 @@ export default function SplideCarousel({ images, onPrevious, onNext }: SplideCar
   }
 
   const splideOptions = {
-    type: 'fade',
+    type: 'fade' as const,
     rewind: true,
     arrows: false,
     pagination: false,
-    lazyLoad: 'nearby',
+    lazyLoad: 'nearby' as const,
     autoplay: false,
     interval: 0,
     pauseOnHover: false,

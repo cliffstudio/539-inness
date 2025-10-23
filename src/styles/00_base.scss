@@ -203,22 +203,3 @@ VIDEO CONTENT ------------------
 	pointer-events: none;
   z-index: 1;
 }
-
-/*
-FLICKITY FADE CAROUSEL SPECIFICS ------------------
-*/
-
-.flickity-enabled.is-fade .flickity-slider > .carousel-cell {
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0 !important;
-  will-change: opacity;
-  @include transition-important(opacity 620ms cubic-bezier(0.25,0.1,0.25,1) 610ms);
-}
-
-.flickity-enabled.is-fade .flickity-slider > .is-selected {
-  pointer-events: auto;
-  z-index: 200;
-  opacity: 1 !important;
-  @include transition-important(opacity 600ms cubic-bezier(0.25,0.1,0.25,1));
-}
