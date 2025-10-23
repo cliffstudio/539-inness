@@ -2,7 +2,7 @@ import { client } from '../../../sanity.client'
 import { homepageQuery } from '../../sanity/lib/queries'
 import { notFound } from 'next/navigation'
 import BodyClassProvider from '../../components/BodyClassProvider'
-import HeroSection from '../../components/HeroSection'
+import FlexibleContent from '../../components/FlexibleContent'
 
 export default async function Home() {
   const page = await client.fetch(homepageQuery)
@@ -18,7 +18,7 @@ export default async function Home() {
         slug={page.slug?.current} 
       />
       
-      {page.hero && <HeroSection {...page.hero} />}
+      <FlexibleContent contentBlocks={page.contentBlocks || []} />
     </>
   )
 }

@@ -32,8 +32,6 @@ export default function Hero({ id, layout = 'full-bleed', subHeading, heading, b
             </div>
           )}
 
-          <div className="opacity-overlay"></div>
-
           <div className="break-content">
             <h6>{subHeading}</h6>
 

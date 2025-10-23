@@ -158,7 +158,12 @@
   padding-top: get-rem-desktop(200);
   padding-bottom: get-rem-desktop(200);
 
-  &.layout-left {
+  &.layout-media-with-text-h4-bullet-list {
+    padding-top: get-rem-desktop(120);
+    padding-bottom: get-rem-desktop(120);
+  }
+
+  &.align-left {
     .col-1 {
       order: 3;
     }
@@ -191,6 +196,27 @@
     .media-text-heading {
       margin-bottom: get-rem-desktop(14);
     }
+
+    .media-text-bullet-list {
+      .media-text-bullet-list-item {
+        @include flex;
+        @include align-items(center);
+        column-gap: get-rem-desktop(24);
+        border-bottom: 1px solid $colour-cream;
+        padding-top: get-rem-desktop(11);
+        padding-bottom: get-rem-desktop(10);
+
+        &:first-child {
+          padding-top: get-rem-desktop(5);
+        }
+
+        svg {
+          width: get-rem-desktop(12);
+          stroke: $colour-orange;
+          fill: none;
+        }
+      }
+    }
   
     .media-text-buttons {
       margin-top: get-rem-desktop(48);
@@ -213,8 +239,16 @@
 
     .carousel-container {
       position: relative;
-      width: 100%;
-      height: 100%;
+
+      .splide__slide {
+        aspect-ratio: 774 / 500;
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      }
     }
 
     .carousel-hover-left,
@@ -332,18 +366,6 @@
 
 .break-section.layout-1 {
   color: $colour-cream;
- 
-  
-  .opacity-overlay {
-    background-color: $colour-black;
-    opacity: 0.3;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-  }
 
   .break-content {
     width: 100%;
@@ -395,5 +417,30 @@
 
   .break-image {
     height: 100%;
+  }
+}
+
+// CAROUSEL SECTION ------------------
+
+.carousel-section {
+  height: 100svh;
+  width: 100%;
+  padding-top: get-rem-desktop(200);
+  padding-bottom: get-rem-desktop(200);
+
+  .splide {
+    height: 100%;
+
+    .splide__track {
+      height: 100%;
+      overflow: hidden;
+
+      .splide__slide {
+        width: auto !important;
+        height: 100%;
+        position: relative;
+        aspect-ratio: 1068 / 960;
+      }
+    }
   }
 }

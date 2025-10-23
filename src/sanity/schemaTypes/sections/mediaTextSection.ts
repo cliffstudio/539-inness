@@ -19,6 +19,7 @@ export default defineType({
           { title: 'Media with Text (h5)', value: 'media-with-text-h5' },
           { title: 'Media with Text (h4 & body)', value: 'media-with-text-h4-body' },
           { title: 'Media with Text (room type)', value: 'media-with-text-room-type' },
+          { title: 'Media with Text (h4 & bullet list)', value: 'media-with-text-h4-bullet-list' },
         ],
       },
       initialValue: 'media-with-text-h4-body',
@@ -27,14 +28,21 @@ export default defineType({
       name: 'heading',
       title: 'Heading',
       type: 'string',
-      hidden: ({ parent }) => parent?.layout !== 'media-with-text-h4-body',
+      hidden: ({ parent }) => parent?.layout !== 'media-with-text-h4-body' && parent?.layout !== 'media-with-text-h4-bullet-list',
     }),
     defineField({
       name: 'body',
       title: 'Body',
       type: 'array',
       of: [{ type: 'block' }],
-      hidden: ({ parent }) => parent?.layout == 'media-with-text-room-type',
+      hidden: ({ parent }) => parent?.layout == 'media-with-text-room-type' || parent?.layout == 'media-with-text-h4-bullet-list',
+    }),
+    defineField({
+      name: 'bulletList',
+      title: 'Bullet List',
+      type: 'array',
+      of: [{ type: 'string' }],
+      hidden: ({ parent }) => parent?.layout !== 'media-with-text-h4-bullet-list',
     }),
     defineField({
       name: 'buttons',
@@ -96,11 +104,15 @@ export default defineType({
       media: 'images',
       mediaType: 'mediaType',
       videoPlaceholder: 'videoPlaceholder',
+      heading: 'heading',
+      layout: 'layout',
+      body: 'body',
     },
-    prepare({ media, mediaType, videoPlaceholder }) {
+    prepare({ media, mediaType, videoPlaceholder, heading, layout, body }) {
       return {
         title: 'Media & Text Section',
-        media: mediaType === 'video' ? videoPlaceholder : media?.[0]
+        media: mediaType === 'video' ? videoPlaceholder : media?.[0],
+        subtitle: layout === 'media-with-text-room-type' ? 'Room Type' : layout === 'media-with-text-h5' ? body?.[0]?.children?.[0]?.text || 'No Body' : heading || 'No Heading',
       }
     }
   }

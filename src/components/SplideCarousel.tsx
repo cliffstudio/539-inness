@@ -1,5 +1,6 @@
 'use client'
 
+/* eslint-disable @next/next/no-img-element */
 import { Splide, SplideSlide } from '@splidejs/react-splide'
 import '@splidejs/splide/css'
 import { useRef } from 'react'
@@ -48,10 +49,10 @@ export default function SplideCarousel({ images, onPrevious, onNext }: SplideCar
       >
         {images.map((image, index) => (
           <SplideSlide key={index}>
-            <img
-              data-src={image.url}
-              alt={image.alt || ""}
-              className="lazy"
+            <img 
+              data-src={image.url} 
+              alt={image.alt || ""} 
+              className="lazy full-bleed-image"
             />
           </SplideSlide>
         ))}

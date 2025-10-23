@@ -13,6 +13,7 @@ import flexibleContent from './objects/flexibleContent'
 import heroSection from './sections/heroSection'
 import mediaTextSection from './sections/mediaTextSection'
 import breakSection from './sections/breakSection'
+import carouselSection from './sections/carouselSection'
 
 export const schemaTypes = [
   // Global
@@ -29,5 +30,6 @@ export const schemaTypes = [
   // Sections
   heroSection,
   mediaTextSection,
-  breakSection
+  breakSection,
+  carouselSection
 ]

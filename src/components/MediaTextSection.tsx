@@ -11,9 +11,10 @@ import SplideCarousel from './SplideCarousel'
 
 interface mediaTextSectionProps {
   id?: string
-  layout?: 'media-with-text-h5' | 'media-with-text-h4-body' | 'media-with-text-room-type'
+  layout?: 'media-with-text-h5' | 'media-with-text-h4-body' | 'media-with-text-room-type' | 'media-with-text-h4-bullet-list'
   heading?: string
   body?: PortableTextBlock[]
+  bulletList?: string[]
   buttons?: Link[]
   mediaType?: 'image' | 'video'
   images?: SanityImage[]
@@ -34,6 +35,7 @@ export default function MediaTextSection({
   layout = 'media-with-text-h4-body', 
   heading,
   body, 
+  bulletList,
   buttons, 
   mediaType = 'image',
   images, 
@@ -44,8 +46,8 @@ export default function MediaTextSection({
 }: mediaTextSectionProps) {
   return (
     <>
-      {(layout === 'media-with-text-h5' || layout === 'media-with-text-h4-body') && (
-        <section id={id} className={`media-text-section layout-${mediaAlignment} row-lg h-pad`}>
+      {(layout === 'media-with-text-h5' || layout === 'media-with-text-h4-body' || layout === 'media-with-text-h4-bullet-list') && (
+        <section id={id} className={`media-text-section layout-${layout} align-${mediaAlignment} row-lg h-pad`}>
           <div className="col-3-12_lg col-1">
             {heading && layout !== 'media-with-text-h5' && (
               <h4 className="media-text-heading">{heading}</h4>
@@ -65,6 +67,21 @@ export default function MediaTextSection({
                   </h5>
                 )}
               </>
+            )}
+
+            {bulletList && bulletList.length > 0 && (
+              <div className="media-text-bullet-list">
+                {bulletList.map((item, index) => (
+                  <div key={index} className="media-text-bullet-list-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="16" viewBox="0 0 13 16">
+                      <path d="M11.8181 0.5H0.5V15.5H11.8181V0.5Z"/>
+                      <path d="M0.5 0.5L11.8181 15.5"/>
+                    </svg>
+
+                    <span>{item}</span>
+                  </div>
+                ))}
+              </div>
             )}
 
             {buttons && buttons.length > 0 && (

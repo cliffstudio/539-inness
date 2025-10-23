@@ -194,7 +194,6 @@ export default function RootLayout({
             `
           }}
         />
-        <OverflowController />
         {children}
       </body>
     </html>

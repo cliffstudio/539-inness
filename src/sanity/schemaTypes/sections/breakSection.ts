@@ -67,11 +67,13 @@ export default defineType({
   preview: {
     select: {
       media: 'image',
+      heading: 'heading',
     },
-    prepare({ media }) {
+    prepare({ media, heading }) {
       return {
         title: 'Break Section',
-        media: media
+        media: media,
+        subtitle: heading || 'No Heading',
       }
     }
   }

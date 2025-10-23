@@ -32,14 +32,13 @@ export const pageType = defineType({
         ],
       },
     }),
-
+    
     // Flexible content blocks
     defineField({
       name: 'contentBlocks',
       title: 'Content Blocks',
       type: 'flexibleContent',
       description: 'Add and arrange content blocks to build your page',
-      hidden: ({ document }) => document?.pageType !== 'general',
     }),
   ],
   preview: {

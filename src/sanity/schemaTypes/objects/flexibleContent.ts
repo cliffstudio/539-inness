@@ -16,9 +16,12 @@ export default defineType({
     {
       type: 'breakSection',
       title: 'Break Section'
+    },
+    {
+      type: 'carouselSection',
+      title: 'Carousel Section'
     }
   ],
-  validation: (Rule) => Rule.max(20).error('Maximum 20 content blocks allowed'),
   options: {
     sortable: true,
   }

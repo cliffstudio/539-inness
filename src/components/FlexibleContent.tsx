@@ -2,6 +2,7 @@ import React from 'react'
 import HeroSection from './HeroSection'
 import MediaTextSection from './MediaTextSection'
 import BreakSection from './BreakSection'
+import CarouselSection from './CarouselSection'
 
 interface ContentBlock {
   _type: string
@@ -62,6 +63,8 @@ const FlexibleContent: React.FC<FlexibleContentProps> = ({ contentBlocks }) => {
             return <MediaTextSection key={groupIndex} {...(blockOrGroup as ContentBlock & { layout?: 'media-with-text-h5' | 'media-with-text-h4-body' | 'media-with-text-room-type' })} />
           case 'breakSection':
             return <BreakSection key={groupIndex} {...(blockOrGroup as ContentBlock & { layout?: 'split' | 'full-bleed' })} />
+          case 'carouselSection':
+            return <CarouselSection key={groupIndex} {...(blockOrGroup as ContentBlock & { layout?: 'carousel-section' })} />
 
           default:
             console.warn(`Unknown content block type: ${blockOrGroup._type}`)

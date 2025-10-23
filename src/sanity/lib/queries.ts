@@ -52,6 +52,7 @@ const mediaTextSectionFragment = groq`{
   layout,
   heading,
   body,
+  bulletList,
   buttons[] ${linkFragment},
   mediaType,
   images[] ${imageFragment},
@@ -77,11 +78,17 @@ const breakSectionFragment = groq`{
   button ${linkFragment}
 }`
 
+const carouselSectionFragment = groq`{
+  id,
+  images[] ${imageFragment}
+}`
+
 const flexibleContentFragment = groq`{
   _type,
   ...select(_type == "heroSection" => ${heroSectionFragment}),
   ...select(_type == "mediaTextSection" => ${mediaTextSectionFragment}),
-  ...select(_type == "breakSection" => ${breakSectionFragment})
+  ...select(_type == "breakSection" => ${breakSectionFragment}),
+  ...select(_type == "carouselSection" => ${carouselSectionFragment})
 }`
 
 // Main page query
