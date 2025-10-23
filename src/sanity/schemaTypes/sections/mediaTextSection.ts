@@ -18,6 +18,7 @@ export default defineType({
         list: [
           { title: 'Media with Text (h5)', value: 'media-with-text-h5' },
           { title: 'Media with Text (h4 & body)', value: 'media-with-text-h4-body' },
+          { title: 'Media with Text (room type)', value: 'media-with-text-room-type' },
         ],
       },
       initialValue: 'media-with-text-h4-body',
@@ -26,20 +27,28 @@ export default defineType({
       name: 'heading',
       title: 'Heading',
       type: 'string',
-      hidden: ({ parent }) => parent?.layout == 'media-with-text-h5',
+      hidden: ({ parent }) => parent?.layout !== 'media-with-text-h4-body',
     }),
     defineField({
       name: 'body',
       title: 'Body',
       type: 'array',
       of: [{ type: 'block' }],
+      hidden: ({ parent }) => parent?.layout == 'media-with-text-room-type',
     }),
     defineField({
       name: 'buttons',
       title: 'Buttons',
       type: 'array',
       of: [{ type: 'link' }],
-      hidden: ({ parent }) => parent?.layout == 'media-with-text-h5',
+      hidden: ({ parent }) => parent?.layout !== 'media-with-text-h4-body',
+    }),
+    defineField({
+      name: 'roomReference',
+      title: 'Room Reference',
+      type: 'reference',
+      to: [{ type: 'room' }],
+      hidden: ({ parent }) => parent?.layout !== 'media-with-text-room-type',
     }),
     defineField({
       name: 'mediaType',

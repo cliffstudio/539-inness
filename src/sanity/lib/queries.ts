@@ -57,7 +57,14 @@ const mediaTextSectionFragment = groq`{
   images[] ${imageFragment},
   video ${videoFragment},
   videoPlaceholder ${imageFragment},
-  mediaAlignment
+  mediaAlignment,
+  roomReference-> {
+    _id,
+    title,
+    roomType,
+    description,
+    "slug": slug.current
+  }
 }`
 
 const breakSectionFragment = groq`{
@@ -164,7 +171,12 @@ export const roomPostsQuery = groq`
   *[_type == "room"] | order(title asc) {
     _id,
     title,
-    slug,
+    description,
+    image ${imageFragment},
+    specs[] {
+      body
+    },
+    "slug": slug.current,
     contentBlocks[] ${flexibleContentFragment}
   }
 `
@@ -173,7 +185,12 @@ export const roomPostQuery = groq`
   *[_type == "room" && slug.current == $slug][0] {
     _id,
     title,
-    slug,
+    description,
+    image ${imageFragment},
+    specs[] {
+      body
+    },
+    "slug": slug.current,
     contentBlocks[] ${flexibleContentFragment}
   }
 `

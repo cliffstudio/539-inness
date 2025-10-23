@@ -175,6 +175,19 @@
   .col-1 {
     margin-top: -0.5em;
 
+    .media-text-room-type {
+      @include flex;
+      column-gap: get-rem-desktop(8);
+      margin-bottom: get-rem-desktop(24);
+      text-transform: capitalize;
+
+      svg {
+        width: get-rem-desktop(24);
+        stroke: $colour-orange;
+        fill: none;
+      }
+    }
+
     .media-text-heading {
       margin-bottom: get-rem-desktop(14);
     }
@@ -290,6 +303,29 @@
 
     .flickity-button {
       display: none;
+    }
+  }
+}
+
+.media-text-section.room-type {
+  padding-top: get-rem-desktop(120);
+  padding-bottom: get-rem-desktop(120);
+}
+
+// Room type group styling for consecutive sections
+.room-type-group {
+  .media-text-section.room-type {
+    &:first-child {
+      padding-top: get-rem-desktop(200);
+    }
+    
+    &:last-child {
+      padding-bottom: get-rem-desktop(200);
+    }
+    
+    &:not(:first-child):not(:last-child) {
+      padding-top: get-rem-desktop(120);
+      padding-bottom: get-rem-desktop(120);
     }
   }
 }

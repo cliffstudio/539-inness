@@ -3,7 +3,7 @@ import React from 'react'
 import { client } from '../../sanity.client'
 import { pageQuery } from '../sanity/lib/queries'
 import { notFound } from 'next/navigation'
-import { SanityImage, SanityVideo, PortableTextBlock } from '../types/sanity'
+// import { SanityImage, SanityVideo, PortableTextBlock } from '../types/sanity'
 import BodyClassProvider from './BodyClassProvider'
 import FlexibleContent from './FlexibleContent'
 

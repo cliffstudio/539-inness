@@ -6,6 +6,12 @@ export const roomType = defineType({
   title: 'Room',
   type: 'document',
   icon: HomeIcon,
+  fieldsets: [
+    {
+      name: 'heroSection',
+      title: 'Hero Section',
+    }
+  ],
   fields: [
     defineField({
       name: 'title',
@@ -23,6 +29,49 @@ export const roomType = defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: 'roomType',
+      title: 'Room Type',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Cabin', value: 'cabin' },
+          { title: 'Farmhouse', value: 'farmhouse' },
+        ],
+      },
+      initialValue: 'cabin',
+    }),
+    defineField({
+      name: 'image',
+      title: 'Image',
+      type: 'image',
+      fieldset: 'heroSection',
+    }),
+    defineField({
+      name: 'description',
+      title: 'Description',
+      type: 'array',
+      of: [{ type: 'block' }],
+      fieldset: 'heroSection',
+    }),
+    defineField({
+      name: 'specs',
+      title: 'Specs',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            {
+              name: 'body',
+              title: 'Body',
+              type: 'string',
+            },
+          ],
+        },
+      ],
+      fieldset: 'heroSection',
+    }),
+    defineField({
       name: 'contentBlocks',
       title: 'Content Blocks',
       type: 'flexibleContent',
@@ -31,7 +80,7 @@ export const roomType = defineType({
   preview: {
     select: {
       title: 'title',
-      media: 'contentBlocks.0.image',
+      media: 'image',
     },
     prepare(selection) {
       const { title, media } = selection
