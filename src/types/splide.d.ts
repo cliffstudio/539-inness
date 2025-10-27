@@ -14,7 +14,7 @@ declare module '@splidejs/react-splide' {
     perPage?: number
     perMove?: number
     gap?: string
-    breakpoints?: Record<number, any>
+    breakpoints?: Record<number, Partial<Omit<SplideOptions, 'breakpoints'>>>
   }
 
   export interface SplideProps {
