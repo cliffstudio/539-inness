@@ -35,7 +35,7 @@ export default function Hero({ id, layout = 'full-bleed', heading, body, image, 
             </div>
           )}
 
-          <div className="hero-content">
+          <div className="hero-content h-pad">
             {heading && <h1>{heading}</h1>}
             
             {body && body.length > 0 && (
@@ -69,7 +69,7 @@ export default function Hero({ id, layout = 'full-bleed', heading, body, image, 
             </div>
           )}
 
-          <div className="hero-content">
+          <div className="hero-content h-pad">
             {(heading || body) && (
               <div className="row-1">
                 {heading && <h3>{heading}</h3>}

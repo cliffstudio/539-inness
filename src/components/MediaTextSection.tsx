@@ -1,6 +1,7 @@
 "use client"
 
 /* eslint-disable @next/next/no-img-element */
+import { useEffect, useRef } from 'react'
 import { urlFor } from '../sanity/utils/imageUrlBuilder'
 import { videoUrlFor } from '../sanity/utils/videoUrlBuilder'
 import { SanityImage, SanityVideo } from '../types/sanity'
@@ -44,6 +45,58 @@ export default function MediaTextSection({
   mediaAlignment = 'right',
   roomReference
 }: mediaTextSectionProps) {
+  const videoRef1 = useRef<HTMLVideoElement>(null)
+  const videoRef2 = useRef<HTMLVideoElement>(null)
+
+  // Handle video loading overlay removal for first video
+  useEffect(() => {
+    if (mediaType === 'video' && videoRef1.current) {
+      const video = videoRef1.current
+      
+      const handleVideoLoaded = () => {
+        const mediaWrap = video.parentElement
+        const loadingOverlay = mediaWrap?.querySelector('.loading-overlay')
+        if (loadingOverlay && loadingOverlay instanceof HTMLElement) {
+          loadingOverlay.classList.add('hidden')
+        }
+      }
+
+      video.addEventListener('canplaythrough', handleVideoLoaded)
+      
+      if (video.readyState >= 3) {
+        handleVideoLoaded()
+      }
+
+      return () => {
+        video.removeEventListener('canplaythrough', handleVideoLoaded)
+      }
+    }
+  }, [mediaType, video])
+
+  // Handle video loading overlay removal for second video (in room-type layout)
+  useEffect(() => {
+    if (mediaType === 'video' && videoRef2.current) {
+      const video = videoRef2.current
+      
+      const handleVideoLoaded = () => {
+        const mediaWrap = video.parentElement
+        const loadingOverlay = mediaWrap?.querySelector('.loading-overlay')
+        if (loadingOverlay && loadingOverlay instanceof HTMLElement) {
+          loadingOverlay.classList.add('hidden')
+        }
+      }
+
+      video.addEventListener('canplaythrough', handleVideoLoaded)
+      
+      if (video.readyState >= 3) {
+        handleVideoLoaded()
+      }
+
+      return () => {
+        video.removeEventListener('canplaythrough', handleVideoLoaded)
+      }
+    }
+  }, [mediaType, video])
   return (
     <>
       {(layout === 'media-with-text-h5' || layout === 'media-with-text-h4-body' || layout === 'media-with-text-h4-bullet-list') && (
@@ -128,6 +181,7 @@ export default function MediaTextSection({
             {mediaType === 'video' && video && (
               <div className="media-wrap">
                 <video
+                  ref={videoRef1}
                   src={videoUrlFor(video)}
                   poster={videoPlaceholder ? urlFor(videoPlaceholder).url() : undefined}
                   autoPlay
@@ -136,6 +190,7 @@ export default function MediaTextSection({
                   playsInline
                   preload="metadata"
                 />
+                <div className="loading-overlay" />
               </div>
             )}
           </div>
@@ -202,6 +257,7 @@ export default function MediaTextSection({
             {mediaType === 'video' && video && (
               <div className="media-wrap">
                 <video
+                  ref={videoRef2}
                   src={videoUrlFor(video)}
                   poster={videoPlaceholder ? urlFor(videoPlaceholder).url() : undefined}
                   autoPlay
@@ -210,6 +266,7 @@ export default function MediaTextSection({
                   playsInline
                   preload="metadata"
                 />
+                <div className="loading-overlay" />
               </div>
             )}
           </div>

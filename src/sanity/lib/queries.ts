@@ -118,6 +118,11 @@ export const homepageQuery = groq`
     title,
     slug,
     pageType,
+    heading,
+    mediaType,
+    image ${imageFragment},
+    video ${videoFragment},
+    videoPlaceholder ${imageFragment},
     contentBlocks[] ${flexibleContentFragment}
   }
 `

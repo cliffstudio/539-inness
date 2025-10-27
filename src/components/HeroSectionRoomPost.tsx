@@ -31,7 +31,7 @@ export default function Hero({ id, title, image, description, specs }: HeroProps
         </div>
       )}
 
-      <div className="hero-content">
+      <div className="hero-content h-pad">
         {(title || description) && (
           <div className="row-1">
             {title && <h3>{title}</h3>}

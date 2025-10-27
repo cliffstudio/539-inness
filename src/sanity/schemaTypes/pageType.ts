@@ -6,6 +6,12 @@ export const pageType = defineType({
   title: 'Page',
   type: 'document',
   icon: DocumentTextIcon,
+  fieldsets: [
+    {
+      name: 'heroSection',
+      title: 'Hero Section',
+    },
+  ],
   fields: [
     defineField({
       name: 'title',
@@ -32,7 +38,49 @@ export const pageType = defineType({
         ],
       },
     }),
-    
+
+    // Homepage specific fields
+    defineField({
+      name: 'heading',
+      title: 'Heading',
+      type: 'string',
+      fieldset: 'heroSection',
+      hidden: ({ parent }) => parent?.pageType !== 'homepage',
+    }),
+    defineField({
+      name: 'mediaType',
+      title: 'Media Type',
+      type: 'string',
+      initialValue: 'image',
+      options: { list: ['image','video'] },
+      fieldset: 'heroSection',
+      hidden: ({ parent }) => parent?.pageType !== 'homepage',
+    }),
+    defineField({ 
+      name: 'image',
+      title: 'Image',
+      type: 'image',
+      fieldset: 'heroSection',
+      hidden: ({ parent }) => parent?.pageType !== 'homepage' || parent?.mediaType !== 'image',
+    }),
+    defineField({ 
+      name: 'video', 
+      title: 'Video',
+      type: 'file', 
+      options: { 
+        accept: 'video/*' 
+      },
+      fieldset: 'heroSection',
+      hidden: ({ parent }) => parent?.pageType !== 'homepage' || parent?.mediaType !== 'video',
+    }),
+    defineField({
+      name: 'videoPlaceholder',
+      title: 'Video Placeholder',
+      type: 'image',
+      fieldset: 'heroSection',
+      hidden: ({ parent }) => parent?.pageType !== 'homepage' || parent?.mediaType !== 'video',
+    }),
+
     // Flexible content blocks
     defineField({
       name: 'contentBlocks',
