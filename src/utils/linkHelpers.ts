@@ -8,6 +8,8 @@ export const getLinkInfo = (cta?: Link) => {
   } else if (cta.linkType === 'jump') {
     return { text: cta.label || '', href: cta.jumpLink ? `#${cta.jumpLink}` : '' }
   } else {
-    return { text: cta.pageLink?.title || '', href: cta.pageLink?.slug ? `/${cta.pageLink.slug}` : '' }
+    // For internal links, use label if provided, otherwise fallback to page title
+    const text = cta.label || cta.pageLink?.title || ''
+    return { text, href: cta.pageLink?.slug ? `/${cta.pageLink.slug}` : '' }
   }
 }

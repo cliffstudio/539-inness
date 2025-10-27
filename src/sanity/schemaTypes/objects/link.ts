@@ -19,7 +19,6 @@ export default defineType({
       name: 'label',
       title: 'Label',
       type: 'string',
-      hidden: ({ parent }) => parent?.linkType !== 'external' && parent?.linkType !== 'jump'
     }),
     defineField({ 
       name: 'href',
@@ -50,19 +49,23 @@ export default defineType({
       pageTitle: 'pageLink.title',
       jumpLink: 'jumpLink',
     },
-    prepare({ linkType, url, pageTitle, jumpLink }) {
+    prepare({ linkType, url, label, pageTitle, jumpLink }) {
+      let title = ''
       let subtitle = ''
       
       if (linkType === 'external') {
+        title = label || 'External Link'
         subtitle = url || 'No URL'
       } else if (linkType === 'jump') {
+        title = label || 'Jump Link'
         subtitle = jumpLink || 'No Jump Link'
       } else {
+        title = label || 'Internal Link'
         subtitle = pageTitle || 'No Page Selected'
       }
       
       return {
-        title: linkType === 'external' ? 'External Link' : linkType === 'jump' ? 'Jump Link' : 'Internal Link',
+        title,
         subtitle,
       }
     }
