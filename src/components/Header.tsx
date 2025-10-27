@@ -63,13 +63,15 @@ export default function Header({ menu }: HeaderProps) {
           </div>
         </div>
 
-        {menu.items.map((item, index) => (
-          <div className="nav" key={index}>
-            <a href={`/${item.pageLink.slug}`}>
-              {item.pageLink.title}
-            </a>
+        {menu.items.length > 0 && (
+          <div className="nav">
+            {menu.items.map((item, index) => (
+              <a key={index} href={`/${item.pageLink.slug}`}>
+                {item.pageLink.title}
+              </a>
+            ))}
           </div>
-        ))}
+        )}
 
         <div className="right">
           <div>Book</div>

@@ -59,12 +59,26 @@ const mediaTextSectionFragment = groq`{
   video ${videoFragment},
   videoPlaceholder ${imageFragment},
   mediaAlignment,
-  roomReference-> {
+  roomLink-> {
     _id,
     title,
     roomType,
     description,
     "slug": slug.current
+  },
+  roomLinks[]-> {
+    _id,
+    title,
+    roomType,
+    description,
+    "slug": slug.current,
+    image ${imageFragment}
+  },
+  links[] {
+    header,
+    description,
+    image ${imageFragment},
+    buttons[] ${linkFragment}
   }
 }`
 

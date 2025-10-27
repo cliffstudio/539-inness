@@ -20,6 +20,8 @@ export default defineType({
           { title: 'Media with Text (h4 & body)', value: 'media-with-text-h4-body' },
           { title: 'Media with Text (room type)', value: 'media-with-text-room-type' },
           { title: 'Media with Text (h4 & bullet list)', value: 'media-with-text-h4-bullet-list' },
+          { title: 'Media with Text (h4, body & links)', value: 'media-with-text-h4-body-links' },
+          { title: 'Media with Text (h4, body & room links)', value: 'media-with-text-h4-body-room-links' },
         ],
       },
       initialValue: 'media-with-text-h4-body',
@@ -28,14 +30,14 @@ export default defineType({
       name: 'heading',
       title: 'Heading',
       type: 'string',
-      hidden: ({ parent }) => parent?.layout !== 'media-with-text-h4-body' && parent?.layout !== 'media-with-text-h4-bullet-list',
+      hidden: ({ parent }) => parent?.layout !== 'media-with-text-h4-body' && parent?.layout !== 'media-with-text-h4-bullet-list' && parent?.layout !== 'media-with-text-h4-body-room-links' && parent?.layout !== 'media-with-text-h4-body-links',
     }),
     defineField({
       name: 'body',
       title: 'Body',
       type: 'array',
       of: [{ type: 'block' }],
-      hidden: ({ parent }) => parent?.layout == 'media-with-text-room-type' || parent?.layout == 'media-with-text-h4-bullet-list',
+      hidden: ({ parent }) => parent?.layout === 'media-with-text-room-type' || parent?.layout === 'media-with-text-h4-bullet-list',
     }),
     defineField({
       name: 'bulletList',
@@ -52,8 +54,8 @@ export default defineType({
       hidden: ({ parent }) => parent?.layout !== 'media-with-text-h4-body',
     }),
     defineField({
-      name: 'roomReference',
-      title: 'Room Reference',
+      name: 'roomLink',
+      title: 'Room Link',
       type: 'reference',
       to: [{ type: 'room' }],
       hidden: ({ parent }) => parent?.layout !== 'media-with-text-room-type',
@@ -97,6 +99,27 @@ export default defineType({
         ],
       },
       initialValue: 'right',
+    }),
+    defineField({
+      name: 'roomLinks',
+      title: 'Room Links',
+      type: 'array',
+      of: [{ type: 'reference', to: [{ type: 'room' }] }],
+      validation: (Rule) => Rule.min(2).custom((value) => {
+        if (!value || value.length === 0) return true // Allow empty array
+        if (value.length % 2 !== 0) {
+          return 'Room Links must be added in multiples of 2 (2, 4, 6, etc.)'
+        }
+        return true
+      }),
+      hidden: ({ parent }) => parent?.layout !== 'media-with-text-h4-body-room-links',
+    }),
+    defineField({
+      name: 'links',
+      title: 'Links',
+      type: 'array',
+      of: [{ type: 'detailedLink' }],
+      hidden: ({ parent }) => parent?.layout !== 'media-with-text-h4-body-links',
     }),
   ],
   preview: {

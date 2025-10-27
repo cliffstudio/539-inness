@@ -6,6 +6,7 @@ import { roomType } from './roomType'
 
 // Objects
 import link from './objects/link'
+import detailedLink from './objects/detailedLink'
 import richPortableText from './objects/richPortableText'
 import flexibleContent from './objects/flexibleContent'
 
@@ -24,6 +25,7 @@ export const schemaTypes = [
 
   // Objects
   link,
+  detailedLink,
   richPortableText,
   flexibleContent,
 

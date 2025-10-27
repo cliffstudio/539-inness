@@ -11,6 +11,10 @@ declare module '@splidejs/react-splide' {
     interval?: number
     pauseOnHover?: boolean
     resetProgress?: boolean
+    perPage?: number
+    perMove?: number
+    gap?: string
+    breakpoints?: Record<number, any>
   }
 
   export interface SplideProps {
