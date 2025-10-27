@@ -47,6 +47,13 @@ const heroSectionFragment = groq`{
   button ${linkFragment}
 }`
 
+const textSectionFragment = groq`{
+  id,
+  heading,
+  body,
+  button ${linkFragment}
+}`
+
 const mediaTextSectionFragment = groq`{
   id,
   layout,
@@ -100,6 +107,7 @@ const carouselSectionFragment = groq`{
 const flexibleContentFragment = groq`{
   _type,
   ...select(_type == "heroSection" => ${heroSectionFragment}),
+  ...select(_type == "textSection" => ${textSectionFragment}),
   ...select(_type == "mediaTextSection" => ${mediaTextSectionFragment}),
   ...select(_type == "breakSection" => ${breakSectionFragment}),
   ...select(_type == "carouselSection" => ${carouselSectionFragment})

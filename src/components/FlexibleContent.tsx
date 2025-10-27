@@ -1,5 +1,6 @@
 import React from 'react'
 import HeroSection from './HeroSection'
+import TextSection from './TextSection'
 import MediaTextSection from './MediaTextSection'
 import BreakSection from './BreakSection'
 import CarouselSection from './CarouselSection'
@@ -59,6 +60,8 @@ const FlexibleContent: React.FC<FlexibleContentProps> = ({ contentBlocks }) => {
         switch (blockOrGroup._type) {
           case 'heroSection':
             return <HeroSection key={groupIndex} {...(blockOrGroup as ContentBlock & { layout?: 'split' | 'full-bleed' })} />
+          case 'textSection':
+            return <TextSection key={groupIndex} {...(blockOrGroup as ContentBlock & { layout?: 'text-section' })} />
           case 'mediaTextSection':
             return <MediaTextSection key={groupIndex} {...(blockOrGroup as ContentBlock & { layout?: 'media-with-text-h5' | 'media-with-text-h4-body' | 'media-with-text-room-type' })} />
           case 'breakSection':

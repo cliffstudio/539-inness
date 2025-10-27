@@ -10,6 +10,10 @@ export default defineType({
       title: 'Hero Section'
     },
     {
+      type: 'textSection',
+      title: 'Text Section'
+    },
+    {
       type: 'mediaTextSection',
       title: 'Media & Text Section'
     },

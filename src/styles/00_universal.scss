@@ -153,6 +153,28 @@
   }
 }
 
+// TEXT SECTION ------------------
+
+.text-section {
+  padding-top: get-rem-desktop(100);
+  padding-bottom: get-rem-desktop(100);
+
+  .text-wrap {
+    max-width: get-rem-desktop(376);
+    margin: 0 auto;
+    text-align: center;
+
+    .text-heading {
+      margin-bottom: get-rem-desktop(14);
+    }
+
+    .button {
+      width: 100%;
+      margin-top: get-rem-desktop(24);
+    }
+  }
+}
+
 // IMAGE MEDIA SECTION ------------------
 
 .media-text-section {
