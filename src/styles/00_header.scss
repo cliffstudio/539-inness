@@ -7,25 +7,48 @@
   width: 100%;
   z-index: 100;
   color: $colour-cream;
+  will-change: background-color, color;
+  @include transition-multiple(background-color 400ms cubic-bezier(0.25,0.1,0.25,1), color 400ms cubic-bezier(0.25,0.1,0.25,1));
 
-  .logo {
-    width: fit-content;
-    margin: 0 auto;
+  .logo-wrap {
     margin-top: get-rem-desktop(16.5);
     margin-bottom: get-rem-desktop(16.5);
+    height: get-rem-desktop(31);
+    position: relative;
 
-    svg {
-      width: get-rem-desktop(102);
-      fill: $colour-cream;
+    .logo-text,
+    .logo-icon {
+      width: fit-content;
+      margin: 0 auto;
+      will-change: opacity;
+      @include transition(opacity 400ms cubic-bezier(0.25,0.1,0.25,1));
+
+      svg {
+        height: get-rem-desktop(31);
+        fill: $colour-cream;
+        will-change: fill;
+        @include transition(fill 400ms cubic-bezier(0.25,0.1,0.25,1));
+      }
+
+      a {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+      }
     }
 
-    a {
+    .logo-icon {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
       z-index: 1;
+      opacity: 0;
+      pointer-events: none;
     }
   }
 
@@ -36,6 +59,8 @@
     border-top: 1px solid $colour-cream;
     border-bottom: 1px solid $colour-cream;
     height: get-rem-desktop(42);
+    will-change: border-color;
+    @include transition(border-color 400ms cubic-bezier(0.25,0.1,0.25,1));
 
     .left {
       @include flex;
@@ -44,10 +69,14 @@
       padding: 0 get-rem-desktop(24);
       border-right: 1px solid $colour-cream;
       height: 100%;
+      will-change: border-color;
+      @include transition(border-color 400ms cubic-bezier(0.25,0.1,0.25,1));
 
       svg {
         stroke: $colour-cream;
         fill: none;
+        will-change: stroke;
+        @include transition(stroke 400ms cubic-bezier(0.25,0.1,0.25,1));
       }
 
       .search-icon {
@@ -74,6 +103,7 @@
 
     .right {
       border-left: 1px solid $colour-cream;
+      color: $colour-cream;
       background-color: $colour-orange;
       width: get-rem-desktop(120);
       padding: 0 get-rem-desktop(24);
@@ -84,10 +114,50 @@
       will-change: background-color;
       @include transition(background-color 400ms cubic-bezier(0.25,0.1,0.25,1));
       cursor: pointer;
+      will-change: border-color;
+      @include transition(border-color 400ms cubic-bezier(0.25,0.1,0.25,1));
 
       &:hover {
         background-color: $colour-orange-hover;
       }
+    }
+  }
+}
+
+.site-header.scrolled {
+  background-color: $colour-cream;
+  color: $colour-black;
+
+  .logo-text,
+  .logo-icon {
+    svg {
+      fill: $colour-black;
+    }
+  }
+
+  .logo-text {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .logo-icon {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .nav-wrap {
+    border-color: $colour-beige;
+
+    .left {
+      border-color: $colour-beige;
+
+      svg {
+        stroke: $colour-black;
+      }
+    }
+
+    .right {
+      border-color: $colour-beige;
     }
   }
 }
