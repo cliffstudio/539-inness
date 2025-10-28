@@ -7,10 +7,11 @@ export const structure: StructureResolver = (S) =>
     .items([
       S.documentTypeListItem('page').title('Pages'),
       S.documentTypeListItem('room').title('Rooms'),
+      S.divider(),
       S.documentTypeListItem('menu').title('Menus'),
       S.documentTypeListItem('footer').title('Footer'),
-      S.divider(),
+      S.documentTypeListItem('metaData').title('Meta Data'),
       ...S.documentTypeListItems().filter(
-        (item) => item.getId() && !['page', 'room', 'menu', 'footer'].includes(item.getId()!),
+        (item) => item.getId() && !['page', 'room', 'menu', 'footer', 'metaData'].includes(item.getId()!),
       ),
     ])

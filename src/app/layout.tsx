@@ -2,11 +2,40 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import "./globals.css";
 import OverflowController from "../components/OverflowController";
+import { client } from "../../sanity.client";
+import { metadataQuery } from "../sanity/lib/queries";
+import { urlFor } from "../sanity/utils/imageUrlBuilder";
 
-export const metadata: Metadata = {
-  title: "Inness",
-  description: "Inness - A unique destination experience",
-};
+// Generate metadata dynamically from Sanity CMS
+export async function generateMetadata(): Promise<Metadata> {
+  const metaData = await client.fetch(metadataQuery);
+  
+  // Build social image URL if available
+  let socialImageUrl: string | undefined;
+  if (metaData?.socialimage?.asset?._ref) {
+    socialImageUrl = urlFor(metaData.socialimage).width(1200).height(630).url();
+  }
+  
+  return {
+    title: metaData?.title,
+    description: metaData?.description,
+    keywords: metaData?.keywords,
+    authors: [{ name: "Inness" }],
+    openGraph: {
+      title: metaData?.title,
+      description: metaData?.description,
+      type: "website",
+      locale: "en_US",
+      ...(socialImageUrl && { images: [socialImageUrl] }),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: metaData?.title,
+      description: metaData?.description,
+      ...(socialImageUrl && { images: [socialImageUrl] }),
+    },
+  };
+}
 
 export default function RootLayout({
   children,

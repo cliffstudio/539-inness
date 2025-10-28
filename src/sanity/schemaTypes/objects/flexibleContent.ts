@@ -24,6 +24,10 @@ export default defineType({
     {
       type: 'carouselSection',
       title: 'Carousel Section'
+    },
+    {
+      type: 'menuSection',
+      title: 'Menu Section'
     }
   ],
   options: {

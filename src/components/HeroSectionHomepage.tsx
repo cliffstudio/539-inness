@@ -57,7 +57,7 @@ export default function HeroSectionHomepage({
   return (
     <section className="hero-section layout-1 relative">
       {mediaType === 'video' && video && (
-        <div className="fill-space-image-wrap media-wrap">
+        <div className="fill-space-video-wrap media-wrap">
           <video
             ref={videoRef}
             src={videoUrlFor(video)}
@@ -67,7 +67,6 @@ export default function HeroSectionHomepage({
             loop
             playsInline
             preload="metadata"
-            className="full-bleed-image"
           />
           <div className="loading-overlay" />
         </div>

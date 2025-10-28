@@ -200,7 +200,7 @@ export default function MediaTextSection({
                     <a 
                       key={index}
                       href={linkInfo.href}
-                      className="button button--cream"
+                      className={`button button--${button.color || 'cream'}`}
                       {...(button.linkType === 'external' && { target: '_blank', rel: 'noopener noreferrer' })}
                     >
                       {linkInfo.text}
@@ -343,21 +343,6 @@ export default function MediaTextSection({
                 </>
               )}
 
-              {bulletList && bulletList.length > 0 && (
-                <div className="media-text-bullet-list">
-                  {bulletList.map((item, index) => (
-                    <div key={index} className="media-text-bullet-list-item">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="13" height="16" viewBox="0 0 13 16">
-                        <path d="M11.8181 0.5H0.5V15.5H11.8181V0.5Z"/>
-                        <path d="M0.5 0.5L11.8181 15.5"/>
-                      </svg>
-
-                      <span>{item}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
-
               {buttons && buttons.length > 0 && (
                 <div className={`media-text-buttons${buttons.length > 1 ? ' multiple-buttons' : ''}`}>
                   {buttons.map((button, index) => {
@@ -367,7 +352,7 @@ export default function MediaTextSection({
                       <a 
                         key={index}
                         href={linkInfo.href}
-                        className="button button--cream"
+                        className={`button button--${button.color || 'cream'}`}
                         {...(button.linkType === 'external' && { target: '_blank', rel: 'noopener noreferrer' })}
                       >
                         {linkInfo.text}
@@ -559,6 +544,25 @@ export default function MediaTextSection({
                   <PortableText value={body} />
                 </div>
               )}
+
+              {buttons && buttons.length > 0 && (
+                <div className={`media-text-buttons${buttons.length > 1 ? ' multiple-buttons' : ''}`}>
+                  {buttons.map((button, index) => {
+                    const linkInfo = getLinkInfo(button)
+                    if (!linkInfo.text || !linkInfo.href) return null
+                    return (
+                      <a 
+                        key={index}
+                        href={linkInfo.href}
+                        className={`button button--${button.color || 'cream'}`}
+                        {...(button.linkType === 'external' && { target: '_blank', rel: 'noopener noreferrer' })}
+                      >
+                        {linkInfo.text}
+                      </a>
+                    )
+                  })}
+                </div>
+              )}
             </div>
 
             <div className="col-3-12_lg dummy-col col-2"></div>
@@ -623,7 +627,7 @@ export default function MediaTextSection({
                                 <a 
                                   key={buttonIndex}
                                   href={linkInfo.href}
-                                  className="button button--cream"
+                                  className={`button button--${button.color || 'cream'}`}
                                   {...(button.linkType === 'external' && { target: '_blank', rel: 'noopener noreferrer' })}
                                 >
                                   {linkInfo.text}

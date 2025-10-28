@@ -74,21 +74,21 @@ h6 {
   }
 }
 
-.button {
+.button,
+.nav-wrap,
+.menu-tab {
   font-family: 'ABC Arizona Flare';
   font-weight: 300;
   @include font-size(14px, 14px);
   line-height: normal;
   text-transform: uppercase;
-  text-align: center;
 }
 
-.nav-wrap {
+.body-smaller {
   font-family: 'ABC Arizona Flare';
   font-weight: 300;
   @include font-size(14px, 14px);
-  line-height: normal;
-  text-transform: uppercase;
+  line-height: calc(20 / 14) + em;
 }
 
 .body-bigger {

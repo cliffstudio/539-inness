@@ -40,6 +40,18 @@ export default defineType({
       description: 'The ID of the element to jump to eg. cabin',
       hidden: ({ parent }) => parent?.linkType !== 'jump'
     }),
+    defineField({
+      name: 'color',
+      title: 'Button Color',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Cream', value: 'cream' },
+          { title: 'Orange', value: 'orange' },
+        ],
+      },
+      initialValue: 'cream',
+    }),
   ],
   preview: {
     select: {

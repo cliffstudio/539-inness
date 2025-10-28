@@ -4,6 +4,7 @@ import Link from 'next/link'
 
 // Type for menu items from menuType schema
 type MenuItem = {
+  label?: string
   pageLink: {
     _id: string
     title?: string
@@ -67,7 +68,7 @@ export default function Header({ menu }: HeaderProps) {
           <div className="nav">
             {menu.items.map((item, index) => (
               <a key={index} href={`/${item.pageLink.slug}`}>
-                {item.pageLink.title}
+                {item.label || item.pageLink.title}
               </a>
             ))}
           </div>

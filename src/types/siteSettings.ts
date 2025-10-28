@@ -4,6 +4,7 @@ export type Link = {
   label: string
   href: string
   isExternal?: boolean
+  color?: 'cream' | 'orange'
 }
 
 export type Header = {

@@ -51,7 +51,7 @@ export default defineType({
       title: 'Buttons',
       type: 'array',
       of: [{ type: 'link' }],
-      hidden: ({ parent }) => parent?.layout !== 'media-with-text-h4-body',
+      hidden: ({ parent }) => parent?.layout !== 'media-with-text-h4-body' && parent?.layout !== 'media-with-text-h4-body-room-links' && parent?.layout !== 'media-with-text-h4-body-links',
     }),
     defineField({
       name: 'roomLink',

@@ -10,6 +10,7 @@ export type Link = {
     slug?: string
   }
   jumpLink?: string
+  color?: 'cream' | 'orange'
 }
 
 export type Header = {

@@ -27,6 +27,7 @@ const linkFragment = groq`{
   label,
   href,
   jumpLink,
+  color,
   pageLink {
     _ref,
     _type,
@@ -104,13 +105,54 @@ const carouselSectionFragment = groq`{
   images[] ${imageFragment}
 }`
 
+const menuSectionFragment = groq`{
+  id,
+  layout,
+  heading,
+  image ${imageFragment},
+  foodTabs[] {
+    tabName,
+    availability,
+    image ${imageFragment},
+    categories[] {
+      name,
+      items[] {
+        name,
+        price,
+        extras[] {
+          name,
+          price
+        }
+      }
+    }
+  },
+  spaTreatments[] {
+    name,
+    description,
+    options[] {
+      duration,
+      price
+    }
+  },
+  venueInfo {
+    name,
+    description,
+    details[] {
+      label,
+      value
+    },
+    includedServices
+  }
+}`
+
 const flexibleContentFragment = groq`{
   _type,
   ...select(_type == "heroSection" => ${heroSectionFragment}),
   ...select(_type == "textSection" => ${textSectionFragment}),
   ...select(_type == "mediaTextSection" => ${mediaTextSectionFragment}),
   ...select(_type == "breakSection" => ${breakSectionFragment}),
-  ...select(_type == "carouselSection" => ${carouselSectionFragment})
+  ...select(_type == "carouselSection" => ${carouselSectionFragment}),
+  ...select(_type == "menuSection" => ${menuSectionFragment})
 }`
 
 // Main page query
@@ -191,6 +233,7 @@ export const menuQuery = groq`
     _id,
     title,
     items[] {
+      label,
       pageLink-> {
         _id,
         title,
@@ -226,6 +269,17 @@ export const roomPostQuery = groq`
     },
     "slug": slug.current,
     contentBlocks[] ${flexibleContentFragment}
+  }
+`
+
+// Metadata query
+export const metadataQuery = groq`
+  *[_type == "metaData"][0] {
+    _id,
+    title,
+    description,
+    keywords,
+    socialimage ${imageFragment}
   }
 `
 

@@ -19,6 +19,7 @@
   min-width: get-rem-desktop(144);
   will-change: background-color, border-color, color;
   @include transition-multiple(background-color 400ms cubic-bezier(0.25,0.1,0.25,1), border-color 400ms cubic-bezier(0.25,0.1,0.25,1), color 400ms cubic-bezier(0.25,0.1,0.25,1));
+  text-align: center;
 
   &--orange {
     background-color: $colour-orange;
@@ -369,6 +370,12 @@
   @include flex;
   @include flex-direction(column);
   row-gap: get-rem-desktop(20);
+  
+  .col-1 {
+    .media-text-buttons {
+      margin-top: get-rem-desktop(24);
+    }
+  }
 
   .media-text-link {
     .media-wrap {
@@ -570,3 +577,101 @@
     }
   }
 }
+
+// MENU SECTION ------------------
+
+.menu-section {
+  padding-top: get-rem-desktop(200);
+  padding-bottom: get-rem-desktop(200);
+
+  .menu-tabs {
+    @include flex;
+    column-gap: get-rem-desktop(24);
+    margin-bottom: get-rem-desktop(72);
+
+    .menu-tab {
+      position: relative;
+      cursor: pointer;
+
+      &:after {
+        content: "";
+        transform-origin: 100%;
+        background: $colour-orange;
+        height: 1px;
+        @include transition(transform .83s cubic-bezier(.33, 0, .13, 1));
+        position: absolute;
+        bottom: get-rem-desktop(-5);
+        left: 0;
+        right: 0;
+        transform: scaleX(0);
+      }
+
+      &.active,
+      &:hover {
+        &:after {
+          transform-origin: 0;
+          transform: scaleX(1);
+        }
+      }
+    }
+  }
+
+  .menu-tab-header {
+    @include flex;
+    @include justify-content(space-between);
+    @include align-items(center);
+    column-gap: get-rem-desktop(24);
+    padding-bottom: get-rem-desktop(25);
+    margin-bottom: get-rem-desktop(12);
+    border-bottom: 1px solid $colour-orange;
+  }
+
+  .menu-content {
+    margin-top: -0.3em;
+
+    .menu-category {
+      margin-bottom: get-rem-desktop(65);
+
+      .menu-category-name {
+        padding-bottom: get-rem-desktop(22);
+        margin-bottom: get-rem-desktop(15);
+        border-bottom: 1px solid $colour-orange;
+      }
+
+      .menu-items {
+        @include flex;
+        @include flex-direction(column);
+        row-gap: get-rem-desktop(10);
+
+        .menu-item-header {
+          @include flex;
+          @include justify-content(space-between);
+          column-gap: get-rem-desktop(24);
+        }
+
+        .menu-item-extras {
+          color: $colour-grey;
+          @include flex;
+          @include flex-wrap(wrap);
+          column-gap: get-rem-desktop(24);
+          margin-top: get-rem-desktop(5);
+
+          .menu-extra {
+            white-space: nowrap;
+          }
+        }
+      }
+    }
+  }
+
+  .menu-image {
+    .media-wrap {
+      aspect-ratio: 772 / 1037;
+      position: relative;
+    }
+  }
+}
+
+// .menu-section.layout-food-menu {
+  
+// }
