@@ -149,6 +149,22 @@ const menuSectionFragment = groq`{
   }
 }`
 
+const eventSectionFragment = groq`{
+  id,
+  layout,
+  heading,
+  events[]-> {
+    _id,
+    title,
+    date,
+    timeRange,
+    image ${imageFragment},
+    description,
+    bookingHref,
+    "slug": slug.current
+  }
+}`
+
 const flexibleContentFragment = groq`{
   _type,
   ...select(_type == "heroSection" => ${heroSectionFragment}),
@@ -156,7 +172,8 @@ const flexibleContentFragment = groq`{
   ...select(_type == "mediaTextSection" => ${mediaTextSectionFragment}),
   ...select(_type == "breakSection" => ${breakSectionFragment}),
   ...select(_type == "carouselSection" => ${carouselSectionFragment}),
-  ...select(_type == "menuSection" => ${menuSectionFragment})
+  ...select(_type == "menuSection" => ${menuSectionFragment}),
+  ...select(_type == "eventSection" => ${eventSectionFragment})
 }`
 
 // Main page query

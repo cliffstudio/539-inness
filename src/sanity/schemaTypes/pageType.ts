@@ -94,10 +94,9 @@ export const pageType = defineType({
       title: 'title',
       pageType: 'pageType',
     },
-    prepare({ title, pageType }) {
+    prepare({ title }) {
       return {
-        title: title,
-        subtitle: pageType ? `${pageType.charAt(0).toUpperCase() + pageType.slice(1)} Page` : 'Page',
+        title: title || 'Untitled Page',
       }
     },
   },

@@ -5,10 +5,11 @@ import MediaTextSection from './MediaTextSection'
 import BreakSection from './BreakSection'
 import CarouselSection from './CarouselSection'
 import MenuSection from './MenuSection'
+import EventSection from './EventSection'
 
 interface ContentBlock {
   _type: string
-  layout?: 'media-with-text-h5' | 'media-with-text-h4-body' | 'media-with-text-room-type' | 'split' | 'full-bleed'
+  layout?: 'media-with-text-h5' | 'media-with-text-h4-body' | 'media-with-text-room-type' | 'media-with-text-h4-bullet-list' | 'media-with-text-h4-body-room-links' | 'media-with-text-h4-body-links' | 'split' | 'full-bleed' | 'text-section' | 'carousel-section' | 'food-menu' | 'spa-menu' | 'venue-menu' | 'single-event' | '2-events' | '4-events'
   [key: string]: unknown
 }
 
@@ -79,7 +80,7 @@ const FlexibleContent: React.FC<FlexibleContentProps> = ({ contentBlocks }) => {
           
           // Only wrap in a div if there are multiple sections
           if (blockOrGroup.length === 1) {
-            return <MediaTextSection key={groupIndex} {...(blockOrGroup[0] as ContentBlock)} />
+            return <MediaTextSection key={groupIndex} {...(blockOrGroup[0] as ContentBlock & { layout?: 'media-with-text-h5' | 'media-with-text-h4-body' | 'media-with-text-room-type' | 'media-with-text-h4-bullet-list' | 'media-with-text-h4-body-room-links' | 'media-with-text-h4-body-links' })} />
           }
           
           let groupClassName = ''
@@ -92,7 +93,7 @@ const FlexibleContent: React.FC<FlexibleContentProps> = ({ contentBlocks }) => {
           return (
             <div key={`group-${groupIndex}`} className={groupClassName}>
               {blockOrGroup.map((block, blockIndex) => (
-                <MediaTextSection key={`${groupIndex}-${blockIndex}`} {...(block as ContentBlock)} />
+                <MediaTextSection key={`${groupIndex}-${blockIndex}`} {...(block as ContentBlock & { layout?: 'media-with-text-h5' | 'media-with-text-h4-body' | 'media-with-text-room-type' | 'media-with-text-h4-bullet-list' | 'media-with-text-h4-body-room-links' | 'media-with-text-h4-body-links' })} />
               ))}
             </div>
           )
@@ -112,6 +113,8 @@ const FlexibleContent: React.FC<FlexibleContentProps> = ({ contentBlocks }) => {
             return <CarouselSection key={groupIndex} {...(blockOrGroup as ContentBlock & { layout?: 'carousel-section' })} />
           case 'menuSection':
             return <MenuSection key={groupIndex} {...(blockOrGroup as ContentBlock & { layout?: 'food-menu' | 'spa-menu' | 'venue-menu' })} />
+          case 'eventSection':
+            return <EventSection key={groupIndex} {...(blockOrGroup as ContentBlock & { layout?: 'single-event' | '2-events' | '4-events' })} />
 
           default:
             console.warn(`Unknown content block type: ${blockOrGroup._type}`)

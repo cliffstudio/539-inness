@@ -19,6 +19,7 @@ import mediaTextSection from './sections/mediaTextSection'
 import breakSection from './sections/breakSection'
 import carouselSection from './sections/carouselSection'
 import menuSection from './sections/menuSection'
+import eventSection from './sections/eventSection'
 
 export const schemaTypes = [
   // Global
@@ -41,5 +42,6 @@ export const schemaTypes = [
   mediaTextSection,
   breakSection,
   carouselSection,
-  menuSection
+  menuSection,
+  eventSection,
 ]

@@ -66,6 +66,11 @@ export const eventType = defineType({
         }),
       ],
     }),
+    defineField({ 
+      name: 'bookingHref',
+      title: 'Booking Href',
+      type: 'url',
+    }),
     defineField({
       name: 'image',
       title: 'Image',
@@ -80,13 +85,22 @@ export const eventType = defineType({
   preview: {
     select: {
       title: 'title',
+      eventType: 'eventType',
       date: 'date',
       startTime: 'timeRange.startTime',
       endTime: 'timeRange.endTime',
       media: 'image',
     },
     prepare(selection) {
-      const { title, date, startTime, endTime, media } = selection
+      const { title, eventType, date, startTime, media } = selection
+
+      // Capitalize event type
+      const capitalizedEventType = eventType 
+        ? eventType.charAt(0).toUpperCase() + eventType.slice(1).toLowerCase()
+        : ''
+
+      // Combine date and time for subtitle
+      const combinedTitle = [title, capitalizedEventType].filter(Boolean).join(' • ')
       
       // Format date as DD Month YYYY
       let formattedDate = ''
@@ -98,14 +112,14 @@ export const eventType = defineType({
         formattedDate = `${day} ${month} ${year}`
       }
       
-      // Format time range as "7.00am-8.00am"
+      // Format time range as "7.00am"
       const timeRange = startTime ? `${startTime}` : ''
       
       // Combine date and time for subtitle
       const subtitle = [formattedDate, timeRange].filter(Boolean).join(' • ')
       
       return {
-        title,
+        title: combinedTitle,
         subtitle,
         media,
       }

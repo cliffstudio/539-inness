@@ -28,7 +28,11 @@ export default defineType({
     {
       type: 'menuSection',
       title: 'Menu Section'
-    }
+    },
+    {
+      type: 'eventSection',
+      title: 'Event Section'
+    },
   ],
   options: {
     sortable: true,
