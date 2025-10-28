@@ -2,6 +2,7 @@
 
 /* eslint-disable @next/next/no-img-element */
 import { useState, useEffect } from 'react'
+import { PortableText, PortableTextBlock } from '@portabletext/react'
 import { urlFor } from '../sanity/utils/imageUrlBuilder'
 import { SanityImageSource } from '@sanity/image-url/lib/types/types'
 import mediaLazyloading from '../utils/lazyLoad'
@@ -36,8 +37,14 @@ interface TimePrice {
 
 interface SpaTreatment {
   name?: string
-  description?: string
+  description?: PortableTextBlock[]
   options?: TimePrice[]
+}
+
+interface SpaTab {
+  tabName?: string
+  image?: SanityImageSource
+  treatments?: SpaTreatment[]
 }
 
 interface VenueDetail {
@@ -58,7 +65,7 @@ interface MenuSectionProps {
   heading?: string
   image?: SanityImageSource
   foodTabs?: FoodTab[]
-  spaTreatments?: SpaTreatment[]
+  spaTabs?: SpaTab[]
   venueInfo?: VenueInfo
 }
 
@@ -67,18 +74,19 @@ export default function MenuSection({
   layout = 'food-menu',
   image,
   foodTabs,
-  spaTreatments,
+  spaTabs,
   venueInfo,
 }: MenuSectionProps) {
   const [activeTab, setActiveTab] = useState(0)
+  const [activeSpaTab, setActiveSpaTab] = useState(0)
 
   // Trigger lazy loading update when tab changes
   useEffect(() => {
     mediaLazyloading().catch(console.error)
-  }, [activeTab])
+  }, [activeTab, activeSpaTab])
 
   return (
-    <section id={id} className={`menu-section layout-${layout} h-pad`}>
+    <section id={id} className={`menu-section layout-${layout} h-pad body-smaller`}>
       
       {/* Food Menu Layout */}
       {layout === 'food-menu' && foodTabs && foodTabs.length > 0 && (
@@ -97,7 +105,7 @@ export default function MenuSection({
           </div>
         
           <div className="row-lg">
-            <div className="col-6-12_lg menu-content body-smaller">
+            <div className="col-6-12_lg menu-content">
               {/* Active Tab Content */}
               {foodTabs[activeTab] && (
                 <div className="menu-tab-content">
@@ -169,63 +177,75 @@ export default function MenuSection({
       )}
 
       {/* Spa Menu Layout */}
-      {layout === 'spa-menu' && (
+      {layout === 'spa-menu' && spaTabs && spaTabs.length > 0 && (
         <>
-          <div className="col-3-12_lg menu-content">
-            {spaTreatments && spaTreatments.length > 0 && (
-              <div className="spa-treatments">
-                {spaTreatments.map((treatment, index) => (
-                  <div key={index} className="spa-treatment">
-                    {treatment.name && (
-                      <h5 className="spa-treatment-name">{treatment.name}</h5>
-                    )}
+          {/* Tabs Navigation */}
+          <div className="menu-tabs">
+            {spaTabs.map((tab, tabIndex) => (
+              <button
+                key={tabIndex}
+                className={`menu-tab ${activeSpaTab === tabIndex ? 'active' : ''}`}
+                onClick={() => setActiveSpaTab(tabIndex)}
+              >
+                {tab.tabName}
+              </button>
+            ))}
+          </div>
+        
+          <div className="row-lg">
+            <div className="col-6-12_lg menu-content">
+              {/* Active Tab Content */}
+              <div className="menu-tab-header">
+                <div className="time-column">Time</div>
+                <div className="price-column">Price</div>
+              </div>
 
-                    {treatment.description && (
-                      <div className="spa-treatment-description">
-                        {treatment.description}
-                      </div>
-                    )}
+              {spaTabs[activeSpaTab] && spaTabs[activeSpaTab].treatments && (
+                <div className="spa-treatments">
+                  {spaTabs[activeSpaTab].treatments.map((treatment, index) => (
+                    <div key={index} className="spa-treatment">
+                      {treatment.name && (
+                        <h5 className="spa-treatment-name">{treatment.name}</h5>
+                      )}
 
-                    {treatment.options && treatment.options.length > 0 && (
-                      <div className="spa-treatment-options">
-                        <table className="spa-options-table">
-                          <thead>
-                            <tr>
-                              <th>Time</th>
-                              <th>Price</th>
-                            </tr>
-                          </thead>
-                          <tbody>
+                      <div className="spa-treatment-content">
+                        {treatment.description && treatment.description.length > 0 && (
+                          <div className="spa-treatment-description">
+                            <PortableText value={treatment.description} />
+                          </div>
+                        )}
+
+                        {treatment.options && treatment.options.length > 0 && (
+                          <div className="spa-treatment-options">
                             {treatment.options.map((option, optIndex) => (
-                              <tr key={optIndex}>
-                                <td>{option.duration}</td>
-                                <td>{option.price !== undefined ? `$${option.price}` : '-'}</td>
-                              </tr>
+                              <div className="spa-treatment-option" key={optIndex}>
+                                <div>{option.duration}</div>
+                                <div>{option.price !== undefined ? `${option.price}` : '-'}</div>
+                              </div>
                             ))}
-                          </tbody>
-                        </table>
+                          </div>
+                        )}
                       </div>
-                    )}
-                  </div>
-                ))}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {spaTabs[activeSpaTab]?.image && (
+              <div className="col-6-12_lg menu-image">
+                <div className="media-wrap">
+                  <img 
+                    key={`spa-tab-image-${activeSpaTab}`}
+                    data-src={urlFor(spaTabs[activeSpaTab].image!).url()} 
+                    alt="" 
+                    className="lazy full-bleed-image"
+                  />
+                  <div className="loading-overlay" />
+                </div>
               </div>
             )}
           </div>
-
-          <div className="col-3-12_lg dummy-col"></div>
-
-          {image && (
-            <div className="col-6-12_lg menu-image">
-              <div className="media-wrap">
-                <img 
-                  data-src={urlFor(image).url()} 
-                  alt="" 
-                  className="lazy full-bleed-image"
-                />
-                <div className="loading-overlay" />
-              </div>
-            </div>
-          )}
         </>
       )}
 

@@ -21,37 +21,78 @@ const FlexibleContent: React.FC<FlexibleContentProps> = ({ contentBlocks }) => {
     return null
   }
 
-  // Group consecutive room-type mediaTextSections
+  // Group consecutive sections that should be grouped
   const groupedBlocks: (ContentBlock | ContentBlock[])[] = []
-  let currentGroup: ContentBlock[] = []
+  let currentRoomGroup: ContentBlock[] = []
+  let currentH4BodyGroup: ContentBlock[] = []
 
   contentBlocks.forEach((block) => {
-    if (block._type === 'mediaTextSection' && block.layout === 'media-with-text-room-type') {
-      currentGroup.push(block)
+    const isRoomType = block._type === 'mediaTextSection' && block.layout === 'media-with-text-room-type'
+    const isH4Body = block._type === 'mediaTextSection' && block.layout === 'media-with-text-h4-body'
+
+    if (isRoomType) {
+      // If we have an h4-body group, add it first
+      if (currentH4BodyGroup.length > 0) {
+        groupedBlocks.push([...currentH4BodyGroup])
+        currentH4BodyGroup = []
+      }
+      currentRoomGroup.push(block)
+    } else if (isH4Body) {
+      // If we have a room-type group, add it first
+      if (currentRoomGroup.length > 0) {
+        groupedBlocks.push([...currentRoomGroup])
+        currentRoomGroup = []
+      }
+      currentH4BodyGroup.push(block)
     } else {
-      // If we have a group, add it to groupedBlocks and reset
-      if (currentGroup.length > 0) {
-        groupedBlocks.push([...currentGroup])
-        currentGroup = []
+      // If we have any groups, add them and reset
+      if (currentRoomGroup.length > 0) {
+        groupedBlocks.push([...currentRoomGroup])
+        currentRoomGroup = []
+      }
+      if (currentH4BodyGroup.length > 0) {
+        groupedBlocks.push([...currentH4BodyGroup])
+        currentH4BodyGroup = []
       }
       groupedBlocks.push(block)
     }
   })
 
-  // Don't forget the last group if it exists
-  if (currentGroup.length > 0) {
-    groupedBlocks.push([...currentGroup])
+  // Don't forget the last groups if they exist
+  if (currentRoomGroup.length > 0) {
+    groupedBlocks.push([...currentRoomGroup])
+  }
+  if (currentH4BodyGroup.length > 0) {
+    groupedBlocks.push([...currentH4BodyGroup])
   }
 
   return (
     <div className="flexible-content">
       {groupedBlocks.map((blockOrGroup, groupIndex) => {
-        // If it's an array, it's a group of room-type sections
+        // If it's an array, it's a group of sections
         if (Array.isArray(blockOrGroup)) {
+          const firstBlockLayout = blockOrGroup[0]?.layout
+          
+          // Determine the group type and className
+          const isRoomTypeGroup = firstBlockLayout === 'media-with-text-room-type'
+          const isH4BodyGroup = firstBlockLayout === 'media-with-text-h4-body'
+          
+          // Only wrap in a div if there are multiple sections
+          if (blockOrGroup.length === 1) {
+            return <MediaTextSection key={groupIndex} {...(blockOrGroup[0] as ContentBlock)} />
+          }
+          
+          let groupClassName = ''
+          if (isRoomTypeGroup) {
+            groupClassName = 'room-type-group'
+          } else if (isH4BodyGroup) {
+            groupClassName = 'h4-body-group'
+          }
+          
           return (
-            <div key={`room-group-${groupIndex}`} className="room-type-group">
+            <div key={`group-${groupIndex}`} className={groupClassName}>
               {blockOrGroup.map((block, blockIndex) => (
-                <MediaTextSection key={`${groupIndex}-${blockIndex}`} {...(block as ContentBlock & { layout: 'media-with-text-room-type' })} />
+                <MediaTextSection key={`${groupIndex}-${blockIndex}`} {...(block as ContentBlock)} />
               ))}
             </div>
           )

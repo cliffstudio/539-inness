@@ -1,8 +1,9 @@
 // Global
 import { pageType } from './pageType'
+import { roomType } from './roomType'
+import { eventType } from './eventType'
 import { menuType } from './menuType'
 import { footerType } from './footerType'
-import { roomType } from './roomType'
 import { metaDataType } from './metaDataType'
 
 // Objects
@@ -22,9 +23,10 @@ import menuSection from './sections/menuSection'
 export const schemaTypes = [
   // Global
   pageType,
+  roomType,
+  eventType,
   menuType,
   footerType,
-  roomType,
   metaDataType,
 
   // Objects

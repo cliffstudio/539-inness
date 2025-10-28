@@ -126,12 +126,16 @@ const menuSectionFragment = groq`{
       }
     }
   },
-  spaTreatments[] {
-    name,
-    description,
-    options[] {
-      duration,
-      price
+  spaTabs[] {
+    tabName,
+    image ${imageFragment},
+    treatments[] {
+      name,
+      description,
+      options[] {
+        duration,
+        price
+      }
     }
   },
   venueInfo {

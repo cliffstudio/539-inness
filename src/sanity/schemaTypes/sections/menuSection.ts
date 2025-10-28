@@ -28,7 +28,7 @@ export default defineType({
       name: 'heading',
       title: 'Heading',
       type: 'string',
-      hidden: ({ parent }) => parent?.layout === 'food-menu',
+      hidden: ({ parent }) => parent?.layout === 'food-menu' || parent?.layout === 'spa-menu',
     }),
     defineField({
       name: 'image',
@@ -37,7 +37,7 @@ export default defineType({
       options: {
         hotspot: true,
       },
-      hidden: ({ parent }) => parent?.layout === 'food-menu',
+      hidden: ({ parent }) => parent?.layout === 'food-menu' || parent?.layout === 'spa-menu',
     }),
     defineField({
       name: 'foodTabs',
@@ -53,7 +53,7 @@ export default defineType({
               name: 'tabName',
               title: 'Tab Name',
               type: 'string',
-              description: 'e.g., "BREAKFAST", "BRUNCH", "LUNCH"',
+              description: 'e.g., "Breakfast", "Brunch", "Lunch"',
               validation: Rule => Rule.required(),
             }),
             defineField({
@@ -182,64 +182,105 @@ export default defineType({
       hidden: ({ parent }) => parent?.layout !== 'food-menu',
     }),
     defineField({
-      name: 'spaTreatments',
-      title: 'Spa Treatments',
+      name: 'spaTabs',
+      title: 'Spa Menu Tabs',
       type: 'array',
       of: [
         {
           type: 'object',
-          name: 'spaTreatment',
-          title: 'Spa Treatment',
+          name: 'spaTab',
+          title: 'Spa Menu Tab',
           fields: [
             defineField({
-              name: 'name',
-              title: 'Treatment Name',
+              name: 'tabName',
+              title: 'Tab Name',
               type: 'string',
+              description: 'e.g., "Massages", "Facials", "Wellness"',
               validation: Rule => Rule.required(),
             }),
             defineField({
-              name: 'description',
-              title: 'Description',
-              type: 'text',
-              validation: Rule => Rule.required(),
+              name: 'image',
+              title: 'Image',
+              type: 'image',
+              options: {
+                hotspot: true,
+              },
             }),
             defineField({
-              name: 'options',
-              title: 'Time & Price Options',
+              name: 'treatments',
+              title: 'Treatments',
               type: 'array',
               of: [
                 {
                   type: 'object',
-                  name: 'timePrice',
-                  title: 'Time & Price',
+                  name: 'spaTreatment',
+                  title: 'Spa Treatment',
                   fields: [
                     defineField({
-                      name: 'duration',
-                      title: 'Duration',
+                      name: 'name',
+                      title: 'Treatment Name',
                       type: 'string',
-                      description: 'e.g., "60 mins"',
+                      validation: Rule => Rule.required(),
                     }),
                     defineField({
-                      name: 'price',
-                      title: 'Price',
-                      type: 'number',
-                      validation: Rule => Rule.min(0),
+                      name: 'description',
+                      title: 'Description',
+                      type: 'richPortableText',
+                      validation: Rule => Rule.required(),
+                    }),
+                    defineField({
+                      name: 'options',
+                      title: 'Time & Price Options',
+                      type: 'array',
+                      of: [
+                        {
+                          type: 'object',
+                          name: 'timePrice',
+                          title: 'Time & Price',
+                          fields: [
+                            defineField({
+                              name: 'duration',
+                              title: 'Duration',
+                              type: 'string',
+                              description: 'e.g., "60 mins"',
+                            }),
+                            defineField({
+                              name: 'price',
+                              title: 'Price',
+                              type: 'number',
+                              validation: Rule => Rule.min(0),
+                            }),
+                          ],
+                        },
+                      ],
+                      validation: Rule => Rule.required().min(1),
                     }),
                   ],
+                  preview: {
+                    select: {
+                      title: 'name',
+                      price: 'options.0.price',
+                    },
+                    prepare({ title, price }) {
+                      return {
+                        title: title,
+                        subtitle: price ? `$${price}` : 'No pricing',
+                      }
+                    },
+                  },
                 },
               ],
-              validation: Rule => Rule.required().min(1),
             }),
           ],
           preview: {
             select: {
-              title: 'name',
-              price: 'options.0.price',
+              title: 'tabName',
+              image: 'image',
             },
-            prepare({ title, price }) {
+            prepare({ title, image }) {
               return {
-                title: title,
-                subtitle: price ? `From $${price}` : 'No pricing',
+                title: title || 'Untitled Tab',
+                media: image,
               }
             },
           },
