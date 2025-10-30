@@ -7,16 +7,17 @@ import { videoUrlFor } from '../sanity/utils/videoUrlBuilder'
 import { SanityImage, SanityVideo } from '../types/sanity'
 import { PortableText, PortableTextBlock } from '@portabletext/react'
 import { Link } from '../types/footerSettings'
-import { getLinkInfo } from '../utils/linkHelpers'
+import ButtonLink from './ButtonLink'
 import SplideCarousel from './SplideCarousel'
 import { Splide, SplideSlide } from '@splidejs/react-splide'
 import '@splidejs/splide/css'
 
 interface mediaTextSectionProps {
   id?: string
-  layout?: 'media-with-text-h5' | 'media-with-text-h4-body' | 'media-with-text-room-type' | 'media-with-text-h4-bullet-list' | 'media-with-text-h4-body-room-links' | 'media-with-text-h4-body-links'
+  layout?: 'media-with-text-h5' | 'media-with-text-h4-body' | 'media-with-text-room-type' | 'media-with-text-h4-bullet-list' | 'media-with-text-h4-body-room-links' | 'media-with-text-h4-body-links' | 'media-with-text-multiple-text-blocks'
   heading?: string
   body?: PortableTextBlock[]
+  textBlocks?: { header?: string; body?: PortableTextBlock[] }[]
   bulletList?: string[]
   buttons?: Link[]
   roomLink?: {
@@ -52,6 +53,7 @@ export default function MediaTextSection({
   layout = 'media-with-text-h4-body', 
   heading,
   body, 
+  textBlocks,
   bulletList,
   buttons, 
   roomLink,
@@ -193,20 +195,9 @@ export default function MediaTextSection({
 
             {buttons && buttons.length > 0 && (
               <div className={`media-text-buttons${buttons.length > 1 ? ' multiple-buttons' : ''}`}>
-                {buttons.map((button, index) => {
-                  const linkInfo = getLinkInfo(button)
-                  if (!linkInfo.text || !linkInfo.href) return null
-                  return (
-                    <a 
-                      key={index}
-                      href={linkInfo.href}
-                      className={`button button--${button.color || 'cream'}`}
-                      {...(button.linkType === 'external' && { target: '_blank', rel: 'noopener noreferrer' })}
-                    >
-                      {linkInfo.text}
-                    </a>
-                  )
-                })}
+                {buttons.map((button, index) => (
+                  <ButtonLink key={index} link={button} />
+                ))}
               </div>
             )}
           </div>
@@ -251,6 +242,66 @@ export default function MediaTextSection({
         </section>
       )}
 
+      {layout === 'media-with-text-multiple-text-blocks' && (
+        <section id={id} className={`media-text-section layout-${layout} align-${mediaAlignment} row-lg h-pad`}>
+          <div className="col-3-12_lg col-1">
+            {textBlocks && textBlocks.length > 0 && (
+              <div className="media-text-multiple-blocks">
+                {textBlocks.map((block, index) => (
+                  <div key={index} className="media-text-block">
+                    {block.header && (
+                      <h5 className="media-text-heading">{block.header}</h5>
+                    )}
+                    {block.body && (
+                      <div className="media-text-body">
+                        <PortableText value={block.body} />
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className="col-3-12_lg dummy-col col-2"></div>
+
+          <div className="col-6-12_lg col-3">
+            {mediaType === 'image' && images && images.length > 0 && (
+              <div className="media-wrap">
+                {images.length === 1 ? (
+                  <img 
+                    data-src={urlFor(images[0]).url()} 
+                    alt="" 
+                    className="lazy full-bleed-image"
+                  />
+                ) : (
+                  <SplideCarousel 
+                    images={images.map(image => ({ url: urlFor(image).url(), alt: "" }))}
+                    onPrevious={() => {}}
+                    onNext={() => {}}
+                  />
+                )}
+              </div>
+            )}
+            {mediaType === 'video' && video && (
+              <div className="media-wrap">
+                <video
+                  ref={videoRef1}
+                  src={videoUrlFor(video)}
+                  poster={videoPlaceholder ? urlFor(videoPlaceholder).url() : undefined}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="metadata"
+                />
+                <div className="loading-overlay" />
+              </div>
+            )}
+          </div>
+        </section>
+      )}
+
       {layout === 'media-with-text-room-type' && roomLink && (
         <section id={id} className={`media-text-section room-type layout-${mediaAlignment} align-${mediaAlignment} row-lg h-pad`}>
           <div className="col-3-12_lg col-1">
@@ -276,12 +327,10 @@ export default function MediaTextSection({
             )}
 
             <div className="media-text-buttons">
-              <a 
-                href={`/rooms/${roomLink.slug}`}
-                className="button button--cream"
-              >
-                View Room Details
-              </a>
+              <ButtonLink 
+                link={{ linkType: 'internal', label: 'View Room Details', pageLink: { slug: `rooms/${roomLink.slug}` } }} 
+                fallbackColor="cream"
+              />
 
               {/* todo: add book room button */}
             </div>
@@ -345,20 +394,9 @@ export default function MediaTextSection({
 
               {buttons && buttons.length > 0 && (
                 <div className={`media-text-buttons${buttons.length > 1 ? ' multiple-buttons' : ''}`}>
-                  {buttons.map((button, index) => {
-                    const linkInfo = getLinkInfo(button)
-                    if (!linkInfo.text || !linkInfo.href) return null
-                    return (
-                      <a 
-                        key={index}
-                        href={linkInfo.href}
-                        className={`button button--${button.color || 'cream'}`}
-                        {...(button.linkType === 'external' && { target: '_blank', rel: 'noopener noreferrer' })}
-                      >
-                        {linkInfo.text}
-                      </a>
-                    )
-                  })}
+                  {buttons.map((button, index) => (
+                    <ButtonLink key={index} link={button} />
+                  ))}
                 </div>
               )}
             </div>
@@ -429,12 +467,10 @@ export default function MediaTextSection({
                               />
 
                               <div className="media-text-buttons">
-                                <a 
-                                  href={`/rooms/${room.slug}`}
-                                  className="button button--cream"
-                                >
-                                  View Details
-                                </a>
+                                <ButtonLink 
+                                  link={{ linkType: 'internal', label: 'View Details', pageLink: { slug: `rooms/${room.slug}` } }}
+                                  fallbackColor="cream"
+                                />
 
                                 {/* todo: hook up book room button */}
                                 <div className="button button--orange">
@@ -498,12 +534,10 @@ export default function MediaTextSection({
                             <div className="loading-overlay" />
 
                             <div className="media-text-buttons">
-                              <a 
-                                href={`/rooms/${room.slug}`}
-                                className="button button--cream"
-                              >
-                                View Details
-                              </a>
+                              <ButtonLink 
+                                link={{ linkType: 'internal', label: 'View Details', pageLink: { slug: `rooms/${room.slug}` } }}
+                                fallbackColor="cream"
+                              />
 
                               {/* todo: hook up book room button */}
                               <div className="button button--orange">
@@ -547,20 +581,9 @@ export default function MediaTextSection({
 
               {buttons && buttons.length > 0 && (
                 <div className={`media-text-buttons${buttons.length > 1 ? ' multiple-buttons' : ''}`}>
-                  {buttons.map((button, index) => {
-                    const linkInfo = getLinkInfo(button)
-                    if (!linkInfo.text || !linkInfo.href) return null
-                    return (
-                      <a 
-                        key={index}
-                        href={linkInfo.href}
-                        className={`button button--${button.color || 'cream'}`}
-                        {...(button.linkType === 'external' && { target: '_blank', rel: 'noopener noreferrer' })}
-                      >
-                        {linkInfo.text}
-                      </a>
-                    )
-                  })}
+                  {buttons.map((button, index) => (
+                    <ButtonLink key={index} link={button} />
+                  ))}
                 </div>
               )}
             </div>
@@ -620,20 +643,9 @@ export default function MediaTextSection({
 
                         {link.buttons && link.buttons.length > 0 && (
                           <div className={`media-text-buttons${link.buttons.length > 1 ? ' multiple-buttons' : ''}`}>
-                            {link.buttons.map((button, buttonIndex) => {
-                              const linkInfo = getLinkInfo(button)
-                              if (!linkInfo.text || !linkInfo.href) return null
-                              return (
-                                <a 
-                                  key={buttonIndex}
-                                  href={linkInfo.href}
-                                  className={`button button--${button.color || 'cream'}`}
-                                  {...(button.linkType === 'external' && { target: '_blank', rel: 'noopener noreferrer' })}
-                                >
-                                  {linkInfo.text}
-                                </a>
-                              )
-                            })}
+                            {link.buttons.map((button, buttonIndex) => (
+                              <ButtonLink key={buttonIndex} link={button} />
+                            ))}
                           </div>
                         )}
                       </div>

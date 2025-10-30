@@ -4,6 +4,7 @@ import { SanityImageSource } from '@sanity/image-url/lib/types/types'
 import { PortableText, PortableTextBlock } from '@portabletext/react'
 import { Link } from '../types/footerSettings'
 import { getLinkInfo } from '../utils/linkHelpers'
+import ButtonLink from './ButtonLink'
 
 interface Spec {
   body?: string
@@ -94,19 +95,9 @@ export default function Hero({ id, layout = 'full-bleed', heading, body, image, 
                   </div>
                 )}
                 
-                {button && (() => {
-                  const linkInfo = getLinkInfo(button)
-                  if (!linkInfo.text || !linkInfo.href) return null
-                  return (
-                    <a 
-                      href={linkInfo.href}
-                      className="button button--outline"
-                      {...(button.linkType === 'external' && { target: '_blank', rel: 'noopener noreferrer' })}
-                    >
-                      {linkInfo.text}
-                    </a>
-                  )
-                })()}
+                {button && (
+                  <ButtonLink link={button} fallbackColor="cream-outline" />
+                )}
               </div>
             )}
           </div>

@@ -48,6 +48,7 @@ export default defineType({
         list: [
           { title: 'Cream', value: 'cream' },
           { title: 'Orange', value: 'orange' },
+          { title: 'Outline', value: 'outline' },
         ],
       },
       initialValue: 'cream',

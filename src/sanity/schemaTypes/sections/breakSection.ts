@@ -50,8 +50,8 @@ export default defineType({
       hidden: ({ parent }) => parent?.layout !== 'split',
     }),
     defineField({
-      name: 'backgroundColour',
-      title: 'Background Colour',
+      name: 'backgroundColor',
+      title: 'Background Color',
       type: 'string',
       options: {
         list: [

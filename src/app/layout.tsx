@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 import "./globals.css";
-import OverflowController from "../components/OverflowController";
 import { client } from "../../sanity.client";
 import { metadataQuery } from "../sanity/lib/queries";
 import { urlFor } from "../sanity/utils/imageUrlBuilder";
+
+export const revalidate = 0
 
 // Generate metadata dynamically from Sanity CMS
 export async function generateMetadata(): Promise<Metadata> {
@@ -223,7 +224,6 @@ export default function RootLayout({
             `
           }}
         />
-        <OverflowController />
         {children}
       </body>
     </html>

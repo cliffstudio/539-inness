@@ -10,7 +10,7 @@ export type Link = {
     slug?: string
   }
   jumpLink?: string
-  color?: 'cream' | 'orange'
+  color?: 'cream' | 'orange' | 'outline'
 }
 
 export type Header = {

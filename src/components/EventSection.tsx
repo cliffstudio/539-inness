@@ -2,6 +2,7 @@
 import { PortableText, PortableTextBlock } from '@portabletext/react'
 import { urlFor } from '../sanity/utils/imageUrlBuilder'
 import { SanityImage } from '../types/sanity'
+import ButtonLink from './ButtonLink'
 
 interface EventSectionProps {
   id?: string
@@ -80,15 +81,17 @@ export default function EventSection({
                 <div className="loading-overlay" />
 
                 <div className="event-buttons">
-                  <a href={`/events/${event.slug}`} className="button button--cream">
-                    Event Information
-                  </a>
+                  <ButtonLink 
+                    link={{ linkType: 'internal', label: 'Event Information', pageLink: { slug: `events/${event.slug || ''}` }, color: 'cream' }}
+                    fallbackColor="cream"
+                  />
 
                   {event.bookingHref && (
                     <div className="event-booking-link">
-                      <a href={event.bookingHref} className="button button--orange" target="_blank" rel="noopener noreferrer">
-                        Book Event
-                      </a>
+                      <ButtonLink 
+                        link={{ linkType: 'external', label: 'Book Event', href: event.bookingHref, color: 'orange' }}
+                        fallbackColor="orange"
+                      />
                     </div>
                   )}
                 </div>

@@ -5,6 +5,8 @@ import BodyClassProvider from '../../components/BodyClassProvider'
 import HeroSectionHomepage from '../../components/HeroSectionHomepage'
 import FlexibleContent from '../../components/FlexibleContent'
 
+export const revalidate = 0
+
 export default async function Home() {
   const page = await client.fetch(homepageQuery)
   

@@ -22,6 +22,7 @@ export default defineType({
           { title: 'Media with Text (h4 & bullet list)', value: 'media-with-text-h4-bullet-list' },
           { title: 'Media with Text (h4, body & links)', value: 'media-with-text-h4-body-links' },
           { title: 'Media with Text (h4, body & room links)', value: 'media-with-text-h4-body-room-links' },
+          { title: 'Media with Text (multiple text blocks)', value: 'media-with-text-multiple-text-blocks' },
         ],
       },
       initialValue: 'media-with-text-h4-body',
@@ -37,7 +38,29 @@ export default defineType({
       title: 'Body',
       type: 'array',
       of: [{ type: 'block' }],
-      hidden: ({ parent }) => parent?.layout === 'media-with-text-room-type' || parent?.layout === 'media-with-text-h4-bullet-list',
+      hidden: ({ parent }) => parent?.layout === 'media-with-text-room-type' || parent?.layout === 'media-with-text-h4-bullet-list' || parent?.layout === 'media-with-text-multiple-text-blocks',
+    }),
+    defineField({
+      name: 'textBlocks',
+      title: 'Text Blocks',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          name: 'textBlock',
+          fields: [
+            { name: 'header', title: 'Header', type: 'string' },
+            { name: 'body', title: 'Body', type: 'array', of: [{ type: 'block' }] },
+          ],
+          preview: {
+            select: { title: 'header' },
+            prepare({ title }) {
+              return { title: title || 'Untitled Text Block' }
+            },
+          },
+        },
+      ],
+      hidden: ({ parent }) => parent?.layout !== 'media-with-text-multiple-text-blocks',
     }),
     defineField({
       name: 'bulletList',
@@ -51,7 +74,7 @@ export default defineType({
       title: 'Buttons',
       type: 'array',
       of: [{ type: 'link' }],
-      hidden: ({ parent }) => parent?.layout !== 'media-with-text-h4-body' && parent?.layout !== 'media-with-text-h4-body-room-links' && parent?.layout !== 'media-with-text-h4-body-links',
+      hidden: ({ parent }) => parent?.layout !== 'media-with-text-h4-body' && parent?.layout !== 'media-with-text-h4-body-room-links' && parent?.layout !== 'media-with-text-h4-body-links' && parent?.layout !== 'media-with-text-h4-bullet-list',
     }),
     defineField({
       name: 'roomLink',
@@ -135,7 +158,7 @@ export default defineType({
       return {
         title: 'Media & Text Section',
         media: mediaType === 'video' ? videoPlaceholder : media?.[0],
-        subtitle: layout === 'media-with-text-room-type' ? 'Room Type' : layout === 'media-with-text-h5' ? body?.[0]?.children?.[0]?.text || 'No Body' : heading || 'No Heading',
+        subtitle: layout === 'media-with-text-room-type' ? 'Room Type' : layout === 'media-with-text-h5' ? body?.[0]?.children?.[0]?.text || 'No Body' : layout === 'media-with-text-multiple-text-blocks' ? 'Multiple Text Blocks' : heading || 'No Heading',
       }
     }
   }

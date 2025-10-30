@@ -4,6 +4,8 @@ import { client } from '../../../../sanity.client'
 import { pageSlugsQuery } from '../../../sanity/lib/queries'
 import { notFound } from 'next/navigation'
 
+export const revalidate = 0
+
 interface PageProps {
   params: Promise<{
     slug: string[]

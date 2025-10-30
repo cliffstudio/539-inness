@@ -4,6 +4,7 @@ import { SanityImageSource } from '@sanity/image-url/lib/types/types'
 import { PortableText, PortableTextBlock } from '@portabletext/react'
 import { Link } from '../types/footerSettings'
 import { getLinkInfo } from '../utils/linkHelpers'
+import ButtonLink from './ButtonLink'
 
 interface BreakProps {
   id?: string
@@ -13,10 +14,11 @@ interface BreakProps {
   body?: PortableTextBlock[]
   image?: SanityImageSource
   button?: Link
-  backgroundColour?: 'black' | 'green' | 'orange'
+  backgroundColor?: 'black' | 'green' | 'orange'
 }
 
-export default function Hero({ id, layout = 'full-bleed', subHeading, heading, body, image, button, backgroundColour = 'black' }: BreakProps) {
+export default function Hero({ id, layout = 'full-bleed', subHeading, heading, body, image, button, backgroundColor }: BreakProps) {
+  const resolvedBackgroundColor = backgroundColor ?? 'black'
   return (
     <>
       {layout === 'full-bleed' && (
@@ -49,7 +51,7 @@ export default function Hero({ id, layout = 'full-bleed', subHeading, heading, b
       )}
 
       {layout === 'split' && (
-        <section id={id} className={`break-section layout-2 row-lg h-pad background-${backgroundColour === 'black' ? 'black' : backgroundColour === 'green' ? 'green' : 'orange'}`}>
+        <section id={id} className={`break-section layout-2 row-lg h-pad background-${resolvedBackgroundColor === 'black' ? 'black' : resolvedBackgroundColor === 'green' ? 'green' : 'orange'}`}>
           <div className="col-6-12_lg">
             <div className="break-content">
               <h6>{subHeading}</h6>
@@ -66,19 +68,9 @@ export default function Hero({ id, layout = 'full-bleed', subHeading, heading, b
                     </div>
                   )}
 
-                  {button && (() => {
-                    const linkInfo = getLinkInfo(button)
-                    if (!linkInfo.text || !linkInfo.href) return null
-                    return (
-                      <a 
-                        href={linkInfo.href}
-                        className="button button--outline"
-                        {...(button.linkType === 'external' && { target: '_blank', rel: 'noopener noreferrer' })}
-                      >
-                        {linkInfo.text}
-                      </a>
-                    )
-                  })()}
+                  {button && (
+                    <ButtonLink link={button} fallbackColor="cream-outline" />
+                  )}
                 </div>
               )}
             </div>

@@ -60,6 +60,10 @@ const mediaTextSectionFragment = groq`{
   layout,
   heading,
   body,
+  textBlocks[] {
+    header,
+    body
+  },
   bulletList,
   buttons[] ${linkFragment},
   mediaType,
@@ -97,7 +101,8 @@ const breakSectionFragment = groq`{
   heading,
   body,
   image ${imageFragment},
-  button ${linkFragment}
+  button ${linkFragment},
+  backgroundColor
 }`
 
 const carouselSectionFragment = groq`{

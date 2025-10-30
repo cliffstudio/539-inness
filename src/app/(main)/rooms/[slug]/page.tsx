@@ -4,6 +4,8 @@ import { roomPostQuery, roomPostsQuery } from '../../../../sanity/lib/queries'
 import RoomPost from '../../../../components/RoomPost'
 import BodyClassProvider from '../../../../components/BodyClassProvider'
 
+export const revalidate = 0
+
 interface RoomPostPageProps {
   params: Promise<{
     slug: string

@@ -16,16 +16,7 @@
   font-style: normal;
 }
 
-/* Overflow control - hidden by default, enabled by JavaScript */
-html,
-html body {
-  overflow: hidden;
-}
-
-html.scroll-enabled,
-html.scroll-enabled body {
-  overflow: auto;
-}
+/* Use default browser scrolling */
 
 /* Smooth scrolling for hash links */
 html {

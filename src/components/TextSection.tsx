@@ -2,7 +2,7 @@
 
 import { PortableText, PortableTextBlock } from '@portabletext/react'
 import { Link } from '../types/footerSettings'
-import { getLinkInfo } from '../utils/linkHelpers'
+import ButtonLink from './ButtonLink'
 
 interface textSectionProps {
   id?: string
@@ -17,7 +17,7 @@ export default function TextSection({
   body, 
   button, 
 }: textSectionProps) {
-  const linkInfo = button ? getLinkInfo(button) : null
+  const linkInfo = button ? { has: true } : null
   
   return (
     <section id={id} className="text-section h-pad">
@@ -32,13 +32,8 @@ export default function TextSection({
           </div>
         )}
 
-        {linkInfo && linkInfo.href && linkInfo.text && button && (
-          <a 
-            href={linkInfo.href}
-            className="button button--orange"
-            {...(button.linkType === 'external' && { target: '_blank', rel: 'noopener noreferrer' })}>
-            {linkInfo.text}
-          </a>
+        {linkInfo && button && (
+          <ButtonLink link={button} fallbackColor="orange" />
         )}
       </div>
     </section>

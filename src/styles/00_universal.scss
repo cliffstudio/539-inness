@@ -40,7 +40,9 @@
   }
 
   &--outline {
-    border: 1px solid $colour-cream;
+    border: 1px solid $colour-black;
+    color: $colour-black;
+    background-color: transparent;
 
     &:hover {
       border-color: $colour-cream;
@@ -182,11 +184,6 @@
   padding-top: get-rem-desktop(200);
   padding-bottom: get-rem-desktop(200);
 
-  &.layout-media-with-text-h4-bullet-list {
-    padding-top: get-rem-desktop(120);
-    padding-bottom: get-rem-desktop(120);
-  }
-
   &.align-left,
   .align-left {
     .col-1 {
@@ -225,7 +222,7 @@
     .media-text-bullet-list {
       .media-text-bullet-list-item {
         @include flex;
-        @include align-items(center);
+        @include align-items(flex-start);
         column-gap: get-rem-desktop(24);
         border-bottom: 1px solid $colour-cream;
         padding-top: get-rem-desktop(11);
@@ -239,6 +236,7 @@
           width: get-rem-desktop(12);
           stroke: $colour-orange;
           fill: none;
+          margin-top: 0.25em;
         }
       }
     }
@@ -340,6 +338,15 @@
       height: 100%;
       object-fit: cover;
     }
+  }
+}
+
+.media-text-section.layout-media-with-text-h4-bullet-list {
+  padding-top: get-rem-desktop(120);
+  padding-bottom: get-rem-desktop(120);
+
+  .media-text-buttons {
+    margin-top: get-rem-desktop(24);
   }
 }
 
@@ -481,6 +488,22 @@
   }
 }
 
+.media-text-section.layout-media-with-text-multiple-text-blocks {
+  position: relative;
+
+  .media-text-multiple-blocks {
+    @include flex;
+    @include flex-direction(column);
+    row-gap: get-rem-desktop(360);
+  }
+  
+  .col-3 {
+    height: fit-content;
+    position: sticky;
+    top: get-rem-desktop(124);
+  }
+}
+
 // BREAK SECTION ------------------
 
 .break-section {
@@ -540,6 +563,18 @@
 
   &.background-green {
     background-color: $colour-green;
+    color: $colour-cream;
+
+    .button {
+      &--outline {
+        border-color: $colour-cream;
+        color: $colour-cream;
+
+        &:hover {
+          color: $colour-black;
+        }
+      }
+    }
   }
 
   &.background-orange {
@@ -758,7 +793,7 @@
   }
 
   .media-wrap {
-    aspect-ratio: 377 / 500;
+    aspect-ratio: 774 / 500;
     position: relative;
     margin-bottom: get-rem-desktop(24);
     position: relative;

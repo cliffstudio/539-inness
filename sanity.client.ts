@@ -1,10 +1,10 @@
 // sanity.client.ts
 import { createClient } from 'next-sanity'
-import { projectId, dataset } from './src/sanity/env'
+import { projectId, dataset, apiVersion } from './src/sanity/env'
 
 export const client = createClient({
   projectId,
   dataset,
-  apiVersion: '2023-10-01',
-  useCdn: false, // Set to false to get latest data during development
+  apiVersion,
+  useCdn: false,
 })
