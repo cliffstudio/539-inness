@@ -3,7 +3,6 @@ import { urlFor } from '../sanity/utils/imageUrlBuilder'
 import { SanityImageSource } from '@sanity/image-url/lib/types/types'
 import { PortableText, PortableTextBlock } from '@portabletext/react'
 import { Link } from '../types/footerSettings'
-import { getLinkInfo } from '../utils/linkHelpers'
 import ButtonLink from './ButtonLink'
 
 interface BreakProps {
@@ -69,7 +68,7 @@ export default function Hero({ id, layout = 'full-bleed', subHeading, heading, b
                   )}
 
                   {button && (
-                    <ButtonLink link={button} fallbackColor="cream-outline" />
+                    <ButtonLink link={button} fallbackColor="outline" />
                   )}
                 </div>
               )}
