@@ -1,4 +1,5 @@
 import { defineType, defineField } from 'sanity'
+import { imageSizeValidation } from '../utils/imageValidation'
 
 export default defineType({
   name: 'heroSection',
@@ -37,6 +38,7 @@ export default defineType({
       name: 'image',
       title: 'Image',
       type: 'image',
+      validation: imageSizeValidation,
     }),
     defineField({
       name: 'specs',

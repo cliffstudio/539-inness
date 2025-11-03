@@ -1,5 +1,6 @@
 import { defineType, defineField } from 'sanity'
 import { HomeIcon } from '@sanity/icons'
+import { imageSizeValidation } from './utils/imageValidation'
 
 export const roomType = defineType({
   name: 'room',
@@ -45,6 +46,7 @@ export const roomType = defineType({
       title: 'Image',
       type: 'image',
       fieldset: 'heroSection',
+      validation: imageSizeValidation,
     }),
     defineField({
       name: 'description',

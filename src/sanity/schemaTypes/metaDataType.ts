@@ -1,3 +1,5 @@
+import { imageSizeValidation } from './utils/imageValidation'
+
 export const metaDataType = {
   name: 'metaData',
   title: 'Meta Data',
@@ -25,6 +27,7 @@ export const metaDataType = {
       options: {
         hotspot: true,
       },
+      validation: imageSizeValidation,
     },
   ],
 }

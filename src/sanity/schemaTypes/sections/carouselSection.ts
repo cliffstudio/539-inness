@@ -1,4 +1,5 @@
 import { defineType, defineField } from 'sanity'
+import { imageSizeValidation } from '../utils/imageValidation'
 
 export default defineType({
   name: 'carouselSection',
@@ -9,7 +10,10 @@ export default defineType({
       name: 'images',
       title: 'Images',
       type: 'array',
-      of: [{ type: 'image' }],
+      of: [{ 
+        type: 'image',
+        validation: imageSizeValidation,
+      }],
     }),
   ],
   preview: {

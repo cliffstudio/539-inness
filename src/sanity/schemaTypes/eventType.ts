@@ -1,5 +1,6 @@
 import { defineType, defineField } from 'sanity'
 import { CalendarIcon } from '@sanity/icons'
+import { imageSizeValidation } from './utils/imageValidation'
 
 export const eventType = defineType({
   name: 'event',
@@ -75,6 +76,7 @@ export const eventType = defineType({
       name: 'image',
       title: 'Image',
       type: 'image',
+      validation: imageSizeValidation,
     }),
     defineField({
       name: 'contentBlocks',

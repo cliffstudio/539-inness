@@ -1,5 +1,6 @@
 import { defineType, defineField } from 'sanity'
 import { DocumentTextIcon } from '@sanity/icons'
+import { imageSizeValidation } from './utils/imageValidation'
 
 export const pageType = defineType({
   name: 'page',
@@ -62,6 +63,7 @@ export const pageType = defineType({
       type: 'image',
       fieldset: 'heroSection',
       hidden: ({ parent }) => parent?.pageType !== 'homepage' || parent?.mediaType !== 'image',
+      validation: imageSizeValidation,
     }),
     defineField({ 
       name: 'video', 
@@ -79,6 +81,7 @@ export const pageType = defineType({
       type: 'image',
       fieldset: 'heroSection',
       hidden: ({ parent }) => parent?.pageType !== 'homepage' || parent?.mediaType !== 'video',
+      validation: imageSizeValidation,
     }),
 
     // Flexible content blocks

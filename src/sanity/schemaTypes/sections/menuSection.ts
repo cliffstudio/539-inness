@@ -1,4 +1,5 @@
 import { defineType, defineField } from 'sanity'
+import { imageSizeValidation } from '../utils/imageValidation'
 
 export default defineType({
   name: 'menuSection',
@@ -38,6 +39,7 @@ export default defineType({
         hotspot: true,
       },
       hidden: ({ parent }) => parent?.layout === 'food-menu' || parent?.layout === 'spa-menu',
+      validation: imageSizeValidation,
     }),
     defineField({
       name: 'foodTabs',
@@ -69,6 +71,7 @@ export default defineType({
               options: {
                 hotspot: true,
               },
+              validation: imageSizeValidation,
             }),
             defineField({
               name: 'categories',
@@ -205,6 +208,7 @@ export default defineType({
               options: {
                 hotspot: true,
               },
+              validation: imageSizeValidation,
             }),
             defineField({
               name: 'treatments',

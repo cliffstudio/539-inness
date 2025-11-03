@@ -1,4 +1,5 @@
 import { defineType, defineField } from 'sanity'
+import { imageSizeValidation } from '../utils/imageValidation'
 
 export default defineType({
   name: 'mediaTextSection',
@@ -93,7 +94,10 @@ export default defineType({
       name: 'images',
       title: 'Images',
       type: 'array',
-      of: [{ type: 'image' }],
+      of: [{ 
+        type: 'image',
+        validation: imageSizeValidation,
+      }],
       hidden: ({ parent }) => parent?.mediaType !== 'image'
     }),
     defineField({ 
@@ -109,7 +113,8 @@ export default defineType({
       name: 'videoPlaceholder',
       title: 'Video Placeholder',
       type: 'image',
-      hidden: ({ parent }) => parent?.mediaType !== 'video'
+      hidden: ({ parent }) => parent?.mediaType !== 'video',
+      validation: imageSizeValidation,
     }),
     defineField({
       name: 'mediaAlignment',
