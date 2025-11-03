@@ -1,5 +1,6 @@
 import { defineType, defineField } from 'sanity'
 import { imageSizeValidation } from '../utils/imageValidation'
+import { videoSizeValidation } from '../utils/videoValidation'
 
 export default defineType({
   name: 'mediaTextSection',
@@ -105,9 +106,10 @@ export default defineType({
       title: 'Video',
       type: 'file', 
       options: { 
-        accept: 'video/*' 
+        accept: 'video/mp4,.mp4' 
       },
-      hidden: ({ parent }) => parent?.mediaType !== 'video'
+      hidden: ({ parent }) => parent?.mediaType !== 'video',
+      validation: videoSizeValidation,
     }),
     defineField({
       name: 'videoPlaceholder',

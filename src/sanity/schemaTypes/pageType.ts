@@ -1,6 +1,7 @@
 import { defineType, defineField } from 'sanity'
 import { DocumentTextIcon } from '@sanity/icons'
 import { imageSizeValidation } from './utils/imageValidation'
+import { videoSizeValidation } from './utils/videoValidation'
 
 export const pageType = defineType({
   name: 'page',
@@ -70,10 +71,11 @@ export const pageType = defineType({
       title: 'Video',
       type: 'file', 
       options: { 
-        accept: 'video/*' 
+        accept: 'video/mp4,.mp4' 
       },
       fieldset: 'heroSection',
       hidden: ({ parent }) => parent?.pageType !== 'homepage' || parent?.mediaType !== 'video',
+      validation: videoSizeValidation,
     }),
     defineField({
       name: 'videoPlaceholder',
