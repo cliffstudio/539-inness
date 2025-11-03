@@ -5,6 +5,7 @@
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const imageSizeValidation = (Rule: any) =>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   Rule.custom(async (value: any, context: any) => {
     if (!value?.asset?._ref) {
       return true // Allow empty/undefined values (handle required separately)
@@ -45,4 +46,3 @@ export const imageSizeValidation = (Rule: any) =>
       return true
     }
   })
-

@@ -74,7 +74,7 @@ export default function ActivitySection({
   }
   
   // When using activities array, determine grid column class based on layout and count
-  const getGridColumnClass = (index: number) => {
+  const getGridColumnClass = () => {
     if (layout === 'single-activity') {
       return 'col-12-12_lg'
     } else if (layout === '2-activities') {
@@ -122,10 +122,10 @@ export default function ActivitySection({
       )}
 
       <div className={`row-lg activity-grid layout-${layout}`}>
-        {activities.map((activity, index) => (
+        {activities.map((activity) => (
           <div 
             key={activity._id} 
-            className={`activity-item ${getGridColumnClass(index)}`}
+            className={`activity-item ${getGridColumnClass()}`}
           >
             {activity.image && (
               <div className="media-wrap">

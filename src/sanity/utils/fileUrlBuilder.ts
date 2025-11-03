@@ -3,8 +3,8 @@ import { dataset, projectId } from '../env'
 export type SanityFile = {
   _type?: 'file'
   asset?: {
-    _ref: string
-    _type?: 'reference'
+    _ref?: string
+    _type?: string
     originalFilename?: string
   }
 }
