@@ -12,7 +12,7 @@ export default defineType({
       type: 'string',
       initialValue: 'internal',
       options: { 
-        list: ['internal','external', 'jump'] 
+        list: ['internal','external', 'jump', 'file'] 
       }
     }),
     defineField({ 
@@ -31,7 +31,7 @@ export default defineType({
       title: 'Page Link',
       type: 'reference',
       to: [{ type: 'page' }],
-      hidden: ({ parent }) => parent?.linkType === 'external' || parent?.linkType === 'jump'
+      hidden: ({ parent }) => parent?.linkType === 'external' || parent?.linkType === 'jump' || parent?.linkType === 'file'
     }),
     defineField({
       name: 'jumpLink',
@@ -39,6 +39,13 @@ export default defineType({
       type: 'string',
       description: 'The ID of the element to jump to eg. cabin',
       hidden: ({ parent }) => parent?.linkType !== 'jump'
+    }),
+    defineField({
+      name: 'file',
+      title: 'File',
+      type: 'file',
+      description: 'Upload a file to link to',
+      hidden: ({ parent }) => parent?.linkType !== 'file'
     }),
     defineField({
       name: 'color',
@@ -61,8 +68,9 @@ export default defineType({
       label: 'label',
       pageTitle: 'pageLink.title',
       jumpLink: 'jumpLink',
+      fileName: 'file.asset.originalFilename',
     },
-    prepare({ linkType, url, label, pageTitle, jumpLink }) {
+    prepare({ linkType, url, label, pageTitle, jumpLink, fileName }) {
       let title = ''
       let subtitle = ''
       
@@ -72,6 +80,9 @@ export default defineType({
       } else if (linkType === 'jump') {
         title = label || 'Jump Link'
         subtitle = jumpLink || 'No Jump Link'
+      } else if (linkType === 'file') {
+        title = label || 'File Link'
+        subtitle = fileName || 'No File Selected'
       } else {
         title = label || 'Internal Link'
         subtitle = pageTitle || 'No Page Selected'

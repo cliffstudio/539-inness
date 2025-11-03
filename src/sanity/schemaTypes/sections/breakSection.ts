@@ -40,17 +40,17 @@ export default defineType({
       of: [{ type: 'block' }],
     }),
     defineField({
+      name: 'button',
+      title: 'Button',
+      type: 'link',
+      hidden: ({ parent }) => parent?.layout !== 'split',
+    }),
+    defineField({
       name: 'image',
       title: 'Image',
       type: 'image',
       description: 'Maximum file size: 500KB.',
       validation: imageSizeValidation,
-    }),
-    defineField({
-      name: 'button',
-      title: 'Button',
-      type: 'link',
-      hidden: ({ parent }) => parent?.layout !== 'split',
     }),
     defineField({
       name: 'backgroundColor',

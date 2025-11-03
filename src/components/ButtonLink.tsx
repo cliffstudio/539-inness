@@ -26,6 +26,7 @@ export default function ButtonLink({ link, className = '', fallbackColor = 'crea
       href={href}
       className={`button ${colorClass}${className ? ` ${className}` : ''}`}
       {...(link.linkType === 'external' && { target: '_blank', rel: 'noopener noreferrer' })}
+      {...(link.linkType === 'file' && { target: '_blank', rel: 'noopener noreferrer', download: link.file?.asset?.originalFilename })}
     >
       {text}
     </a>

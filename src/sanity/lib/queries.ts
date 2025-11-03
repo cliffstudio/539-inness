@@ -28,6 +28,13 @@ const linkFragment = groq`{
   href,
   jumpLink,
   color,
+  file {
+    asset {
+      _ref,
+      _type,
+      originalFilename
+    }
+  },
   pageLink {
     _ref,
     _type,
