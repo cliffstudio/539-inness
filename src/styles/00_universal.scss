@@ -13,6 +13,38 @@
   // }
 }
 
+.button-wrap {
+  .button {
+    width: 100%;
+  }
+
+  &--multiple-buttons {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: get-rem-desktop(12);
+  }
+
+  &--overlay-media {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    padding: get-rem-desktop(12);
+    z-index: 10;
+    width: 100%;
+    opacity: 0;
+    will-change: opacity;
+    @include transition (opacity 400ms cubic-bezier(0.25,0.1,0.25,1));
+  }
+}
+
+.media-wrap {
+  &:hover {
+    .button-wrap--overlay-media {
+      opacity: 1;
+    }
+  }
+}
+
 .button {
   display: inline-block;
   padding: get-rem-desktop(10.5) get-rem-desktop(16);
@@ -241,18 +273,8 @@
       }
     }
   
-    .media-text-buttons {
+    .button-wrap {
       margin-top: get-rem-desktop(48);
-
-      .button {
-        width: 100%;
-      }
-
-      &.multiple-buttons {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        column-gap: get-rem-desktop(24);
-      }
     }
   }
 
@@ -345,7 +367,7 @@
   padding-top: get-rem-desktop(120);
   padding-bottom: get-rem-desktop(120);
 
-  .media-text-buttons {
+  .button-wrap {
     margin-top: get-rem-desktop(24);
   }
 }
@@ -386,7 +408,7 @@
   row-gap: get-rem-desktop(20);
   
   .col-1 {
-    .media-text-buttons {
+    .button-wrap {
       margin-top: get-rem-desktop(24);
     }
   }
@@ -396,12 +418,6 @@
       margin-bottom: get-rem-desktop(24);
       overflow: hidden;
       position: relative;
-
-      &:hover {
-        .media-text-buttons {
-          opacity: 1;
-        }
-      }
     }
 
     .media-text-heading {
@@ -410,28 +426,6 @@
 
     .media-text-body {
       max-width: get-rem-desktop(700);
-    }
-
-    .media-text-buttons {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      padding: get-rem-desktop(12);
-      z-index: 10;
-      width: 100%;
-      opacity: 0;
-      will-change: opacity;
-      @include transition (opacity 400ms cubic-bezier(0.25,0.1,0.25,1));
-
-      &.multiple-buttons {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        column-gap: get-rem-desktop(12);
-      }
-
-      .button {
-        width: 100%;
-      }
     }
   }
 }
@@ -448,12 +442,6 @@
   .media-text-link {
     .media-wrap {
       aspect-ratio: 377 / 500;
-    }
-
-    .media-text-buttons {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      column-gap: get-rem-desktop(12);
     }
   }
 
@@ -794,13 +782,69 @@
   }
 }
 
-// EVENT SECTION ------------------
+// ACTIVITY SECTION ------------------
 
-.event-section {
+.activity-filter {
+  @include flex;
+  @include justify-content(space-between);
+  @include align-items(center);
+  padding-top: get-rem-desktop(80);
+  padding-bottom: get-rem-desktop(100);
+
+  .activity-filter-options {
+    @include flex;
+    column-gap: get-rem-desktop(24);
+
+    .activity-filter-option {
+      @include flex;
+      @include align-items(center);
+      cursor: pointer;
+      column-gap: get-rem-desktop(8);
+      @include transition(all 400ms cubic-bezier(0.25,0.1,0.25,1));
+
+      .activity-filter-box {
+        width: get-rem-desktop(28);
+        height: get-rem-desktop(28);
+        border: 1px solid $colour-black;
+        padding: get-rem-desktop(5);
+        @include transition(all 400ms cubic-bezier(0.25,0.1,0.25,1));
+
+        .activity-filter-box-inner {
+          width: 100%;
+          height: 100%;
+          background-color: transparent;
+          @include transition(all 400ms cubic-bezier(0.25,0.1,0.25,1));
+        }
+      }
+
+      span:not(.activity-filter-box) {
+        color: $colour-black;
+        text-transform: capitalize;
+        @include transition(all 400ms cubic-bezier(0.25,0.1,0.25,1));
+      }
+
+      &.active {
+        .activity-filter-box {
+          border-color: $colour-orange;
+          
+          .activity-filter-box-inner {
+            background-color: $colour-orange;
+          }
+        }
+
+        span:not(.activity-filter-box) {
+          color: $colour-black;
+        }
+      }
+    }
+  }
+}
+
+.activity-section {
   padding-top: get-rem-desktop(200);
   padding-bottom: get-rem-desktop(200);
 
-  .event-section-heading {
+  .activity-section-heading {
     text-align: center;
     margin-bottom: get-rem-desktop(48);
   }
@@ -810,44 +854,68 @@
     position: relative;
     margin-bottom: get-rem-desktop(24);
     position: relative;
-
-    &:hover {
-      .event-buttons {
-        opacity: 1;
-      }
-    }
-
-    .event-buttons {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      padding: get-rem-desktop(12);
-      z-index: 10;
-      width: 100%;
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      column-gap: get-rem-desktop(12);
-      opacity: 0;
-      will-change: opacity;
-      @include transition (opacity 400ms cubic-bezier(0.25,0.1,0.25,1));
-
-      .button {
-        width: 100%;
-      }
-    }
   }
 
-  .event-title {
+  .activity-title {
     margin-bottom: get-rem-desktop(10);
   }
 
-  .event-date-time {
+  .activity-date-time {
     margin-top: get-rem-desktop(36);
   }
 }
 
-.event-section.layout-4-events {
+.activity-section.layout-4-activities {
   .media-wrap {
     aspect-ratio: 377 / 500;
+  }
+}
+
+body.page-type-activities {
+  .activity-section {
+    padding-top: 0;
+  }
+
+  .activity-grid {
+    row-gap: get-rem-desktop(72);
+  }
+}
+
+// FEATURE SECTION ------------------
+
+.feature-section {
+  padding-top: get-rem-desktop(120);
+  padding-bottom: get-rem-desktop(120);
+
+  .feature-section-subheading {
+    @include flex;
+    column-gap: get-rem-desktop(8);
+    margin-bottom: get-rem-desktop(20);
+
+    svg {
+      width: get-rem-desktop(24);
+      stroke: $colour-orange;
+      fill: none;
+    }
+  }
+
+  .feature-section-heading {
+    margin-bottom: get-rem-desktop(48);
+  }
+
+  .feature-grid {
+    row-gap: get-rem-desktop(72);
+  }
+
+  .feature-item {
+    .media-wrap {
+      aspect-ratio: 377 / 500;
+      position: relative;
+      margin-bottom: get-rem-desktop(20);
+    }
+
+    .feature-heading {
+      margin-bottom: get-rem-desktop(16);
+    }
   }
 }

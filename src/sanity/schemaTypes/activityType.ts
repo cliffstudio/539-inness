@@ -2,9 +2,9 @@ import { defineType, defineField } from 'sanity'
 import { CalendarIcon } from '@sanity/icons'
 import { imageSizeValidation } from './utils/imageValidation'
 
-export const eventType = defineType({
-  name: 'event',
-  title: 'Event',
+export const activityType = defineType({
+  name: 'activity',
+  title: 'Activity',
   type: 'document',
   icon: CalendarIcon,
   fields: [
@@ -24,8 +24,8 @@ export const eventType = defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'eventType',
-      title: 'Event Type',
+      name: 'activityType',
+      title: 'Activity Type',
       type: 'string',
       options: {
         list: [
@@ -88,22 +88,22 @@ export const eventType = defineType({
   preview: {
     select: {
       title: 'title',
-      eventType: 'eventType',
+      activityType: 'activityType',
       date: 'date',
       startTime: 'timeRange.startTime',
       endTime: 'timeRange.endTime',
       media: 'image',
     },
     prepare(selection) {
-      const { title, eventType, date, startTime, media } = selection
+      const { title, activityType, date, startTime, media } = selection
 
-      // Capitalize event type
-      const capitalizedEventType = eventType 
-        ? eventType.charAt(0).toUpperCase() + eventType.slice(1).toLowerCase()
+      // Capitalize activity type
+      const capitalizedActivityType = activityType 
+        ? activityType.charAt(0).toUpperCase() + activityType.slice(1).toLowerCase()
         : ''
 
       // Combine date and time for subtitle
-      const combinedTitle = [title, capitalizedEventType].filter(Boolean).join(' • ')
+      const combinedTitle = [title, capitalizedActivityType].filter(Boolean).join(' • ')
       
       // Format date as DD Month YYYY
       let formattedDate = ''
@@ -152,3 +152,4 @@ export const eventType = defineType({
     }
   ]
 })
+

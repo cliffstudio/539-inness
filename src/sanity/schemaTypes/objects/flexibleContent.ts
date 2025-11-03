@@ -30,8 +30,12 @@ export default defineType({
       title: 'Menu Section'
     },
     {
-      type: 'eventSection',
-      title: 'Event Section'
+      type: 'activitySection',
+      title: 'Activity Section'
+    },
+    {
+      type: 'featureSection',
+      title: 'Feature Section'
     },
   ],
   options: {

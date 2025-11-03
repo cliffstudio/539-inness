@@ -194,9 +194,9 @@ export default function MediaTextSection({
             )}
 
             {buttons && buttons.length > 0 && (
-              <div className={`media-text-buttons${buttons.length > 1 ? ' multiple-buttons' : ''}`}>
+              <div className={`button-wrap${buttons.length > 1 ? ' button-wrap--multiple-buttons' : ''}`}>
                 {buttons.map((button, index) => (
-                  <ButtonLink key={index} link={button} />
+                  <ButtonLink key={index} link={button} fallbackColor="cream" />
                 ))}
               </div>
             )}
@@ -326,13 +326,16 @@ export default function MediaTextSection({
               </div>
             )}
 
-            <div className="media-text-buttons">
+            <div className="button-wrap button-wrap--multiple-buttons">
               <ButtonLink 
                 link={{ linkType: 'internal', label: 'View Room Details', pageLink: { slug: `rooms/${roomLink.slug}` } }} 
                 fallbackColor="cream"
               />
 
               {/* todo: add book room button */}
+              <div className="button button--orange">
+                Book Room
+              </div>
             </div>
           </div>
 
@@ -393,9 +396,9 @@ export default function MediaTextSection({
               )}
 
               {buttons && buttons.length > 0 && (
-                <div className={`media-text-buttons${buttons.length > 1 ? ' multiple-buttons' : ''}`}>
+                <div className={`button-wrap${buttons.length > 1 ? ' button-wrap--multiple-buttons' : ''}`}>
                   {buttons.map((button, index) => (
-                    <ButtonLink key={index} link={button} />
+                    <ButtonLink key={index} link={button} fallbackColor="cream" />
                   ))}
                 </div>
               )}
@@ -466,7 +469,7 @@ export default function MediaTextSection({
                                 className="lazy full-bleed-image"
                               />
 
-                              <div className="media-text-buttons">
+                              <div className="button-wrap button-wrap--multiple-buttons">
                                 <ButtonLink 
                                   link={{ linkType: 'internal', label: 'View Details', pageLink: { slug: `rooms/${room.slug}` } }}
                                   fallbackColor="cream"
@@ -533,7 +536,7 @@ export default function MediaTextSection({
                             />
                             <div className="loading-overlay" />
 
-                            <div className="media-text-buttons">
+                            <div className="button-wrap button-wrap--multiple-buttons">
                               <ButtonLink 
                                 link={{ linkType: 'internal', label: 'View Details', pageLink: { slug: `rooms/${room.slug}` } }}
                                 fallbackColor="cream"
@@ -580,9 +583,9 @@ export default function MediaTextSection({
               )}
 
               {buttons && buttons.length > 0 && (
-                <div className={`media-text-buttons${buttons.length > 1 ? ' multiple-buttons' : ''}`}>
+                <div className={`button-wrap${buttons.length > 1 ? ' button-wrap--multiple-buttons' : ''}`}>
                   {buttons.map((button, index) => (
-                    <ButtonLink key={index} link={button} />
+                    <ButtonLink key={index} link={button} fallbackColor="cream" />
                   ))}
                 </div>
               )}
@@ -642,9 +645,9 @@ export default function MediaTextSection({
                         <div className="loading-overlay" />
 
                         {link.buttons && link.buttons.length > 0 && (
-                          <div className={`media-text-buttons${link.buttons.length > 1 ? ' multiple-buttons' : ''}`}>
+                          <div className={`button-wrap${link.buttons.length > 1 ? ' button-wrap--multiple-buttons' : ''}`}>
                             {link.buttons.map((button, buttonIndex) => (
-                              <ButtonLink key={buttonIndex} link={button} />
+                              <ButtonLink key={buttonIndex} link={button} fallbackColor="cream" />
                             ))}
                           </div>
                         )}

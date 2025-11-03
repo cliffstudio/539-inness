@@ -22,11 +22,11 @@ export default async function Home() {
       />
       
       <HeroSectionHomepage 
-        heading={page.heading}
-        mediaType={page.mediaType}
-        image={page.image}
-        video={page.video}
-        videoPlaceholder={page.videoPlaceholder}
+        homepageHeading={page.homepageHeading}
+        homepageMediaType={page.homepageMediaType}
+        homepageImage={page.homepageImage}
+        homepageVideo={page.homepageVideo}
+        homepageVideoPlaceholder={page.homepageVideoPlaceholder}
       />
       
       <FlexibleContent contentBlocks={page.contentBlocks || []} />

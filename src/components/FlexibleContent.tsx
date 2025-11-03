@@ -5,11 +5,12 @@ import MediaTextSection from './MediaTextSection'
 import BreakSection from './BreakSection'
 import CarouselSection from './CarouselSection'
 import MenuSection from './MenuSection'
-import EventSection from './EventSection'
+import ActivitySection from './ActivitySection'
+import FeatureSection from './FeatureSection'
 
 interface ContentBlock {
   _type: string
-  layout?: 'media-with-text-h5' | 'media-with-text-h4-body' | 'media-with-text-room-type' | 'media-with-text-h4-bullet-list' | 'media-with-text-h4-body-room-links' | 'media-with-text-h4-body-links' | 'split' | 'full-bleed' | 'text-section' | 'carousel-section' | 'food-menu' | 'spa-menu' | 'venue-menu' | 'single-event' | '2-events' | '4-events'
+  layout?: 'media-with-text-h5' | 'media-with-text-h4-body' | 'media-with-text-room-type' | 'media-with-text-h4-bullet-list' | 'media-with-text-h4-body-room-links' | 'media-with-text-h4-body-links' | 'split' | 'full-bleed' | 'text-section' | 'carousel-section' | 'food-menu' | 'spa-menu' | 'venue-menu' | 'single-activity' | '2-activities' | '4-activities'
   [key: string]: unknown
 }
 
@@ -113,8 +114,10 @@ const FlexibleContent: React.FC<FlexibleContentProps> = ({ contentBlocks }) => {
             return <CarouselSection key={groupIndex} {...(blockOrGroup as ContentBlock & { layout?: 'carousel-section' })} />
           case 'menuSection':
             return <MenuSection key={groupIndex} {...(blockOrGroup as ContentBlock & { layout?: 'food-menu' | 'spa-menu' | 'venue-menu' })} />
-          case 'eventSection':
-            return <EventSection key={groupIndex} {...(blockOrGroup as ContentBlock & { layout?: 'single-event' | '2-events' | '4-events' })} />
+          case 'activitySection':
+            return <ActivitySection key={groupIndex} {...(blockOrGroup as ContentBlock & { layout?: 'single-activity' | '2-activities' | '4-activities' })} />
+          case 'featureSection':
+            return <FeatureSection key={groupIndex} {...(blockOrGroup as ContentBlock)} />
 
           default:
             console.warn(`Unknown content block type: ${blockOrGroup._type}`)

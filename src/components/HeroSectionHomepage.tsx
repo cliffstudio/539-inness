@@ -8,24 +8,24 @@ import { SanityImageSource } from '@sanity/image-url/lib/types/types'
 import { SanityVideo } from '../types/sanity'
 
 interface HomepageHeroProps {
-  heading?: string
-  mediaType?: 'image' | 'video'
-  image?: SanityImageSource
-  video?: SanityVideo
-  videoPlaceholder?: SanityImageSource
+  homepageHeading?: string
+  homepageMediaType?: 'image' | 'video'
+  homepageImage?: SanityImageSource
+  homepageVideo?: SanityVideo
+  homepageVideoPlaceholder?: SanityImageSource
 }
 
 export default function HeroSectionHomepage({ 
-  heading, 
-  mediaType = 'image',
-  image, 
-  video, 
-  videoPlaceholder 
+  homepageHeading, 
+  homepageMediaType = 'image',
+  homepageImage, 
+  homepageVideo, 
+  homepageVideoPlaceholder 
 }: HomepageHeroProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
 
   useEffect(() => {
-    if (mediaType === 'video' && videoRef.current) {
+    if (homepageMediaType === 'video' && videoRef.current) {
       const video = videoRef.current
       
       const handleVideoLoaded = () => {
@@ -47,21 +47,21 @@ export default function HeroSectionHomepage({
         video.removeEventListener('canplaythrough', handleVideoLoaded)
       }
     }
-  }, [mediaType])
+  }, [homepageMediaType])
 
   // Don't render if no content
-  if (!heading && !image && !video) {
+  if (!homepageHeading && !homepageImage && !homepageVideo) {
     return null
   }
 
   return (
     <section className="hero-section layout-1 relative">
-      {mediaType === 'video' && video && (
+      {homepageMediaType === 'video' && homepageVideo && (
         <div className="fill-space-video-wrap media-wrap">
           <video
             ref={videoRef}
-            src={videoUrlFor(video)}
-            poster={videoPlaceholder ? urlFor(videoPlaceholder).url() : undefined}
+            src={videoUrlFor(homepageVideo)}
+            poster={homepageVideoPlaceholder ? urlFor(homepageVideoPlaceholder).url() : undefined}
             autoPlay
             muted
             loop
@@ -72,10 +72,10 @@ export default function HeroSectionHomepage({
         </div>
       )}
       
-      {mediaType === 'image' && image && (
+      {homepageMediaType === 'image' && homepageImage && (
         <div className="fill-space-image-wrap media-wrap">
           <img 
-            data-src={urlFor(image).url()} 
+            data-src={urlFor(homepageImage).url()} 
             alt="" 
             className="lazy full-bleed-image"
           />
@@ -83,9 +83,9 @@ export default function HeroSectionHomepage({
         </div>
       )}
 
-      {heading && (
+      {homepageHeading && (
         <div className="hero-content h-pad">
-          <h3>{heading}</h3>
+          <h3>{homepageHeading}</h3>
         </div>
       )}
 

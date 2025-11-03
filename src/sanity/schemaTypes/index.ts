@@ -1,7 +1,7 @@
 // Global
 import { pageType } from './pageType'
 import { roomType } from './roomType'
-import { eventType } from './eventType'
+import { activityType } from './activityType'
 import { menuType } from './menuType'
 import { footerType } from './footerType'
 import { metaDataType } from './metaDataType'
@@ -19,13 +19,14 @@ import mediaTextSection from './sections/mediaTextSection'
 import breakSection from './sections/breakSection'
 import carouselSection from './sections/carouselSection'
 import menuSection from './sections/menuSection'
-import eventSection from './sections/eventSection'
+import activitySection from './sections/activitySection'
+import featureSection from './sections/featureSection'
 
 export const schemaTypes = [
   // Global
   pageType,
   roomType,
-  eventType,
+  activityType,
   menuType,
   footerType,
   metaDataType,
@@ -43,5 +44,6 @@ export const schemaTypes = [
   breakSection,
   carouselSection,
   menuSection,
-  eventSection,
+  activitySection,
+  featureSection,
 ]

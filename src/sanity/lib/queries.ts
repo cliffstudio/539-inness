@@ -161,11 +161,41 @@ const menuSectionFragment = groq`{
   }
 }`
 
-const eventSectionFragment = groq`{
+const activitySectionFragment = groq`{
   id,
   layout,
   heading,
-  events[]-> {
+  activity1-> {
+    _id,
+    title,
+    date,
+    timeRange,
+    image ${imageFragment},
+    description,
+    bookingHref,
+    "slug": slug.current
+  },
+  activity2-> {
+    _id,
+    title,
+    date,
+    timeRange,
+    image ${imageFragment},
+    description,
+    bookingHref,
+    "slug": slug.current
+  },
+  activity3-> {
+    _id,
+    title,
+    date,
+    timeRange,
+    image ${imageFragment},
+    description,
+    bookingHref,
+    "slug": slug.current
+  },
+  activity4-> {
     _id,
     title,
     date,
@@ -177,6 +207,18 @@ const eventSectionFragment = groq`{
   }
 }`
 
+const featureSectionFragment = groq`{
+  id,
+  subHeading,
+  heading,
+  features[] {
+    image ${imageFragment},
+    heading,
+    body,
+    links[] ${linkFragment}
+  }
+}`
+
 const flexibleContentFragment = groq`{
   _type,
   ...select(_type == "heroSection" => ${heroSectionFragment}),
@@ -185,7 +227,8 @@ const flexibleContentFragment = groq`{
   ...select(_type == "breakSection" => ${breakSectionFragment}),
   ...select(_type == "carouselSection" => ${carouselSectionFragment}),
   ...select(_type == "menuSection" => ${menuSectionFragment}),
-  ...select(_type == "eventSection" => ${eventSectionFragment})
+  ...select(_type == "activitySection" => ${activitySectionFragment}),
+  ...select(_type == "featureSection" => ${featureSectionFragment})
 }`
 
 // Main page query
@@ -215,12 +258,41 @@ export const homepageQuery = groq`
     title,
     slug,
     pageType,
-    heading,
-    mediaType,
-    image ${imageFragment},
-    video ${videoFragment},
-    videoPlaceholder ${imageFragment},
+    homepageHeading,
+    homepageMediaType,
+    homepageImage ${imageFragment},
+    homepageVideo ${videoFragment},
+    homepageVideoPlaceholder ${imageFragment},
     contentBlocks[] ${flexibleContentFragment}
+  }
+`
+
+// Activities specific query
+export const activitiesQuery = groq`
+  *[_type == "page" && pageType == "activities"][0] {
+    _id,
+    _type,
+    title,
+    slug,
+    pageType,
+    activitiesHeading,
+    activitiesBody,
+    activitiesImage ${imageFragment}
+  }
+`
+
+// Query to get all activities
+export const allActivitiesQuery = groq`
+  *[_type == "activity"] | order(date asc) {
+    _id,
+    title,
+    date,
+    timeRange,
+    image ${imageFragment},
+    description,
+    bookingHref,
+    "slug": slug.current,
+    activityType
   }
 `
 

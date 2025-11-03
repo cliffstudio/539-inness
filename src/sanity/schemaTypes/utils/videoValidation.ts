@@ -1,13 +1,13 @@
-import { Rule } from 'sanity'
+import { FileRule } from 'sanity'
 
 /**
  * Validates that a video file:
  * - Is MP4 format only
  * - Has a file size of 10MB or less
- * @param Rule - Sanity validation rule
+ * @param Rule - Sanity validation rule for file fields
  * @returns Custom validation function
  */
-export const videoSizeValidation = (Rule: Rule) =>
+export const videoSizeValidation = (Rule: FileRule) =>
   Rule.custom(async (value, context) => {
     if (!value?.asset?._ref) {
       return true // Allow empty/undefined values (handle required separately)

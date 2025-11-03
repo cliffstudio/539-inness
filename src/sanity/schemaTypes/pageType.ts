@@ -36,21 +36,22 @@ export const pageType = defineType({
       options: {
         list: [
           { title: 'Homepage', value: 'homepage' },
-          { title: 'General Page', value: 'general' },
+          { title: 'General', value: 'general' },
+          { title: 'Activities', value: 'activities' },
         ],
       },
     }),
 
     // Homepage specific fields
     defineField({
-      name: 'heading',
+      name: 'homepageHeading',
       title: 'Heading',
       type: 'string',
       fieldset: 'heroSection',
       hidden: ({ parent }) => parent?.pageType !== 'homepage',
     }),
     defineField({
-      name: 'mediaType',
+      name: 'homepageMediaType',
       title: 'Media Type',
       type: 'string',
       initialValue: 'image',
@@ -59,16 +60,16 @@ export const pageType = defineType({
       hidden: ({ parent }) => parent?.pageType !== 'homepage',
     }),
     defineField({ 
-      name: 'image',
+      name: 'homepageImage',
       title: 'Image',
       type: 'image',
       description: 'Maximum file size: 500KB.',
       fieldset: 'heroSection',
-      hidden: ({ parent }) => parent?.pageType !== 'homepage' || parent?.mediaType !== 'image',
+      hidden: ({ parent }) => parent?.pageType !== 'homepage' || parent?.homepageMediaType !== 'image',
       validation: imageSizeValidation,
     }),
     defineField({ 
-      name: 'video', 
+      name: 'homepageVideo', 
       title: 'Video',
       description: 'Only MP4 files are accepted. Maximum file size: 10MB.',
       type: 'file', 
@@ -76,16 +77,42 @@ export const pageType = defineType({
         accept: 'video/mp4,.mp4' 
       },
       fieldset: 'heroSection',
-      hidden: ({ parent }) => parent?.pageType !== 'homepage' || parent?.mediaType !== 'video',
+      hidden: ({ parent }) => parent?.pageType !== 'homepage' || parent?.homepageMediaType !== 'video',
       validation: videoSizeValidation,
     }),
     defineField({
-      name: 'videoPlaceholder',
+      name: 'homepageVideoPlaceholder',
       title: 'Video Placeholder',
       type: 'image',
       description: 'Maximum file size: 500KB.',
       fieldset: 'heroSection',
-      hidden: ({ parent }) => parent?.pageType !== 'homepage' || parent?.mediaType !== 'video',
+      hidden: ({ parent }) => parent?.pageType !== 'homepage' || parent?.homepageMediaType !== 'video',
+      validation: imageSizeValidation,
+    }),
+
+    // Activities specific fields
+    defineField({
+      name: 'activitiesHeading',
+      title: 'Heading',
+      type: 'string',
+      fieldset: 'heroSection',
+      hidden: ({ parent }) => parent?.pageType !== 'activities',
+    }),
+    defineField({
+      name: 'activitiesBody',
+      title: 'Body',
+      type: 'array',
+      of: [{ type: 'block' }],
+      fieldset: 'heroSection',
+      hidden: ({ parent }) => parent?.pageType !== 'activities',
+    }),
+    defineField({ 
+      name: 'activitiesImage',
+      title: 'Image',
+      type: 'image',
+      description: 'Maximum file size: 500KB.',
+      fieldset: 'heroSection',
+      hidden: ({ parent }) => parent?.pageType !== 'activities',
       validation: imageSizeValidation,
     }),
 
@@ -95,6 +122,7 @@ export const pageType = defineType({
       title: 'Content Blocks',
       type: 'flexibleContent',
       description: 'Add and arrange content blocks to build your page',
+      hidden: ({ parent }) => parent?.pageType === 'activities',
     }),
   ],
   preview: {
