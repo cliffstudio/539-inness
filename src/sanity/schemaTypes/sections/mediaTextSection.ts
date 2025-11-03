@@ -95,6 +95,7 @@ export default defineType({
       name: 'images',
       title: 'Images',
       type: 'array',
+      description: 'Maximum file size per image: 500KB.',
       of: [{ 
         type: 'image',
         validation: imageSizeValidation,
@@ -104,6 +105,7 @@ export default defineType({
     defineField({ 
       name: 'video', 
       title: 'Video',
+      description: 'Only MP4 files are accepted. Maximum file size: 10MB.',
       type: 'file', 
       options: { 
         accept: 'video/mp4,.mp4' 
@@ -115,6 +117,7 @@ export default defineType({
       name: 'videoPlaceholder',
       title: 'Video Placeholder',
       type: 'image',
+      description: 'Maximum file size: 500KB.',
       hidden: ({ parent }) => parent?.mediaType !== 'video',
       validation: imageSizeValidation,
     }),

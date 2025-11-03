@@ -1,12 +1,11 @@
-import { Rule } from 'sanity'
-
 /**
  * Validates that an image file size is 500KB or less
  * @param Rule - Sanity validation rule
  * @returns Custom validation function
  */
-export const imageSizeValidation = (Rule: Rule) =>
-  Rule.custom(async (value, context) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const imageSizeValidation = (Rule: any) =>
+  Rule.custom(async (value: any, context: any) => {
     if (!value?.asset?._ref) {
       return true // Allow empty/undefined values (handle required separately)
     }

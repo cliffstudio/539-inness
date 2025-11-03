@@ -24,6 +24,7 @@ export const metaDataType = {
       name: 'socialimage',
       title: 'Social Image',
       type: 'image',
+      description: 'Maximum file size: 500KB.',
       options: {
         hotspot: true,
       },

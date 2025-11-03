@@ -45,6 +45,7 @@ export const roomType = defineType({
       name: 'image',
       title: 'Image',
       type: 'image',
+      description: 'Maximum file size: 500KB.',
       fieldset: 'heroSection',
       validation: imageSizeValidation,
     }),

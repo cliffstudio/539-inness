@@ -62,6 +62,7 @@ export const pageType = defineType({
       name: 'image',
       title: 'Image',
       type: 'image',
+      description: 'Maximum file size: 500KB.',
       fieldset: 'heroSection',
       hidden: ({ parent }) => parent?.pageType !== 'homepage' || parent?.mediaType !== 'image',
       validation: imageSizeValidation,
@@ -69,6 +70,7 @@ export const pageType = defineType({
     defineField({ 
       name: 'video', 
       title: 'Video',
+      description: 'Only MP4 files are accepted. Maximum file size: 10MB.',
       type: 'file', 
       options: { 
         accept: 'video/mp4,.mp4' 
@@ -81,6 +83,7 @@ export const pageType = defineType({
       name: 'videoPlaceholder',
       title: 'Video Placeholder',
       type: 'image',
+      description: 'Maximum file size: 500KB.',
       fieldset: 'heroSection',
       hidden: ({ parent }) => parent?.pageType !== 'homepage' || parent?.mediaType !== 'video',
       validation: imageSizeValidation,

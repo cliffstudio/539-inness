@@ -43,6 +43,7 @@ export default defineType({
       name: 'image',
       title: 'Image',
       type: 'image',
+      description: 'Maximum file size: 500KB.',
       validation: imageSizeValidation,
     }),
     defineField({
