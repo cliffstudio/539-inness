@@ -68,8 +68,11 @@ export default function MediaTextSection({
   const videoRef1 = useRef<HTMLVideoElement>(null)
   const videoRef2 = useRef<HTMLVideoElement>(null)
   const splideRef = useRef<{ go: (direction: string) => void } | null>(null)
+  const linksSplideRef = useRef<{ go: (direction: string) => void } | null>(null)
   const [currentPage, setCurrentPage] = useState(1)
+  const [linksCurrentPage, setLinksCurrentPage] = useState(1)
   const totalPages = roomLinks ? Math.ceil(roomLinks.length / 4) : 1
+  const linksTotalPages = links ? Math.ceil(links.length / 4) : 1
 
   const handlePrevious = () => {
     if (splideRef.current) {
@@ -80,6 +83,18 @@ export default function MediaTextSection({
   const handleNext = () => {
     if (splideRef.current) {
       splideRef.current.go('>')
+    }
+  }
+
+  const handleLinksPrevious = () => {
+    if (linksSplideRef.current) {
+      linksSplideRef.current.go('<')
+    }
+  }
+
+  const handleLinksNext = () => {
+    if (linksSplideRef.current) {
+      linksSplideRef.current.go('>')
     }
   }
 
@@ -103,6 +118,27 @@ export default function MediaTextSection({
       splideInstance.off('moved', handlePageChange)
     }
   }, [roomLinks])
+
+  // Track links splide carousel page changes
+  useEffect(() => {
+    const splide = linksSplideRef.current
+    if (!splide) return
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const splideInstance = (splide as any).splide
+    if (!splideInstance) return
+
+    const handlePageChange = () => {
+      const page = splideInstance.index + 1
+      setLinksCurrentPage(page)
+    }
+
+    splideInstance.on('moved', handlePageChange)
+
+    return () => {
+      splideInstance.off('moved', handlePageChange)
+    }
+  }, [links])
 
   // Handle video loading overlay removal for first video
   useEffect(() => {
@@ -631,42 +667,121 @@ export default function MediaTextSection({
           </div>
 
           {links && links.length > 0 && (
-            <div className="row-lg">
-              {links.map((link, index) => (
-                <div key={index} className="col-6-12_lg">
-                  <div className="media-text-link">
-                    {link.image && (
-                      <div className="media-wrap">
-                        <img 
-                          data-src={urlFor(link.image).url()} 
-                          alt="" 
-                          className="lazy full-bleed-image"
-                        />
-                        <div className="loading-overlay" />
+            <>
+              {links.length > 4 ? (
+                <div className="media-text-room-links-carousel">
+                  <Splide
+                    ref={linksSplideRef}
+                    options={{
+                      type: 'slide',
+                      perPage: 4,
+                      perMove: 4,
+                      gap: '20px',
+                      pagination: false,
+                      arrows: false,
+                    }}
+                  >
+                    {links.map((link, index) => (
+                      <SplideSlide key={index}>
+                        <div className="media-text-link">
+                          {link.image && (
+                            <div className="media-wrap">
+                              <img 
+                                data-src={urlFor(link.image).url()} 
+                                alt="" 
+                                className="lazy full-bleed-image"
+                              />
 
-                        {link.buttons && link.buttons.length > 0 && (
-                          <div className={`button-wrap${link.buttons.length > 1 ? ' button-wrap--multiple-buttons' : ''}`}>
-                            {link.buttons.map((button, buttonIndex) => (
-                              <ButtonLink key={buttonIndex} link={button} fallbackColor="cream" />
-                            ))}
+                              {link.buttons && link.buttons.length > 0 && (
+                                <div className={`button-wrap${link.buttons.length > 1 ? ' button-wrap--multiple-buttons' : ''}`}>
+                                  {link.buttons.map((button, buttonIndex) => (
+                                    <ButtonLink key={buttonIndex} link={button} fallbackColor="cream" />
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          )}
+
+                          {link.header && (
+                            <h5 className="media-text-heading">{link.header}</h5>
+                          )}
+
+                          {link.description && (
+                            <div className="media-text-body">
+                              <PortableText value={link.description} />
+                            </div>
+                          )}
+                        </div>
+                      </SplideSlide>
+                    ))}
+                  </Splide>
+                  <div className="media-text-room-links-carousel-controls">
+                    <button 
+                      className="carousel-arrow carousel-arrow--prev"
+                      onClick={handleLinksPrevious}
+                      disabled={linksCurrentPage === 1}
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36">
+                        <circle cx="18" cy="18" r="17.5"/>
+                        <path d="M20.5 12L14 18.5L20.5 25"/>
+                      </svg>
+                    </button>
+
+                    <div className="carousel-pagination">
+                      <h6>{linksCurrentPage}/{linksTotalPages}</h6>
+                    </div>
+
+                    <button 
+                      className="carousel-arrow carousel-arrow--next"
+                      onClick={handleLinksNext}
+                      disabled={linksCurrentPage === linksTotalPages}
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36" fill="none">
+                        <circle cx="18" cy="18" r="17.5" transform="matrix(-1 0 0 1 36 0)"/>
+                        <path d="M15.5 12L22 18.5L15.5 25"/>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="row-lg">
+                  {links.map((link, index) => (
+                    <div key={index} className={links.length === 2 ? 'col-6-12_lg two-across' : 'col-3-12_lg'}>
+                      <div className="media-text-link">
+                        {link.image && (
+                          <div className="media-wrap">
+                            <img 
+                              data-src={urlFor(link.image).url()} 
+                              alt="" 
+                              className="lazy full-bleed-image"
+                            />
+                            <div className="loading-overlay" />
+
+                            {link.buttons && link.buttons.length > 0 && (
+                              <div className={`button-wrap${link.buttons.length > 1 ? ' button-wrap--multiple-buttons' : ''}`}>
+                                {link.buttons.map((button, buttonIndex) => (
+                                  <ButtonLink key={buttonIndex} link={button} fallbackColor="cream" />
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        )}
+
+                        {link.header && (
+                          <h5 className="media-text-heading">{link.header}</h5>
+                        )}
+
+                        {link.description && (
+                          <div className="media-text-body">
+                            <PortableText value={link.description} />
                           </div>
                         )}
                       </div>
-                    )}
-
-                    {link.header && (
-                      <h5 className="media-text-heading">{link.header}</h5>
-                    )}
-
-                    {link.description && (
-                      <div className="media-text-body">
-                        <PortableText value={link.description} />
-                      </div>
-                    )}
-                  </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+              )}
+            </>
           )}
         </section>
       )}

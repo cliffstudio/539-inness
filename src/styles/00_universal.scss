@@ -274,7 +274,7 @@
     }
   
     .button-wrap {
-      margin-top: get-rem-desktop(48);
+      margin-top: get-rem-desktop(24);
     }
   }
 
@@ -406,6 +406,14 @@
   @include flex;
   @include flex-direction(column);
   row-gap: get-rem-desktop(20);
+
+  .two-across {
+    .media-text-link {
+      .media-wrap {
+        aspect-ratio: 774 / 500;
+      }
+    }
+  }
   
   .col-1 {
     .button-wrap {
@@ -415,6 +423,7 @@
 
   .media-text-link {
     .media-wrap {
+      aspect-ratio: 377 / 500;
       margin-bottom: get-rem-desktop(24);
       overflow: hidden;
       position: relative;
@@ -426,22 +435,6 @@
 
     .media-text-body {
       max-width: get-rem-desktop(700);
-    }
-  }
-}
-
-.media-text-section.layout-media-with-text-h4-body-room-links {
-  .two-across {
-    .media-text-link {
-      .media-wrap {
-        aspect-ratio: 774 / 500;
-      }
-    }
-  }
-
-  .media-text-link {
-    .media-wrap {
-      aspect-ratio: 377 / 500;
     }
   }
 
@@ -782,6 +775,37 @@
   }
 }
 
+.menu-section.layout-venue-menu {
+  .menu-tab-header {
+    border-top: 1px solid $colour-orange;
+    padding-top: get-rem-desktop(12);
+    margin-bottom: get-rem-desktop(20);
+
+    .venue-title {
+      margin-bottom: get-rem-desktop(24);
+    }
+  }
+
+  .venue-spec {
+    border-bottom: 1px solid $colour-orange;
+    padding-bottom: get-rem-desktop(20);
+    margin-bottom: get-rem-desktop(20);
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: get-rem-desktop(24);
+
+    &:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .venue-spec-description p {
+      margin-bottom: get-rem-desktop(6);
+    }
+  }
+}
+
 // ACTIVITY SECTION ------------------
 
 .activity-filter {
@@ -909,7 +933,7 @@ body.page-type-activities {
 
   .feature-item {
     .media-wrap {
-      aspect-ratio: 377 / 500;
+      aspect-ratio: 774 / 500;
       position: relative;
       margin-bottom: get-rem-desktop(20);
     }
@@ -917,5 +941,11 @@ body.page-type-activities {
     .feature-heading {
       margin-bottom: get-rem-desktop(16);
     }
+  }
+}
+
+.feature-section.layout-4-features {
+  .media-wrap {
+    aspect-ratio: 377 / 500;
   }
 }

@@ -47,16 +47,16 @@ interface SpaTab {
   treatments?: SpaTreatment[]
 }
 
-interface VenueDetail {
-  label?: string
-  value?: string
+interface VenueSpec {
+  specName?: string
+  specDescription?: PortableTextBlock[]
 }
 
-interface VenueInfo {
-  name?: string
-  description?: string
-  details?: VenueDetail[]
-  includedServices?: string[]
+interface VenueTab {
+  areaName?: string
+  areaDescription?: PortableTextBlock[]
+  image?: SanityImageSource
+  specs?: VenueSpec[]
 }
 
 interface MenuSectionProps {
@@ -66,7 +66,7 @@ interface MenuSectionProps {
   image?: SanityImageSource
   foodTabs?: FoodTab[]
   spaTabs?: SpaTab[]
-  venueInfo?: VenueInfo
+  venueTabs?: VenueTab[]
 }
 
 export default function MenuSection({
@@ -75,15 +75,16 @@ export default function MenuSection({
   image,
   foodTabs,
   spaTabs,
-  venueInfo,
+  venueTabs,
 }: MenuSectionProps) {
   const [activeTab, setActiveTab] = useState(0)
   const [activeSpaTab, setActiveSpaTab] = useState(0)
+  const [activeVenueTab, setActiveVenueTab] = useState(0)
 
   // Trigger lazy loading update when tab changes
   useEffect(() => {
     mediaLazyloading().catch(console.error)
-  }, [activeTab, activeSpaTab])
+  }, [activeTab, activeSpaTab, activeVenueTab])
 
   return (
     <section id={id} className={`menu-section layout-${layout} h-pad body-smaller`}>
@@ -250,52 +251,72 @@ export default function MenuSection({
       )}
 
       {/* Venue Menu Layout */}
-      {layout === 'venue-menu' && venueInfo && (
+      {layout === 'venue-menu' && venueTabs && venueTabs.length > 0 && (
         <>
-          <div className="col-3-12_lg menu-content">
-            {venueInfo.name && <h4 className="menu-heading">{venueInfo.name}</h4>}
+          {/* Tabs Navigation */}
+          <div className="menu-tabs">
+            {venueTabs.map((tab, tabIndex) => (
+              <button
+                key={tabIndex}
+                className={`menu-tab ${activeVenueTab === tabIndex ? 'active' : ''}`}
+                onClick={() => setActiveVenueTab(tabIndex)}
+              >
+                {tab.areaName}
+              </button>
+            ))}
+          </div>
+        
+          <div className="row-lg">
+            <div className="col-6-12_lg menu-content">
+              {/* Active Tab Content */}
+              {venueTabs[activeVenueTab] && (
+                <div className="menu-tab-content">
+                  <div className="menu-tab-header">
+                    {venueTabs[activeVenueTab].areaName && (
+                      <h5 className="venue-title">{venueTabs[activeVenueTab].areaName}</h5>
+                    )}
 
-            {venueInfo.description && (
-              <div className="menu-description">{venueInfo.description}</div>
-            )}
-
-            {venueInfo.details && venueInfo.details.length > 0 && (
-              <div className="venue-details">
-                {venueInfo.details.map((detail, index) => (
-                  <div key={index} className="venue-detail">
-                    {detail.label && <div className="venue-detail-label">{detail.label}</div>}
-                    {detail.value && <div className="venue-detail-value">{detail.value}</div>}
+                    {venueTabs[activeVenueTab].areaDescription && venueTabs[activeVenueTab].areaDescription!.length > 0 && (
+                      <div className="venue-description">
+                        <PortableText value={venueTabs[activeVenueTab].areaDescription} />
+                      </div>
+                    )}
                   </div>
-                ))}
-              </div>
-            )}
 
-            {venueInfo.includedServices && venueInfo.includedServices.length > 0 && (
-              <div className="venue-included">
-                <h6 className="venue-included-heading">Closure includes:</h6>
-                <ul className="venue-services-list">
-                  {venueInfo.includedServices.map((service, index) => (
-                    <li key={index} className="venue-service">{service}</li>
-                  ))}
-                </ul>
+                  {venueTabs[activeVenueTab].specs && venueTabs[activeVenueTab].specs!.length > 0 && (
+                    <div className="venue-specs">
+                      {venueTabs[activeVenueTab].specs!.map((spec, specIndex) => (
+                        <div key={specIndex} className="venue-spec">
+                          {spec.specName && (
+                            <div className="venue-spec-name">{spec.specName}</div>
+                          )}
+                          {spec.specDescription && spec.specDescription.length > 0 && (
+                            <div className="venue-spec-description">
+                              <PortableText value={spec.specDescription} />
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {venueTabs[activeVenueTab]?.image && (
+              <div className="col-6-12_lg menu-image">
+                <div className="media-wrap">
+                  <img 
+                    key={`venue-tab-image-${activeVenueTab}`}
+                    data-src={urlFor(venueTabs[activeVenueTab].image!).url()} 
+                    alt="" 
+                    className="lazy full-bleed-image"
+                  />
+                  <div className="loading-overlay" />
+                </div>
               </div>
             )}
           </div>
-
-          <div className="col-3-12_lg dummy-col"></div>
-
-          {image && (
-            <div className="col-6-12_lg menu-image">
-              <div className="media-wrap">
-                <img 
-                  data-src={urlFor(image).url()} 
-                  alt="" 
-                  className="lazy full-bleed-image"
-                />
-                <div className="loading-overlay" />
-              </div>
-            </div>
-          )}
         </>
       )}
     </section>

@@ -11,6 +11,11 @@ export default defineType({
       type: 'string',
     }),
     defineField({
+      name: 'heading',
+      title: 'Heading',
+      type: 'string',
+    }),
+    defineField({
       name: 'layout',
       title: 'Layout',
       type: 'string',
@@ -22,11 +27,6 @@ export default defineType({
         ],
       },
       initialValue: 'single-activity',
-    }),
-    defineField({
-      name: 'heading',
-      title: 'Heading',
-      type: 'string',
     }),
     defineField({
       name: 'activity1',

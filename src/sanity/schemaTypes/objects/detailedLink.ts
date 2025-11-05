@@ -7,6 +7,13 @@ export default defineType({
   type: 'object',
   fields: [
     defineField({
+      name: 'image',
+      title: 'Image',
+      type: 'image',
+      description: 'Maximum file size: 500KB.',
+      validation: imageSizeValidation,
+    }),
+    defineField({
       name: 'header',
       title: 'Header',
       type: 'string',
@@ -15,13 +22,6 @@ export default defineType({
       name: 'description',
       title: 'Description',
       type: 'richPortableText',
-    }),
-    defineField({
-      name: 'image',
-      title: 'Image',
-      type: 'image',
-      description: 'Maximum file size: 500KB.',
-      validation: imageSizeValidation,
     }),
     defineField({
       name: 'buttons',

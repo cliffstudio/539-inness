@@ -26,23 +26,6 @@ export default defineType({
       validation: Rule => Rule.required(),
     }),
     defineField({
-      name: 'heading',
-      title: 'Heading',
-      type: 'string',
-      hidden: ({ parent }) => parent?.layout === 'food-menu' || parent?.layout === 'spa-menu',
-    }),
-    defineField({
-      name: 'image',
-      title: 'Image',
-      type: 'image',
-      description: 'Maximum file size: 500KB.',
-      options: {
-        hotspot: true,
-      },
-      hidden: ({ parent }) => parent?.layout === 'food-menu' || parent?.layout === 'spa-menu',
-      validation: imageSizeValidation,
-    }),
-    defineField({
       name: 'foodTabs',
       title: 'Food Menu Tabs',
       type: 'array',
@@ -64,16 +47,6 @@ export default defineType({
               title: 'Availability',
               type: 'string',
               description: 'e.g., "Saturday - Sunday (8am - 3pm)"',
-            }),
-            defineField({
-              name: 'image',
-              title: 'Image',
-              type: 'image',
-              description: 'Maximum file size: 500KB.',
-              options: {
-                hotspot: true,
-              },
-              validation: imageSizeValidation,
             }),
             defineField({
               name: 'categories',
@@ -169,6 +142,16 @@ export default defineType({
                 },
               ],
             }),
+            defineField({
+              name: 'image',
+              title: 'Image',
+              type: 'image',
+              description: 'Maximum file size: 500KB.',
+              options: {
+                hotspot: true,
+              },
+              validation: imageSizeValidation,
+            }),
           ],
           preview: {
             select: {
@@ -202,16 +185,6 @@ export default defineType({
               type: 'string',
               description: 'e.g., "Massages", "Facials", "Wellness"',
               validation: Rule => Rule.required(),
-            }),
-            defineField({
-              name: 'image',
-              title: 'Image',
-              type: 'image',
-              description: 'Maximum file size: 500KB.',
-              options: {
-                hotspot: true,
-              },
-              validation: imageSizeValidation,
             }),
             defineField({
               name: 'treatments',
@@ -278,6 +251,16 @@ export default defineType({
                 },
               ],
             }),
+            defineField({
+              name: 'image',
+              title: 'Image',
+              type: 'image',
+              description: 'Maximum file size: 500KB.',
+              options: {
+                hotspot: true,
+              },
+              validation: imageSizeValidation,
+            }),
           ],
           preview: {
             select: {
@@ -296,63 +279,87 @@ export default defineType({
       hidden: ({ parent }) => parent?.layout !== 'spa-menu',
     }),
     defineField({
-      name: 'venueInfo',
-      title: 'Venue Information',
-      type: 'object',
-      fields: [
-        defineField({
-          name: 'name',
-          title: 'Venue Name',
-          type: 'string',
-        }),
-        defineField({
-          name: 'description',
-          title: 'Description',
-          type: 'text',
-        }),
-        defineField({
-          name: 'details',
-          title: 'Venue Details',
-          type: 'array',
-          of: [
-            {
-              type: 'object',
-              name: 'venueDetail',
-              title: 'Detail',
-              fields: [
-                defineField({
-                  name: 'label',
-                  title: 'Label',
-                  type: 'string',
-                  description: 'e.g., "Size", "Capacity"',
-                }),
-                defineField({
-                  name: 'value',
-                  title: 'Value',
-                  type: 'string',
-                }),
+      name: 'venueTabs',
+      title: 'Venue Menu Tabs',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          name: 'venueTab',
+          title: 'Venue Menu Tab',
+          fields: [
+            defineField({
+              name: 'areaName',
+              title: 'Name',
+              type: 'string',
+              description: 'e.g., "The Barn", "Restaurant", "Lounge"',
+              validation: Rule => Rule.required(),
+            }),
+            defineField({
+              name: 'areaDescription',
+              title: 'Description',
+              type: 'richPortableText',
+            }),
+            defineField({
+              name: 'specs',
+              title: 'Specs',
+              type: 'array',
+              of: [
+                {
+                  type: 'object',
+                  name: 'venueSpec',
+                  title: 'Venue Spec',
+                  fields: [
+                    defineField({
+                      name: 'specName',
+                      title: 'Spec Name',
+                      type: 'string',
+                      validation: Rule => Rule.required(),
+                    }),
+                    defineField({
+                      name: 'specDescription',
+                      title: 'Spec Description',
+                      type: 'richPortableText',
+                      validation: Rule => Rule.required(),
+                    }),
+                  ],
+                  preview: {
+                    select: {
+                      title: 'specName',
+                    },
+                    prepare({ title }) {
+                      return {
+                        title: title,
+                      }
+                    },
+                  },
+                },
               ],
-              preview: {
-                select: {
-                  label: 'label',
-                  value: 'value',
-                },
-                prepare({ label, value }) {
-                  return {
-                    title: label,
-                    subtitle: value,
-                  }
-                },
+            }),
+            defineField({
+              name: 'image',
+              title: 'Image',
+              type: 'image',
+              description: 'Maximum file size: 500KB.',
+              options: {
+                hotspot: true,
               },
-            },
+              validation: imageSizeValidation,
+            }),
           ],
-        }),
-        defineField({
-          name: 'includedServices',
-          title: 'Included Services',
-          type: 'array',
-          of: [{ type: 'string' }],
-        }),
+          preview: {
+            select: {
+              title: 'areaName',
+              image: 'image',
+            },
+            prepare({ title, image }) {
+              return {
+                title: title || 'Untitled Area',
+                media: image,
+              }
+            },
+          },
+        },
       ],
       hidden: ({ parent }) => parent?.layout !== 'venue-menu',
     }),

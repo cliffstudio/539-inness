@@ -10,7 +10,7 @@ import FeatureSection from './FeatureSection'
 
 interface ContentBlock {
   _type: string
-  layout?: 'media-with-text-h5' | 'media-with-text-h4-body' | 'media-with-text-room-type' | 'media-with-text-h4-bullet-list' | 'media-with-text-h4-body-room-links' | 'media-with-text-h4-body-links' | 'split' | 'full-bleed' | 'text-section' | 'carousel-section' | 'food-menu' | 'spa-menu' | 'venue-menu' | 'single-activity' | '2-activities' | '4-activities'
+  layout?: 'media-with-text-h5' | 'media-with-text-h4-body' | 'media-with-text-room-type' | 'media-with-text-h4-bullet-list' | 'media-with-text-h4-body-room-links' | 'media-with-text-h4-body-links' | 'split' | 'full-bleed' | 'text-section' | 'carousel-section' | 'food-menu' | 'spa-menu' | 'venue-menu' | 'single-activity' | '2-activities' | '4-activities' | 'single-feature' | '2-features' | '4-features'
   [key: string]: unknown
 }
 
@@ -117,7 +117,7 @@ const FlexibleContent: React.FC<FlexibleContentProps> = ({ contentBlocks }) => {
           case 'activitySection':
             return <ActivitySection key={groupIndex} {...(blockOrGroup as ContentBlock & { layout?: 'single-activity' | '2-activities' | '4-activities' })} />
           case 'featureSection':
-            return <FeatureSection key={groupIndex} {...(blockOrGroup as ContentBlock)} />
+            return <FeatureSection key={groupIndex} {...(blockOrGroup as ContentBlock & { layout?: 'single-feature' | '2-features' | '4-features' })} />
 
           default:
             console.warn(`Unknown content block type: ${blockOrGroup._type}`)

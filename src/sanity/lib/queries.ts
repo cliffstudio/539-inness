@@ -150,14 +150,14 @@ const menuSectionFragment = groq`{
       }
     }
   },
-  venueInfo {
-    name,
-    description,
-    details[] {
-      label,
-      value
-    },
-    includedServices
+  venueTabs[] {
+    areaName,
+    areaDescription,
+    image ${imageFragment},
+    specs[] {
+      specName,
+      specDescription
+    }
   }
 }`
 
@@ -209,9 +209,28 @@ const activitySectionFragment = groq`{
 
 const featureSectionFragment = groq`{
   id,
+  layout,
   subHeading,
   heading,
-  features[] {
+  feature1 {
+    image ${imageFragment},
+    heading,
+    body,
+    links[] ${linkFragment}
+  },
+  feature2 {
+    image ${imageFragment},
+    heading,
+    body,
+    links[] ${linkFragment}
+  },
+  feature3 {
+    image ${imageFragment},
+    heading,
+    body,
+    links[] ${linkFragment}
+  },
+  feature4 {
     image ${imageFragment},
     heading,
     body,
