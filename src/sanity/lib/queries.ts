@@ -43,6 +43,26 @@ const linkFragment = groq`{
   }
 }`
 
+const footerLinkFragment = groq`{
+  linkType,
+  label,
+  href,
+  jumpLink,
+  file {
+    asset {
+      _ref,
+      _type,
+      originalFilename
+    }
+  },
+  pageLink {
+    _ref,
+    _type,
+    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,
+    "title": *[_type == "page" && _id == ^._ref][0].title
+  }
+}`
+
 const heroSectionFragment = groq`{
   id,
   layout,
@@ -96,6 +116,7 @@ const mediaTextSectionFragment = groq`{
   links[] {
     header,
     body,
+    date,
     image ${imageFragment},
     buttons[] ${linkFragment}
   }
@@ -314,6 +335,7 @@ export const linksQuery = groq`
     links[] {
       header,
       body,
+      date,
       image ${imageFragment},
       buttons[] ${linkFragment}
     }
@@ -339,34 +361,24 @@ export const allActivitiesQuery = groq`
 export const footerQuery = groq`
   *[_type == "footer"][0] {
     _id,
-    title,
-    footerItems[] {
+    navigationColumn1 {
       heading,
-      text
+      links[] ${footerLinkFragment}
     },
-    socialLinks {
+    navigationColumn2 {
       heading,
-      links[] {
-        linkType,
+      links[] ${footerLinkFragment}
+    },
+    followColumn {
+      heading,
+      links[] ${footerLinkFragment}
+    },
+    contactColumn {
+      heading,
+      contactItems[] {
         label,
-        href,
-        jumpLink,
-        "isExternal": linkType == "external",
-        pageLink-> {
-          title,
-          "slug": slug.current
-        }
-      }
-    },
-    footerNav[] {
-      linkType,
-      label,
-      href,
-      jumpLink,
-      "isExternal": linkType == "external",
-      pageLink-> {
-        title,
-        "slug": slug.current
+        phoneNumber,
+        extension
       }
     }
   }

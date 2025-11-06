@@ -1,0 +1,34 @@
+@use '00_mixins' as *;
+
+.not-found-page {
+  .inner-wrap {
+    padding-top: get-rem-desktop(200);
+    padding-bottom: get-rem-desktop(165);
+    min-height: 100dvh;
+
+    max-width: get-rem-desktop(520);
+    margin: 0 auto;
+    text-align: center;
+
+    @include flex;
+    @include flex-direction(column);
+    @include justify-content(space-between);
+    row-gap: get-rem-desktop(200);
+    
+    .not-found-page__heading {
+      font-family: 'ABC Arizona Flare';
+      font-weight: 100;
+      @include font-size(280px, 280px);
+      line-height: 1;
+      margin-bottom: get-rem-desktop(28);
+    }
+
+    .not-found-page__subheading {
+      margin-bottom: get-rem-desktop(10);
+    }
+
+    .not-found-page__button {
+      text-decoration: underline;
+    }
+  }
+}

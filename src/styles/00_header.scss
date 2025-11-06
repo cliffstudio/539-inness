@@ -161,3 +161,24 @@
     }
   }
 }
+
+.page-type-404 {
+  .site-header {
+    color: $colour-black;
+
+    .logo-text,
+    .logo-icon {
+      svg {
+        fill: $colour-black;
+      }
+    }
+
+    .nav-wrap {
+      .left {
+        svg {
+          stroke: $colour-black;
+        }
+      }
+    }
+  }
+}

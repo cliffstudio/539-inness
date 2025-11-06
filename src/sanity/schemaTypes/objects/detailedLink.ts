@@ -24,6 +24,11 @@ export default defineType({
       type: 'richPortableText',
     }),
     defineField({
+      name: 'date',
+      title: 'Date',
+      type: 'date',
+    }),
+    defineField({
       name: 'buttons',
       title: 'Buttons',
       type: 'array',

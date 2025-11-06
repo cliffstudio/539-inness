@@ -25,21 +25,32 @@ export type Header = {
   rightNav: Link[]
 }
 
-export type FooterItem = {
-  heading?: string
-  text?: PortableTextBlock[]
-}
-
-export type SocialLinks = {
+export type NavigationColumn = {
   heading?: string
   links?: Link[]
 }
 
+export type FollowColumn = {
+  heading?: string
+  links?: Link[]
+}
+
+export type ContactItem = {
+  label?: string
+  phoneNumber?: string
+  extension?: string
+}
+
+export type ContactColumn = {
+  heading?: string
+  contactItems?: ContactItem[]
+}
+
 export type Footer = {
-  title?: string
-  footerItems?: FooterItem[]
-  socialLinks?: SocialLinks
-  footerNav?: Link[]
+  navigationColumn1?: NavigationColumn
+  navigationColumn2?: NavigationColumn
+  followColumn?: FollowColumn
+  contactColumn?: ContactColumn
 }
 
 export type FooterSettings = Footer

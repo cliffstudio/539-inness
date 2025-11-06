@@ -8,6 +8,7 @@ import { metaDataType } from './metaDataType'
 
 // Objects
 import link from './objects/link'
+import footerLink from './objects/footerLink'
 import detailedLink from './objects/detailedLink'
 import richPortableText from './objects/richPortableText'
 import flexibleContent from './objects/flexibleContent'
@@ -33,6 +34,7 @@ export const schemaTypes = [
 
   // Objects
   link,
+  footerLink,
   detailedLink,
   richPortableText,
   flexibleContent,

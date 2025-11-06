@@ -1,1 +1,32 @@
 @use '00_mixins' as *;
+
+.site-footer {
+  background-color: $colour-orange;
+  color: $colour-cream;
+  padding-top: get-rem-desktop(200);
+  padding-bottom: get-rem-desktop(80);
+  @include flex;
+  @include flex-direction(column);
+  gap: get-rem-desktop(90);
+
+  svg {
+    width: get-rem-desktop(244);
+    fill: $colour-cream;
+  }
+
+  .site-footer__heading {
+    margin-top: -0.25em;
+    margin-bottom: get-rem-desktop(5);
+  }
+
+  .site-footer__links,
+  .site-footer__contact {
+    @include flex;
+    @include flex-direction(column);
+    gap: get-rem-desktop(5);
+  }
+
+  .site-footer__credit {
+    text-align: right;
+  }
+}

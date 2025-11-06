@@ -105,14 +105,25 @@ export const activityType = defineType({
       // Combine date and time for subtitle
       const combinedTitle = [title, capitalizedActivityType].filter(Boolean).join(' • ')
       
-      // Format date as DD Month YYYY
+      // Format date as DDth Month YYYY (e.g., 25th July 2025)
       let formattedDate = ''
       if (date) {
         const dateObj = new Date(date)
         const day = dateObj.getDate()
         const month = dateObj.toLocaleString('en-US', { month: 'long' })
         const year = dateObj.getFullYear()
-        formattedDate = `${day} ${month} ${year}`
+        
+        // Add ordinal suffix (st, nd, rd, th)
+        const getOrdinalSuffix = (n: number) => {
+          const j = n % 10
+          const k = n % 100
+          if (j === 1 && k !== 11) return 'st'
+          if (j === 2 && k !== 12) return 'nd'
+          if (j === 3 && k !== 13) return 'rd'
+          return 'th'
+        }
+        
+        formattedDate = `${day}${getOrdinalSuffix(day)} ${month} ${year}`
       }
       
       // Format time range as "7.00am"

@@ -1,13 +1,11 @@
 "use client"
 
 /* eslint-disable @next/next/no-img-element */
-import { useEffect, useRef, useState } from 'react'
 import { urlFor } from '../sanity/utils/imageUrlBuilder'
 import { SanityImage } from '../types/sanity'
 import { PortableText, PortableTextBlock } from '@portabletext/react'
 import { Link } from '../types/footerSettings'
 import ButtonLink from './ButtonLink'
-import { Splide, SplideSlide } from '@splidejs/react-splide'
 import '@splidejs/react-splide/css'
 
 interface LinksSectionProps {
@@ -15,48 +13,37 @@ interface LinksSectionProps {
   links?: {
     header?: string
     body?: PortableTextBlock[]
+    date?: string
     image?: SanityImage
     buttons?: Link[]
   }[]
 }
 
 export default function LinksSection({ id, links }: LinksSectionProps) {
-  const linksSplideRef = useRef<{ go: (direction: string) => void } | null>(null)
-  const [linksCurrentPage, setLinksCurrentPage] = useState(1)
-  const linksTotalPages = links ? Math.ceil(links.length / 4) : 1
-
-  const handleLinksPrevious = () => {
-    if (linksSplideRef.current) {
-      linksSplideRef.current.go('<')
+  const formatDate = (dateString?: string) => {
+    if (!dateString) return ''
+    
+    try {
+      const date = new Date(dateString)
+      const day = date.getDate()
+      const month = date.toLocaleString('en-US', { month: 'long' })
+      const year = date.getFullYear()
+      
+      // Add ordinal suffix (st, nd, rd, th)
+      const getOrdinalSuffix = (n: number) => {
+        const j = n % 10
+        const k = n % 100
+        if (j === 1 && k !== 11) return 'st'
+        if (j === 2 && k !== 12) return 'nd'
+        if (j === 3 && k !== 13) return 'rd'
+        return 'th'
+      }
+      
+      return `${day}${getOrdinalSuffix(day)} ${month} ${year}`
+    } catch {
+      return dateString
     }
   }
-
-  const handleLinksNext = () => {
-    if (linksSplideRef.current) {
-      linksSplideRef.current.go('>')
-    }
-  }
-
-  // Track links splide carousel page changes
-  useEffect(() => {
-    const splide = linksSplideRef.current
-    if (!splide) return
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const splideInstance = (splide as any).splide
-    if (!splideInstance) return
-
-    const handlePageChange = () => {
-      const page = splideInstance.index + 1
-      setLinksCurrentPage(page)
-    }
-
-    splideInstance.on('moved', handlePageChange)
-
-    return () => {
-      splideInstance.off('moved', handlePageChange)
-    }
-  }, [links])
 
   if (!links || links.length === 0) {
     return null
@@ -95,6 +82,10 @@ export default function LinksSection({ id, links }: LinksSectionProps) {
                 <div className="media-text-body">
                   <PortableText value={link.body} />
                 </div>
+              )}
+
+              {link.date && (
+                <div className="media-text-date">{formatDate(link.date)}</div>
               )}
             </div>
           </div>
