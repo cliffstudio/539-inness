@@ -42,7 +42,7 @@ interface mediaTextSectionProps {
   }[]
   links?: {
     header?: string
-    description?: PortableTextBlock[]
+    body?: PortableTextBlock[]
     image?: SanityImage
     buttons?: Link[]
   }[]
@@ -706,9 +706,9 @@ export default function MediaTextSection({
                             <h5 className="media-text-heading">{link.header}</h5>
                           )}
 
-                          {link.description && (
+                          {link.body && (
                             <div className="media-text-body">
-                              <PortableText value={link.description} />
+                              <PortableText value={link.body} />
                             </div>
                           )}
                         </div>

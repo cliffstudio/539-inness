@@ -1,12 +1,14 @@
 // src/components/DynamicPage.tsx
 import React from 'react'
 import { client } from '../../sanity.client'
-import { pageQuery, activitiesQuery, allActivitiesQuery } from '../sanity/lib/queries'
+import { pageQuery, activitiesQuery, allActivitiesQuery, linksQuery } from '../sanity/lib/queries'
 import { notFound } from 'next/navigation'
 import BodyClassProvider from './BodyClassProvider'
 import FlexibleContent from './FlexibleContent'
 import HeroSectionActivities from './HeroSectionActivities'
+import HeroSectionLinks from './HeroSectionLinks'
 import ActivityFilter from './ActivityFilter'
+import LinksSection from './LinksSection'
 
 interface PageProps {
   params: Promise<{
@@ -48,6 +50,34 @@ export default async function DynamicPage({ params }: PageProps) {
 
         {allActivities && allActivities.length > 0 && (
           <ActivityFilter activities={allActivities} layout="4-activities" />
+        )}
+      </>
+    )
+  }
+
+  // If this is a Links page, fetch the full links data
+  if (page.pageType === 'links') {
+    const linksPage = await client.fetch(linksQuery, { slug: resolvedParams.slug })
+
+    if (!linksPage) {
+      notFound()
+    }
+
+    return (
+      <>
+        <BodyClassProvider 
+          pageType={page.pageType} 
+          slug={page.slug?.current} 
+        />
+        
+        <HeroSectionLinks 
+          heading={linksPage.heading}
+          body={linksPage.body}
+          image={linksPage.image}
+        />
+
+        {linksPage.links && linksPage.links.length > 0 && (
+          <LinksSection links={linksPage.links} />
         )}
       </>
     )

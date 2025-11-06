@@ -13,6 +13,10 @@ export const pageType = defineType({
       name: 'heroSection',
       title: 'Hero Section',
     },
+    {
+      name: 'linksSection',
+      title: 'Links Section',
+    },
   ],
   fields: [
     defineField({
@@ -36,8 +40,9 @@ export const pageType = defineType({
       options: {
         list: [
           { title: 'Homepage', value: 'homepage' },
-          { title: 'General', value: 'general' },
-          { title: 'Activities', value: 'activities' },
+          { title: 'General Page', value: 'general' },
+          { title: 'Activities Page', value: 'activities' },
+          { title: 'Links Page', value: 'links' },
         ],
       },
     }),
@@ -122,7 +127,41 @@ export const pageType = defineType({
       title: 'Content Blocks',
       type: 'flexibleContent',
       description: 'Add and arrange content blocks to build your page',
-      hidden: ({ parent }) => parent?.pageType === 'activities',
+      hidden: ({ parent }) => parent?.pageType === 'activities' || parent?.pageType === 'links',
+    }),
+
+    // Links specific fields
+    defineField({
+      name: 'heading',
+      title: 'Heading',
+      type: 'string',
+      fieldset: 'heroSection',
+      hidden: ({ parent }) => parent?.pageType !== 'links',
+    }),
+    defineField({
+      name: 'body',
+      title: 'Body',
+      type: 'array',
+      of: [{ type: 'block' }],
+      fieldset: 'heroSection',
+      hidden: ({ parent }) => parent?.pageType !== 'links',
+    }),
+    defineField({
+      name: 'image',
+      title: 'Image',
+      type: 'image',
+      description: 'Maximum file size: 500KB.',
+      fieldset: 'heroSection',
+      hidden: ({ parent }) => parent?.pageType !== 'links',
+      validation: imageSizeValidation,
+    }),
+    defineField({
+      name: 'links',
+      title: 'Links',
+      type: 'array',
+      of: [{ type: 'detailedLink' }],
+      fieldset: 'linksSection',
+      hidden: ({ parent }) => parent?.pageType !== 'links',
     }),
   ],
   preview: {

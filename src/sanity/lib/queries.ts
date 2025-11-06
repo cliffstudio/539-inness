@@ -95,7 +95,7 @@ const mediaTextSectionFragment = groq`{
   },
   links[] {
     header,
-    description,
+    body,
     image ${imageFragment},
     buttons[] ${linkFragment}
   }
@@ -297,6 +297,26 @@ export const activitiesQuery = groq`
     activitiesHeading,
     activitiesBody,
     activitiesImage ${imageFragment}
+  }
+`
+
+// Links specific query
+export const linksQuery = groq`
+  *[_type == "page" && pageType == "links" && slug.current == $slug][0] {
+    _id,
+    _type,
+    title,
+    slug,
+    pageType,
+    heading,
+    body,
+    image ${imageFragment},
+    links[] {
+      header,
+      body,
+      image ${imageFragment},
+      buttons[] ${linkFragment}
+    }
   }
 `
 

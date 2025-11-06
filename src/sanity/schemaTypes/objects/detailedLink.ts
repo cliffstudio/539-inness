@@ -19,8 +19,8 @@ export default defineType({
       type: 'string',
     }),
     defineField({
-      name: 'description',
-      title: 'Description',
+      name: 'body',
+      title: 'Body',
       type: 'richPortableText',
     }),
     defineField({

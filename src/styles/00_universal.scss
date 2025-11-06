@@ -402,7 +402,8 @@
 }
 
 .media-text-section.layout-media-with-text-h4-body-room-links,
-.media-text-section.layout-media-with-text-h4-body-links {
+.media-text-section.layout-media-with-text-h4-body-links,
+.links-section {
   @include flex;
   @include flex-direction(column);
   row-gap: get-rem-desktop(20);
@@ -947,5 +948,16 @@ body.page-type-activities {
 .feature-section.layout-4-features {
   .media-wrap {
     aspect-ratio: 377 / 500;
+  }
+}
+
+// LINKS SECTION ------------------
+
+.links-section {
+  padding-top: get-rem-desktop(200);
+  padding-bottom: get-rem-desktop(200);
+
+  .inner-wrap {
+    row-gap: get-rem-desktop(48);
   }
 }
