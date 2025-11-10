@@ -90,7 +90,11 @@ const resolveSearchParams = async (searchParams: SearchParamsInput) => {
   return searchParams
 }
 
-export default async function SearchPage({ searchParams }: { searchParams?: SearchParams | Promise<SearchParams> }) {
+type SearchPageProps = {
+  searchParams?: Promise<SearchParams>
+}
+
+export default async function SearchPage({ searchParams }: SearchPageProps) {
   const resolvedSearchParams = await resolveSearchParams(searchParams)
   const searchTerm = getSearchTerm(resolvedSearchParams)
   const searchData = await fetchSearchResults(searchTerm)

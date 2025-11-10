@@ -98,13 +98,22 @@ const getDetailSlug = (result: SearchResult) => {
   return result.slug.startsWith('/') ? result.slug.slice(1) : result.slug
 }
 
-export default async function SearchResultsPage({ searchParams }: { searchParams?: SearchParams | Promise<SearchParams> }) {
-  let resolvedSearchParams: SearchParams | undefined
+type SearchParamsInput = SearchParams | Promise<SearchParams> | undefined
+
+const resolveSearchParams = async (searchParams: SearchParamsInput) => {
+  if (!searchParams) return undefined
   if (typeof (searchParams as Promise<SearchParams>)?.then === 'function') {
-    resolvedSearchParams = await (searchParams as Promise<SearchParams>)
-  } else {
-    resolvedSearchParams = searchParams as SearchParams | undefined
+    return await (searchParams as Promise<SearchParams>)
   }
+  return searchParams
+}
+
+type SearchResultsPageProps = {
+  searchParams?: Promise<SearchParams>
+}
+
+export default async function SearchResultsPage({ searchParams }: SearchResultsPageProps) {
+  const resolvedSearchParams = await resolveSearchParams(searchParams)
 
   const searchTerm = getSearchTerm(resolvedSearchParams)
   if (!searchTerm) {
