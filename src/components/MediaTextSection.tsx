@@ -207,13 +207,13 @@ export default function MediaTextSection({
               <>
                 {layout === 'media-with-text-h4-body' && (
                   <div className="media-text-body">
-                    <PortableText value={body} />
+                    <PortableText value={body ?? []} />
                   </div>
                 )}
 
                 {layout === 'media-with-text-h5' && (
                   <h5 className="media-text-body">
-                    <PortableText value={body} />
+                    <PortableText value={body ?? []} />
                   </h5>
                 )}
               </>
@@ -299,7 +299,8 @@ export default function MediaTextSection({
               <div className="media-text-multiple-blocks">
                 {textBlocks.map((block, index) => {
                   const blockLayout = block.layout ?? 'h4-text'
-                  const hasBody = block.body && block.body.length > 0
+                  const blockBody: PortableTextBlock[] = block.body ?? []
+                  const hasBody = blockBody.length > 0
                   const hasBulletList = block.bulletList?.some((bullet) => bullet?.body && bullet.body.length > 0)
 
                   return (
@@ -309,7 +310,7 @@ export default function MediaTextSection({
                       )}
                       {blockLayout === 'h4-text' && hasBody && (
                         <div className="media-text-body">
-                          <PortableText value={block.body} />
+                          <PortableText value={blockBody} />
                         </div>
                       )}
                       {blockLayout === 'h4-bullet-list' && hasBulletList && (
@@ -401,7 +402,7 @@ export default function MediaTextSection({
             
             {roomLink.description && (
               <div className="media-text-body">
-                <PortableText value={roomLink.description} />
+                <PortableText value={roomLink.description ?? []} />
               </div>
             )}
 
@@ -469,7 +470,7 @@ export default function MediaTextSection({
               {body && body.length > 0 && (
                 <>
                   <div className="media-text-body">
-                    <PortableText value={body} />
+                    <PortableText value={body ?? []} />
                   </div>
                 </>
               )}
@@ -566,7 +567,7 @@ export default function MediaTextSection({
 
                           {room.description && (
                             <div className="media-text-body">
-                              <PortableText value={room.description} />
+                              <PortableText value={room.description ?? []} />
                             </div>
                           )}
                         </div>
@@ -633,7 +634,7 @@ export default function MediaTextSection({
 
                         {room.description && (
                           <div className="media-text-body">
-                            <PortableText value={room.description} />
+                            <PortableText value={room.description ?? []} />
                           </div>
                         )}
                       </div>
@@ -657,7 +658,7 @@ export default function MediaTextSection({
 
               {body && body.length > 0 && (
                 <div className="media-text-body">
-                  <PortableText value={body} />
+                  <PortableText value={body ?? []} />
                 </div>
               )}
 
@@ -751,7 +752,7 @@ export default function MediaTextSection({
 
                           {link.body && (
                             <div className="media-text-body">
-                              <PortableText value={link.body} />
+                              <PortableText value={link.body ?? []} />
                             </div>
                           )}
                         </div>
@@ -816,7 +817,7 @@ export default function MediaTextSection({
 
                         {link.body && (
                           <div className="media-text-body">
-                            <PortableText value={link.body} />
+                            <PortableText value={link.body ?? []} />
                           </div>
                         )}
                       </div>
