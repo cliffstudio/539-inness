@@ -21,7 +21,7 @@ export default function TextSection({
   
   return (
     <section id={id} className="text-section h-pad">
-      <div className="text-wrap">
+      <div className="text-wrap out-of-view">
         {heading && (
           <h4 className="text-heading">{heading}</h4>
         )}

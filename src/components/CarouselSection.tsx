@@ -62,7 +62,7 @@ export default function CarouselSection({ images }: CarouselSectionProps) {
 
   return (
     <section className="carousel-section">
-      <div ref={splideRef} className="splide carousel-section__splide">
+      <div ref={splideRef} className="splide carousel-section__splide out-of-opacity">
         <div className="splide__track">
           <ul className="splide__list">
             {images.map((image, index) => {

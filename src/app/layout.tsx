@@ -115,7 +115,7 @@ export default function RootLayout({
                 
                 // Initialize the viewport detection
                 function outOfView() {
-                  $('.out-of-view').inViewport(
+                  $('.out-of-view, .out-of-opacity').inViewport(
                     function(){
                       $(this).addClass("am-in-view in-view-detect");
                     },

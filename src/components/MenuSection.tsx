@@ -91,7 +91,7 @@ export default function MenuSection({
       {layout === 'food-menu' && foodTabs && foodTabs.length > 0 && (
         <>
           {/* Tabs Navigation */}
-          <div className="menu-tabs">
+          <div className="menu-tabs out-of-opacity">
             {foodTabs.map((tab, tabIndex) => (
               <button
                 key={tabIndex}
@@ -104,7 +104,7 @@ export default function MenuSection({
           </div>
         
           <div className="row-lg">
-            <div className="col-6-12_lg menu-content">
+            <div className="col-6-12_lg menu-content out-of-opacity">
               {/* Active Tab Content */}
               {foodTabs[activeTab] && (
                 <div className="menu-tab-content">
@@ -159,7 +159,7 @@ export default function MenuSection({
             </div>
 
             {foodTabs[activeTab]?.image && (
-              <div className="col-6-12_lg menu-image">
+              <div className="col-6-12_lg menu-image out-of-opacity">
                 <div className="media-wrap">
                   <img 
                     key={`tab-image-${activeTab}`}
@@ -179,7 +179,7 @@ export default function MenuSection({
       {layout === 'spa-menu' && spaTabs && spaTabs.length > 0 && (
         <>
           {/* Tabs Navigation */}
-          <div className="menu-tabs">
+          <div className="menu-tabs out-of-opacity">
             {spaTabs.map((tab, tabIndex) => (
               <button
                 key={tabIndex}
@@ -192,7 +192,7 @@ export default function MenuSection({
           </div>
         
           <div className="row-lg">
-            <div className="col-6-12_lg menu-content">
+            <div className="col-6-12_lg menu-content out-of-opacity">
               {/* Active Tab Content */}
               <div className="menu-tab-header">
                 <div className="time-column">Time</div>
@@ -232,7 +232,7 @@ export default function MenuSection({
             </div>
 
             {spaTabs[activeSpaTab]?.image && (
-              <div className="col-6-12_lg menu-image">
+              <div className="col-6-12_lg menu-image out-of-opacity">
                 <div className="media-wrap">
                   <img 
                     key={`spa-tab-image-${activeSpaTab}`}
@@ -252,7 +252,7 @@ export default function MenuSection({
       {layout === 'venue-menu' && venueTabs && venueTabs.length > 0 && (
         <>
           {/* Tabs Navigation */}
-          <div className="menu-tabs">
+          <div className="menu-tabs out-of-opacity">
             {venueTabs.map((tab, tabIndex) => (
               <button
                 key={tabIndex}
@@ -265,7 +265,7 @@ export default function MenuSection({
           </div>
         
           <div className="row-lg">
-            <div className="col-6-12_lg menu-content">
+            <div className="col-6-12_lg menu-content out-of-opacity">
               {/* Active Tab Content */}
               {venueTabs[activeVenueTab] && (
                 <div className="menu-tab-content">
@@ -302,7 +302,7 @@ export default function MenuSection({
             </div>
 
             {venueTabs[activeVenueTab]?.image && (
-              <div className="col-6-12_lg menu-image">
+              <div className="col-6-12_lg menu-image out-of-opacity">
                 <div className="media-wrap">
                   <img 
                     key={`venue-tab-image-${activeVenueTab}`}

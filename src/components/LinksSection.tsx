@@ -53,7 +53,7 @@ export default function LinksSection({ id, links }: LinksSectionProps) {
     <section id={id} className="links-section h-pad row-lg">
       <div className="inner-wrap row-lg">
         {links.map((link, index) => (
-          <div key={index} className="col-3-12_lg">
+          <div key={index} className="col-3-12_lg out-of-opacity">
             <div className="media-text-link">
               {link.image && (
                 <div className="media-wrap">

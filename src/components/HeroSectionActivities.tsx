@@ -25,16 +25,18 @@ export default function HeroSectionActivities({ id, activitiesHeading, activitie
       )}
 
       <div className="hero-content h-pad">
-        {activitiesHeading && <h1>{activitiesHeading}</h1>}
-        
-        {activitiesBody && activitiesBody.length > 0 && (
-          <div className="hero-body">
-            <PortableText value={activitiesBody} />
-          </div>
-        )}
+        <div className="out-of-view">
+          {activitiesHeading && <h1>{activitiesHeading}</h1>}
+          
+          {activitiesBody && activitiesBody.length > 0 && (
+            <div className="hero-body">
+              <PortableText value={activitiesBody} />
+            </div>
+          )}
+        </div>
       </div>
 
-      <div className="hero-arrow">
+      <div className="hero-arrow out-of-opacity">
         <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36" fill="none">
           <circle cx="18" cy="18" r="17.5" transform="matrix(0 -1 -1 0 36 36)" stroke="#FFF9ED"/>
           <path d="M24 15.5L17.5 22L11 15.5" stroke="#FFF9ED"/>

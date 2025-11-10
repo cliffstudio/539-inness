@@ -59,7 +59,7 @@ export default function ActivityFilter({ activities, layout = '4-activities' }: 
 
   return (
     <>
-      <div className="activity-filter h-pad">
+      <div className="activity-filter h-pad out-of-opacity">
         <div className="activity-filter-label">Filter</div>
 
         <div className="activity-filter-options">

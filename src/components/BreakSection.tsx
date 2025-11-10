@@ -33,7 +33,7 @@ export default function Hero({ id, layout = 'full-bleed', subHeading, heading, b
             </div>
           )}
 
-          <div className="break-content">
+          <div className="break-content out-of-view">
             <h6>{subHeading}</h6>
 
             {heading && (
@@ -51,7 +51,7 @@ export default function Hero({ id, layout = 'full-bleed', subHeading, heading, b
 
       {layout === 'split' && (
         <section id={id} className={`break-section layout-2 row-lg h-pad background-${resolvedBackgroundColor === 'black' ? 'black' : resolvedBackgroundColor === 'green' ? 'green' : 'orange'}`}>
-          <div className="col-6-12_lg">
+          <div className="col-6-12_lg out-of-opacity">
             <div className="break-content">
               <h6>{subHeading}</h6>
 
@@ -76,7 +76,7 @@ export default function Hero({ id, layout = 'full-bleed', subHeading, heading, b
           </div>
 
           {image && (
-            <div className="col-6-12_lg">
+            <div className="col-6-12_lg out-of-opacity">
               <div className="break-image relative">
                 <div className="fill-space-image-wrap media-wrap">
                   <img 

@@ -127,7 +127,7 @@ export default function ActivitySection({
   return (
     <section id={id} className={`activity-section layout-${layout} h-pad`}>
       {heading && (
-        <div className="activity-section-heading">
+        <div className="activity-section-heading out-of-opacity">
           <h4>{heading}</h4>
         </div>
       )}
@@ -136,7 +136,7 @@ export default function ActivitySection({
         {activities.map((activity) => (
           <div 
             key={activity._id} 
-            className={`activity-item ${getGridColumnClass()}`}
+            className={`activity-item ${getGridColumnClass()} out-of-opacity`}
           >
             {activity.image && (
               <div className="media-wrap">

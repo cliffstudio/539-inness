@@ -19,7 +19,7 @@ export default function Hero({ id, title, image, description, specs }: HeroProps
   return (
     <section id={id} className="hero-section layout-2 h-pad">
       {image && (
-        <div className="hero-image relative">
+        <div className="hero-image relative out-of-opacity">
           <div className="fill-space-image-wrap media-wrap">
             <img 
               data-src={urlFor(image).url()} 
@@ -31,7 +31,7 @@ export default function Hero({ id, title, image, description, specs }: HeroProps
         </div>
       )}
 
-      <div className="hero-content h-pad">
+      <div className="hero-content h-pad out-of-opacity">
         {(title || description) && (
           <div className="row-1">
             {title && <h3>{title}</h3>}

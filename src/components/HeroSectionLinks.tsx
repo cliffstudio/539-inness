@@ -14,7 +14,7 @@ export default function HeroSectionLinks({ id, heading, body, image }: LinksHero
   return (
     <section id={id} className="hero-section layout-2 h-pad">
       {image && (
-        <div className="hero-image relative">
+        <div className="hero-image relative out-of-opacity">
           <div className="fill-space-image-wrap media-wrap">
             <img 
               data-src={urlFor(image).url()} 
@@ -26,7 +26,7 @@ export default function HeroSectionLinks({ id, heading, body, image }: LinksHero
         </div>
       )}
 
-      <div className="hero-content h-pad">
+      <div className="hero-content h-pad out-of-view">
         {(heading || body) && (
           <div className="row-1">
             {heading && <h3>{heading}</h3>}

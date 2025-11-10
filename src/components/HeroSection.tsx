@@ -36,19 +36,21 @@ export default function Hero({ id, layout = 'full-bleed', heading, body, image, 
           )}
 
           <div className="hero-content h-pad">
-            {heading && <h1>{heading}</h1>}
-            
-            {body && body.length > 0 && (
-              <div className="hero-body">
-                <PortableText value={body} />
-              </div>
-            )}
+            <div className="out-of-view">
+              {heading && <h1>{heading}</h1>}
+              
+              {body && body.length > 0 && (
+                <div className="hero-body">
+                  <PortableText value={body} />
+                </div>
+              )}
+            </div>
           </div>
-
-          <div className="hero-arrow">
-            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36" fill="none">
-              <circle cx="18" cy="18" r="17.5" transform="matrix(0 -1 -1 0 36 36)" stroke="#FFF9ED"/>
-              <path d="M24 15.5L17.5 22L11 15.5" stroke="#FFF9ED"/>
+          
+          <div className="hero-arrow out-of-opacity">
+            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36">
+              <circle cx="18" cy="18" r="17.5" transform="matrix(0 -1 -1 0 36 36)"/>
+              <path d="M24 15.5L17.5 22L11 15.5"/>
             </svg>
           </div>
         </section>
@@ -57,7 +59,7 @@ export default function Hero({ id, layout = 'full-bleed', heading, body, image, 
       {layout === 'split' && (
         <section id={id} className="hero-section layout-2 h-pad">
           {image && (
-            <div className="hero-image relative">
+            <div className="hero-image relative out-of-opacity">
               <div className="fill-space-image-wrap media-wrap">
                 <img 
                   data-src={urlFor(image).url()} 
@@ -69,7 +71,7 @@ export default function Hero({ id, layout = 'full-bleed', heading, body, image, 
             </div>
           )}
 
-          <div className="hero-content h-pad">
+          <div className="hero-content h-pad out-of-opacity">
             {(heading || body) && (
               <div className="row-1">
                 {heading && <h3>{heading}</h3>}

@@ -198,7 +198,7 @@ export default function MediaTextSection({
     <>
       {(layout === 'media-with-text-h5' || layout === 'media-with-text-h4-body' || layout === 'media-with-text-h4-bullet-list') && (
         <section id={id} className={`media-text-section layout-${layout} align-${mediaAlignment} row-lg h-pad`}>
-          <div className="col-3-12_lg col-1">
+          <div className="col-3-12_lg col-1 out-of-view">
             {heading && layout !== 'media-with-text-h5' && (
               <h4 className="media-text-heading">{heading}</h4>
             )}
@@ -254,7 +254,7 @@ export default function MediaTextSection({
 
           <div className="col-3-12_lg dummy-col col-2"></div>
 
-          <div className="col-6-12_lg col-3">
+          <div className="col-6-12_lg col-3 out-of-opacity">
             {mediaType === 'image' && images && images.length > 0 && (
               <div className="media-wrap">
                 {images.length === 1 ? (
@@ -296,7 +296,7 @@ export default function MediaTextSection({
         <section id={id} className={`media-text-section layout-${layout} align-${mediaAlignment} row-lg h-pad`}>
           <div className="col-3-12_lg col-1">
             {textBlocks && textBlocks.length > 0 && (
-              <div className="media-text-multiple-blocks">
+              <div className="media-text-multiple-blocks out-of-view">
                 {textBlocks.map((block, index) => {
                   const blockLayout = block.layout ?? 'h4-text'
                   const blockBody: PortableTextBlock[] = block.body ?? []
@@ -308,11 +308,13 @@ export default function MediaTextSection({
                       {block.header && (
                         <h5 className="media-text-heading">{block.header}</h5>
                       )}
+
                       {blockLayout === 'h4-text' && hasBody && (
                         <div className="media-text-body">
                           <PortableText value={blockBody} />
                         </div>
                       )}
+
                       {blockLayout === 'h4-bullet-list' && hasBulletList && (
                         <div className="media-text-bullet-list">
                           {block.bulletList?.map((item, itemIndex) => {
@@ -345,7 +347,7 @@ export default function MediaTextSection({
 
           <div className="col-3-12_lg dummy-col col-2"></div>
 
-          <div className="col-6-12_lg col-3">
+          <div className="col-6-12_lg col-3 out-of-opacity">
             {mediaType === 'image' && images && images.length > 0 && (
               <div className="media-wrap">
                 {images.length === 1 ? (
@@ -363,6 +365,7 @@ export default function MediaTextSection({
                 )}
               </div>
             )}
+
             {mediaType === 'video' && video && (
               <div className="media-wrap">
                 <video
@@ -384,7 +387,7 @@ export default function MediaTextSection({
 
       {layout === 'media-with-text-room-type' && roomLink && (
         <section id={id} className={`media-text-section room-type layout-${mediaAlignment} align-${mediaAlignment} row-lg h-pad`}>
-          <div className="col-3-12_lg col-1">
+          <div className="col-3-12_lg col-1 out-of-view">
             {roomLink.roomType && (
               <div className="media-text-room-type">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="16" viewBox="0 0 24 16">
@@ -421,7 +424,7 @@ export default function MediaTextSection({
 
           <div className="col-3-12_lg dummy-col col-2"></div>
 
-          <div className="col-6-12_lg col-3">
+          <div className="col-6-12_lg col-3 out-of-opacity">
             {mediaType === 'image' && images && images.length > 0 && (
               <div className="media-wrap">
                 {images.length === 1 ? (
@@ -651,7 +654,7 @@ export default function MediaTextSection({
       {(layout === 'media-with-text-h4-body-links') && links && links.length > 0 && (
         <section id={id} className={`media-text-section layout-${layout} h-pad`}>
           <div className={`align-${mediaAlignment} row-lg`}>
-            <div className="col-3-12_lg col-1">
+            <div className="col-3-12_lg col-1 out-of-view">
               {heading && (
                 <h4 className="media-text-heading">{heading}</h4>
               )}
@@ -673,7 +676,7 @@ export default function MediaTextSection({
 
             <div className="col-3-12_lg dummy-col col-2"></div>
 
-            <div className="col-6-12_lg col-3">
+            <div className="col-6-12_lg col-3 out-of-opacity">
               {mediaType === 'image' && images && images.length > 0 && (
                 <div className="media-wrap">
                   {images.length === 1 ? (
@@ -713,7 +716,7 @@ export default function MediaTextSection({
           {links && links.length > 0 && (
             <>
               {links.length > 4 ? (
-                <div className="media-text-room-links-carousel">
+                <div className="media-text-room-links-carousel out-of-opacity">
                   <Splide
                     ref={linksSplideRef}
                     options={{
@@ -759,6 +762,7 @@ export default function MediaTextSection({
                       </SplideSlide>
                     ))}
                   </Splide>
+
                   <div className="media-text-room-links-carousel-controls">
                     <button 
                       className="carousel-arrow carousel-arrow--prev"
@@ -791,7 +795,7 @@ export default function MediaTextSection({
                 <div className="row-lg">
                   {links.map((link, index) => (
                     <div key={index} className={links.length === 2 ? 'col-6-12_lg two-across' : 'col-3-12_lg'}>
-                      <div className="media-text-link">
+                      <div className="media-text-link out-of-opacity">
                         {link.image && (
                           <div className="media-wrap">
                             <img 

@@ -21,7 +21,7 @@ const TextPage: React.FC<TextPageProps> = ({ title, textBlocks }) => {
 
   return (
     <div className="text-page h-pad">
-      <div className="inner-wrap">
+      <div className="inner-wrap out-of-opacity">
         {title && (
           <h4 className="text-page__title">{title}</h4>
         )}
