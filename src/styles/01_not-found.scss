@@ -5,11 +5,9 @@
     padding-top: get-rem-desktop(200);
     padding-bottom: get-rem-desktop(165);
     min-height: 100dvh;
-
     max-width: get-rem-desktop(520);
     margin: 0 auto;
     text-align: center;
-
     @include flex;
     @include flex-direction(column);
     @include justify-content(space-between);

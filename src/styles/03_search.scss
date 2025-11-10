@@ -1,0 +1,129 @@
+@use '00_mixins' as *;
+
+.search-page,
+.search-results-page {
+  .search-form {
+    margin-bottom: get-rem-desktop(80);
+  }
+
+  .search-form__field {
+    @include flex;
+    @include align-items(center);
+    gap: get-rem-desktop(24);
+    border-bottom: 1px solid $colour-black;
+
+    input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      padding: 0;
+      color: inherit;
+      font-family: inherit;
+      @include font-size(28px, 28px);
+
+      &::-webkit-search-decoration,
+      &::-webkit-search-cancel-button,
+      &::-webkit-search-results-button,
+      &::-webkit-search-results-decoration {
+        -webkit-appearance: none;
+        appearance: none;
+        display: none;
+      }
+
+      &::placeholder {
+        color: rgba($colour-black, 0.5);
+      }
+
+      &:focus {
+        outline: none;
+      }
+    }
+
+    button {
+      background: none;
+      border: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+
+      svg {
+        width: 18px;
+        height: 18px;
+        stroke: $colour-black;
+        stroke-width: 1px;
+        fill: none;
+      }
+    }
+  }
+}
+
+.search-page {
+  .inner-wrap {
+    padding-top: calc(50vh - #{get-rem-desktop(20)});
+    padding-bottom: get-rem-desktop(250);
+    min-height: 100dvh;
+    max-width: get-rem-desktop(700);
+    margin: 0 auto;
+  }
+
+  .search-page__results-list {
+    list-style: none;
+    padding: 0;
+    @include flex;
+    @include flex-direction(column);
+    row-gap: get-rem-desktop(16);
+
+    a {
+      text-decoration: none;
+    }
+  }
+
+  .search-page__show-all a {
+    @include underline;
+  }
+
+  .search-page__empty {
+    p {
+      margin: 0;
+    }
+  }
+}
+
+.search-results-page {
+  padding-top: get-rem-desktop(176);
+  padding-bottom: get-rem-desktop(120);
+
+  .inner-wrap {
+    max-width: get-rem-desktop(700);
+    margin: 0 auto;
+  }
+
+  .search-results-page__intro {
+    margin-bottom: get-rem-desktop(70);
+
+    .search-results-page__eyebrow {
+      font-weight: 300;
+      text-transform: uppercase;
+      margin-bottom: get-rem-desktop(20);
+    }
+  }
+
+  .search-results-page__list {
+    @include flex;
+    @include flex-direction(column);
+    row-gap: get-rem-desktop(80);
+  }
+
+  .search-results-page__item {
+    .search-results-page__item-title {
+      margin-bottom: get-rem-desktop(24);
+    }
+
+    .search-results-page__cta {
+      margin-top: get-rem-desktop(24);
+    }
+  }
+}

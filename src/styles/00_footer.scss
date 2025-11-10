@@ -19,6 +19,12 @@
     margin-bottom: get-rem-desktop(5);
   }
 
+  .site-footer__contact {
+    a {
+      @include underline;
+    }
+  }
+
   .site-footer__links,
   .site-footer__contact {
     @include flex;

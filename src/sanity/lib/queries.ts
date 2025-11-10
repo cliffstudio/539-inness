@@ -368,6 +368,37 @@ export const allActivitiesQuery = groq`
   }
 `
 
+export const siteSearchQuery = groq`
+  {
+    "activities": *[_type == "activity" && (
+      title match $wildcardTerm ||
+      activityType match $wildcardTerm ||
+      pt::text(description) match $wildcardTerm
+    )] | order(title asc) {
+      _id,
+      title,
+      "slug": slug.current,
+      activityType,
+      date,
+      timeRange,
+      "descriptionPlain": coalesce(pt::text(description), ""),
+      "resultType": "activity"
+    },
+    "pages": *[_type == "page" && defined(slug.current) && (
+      title match $wildcardTerm ||
+      slug.current match $wildcardTerm ||
+      pageType match $wildcardTerm
+    )] | order(title asc) {
+      _id,
+      title,
+      "slug": slug.current,
+      pageType,
+      "descriptionPlain": coalesce(pt::text(contentBlocks[_type == "heroSection"][0].body), ""),
+      "resultType": "page"
+    }
+  }
+`
+
 export const activityQuery = groq`
   *[_type == "activity" && slug.current == $slug][0] {
     _id,
