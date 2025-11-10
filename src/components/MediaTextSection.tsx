@@ -222,8 +222,8 @@ export default function MediaTextSection({
             {bulletList && bulletList.length > 0 && (
               <div className="media-text-bullet-list">
                 {bulletList.map((item, index) => {
-                  const hasContent = item?.body && item.body.length > 0
-                  if (!hasContent) {
+                  const bulletBody: PortableTextBlock[] = item?.body ?? []
+                  if (bulletBody.length === 0) {
                     return null
                   }
 
@@ -235,7 +235,7 @@ export default function MediaTextSection({
                       </svg>
 
                       <div className="media-text-bullet-list-text">
-                        <PortableText value={item.body} />
+                        <PortableText value={bulletBody} />
                       </div>
                     </div>
                   )
@@ -315,8 +315,8 @@ export default function MediaTextSection({
                       {blockLayout === 'h4-bullet-list' && hasBulletList && (
                         <div className="media-text-bullet-list">
                           {block.bulletList?.map((item, itemIndex) => {
-                            const hasContent = item?.body && item.body.length > 0
-                            if (!hasContent) {
+                            const bulletBody: PortableTextBlock[] = item?.body ?? []
+                            if (bulletBody.length === 0) {
                               return null
                             }
 
@@ -328,7 +328,7 @@ export default function MediaTextSection({
                                 </svg>
 
                                 <div className="media-text-bullet-list-text">
-                                  <PortableText value={item.body} />
+                                  <PortableText value={bulletBody} />
                                 </div>
                               </div>
                             )

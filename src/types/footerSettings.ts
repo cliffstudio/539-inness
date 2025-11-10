@@ -1,5 +1,3 @@
-import { PortableTextBlock } from './sanity'
-
 export type Link = {
   linkType: 'internal' | 'external' | 'jump' | 'file'
   label?: string

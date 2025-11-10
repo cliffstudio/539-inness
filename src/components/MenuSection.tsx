@@ -63,7 +63,6 @@ interface MenuSectionProps {
   id?: string
   layout?: 'food-menu' | 'spa-menu' | 'venue-menu'
   heading?: string
-  image?: SanityImageSource
   foodTabs?: FoodTab[]
   spaTabs?: SpaTab[]
   venueTabs?: VenueTab[]
@@ -72,7 +71,6 @@ interface MenuSectionProps {
 export default function MenuSection({
   id,
   layout = 'food-menu',
-  image,
   foodTabs,
   spaTabs,
   venueTabs,
