@@ -10,7 +10,7 @@ import FeatureSection from './FeatureSection'
 
 interface ContentBlock {
   _type: string
-  layout?: 'media-with-text-h5' | 'media-with-text-h4-body' | 'media-with-text-room-type' | 'media-with-text-h4-bullet-list' | 'media-with-text-h4-body-room-links' | 'media-with-text-h4-body-links' | 'split' | 'full-bleed' | 'text-section' | 'carousel-section' | 'food-menu' | 'spa-menu' | 'venue-menu' | 'single-activity' | '2-activities' | '4-activities' | 'single-feature' | '2-features' | '4-features'
+  layout?: 'media-with-text-h5' | 'media-with-text-h4-body' | 'media-with-text-room-type' | 'media-with-text-h4-bullet-list' | 'media-with-text-h4-body-room-links' | 'media-with-text-h4-body-links' | 'media-with-text-multiple-text-blocks' | 'split' | 'full-bleed' | 'text-section' | 'carousel-section' | 'food-menu' | 'spa-menu' | 'venue-menu' | 'single-activity' | '2-activities' | '4-activities' | 'single-feature' | '2-features' | '4-features'
   [key: string]: unknown
 }
 
@@ -81,7 +81,7 @@ const FlexibleContent: React.FC<FlexibleContentProps> = ({ contentBlocks }) => {
           
           // Only wrap in a div if there are multiple sections
           if (blockOrGroup.length === 1) {
-            return <MediaTextSection key={groupIndex} {...(blockOrGroup[0] as ContentBlock & { layout?: 'media-with-text-h5' | 'media-with-text-h4-body' | 'media-with-text-room-type' | 'media-with-text-h4-bullet-list' | 'media-with-text-h4-body-room-links' | 'media-with-text-h4-body-links' })} />
+            return <MediaTextSection key={groupIndex} {...(blockOrGroup[0] as ContentBlock & { layout?: 'media-with-text-h5' | 'media-with-text-h4-body' | 'media-with-text-room-type' | 'media-with-text-h4-bullet-list' | 'media-with-text-h4-body-room-links' | 'media-with-text-h4-body-links' | 'media-with-text-multiple-text-blocks' })} />
           }
           
           let groupClassName = ''
@@ -94,7 +94,7 @@ const FlexibleContent: React.FC<FlexibleContentProps> = ({ contentBlocks }) => {
           return (
             <div key={`group-${groupIndex}`} className={groupClassName}>
               {blockOrGroup.map((block, blockIndex) => (
-                <MediaTextSection key={`${groupIndex}-${blockIndex}`} {...(block as ContentBlock & { layout?: 'media-with-text-h5' | 'media-with-text-h4-body' | 'media-with-text-room-type' | 'media-with-text-h4-bullet-list' | 'media-with-text-h4-body-room-links' | 'media-with-text-h4-body-links' })} />
+                <MediaTextSection key={`${groupIndex}-${blockIndex}`} {...(block as ContentBlock & { layout?: 'media-with-text-h5' | 'media-with-text-h4-body' | 'media-with-text-room-type' | 'media-with-text-h4-bullet-list' | 'media-with-text-h4-body-room-links' | 'media-with-text-h4-body-links' | 'media-with-text-multiple-text-blocks' })} />
               ))}
             </div>
           )
@@ -107,7 +107,7 @@ const FlexibleContent: React.FC<FlexibleContentProps> = ({ contentBlocks }) => {
           case 'textSection':
             return <TextSection key={groupIndex} {...(blockOrGroup as ContentBlock & { layout?: 'text-section' })} />
           case 'mediaTextSection':
-            return <MediaTextSection key={groupIndex} {...(blockOrGroup as ContentBlock & { layout?: 'media-with-text-h5' | 'media-with-text-h4-body' | 'media-with-text-room-type' })} />
+            return <MediaTextSection key={groupIndex} {...(blockOrGroup as ContentBlock & { layout?: 'media-with-text-h5' | 'media-with-text-h4-body' | 'media-with-text-room-type' | 'media-with-text-multiple-text-blocks' })} />
           case 'breakSection':
             return <BreakSection key={groupIndex} {...(blockOrGroup as ContentBlock & { layout?: 'split' | 'full-bleed' })} />
           case 'carouselSection':

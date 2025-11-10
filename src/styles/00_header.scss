@@ -103,7 +103,7 @@
 
     .right {
       border-left: 1px solid $colour-cream;
-      color: $colour-cream;
+      color: $colour-black;
       background-color: $colour-orange;
       width: get-rem-desktop(120);
       padding: 0 get-rem-desktop(24);
@@ -162,6 +162,7 @@
   }
 }
 
+.page-type-text,
 .page-type-404 {
   .site-header {
     color: $colour-black;

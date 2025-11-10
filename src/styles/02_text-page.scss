@@ -1,0 +1,27 @@
+@use '00_mixins' as *;
+
+.text-page {
+  padding-top: get-rem-desktop(170);
+  padding-bottom: get-rem-desktop(115);
+
+  .inner-wrap {
+    max-width: get-rem-desktop(700);
+    margin: 0 auto;
+
+    .text-page__title {
+      margin-bottom: get-rem-desktop(75);
+    }
+
+    .text-page__block {
+      margin-bottom: get-rem-desktop(80);
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      .text-page__header {
+        margin-bottom: get-rem-desktop(24);
+      }
+    }
+  }
+}

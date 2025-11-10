@@ -43,6 +43,7 @@ export const pageType = defineType({
           { title: 'General Page', value: 'general' },
           { title: 'Activities Page', value: 'activities' },
           { title: 'Links Page', value: 'links' },
+          { title: 'Text Page', value: 'text' },
         ],
       },
     }),
@@ -127,7 +128,7 @@ export const pageType = defineType({
       title: 'Content Blocks',
       type: 'flexibleContent',
       description: 'Add and arrange content blocks to build your page',
-      hidden: ({ parent }) => parent?.pageType === 'activities' || parent?.pageType === 'links',
+      hidden: ({ parent }) => parent?.pageType === 'activities' || parent?.pageType === 'links' || parent?.pageType === 'text',
     }),
 
     // Links specific fields
@@ -162,6 +163,43 @@ export const pageType = defineType({
       of: [{ type: 'detailedLink' }],
       fieldset: 'linksSection',
       hidden: ({ parent }) => parent?.pageType !== 'links',
+    }),
+
+    // Text specific fields
+    defineField({
+      name: 'textBlocks',
+      title: 'Text Blocks',
+      type: 'array',
+      of: [{ 
+        type: 'object',
+        name: 'textBlock',
+        fields: [
+          {
+            name: 'header',
+            title: 'Header',
+            type: 'string',
+          },
+          {
+            name: 'body',
+            title: 'Body',
+            type: 'array',
+            of: [{ type: 'block' }],
+          },
+        ],
+        preview: {
+          select: {
+            header: 'header',
+            body: 'body',
+          },
+          prepare({ header, body }) {
+            return {
+              title: header || 'Untitled Text Block',
+              subtitle: body?.[0]?.children?.[0]?.text || 'No Body',
+            }
+          },
+        },
+      }],
+      hidden: ({ parent }) => parent?.pageType !== 'text',
     }),
   ],
   preview: {

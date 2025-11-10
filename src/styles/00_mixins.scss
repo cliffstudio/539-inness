@@ -99,7 +99,8 @@ MIXINS --------------------
 
 @mixin underline {
   text-decoration: underline;
-  text-underline-offset: 0.15em;
+  text-underline-offset: 0.1em;
+  text-decoration-thickness: 1px;
 }
 
 @mixin reset-ul {

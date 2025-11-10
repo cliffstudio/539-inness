@@ -17,8 +17,13 @@ interface mediaTextSectionProps {
   layout?: 'media-with-text-h5' | 'media-with-text-h4-body' | 'media-with-text-room-type' | 'media-with-text-h4-bullet-list' | 'media-with-text-h4-body-room-links' | 'media-with-text-h4-body-links' | 'media-with-text-multiple-text-blocks'
   heading?: string
   body?: PortableTextBlock[]
-  textBlocks?: { header?: string; body?: PortableTextBlock[] }[]
-  bulletList?: string[]
+  textBlocks?: { 
+    layout?: 'h4-text' | 'h4-bullet-list'
+    header?: string
+    body?: PortableTextBlock[]
+    bulletList?: { body?: PortableTextBlock[] }[]
+  }[]
+  bulletList?: { body?: PortableTextBlock[] }[]
   buttons?: Link[]
   roomLink?: {
     _id: string
@@ -216,16 +221,25 @@ export default function MediaTextSection({
 
             {bulletList && bulletList.length > 0 && (
               <div className="media-text-bullet-list">
-                {bulletList.map((item, index) => (
-                  <div key={index} className="media-text-bullet-list-item">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="16" viewBox="0 0 13 16">
-                      <path d="M11.8181 0.5H0.5V15.5H11.8181V0.5Z"/>
-                      <path d="M0.5 0.5L11.8181 15.5"/>
-                    </svg>
+                {bulletList.map((item, index) => {
+                  const hasContent = item?.body && item.body.length > 0
+                  if (!hasContent) {
+                    return null
+                  }
 
-                    <span>{item}</span>
-                  </div>
-                ))}
+                  return (
+                    <div key={index} className="media-text-bullet-list-item">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="13" height="16" viewBox="0 0 13 16">
+                        <path d="M11.8181 0.5H0.5V15.5H11.8181V0.5Z"/>
+                        <path d="M0.5 0.5L11.8181 15.5"/>
+                      </svg>
+
+                      <div className="media-text-bullet-list-text">
+                        <PortableText value={item.body} />
+                      </div>
+                    </div>
+                  )
+                })}
               </div>
             )}
 
@@ -283,18 +297,47 @@ export default function MediaTextSection({
           <div className="col-3-12_lg col-1">
             {textBlocks && textBlocks.length > 0 && (
               <div className="media-text-multiple-blocks">
-                {textBlocks.map((block, index) => (
-                  <div key={index} className="media-text-block">
-                    {block.header && (
-                      <h5 className="media-text-heading">{block.header}</h5>
-                    )}
-                    {block.body && (
-                      <div className="media-text-body">
-                        <PortableText value={block.body} />
-                      </div>
-                    )}
-                  </div>
-                ))}
+                {textBlocks.map((block, index) => {
+                  const blockLayout = block.layout ?? 'h4-text'
+                  const hasBody = block.body && block.body.length > 0
+                  const hasBulletList = block.bulletList?.some((bullet) => bullet?.body && bullet.body.length > 0)
+
+                  return (
+                    <div key={index} className="media-text-block">
+                      {block.header && (
+                        <h5 className="media-text-heading">{block.header}</h5>
+                      )}
+                      {blockLayout === 'h4-text' && hasBody && (
+                        <div className="media-text-body">
+                          <PortableText value={block.body} />
+                        </div>
+                      )}
+                      {blockLayout === 'h4-bullet-list' && hasBulletList && (
+                        <div className="media-text-bullet-list">
+                          {block.bulletList?.map((item, itemIndex) => {
+                            const hasContent = item?.body && item.body.length > 0
+                            if (!hasContent) {
+                              return null
+                            }
+
+                            return (
+                              <div key={itemIndex} className="media-text-bullet-list-item">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="16" viewBox="0 0 13 16">
+                                  <path d="M11.8181 0.5H0.5V15.5H11.8181V0.5Z"/>
+                                  <path d="M0.5 0.5L11.8181 15.5"/>
+                                </svg>
+
+                                <div className="media-text-bullet-list-text">
+                                  <PortableText value={item.body} />
+                                </div>
+                              </div>
+                            )
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  )
+                })}
               </div>
             )}
           </div>

@@ -2,7 +2,7 @@
 
 .site-footer {
   background-color: $colour-orange;
-  color: $colour-cream;
+  color: $colour-black;
   padding-top: get-rem-desktop(200);
   padding-bottom: get-rem-desktop(80);
   @include flex;
@@ -11,7 +11,7 @@
 
   svg {
     width: get-rem-desktop(244);
-    fill: $colour-cream;
+    fill: $colour-black;
   }
 
   .site-footer__heading {
@@ -24,6 +24,13 @@
     @include flex;
     @include flex-direction(column);
     gap: get-rem-desktop(5);
+  }
+
+  .site-footer__links,
+  .site-footer__credit {
+    a {
+      text-decoration: none;
+    }
   }
 
   .site-footer__credit {

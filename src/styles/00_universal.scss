@@ -55,7 +55,7 @@
 
   &--orange {
     background-color: $colour-orange;
-    color: $colour-cream;
+    color: $colour-black;
 
     &:hover {
       background-color: $colour-orange-hover;
@@ -269,6 +269,18 @@
           stroke: $colour-orange;
           fill: none;
           margin-top: 0.25em;
+        }
+
+        .media-text-bullet-list-text {
+          width: 100%;
+
+          p {
+            margin: 0;
+
+            &:not(:last-child) {
+              margin-bottom: get-rem-desktop(8);
+            }
+          }
         }
       }
     }
@@ -565,8 +577,7 @@
 
   &.background-orange {
     background-color: $colour-orange;
-
-    color: $colour-cream;
+    color: $colour-black;
 
     .button {
       &--outline {

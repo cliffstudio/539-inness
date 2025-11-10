@@ -88,10 +88,16 @@ const mediaTextSectionFragment = groq`{
   heading,
   body,
   textBlocks[] {
+    layout,
     header,
+    body,
+    bulletList[] {
+      body
+    }
+  },
+  bulletList[] {
     body
   },
-  bulletList,
   buttons[] ${linkFragment},
   mediaType,
   images[] ${imageFragment},
@@ -279,6 +285,11 @@ export const pageQuery = groq`
     title,
     slug,
     pageType,
+    textBlocks[] {
+      _key,
+      header,
+      body
+    },
     contentBlocks[] ${flexibleContentFragment}
   }
 `
@@ -354,6 +365,27 @@ export const allActivitiesQuery = groq`
     bookingHref,
     "slug": slug.current,
     activityType
+  }
+`
+
+export const activityQuery = groq`
+  *[_type == "activity" && slug.current == $slug][0] {
+    _id,
+    title,
+    slug,
+    date,
+    timeRange,
+    description,
+    bookingHref,
+    activityType,
+    image ${imageFragment},
+    contentBlocks[] ${flexibleContentFragment}
+  }
+`
+
+export const activitySlugsQuery = groq`
+  *[_type == "activity" && defined(slug.current)] {
+    "slug": slug.current
   }
 `
 

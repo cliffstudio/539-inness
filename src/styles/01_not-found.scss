@@ -28,7 +28,7 @@
     }
 
     .not-found-page__button {
-      text-decoration: underline;
+      @include underline;
     }
   }
 }

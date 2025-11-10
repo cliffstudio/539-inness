@@ -31,12 +31,12 @@ export default function Footer({ footer }: FooterProps) {
             )}
 
             {footer.navigationColumn1.links && footer.navigationColumn1.links.length > 0 && (
-              <ul className="site-footer__links">
+              <div className="site-footer__links">
                 {footer.navigationColumn1.links.map((link, linkIndex) => {
                   const { href, text } = getLinkInfo(link)
                   if (!href || !text) return null
                   return (
-                    <li key={linkIndex}>
+                    <div key={linkIndex}>
                       <a
                         href={href}
                         className="site-footer__link"
@@ -45,10 +45,10 @@ export default function Footer({ footer }: FooterProps) {
                       >
                         {text}
                       </a>
-                    </li>
+                    </div>
                   )
                 })}
-              </ul>
+              </div>
             )}
           </div>
         )}
@@ -61,12 +61,12 @@ export default function Footer({ footer }: FooterProps) {
             )}
 
             {footer.navigationColumn2.links && footer.navigationColumn2.links.length > 0 && (
-              <ul className="site-footer__links">
+              <div className="site-footer__links">
                 {footer.navigationColumn2.links.map((link, linkIndex) => {
                   const { href, text } = getLinkInfo(link)
                   if (!href || !text) return null
                   return (
-                    <li key={linkIndex}>
+                    <div key={linkIndex}>
                       <a
                         href={href}
                         className="site-footer__link"
@@ -75,10 +75,10 @@ export default function Footer({ footer }: FooterProps) {
                       >
                         {text}
                       </a>
-                    </li>
+                    </div>
                   )
                 })}
-              </ul>
+              </div>
             )}
           </div>
         )}
@@ -91,12 +91,12 @@ export default function Footer({ footer }: FooterProps) {
             )}
 
             {footer.followColumn.links && footer.followColumn.links.length > 0 && (
-              <ul className="site-footer__links">
+              <div className="site-footer__links">
                 {footer.followColumn.links.map((link, linkIndex) => {
                   const { href, text } = getLinkInfo(link)
                   if (!href || !text) return null
                   return (
-                    <li key={linkIndex}>
+                    <div key={linkIndex}>
                       <a
                         href={href}
                         className="site-footer__link"
@@ -105,10 +105,10 @@ export default function Footer({ footer }: FooterProps) {
                       >
                         {text}
                       </a>
-                    </li>
+                    </div>
                   )
                 })}
-              </ul>
+              </div>
             )}
           </div>
         )}
@@ -121,21 +121,21 @@ export default function Footer({ footer }: FooterProps) {
             )}
 
             {footer.contactColumn.contactItems && footer.contactColumn.contactItems.length > 0 && (
-              <ul className="site-footer__contact">
+              <div className="site-footer__contact">
                 {footer.contactColumn.contactItems.map((item, index) => {
                   if (!item.label || !item.phoneNumber) return null
                   const phoneHref = `tel:${item.phoneNumber.replace(/\D/g, '')}`
                   return (
-                    <li key={index} className="site-footer__contact-item">
+                    <div key={index} className="site-footer__contact-item">
                       <span className="site-footer__contact-label">{item.label}: </span>
                       <a href={phoneHref} className="site-footer__contact-phone">
                         {item.phoneNumber}
-                        {item.extension && ` ${item.extension}`}
                       </a>
-                    </li>
+                      <span className="site-footer__contact-extension">{item.extension && ` ${item.extension}`}</span>
+                    </div>
                   )
                 })}
-              </ul>
+              </div>
             )}
           </div>
         )}

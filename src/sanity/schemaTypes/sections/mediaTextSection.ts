@@ -51,13 +51,65 @@ export default defineType({
           type: 'object',
           name: 'textBlock',
           fields: [
+            {
+              name: 'layout',
+              title: 'Layout',
+              type: 'string',
+              options: {
+                list: [
+                  { title: 'H4 with Text', value: 'h4-text' },
+                  { title: 'H4 with Bullet List', value: 'h4-bullet-list' },
+                ],
+              },
+              initialValue: 'h4-text',
+            },
             { name: 'header', title: 'Header', type: 'string' },
-            { name: 'body', title: 'Body', type: 'array', of: [{ type: 'block' }] },
+            { 
+              name: 'body', 
+              title: 'Body', 
+              type: 'array', 
+              of: [{ type: 'block' }],
+              hidden: ({ parent }) => parent?.layout === 'h4-bullet-list',
+            },
+            {
+              name: 'bulletList',
+              title: 'Bullet List',
+              type: 'array',
+              description: 'Add each bullet as a separate list item.',
+              of: [
+                {
+                  type: 'object',
+                  name: 'bulletItem',
+                  fields: [
+                    {
+                      name: 'body',
+                      title: 'Body',
+                      type: 'array',
+                      of: [{ type: 'block' }],
+                    },
+                  ],
+                  preview: {
+                    select: {
+                      body: 'body',
+                    },
+                    prepare({ body }) {
+                      const firstBlock = body?.[0]
+                      const text = firstBlock?.children?.[0]?.text
+                      return {
+                        title: text || 'Bullet Item',
+                      }
+                    },
+                  },
+                },
+              ],
+              hidden: ({ parent }) => parent?.layout !== 'h4-bullet-list',
+            },
           ],
           preview: {
-            select: { title: 'header' },
-            prepare({ title }) {
-              return { title: title || 'Untitled Text Block' }
+            select: { title: 'header', layout: 'layout' },
+            prepare({ title, layout }) {
+              const layoutLabel = layout === 'h4-bullet-list' ? 'H4 + Bullet List' : 'H4 + Text'
+              return { title: `${title || 'Untitled Text Block'} (${layoutLabel})` }
             },
           },
         },
@@ -68,7 +120,33 @@ export default defineType({
       name: 'bulletList',
       title: 'Bullet List',
       type: 'array',
-      of: [{ type: 'string' }],
+      description: 'Add each bullet as a separate list item.',
+      of: [
+        {
+          type: 'object',
+          name: 'bulletItem',
+          fields: [
+            {
+              name: 'body',
+              title: 'Body',
+              type: 'array',
+              of: [{ type: 'block' }],
+            },
+          ],
+          preview: {
+            select: {
+              body: 'body',
+            },
+            prepare({ body }) {
+              const firstBlock = body?.[0]
+              const text = firstBlock?.children?.[0]?.text
+              return {
+                title: text || 'Bullet Item',
+              }
+            },
+          },
+        },
+      ],
       hidden: ({ parent }) => parent?.layout !== 'media-with-text-h4-bullet-list',
     }),
     defineField({

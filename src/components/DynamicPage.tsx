@@ -1,7 +1,7 @@
 // src/components/DynamicPage.tsx
 import React from 'react'
 import { client } from '../../sanity.client'
-import { pageQuery, activitiesQuery, allActivitiesQuery, linksQuery } from '../sanity/lib/queries'
+import { pageQuery, activitiesQuery, allActivitiesQuery, linksQuery, activityQuery } from '../sanity/lib/queries'
 import { notFound } from 'next/navigation'
 import BodyClassProvider from './BodyClassProvider'
 import FlexibleContent from './FlexibleContent'
@@ -9,6 +9,8 @@ import HeroSectionActivities from './HeroSectionActivities'
 import HeroSectionLinks from './HeroSectionLinks'
 import ActivityFilter from './ActivityFilter'
 import LinksSection from './LinksSection'
+import ActivityPage from './ActivityPage'
+import TextPage from './TextPage'
 
 interface PageProps {
   params: Promise<{
@@ -18,7 +20,34 @@ interface PageProps {
 
 export default async function DynamicPage({ params }: PageProps) {
   const resolvedParams = await params
-  const page = await client.fetch(pageQuery, { slug: resolvedParams.slug })
+  const slug = resolvedParams.slug
+  const isActivityDetail = slug.startsWith('activities/')
+
+  if (isActivityDetail) {
+    const activitySlug = slug.replace(/^activities\//, '')
+
+    if (!activitySlug) {
+      notFound()
+    }
+
+    const activity = await client.fetch(activityQuery, { slug: activitySlug })
+
+    if (!activity) {
+      notFound()
+    }
+
+    return (
+      <>
+        <BodyClassProvider 
+          pageType="activity" 
+          slug={slug} 
+        />
+        <ActivityPage {...activity} />
+      </>
+    )
+  }
+
+  const page = await client.fetch(pageQuery, { slug })
 
   if (!page) {
     notFound()
@@ -79,6 +108,19 @@ export default async function DynamicPage({ params }: PageProps) {
         {linksPage.links && linksPage.links.length > 0 && (
           <LinksSection links={linksPage.links} />
         )}
+      </>
+    )
+  }
+
+  if (page.pageType === 'text') {
+    return (
+      <>
+        <BodyClassProvider 
+          pageType={page.pageType} 
+          slug={page.slug?.current} 
+        />
+
+        <TextPage title={page.title} textBlocks={page.textBlocks} />
       </>
     )
   }
