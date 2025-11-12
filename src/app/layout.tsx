@@ -65,6 +65,14 @@ export default function RootLayout({
           strategy="beforeInteractive"
         />
         <Script
+          src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"
+          strategy="afterInteractive"
+        />
+        <Script
+          src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"
+          strategy="afterInteractive"
+        />
+        <Script
           id="viewport-detection"
           strategy="afterInteractive"
           dangerouslySetInnerHTML={{
@@ -125,14 +133,50 @@ export default function RootLayout({
                   );
                 }
                 
+                function initScaleImages() {
+                  if (typeof window === 'undefined' || typeof window.gsap === 'undefined' || typeof window.ScrollTrigger === 'undefined') {
+                    return;
+                  }
+
+                  if (!window.__gsapScrollTriggerRegistered) {
+                    window.gsap.registerPlugin(window.ScrollTrigger);
+                    window.__gsapScrollTriggerRegistered = true;
+                  }
+
+                  window.gsap.utils.toArray('.scale-element').forEach(function(image) {
+                    if (!image.closest('.scale-container')) {
+                      return;
+                    }
+
+                    if (image.dataset.scaleImageInitialized === 'true') {
+                      return;
+                    }
+
+                    image.dataset.scaleImageInitialized = 'true';
+
+                    window.gsap.to(image, {
+                      scale: 1.1,
+                      ease: "none",
+                      scrollTrigger: {
+                        trigger: image.closest('.scale-container'),
+                        start: "top bottom",
+                        end: "bottom top",
+                        scrub: true
+                      }
+                    });
+                  });
+                }
+
                 // Run when DOM is ready
                 $(document).ready(function() {
                   outOfView();
+                  initScaleImages();
                 });
                 
                 // Re-run on browser navigation (back/forward)
                 window.addEventListener('popstate', function() {
                   setTimeout(outOfView, 100);
+                  setTimeout(initScaleImages, 100);
                 });
                 
                 // Re-run on Next.js route changes
@@ -158,6 +202,7 @@ export default function RootLayout({
                   
                   if (shouldReRun) {
                     setTimeout(outOfView, 100);
+                    setTimeout(initScaleImages, 100);
                   }
                 });
                 
@@ -220,6 +265,7 @@ export default function RootLayout({
                 
                 // Initialize smooth scroll
                 initSmoothScroll();
+                initScaleImages();
               }
             `
           }}

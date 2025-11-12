@@ -90,7 +90,7 @@ export default function ActivityFilter({ activities, layout = '4-activities' }: 
         </div>
       </div>
 
-      <ActivitySection layout={layout} activities={filteredActivities} />
+      <ActivitySection layout={layout} activities={filteredActivities} disableCarousel={true} />
     </>
   )
 }

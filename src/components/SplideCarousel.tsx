@@ -54,6 +54,7 @@ export default function SplideCarousel({ images, onPrevious, onNext }: SplideCar
               alt={image.alt || ""} 
               className="lazy full-bleed-image"
             />
+            <div className="loading-overlay" />
           </SplideSlide>
         ))}
       </Splide>

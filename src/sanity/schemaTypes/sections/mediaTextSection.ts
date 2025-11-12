@@ -24,6 +24,7 @@ export default defineType({
           { title: 'Media with Text (h4 & bullet list)', value: 'media-with-text-h4-bullet-list' },
           { title: 'Media with Text (h4, body & links)', value: 'media-with-text-h4-body-links' },
           { title: 'Media with Text (h4, body & room links)', value: 'media-with-text-h4-body-room-links' },
+          { title: 'Media with Text (h4, body & activity links)', value: 'media-with-text-h4-body-activity-links' },
           { title: 'Media with Text (multiple text blocks)', value: 'media-with-text-multiple-text-blocks' },
         ],
       },
@@ -33,7 +34,7 @@ export default defineType({
       name: 'heading',
       title: 'Heading',
       type: 'string',
-      hidden: ({ parent }) => parent?.layout !== 'media-with-text-h4-body' && parent?.layout !== 'media-with-text-h4-bullet-list' && parent?.layout !== 'media-with-text-h4-body-room-links' && parent?.layout !== 'media-with-text-h4-body-links',
+      hidden: ({ parent }) => parent?.layout !== 'media-with-text-h4-body' && parent?.layout !== 'media-with-text-h4-bullet-list' && parent?.layout !== 'media-with-text-h4-body-room-links' && parent?.layout !== 'media-with-text-h4-body-links' && parent?.layout !== 'media-with-text-h4-body-activity-links',
     }),
     defineField({
       name: 'body',
@@ -154,7 +155,7 @@ export default defineType({
       title: 'Buttons',
       type: 'array',
       of: [{ type: 'link' }],
-      hidden: ({ parent }) => parent?.layout !== 'media-with-text-h4-body' && parent?.layout !== 'media-with-text-h4-body-room-links' && parent?.layout !== 'media-with-text-h4-body-links' && parent?.layout !== 'media-with-text-h4-bullet-list',
+      hidden: ({ parent }) => parent?.layout !== 'media-with-text-h4-body' && parent?.layout !== 'media-with-text-h4-body-room-links' && parent?.layout !== 'media-with-text-h4-body-links' && parent?.layout !== 'media-with-text-h4-bullet-list' && parent?.layout !== 'media-with-text-h4-body-activity-links',
     }),
     defineField({
       name: 'roomLink',
@@ -216,20 +217,47 @@ export default defineType({
       title: 'Room Links',
       type: 'array',
       of: [{ type: 'reference', to: [{ type: 'room' }] }],
-      validation: (Rule) => Rule.min(2).custom((value) => {
-        if (!value || value.length === 0) return true // Allow empty array
-        if (value.length % 2 !== 0) {
-          return 'Room Links must be added in multiples of 2 (2, 4, 6, etc.)'
-        }
-        return true
-      }),
+      description: 'Add Room Links in even numbers (2, 4, 6, etc.)',
+      validation: (Rule) =>
+        Rule.custom((value) => {
+          if (!value || value.length === 0) return true
+          if (value.length < 2 || value.length % 2 !== 0) {
+            return 'Room Links must be added in even numbers (2, 4, 6, etc.)'
+          }
+          return true
+        }),
       hidden: ({ parent }) => parent?.layout !== 'media-with-text-h4-body-room-links',
+    }),
+    defineField({
+      name: 'activityLinks',
+      title: 'Activity Links',
+      type: 'array',
+      of: [{ type: 'reference', to: [{ type: 'activity' }] }],
+      description: 'Add Activity Links in even numbers (2, 4, 6, etc.)',
+      validation: (Rule) =>
+        Rule.custom((value) => {
+          if (!value || value.length === 0) return true
+          if (value.length < 2 || value.length % 2 !== 0) {
+            return 'Activity Links must be added in even numbers (2, 4, 6, etc.)'
+          }
+          return true
+        }),
+      hidden: ({ parent }) => parent?.layout !== 'media-with-text-h4-body-activity-links',
     }),
     defineField({
       name: 'links',
       title: 'Links',
       type: 'array',
       of: [{ type: 'detailedLink' }],
+      description: 'Add Links in sets of either 2 or 4.',
+      validation: (Rule) =>
+        Rule.custom((value) => {
+          if (!value || value.length === 0) return true
+          if (![2, 4].includes(value.length)) {
+            return 'Links must be added in sets of either 2 or 4.'
+          }
+          return true
+        }),
       hidden: ({ parent }) => parent?.layout !== 'media-with-text-h4-body-links',
     }),
   ],

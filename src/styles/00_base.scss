@@ -35,7 +35,7 @@ p, ul, ol {
 		margin-bottom: 0px !important;
 	}
 
-  a {
+  a:not(.button) {
     @include underline;
   }
 }

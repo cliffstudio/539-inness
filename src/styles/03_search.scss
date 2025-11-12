@@ -64,7 +64,7 @@
   .inner-wrap {
     padding-top: calc(50vh - #{get-rem-desktop(20)});
     padding-bottom: get-rem-desktop(250);
-    min-height: 100dvh;
+    min-height: 100svh;
     max-width: get-rem-desktop(700);
     margin: 0 auto;
   }
@@ -93,8 +93,12 @@
 }
 
 .search-results-page {
-  padding-top: get-rem-desktop(176);
+  padding-top: get-rem-desktop(170);
   padding-bottom: get-rem-desktop(120);
+
+  @media only screen and (max-width: 768px) {
+    padding-bottom: get-rem-mobile(170);
+  }
 
   .inner-wrap {
     max-width: get-rem-desktop(700);

@@ -76,11 +76,11 @@ export default function CarouselSection({ images }: CarouselSectionProps) {
               return (
                 <li key={index} className="splide__slide">
                   <img 
-                    src={imageUrl}
+                    data-src={imageUrl}
                     alt=""
-                    className="full-bleed-image"
-                    loading="lazy"
+                    className="lazy full-bleed-image"
                   />
+                  <div className="loading-overlay" />
                 </li>
               )
             })}

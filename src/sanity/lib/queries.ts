@@ -119,6 +119,15 @@ const mediaTextSectionFragment = groq`{
     "slug": slug.current,
     image ${imageFragment}
   },
+  activityLinks[]-> {
+    _id,
+    title,
+    description,
+    "slug": slug.current,
+    image ${imageFragment},
+    date,
+    timeRange
+  },
   links[] {
     header,
     body,

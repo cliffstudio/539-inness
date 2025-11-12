@@ -50,7 +50,7 @@ const ActivityPage: React.FC<ActivityPageProps> = ({
           </div>
         )}
 
-        <div className="hero-content h-pad out-of-opacity">
+        <div className="hero-content out-of-opacity">
           <div className="row-1">
             {title && <h3>{title}</h3>}
 

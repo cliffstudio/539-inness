@@ -103,7 +103,7 @@ export default function MenuSection({
             ))}
           </div>
         
-          <div className="row-lg">
+          <div className="menu-content-wrap row-lg">
             <div className="col-6-12_lg menu-content out-of-opacity">
               {/* Active Tab Content */}
               {foodTabs[activeTab] && (
@@ -191,7 +191,7 @@ export default function MenuSection({
             ))}
           </div>
         
-          <div className="row-lg">
+          <div className="menu-content-wrap row-lg">
             <div className="col-6-12_lg menu-content out-of-opacity">
               {/* Active Tab Content */}
               <div className="menu-tab-header">
@@ -264,7 +264,7 @@ export default function MenuSection({
             ))}
           </div>
         
-          <div className="row-lg">
+          <div className="menu-content-wrap row-lg">
             <div className="col-6-12_lg menu-content out-of-opacity">
               {/* Active Tab Content */}
               {venueTabs[activeVenueTab] && (

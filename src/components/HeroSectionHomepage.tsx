@@ -49,6 +49,13 @@ export default function HeroSectionHomepage({
     }
   }, [homepageMediaType])
 
+  const handleArrowClick = () => {
+    window.scrollBy({
+      top: window.innerHeight,
+      behavior: 'smooth'
+    })
+  }
+
   // Don't render if no content
   if (!homepageHeading && !homepageImage && !homepageVideo) {
     return null
@@ -84,12 +91,12 @@ export default function HeroSectionHomepage({
       )}
 
       {homepageHeading && (
-        <div className="hero-content h-pad out-of-view">
+        <div className="hero-content h-pad out-of-opacity stage-1">
           <h3>{homepageHeading}</h3>
         </div>
       )}
 
-      <div className="hero-arrow out-of-opacity">
+      <div className="hero-arrow out-of-opacity stage-2" onClick={handleArrowClick} style={{ cursor: 'pointer' }}>
         <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36" fill="none">
           <circle cx="18" cy="18" r="17.5" transform="matrix(0 -1 -1 0 36 36)" stroke="#FFF9ED"/>
           <path d="M24 15.5L17.5 22L11 15.5" stroke="#FFF9ED"/>

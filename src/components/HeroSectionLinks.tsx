@@ -26,7 +26,7 @@ export default function HeroSectionLinks({ id, heading, body, image }: LinksHero
         </div>
       )}
 
-      <div className="hero-content h-pad out-of-view">
+      <div className="hero-content out-of-opacity">
         {(heading || body) && (
           <div className="row-1">
             {heading && <h3>{heading}</h3>}

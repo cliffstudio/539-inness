@@ -21,27 +21,27 @@ export default function Hero({ id, layout = 'full-bleed', subHeading, heading, b
   return (
     <>
       {layout === 'full-bleed' && (
-        <section id={id} className="break-section layout-1 relative">
+        <section id={id} className="break-section layout-1 relative scale-container">
           {image && (
-            <div className="fill-space-image-wrap media-wrap">
+            <div className="fill-space-image-wrap media-wrap scale-element">
               <img 
                 data-src={urlFor(image).url()} 
                 alt="" 
-                className="lazy full-bleed-image"
+                className="lazy full-bleed-image scale-element"
               />
               <div className="loading-overlay" />
             </div>
           )}
 
-          <div className="break-content out-of-view">
-            <h6>{subHeading}</h6>
+          <div className="break-content h-pad">
+            <h6 className="out-of-opacity">{subHeading}</h6>
 
             {heading && (
-              <h1 className="break-heading">{heading}</h1>
+              <h1 className="break-heading out-of-opacity">{heading}</h1>
             )}
 
             {body && body.length > 0 && (
-              <div className="break-body body-bigger">
+              <div className="break-body body-bigger out-of-opacity">
                 <PortableText value={body} />
               </div>
             )}
@@ -53,7 +53,9 @@ export default function Hero({ id, layout = 'full-bleed', subHeading, heading, b
         <section id={id} className={`break-section layout-2 row-lg h-pad background-${resolvedBackgroundColor === 'black' ? 'black' : resolvedBackgroundColor === 'green' ? 'green' : 'orange'}`}>
           <div className="col-6-12_lg out-of-opacity">
             <div className="break-content">
-              <h6>{subHeading}</h6>
+              <h6 className="desktop">{subHeading}</h6>
+              
+              {subHeading && <h6 className="mobile">{subHeading}</h6>}
 
               {heading && (
                 <h1>{heading}</h1>

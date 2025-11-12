@@ -31,7 +31,7 @@ export default function Hero({ id, title, image, description, specs }: HeroProps
         </div>
       )}
 
-      <div className="hero-content h-pad out-of-opacity">
+      <div className="hero-content out-of-opacity">
         {(title || description) && (
           <div className="row-1">
             {title && <h3>{title}</h3>}
@@ -56,6 +56,9 @@ export default function Hero({ id, title, image, description, specs }: HeroProps
           )}
           
           {/* todo: add check availability button */}
+          <div className="button button--outline">
+            Book Room
+          </div>
         </div>
       </div>
     </section>

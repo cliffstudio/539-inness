@@ -4,7 +4,7 @@
   .inner-wrap {
     padding-top: get-rem-desktop(200);
     padding-bottom: get-rem-desktop(165);
-    min-height: 100dvh;
+    min-height: 100svh;
     max-width: get-rem-desktop(520);
     margin: 0 auto;
     text-align: center;
@@ -16,7 +16,7 @@
     .not-found-page__heading {
       font-family: 'ABC Arizona Flare';
       font-weight: 100;
-      @include font-size(280px, 280px);
+      @include font-size(100px, 280px);
       line-height: 1;
       margin-bottom: get-rem-desktop(28);
     }
