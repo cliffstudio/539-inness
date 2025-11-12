@@ -10,6 +10,12 @@ html, html a {
 	text-shadow: 1px 1px 1px rgba(0,0,0,0.004);
 }
 
+/* Prevent overscroll bounce to stop fixed content from being visible during overscroll */
+html,
+body {
+  overscroll-behavior: none;
+}
+
 * {
   -webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
