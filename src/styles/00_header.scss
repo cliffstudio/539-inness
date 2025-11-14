@@ -1,6 +1,10 @@
 @use '00_mixins' as *;
 
-.site-header {
+/*
+DESKTOP HEADER ------------------
+*/
+
+.site-header-desktop {
   position: fixed;
   top: 0;
   left: 0;
@@ -9,6 +13,10 @@
   color: $colour-cream;
   will-change: background-color, color;
   @include transition-multiple(background-color 500ms cubic-bezier(0.25,0.1,0.25,1), color 500ms cubic-bezier(0.25,0.1,0.25,1));
+
+  @media only screen and (max-width: 768px) {
+    display: none;
+  }
 
   .logo-wrap {
     margin-top: get-rem-desktop(16.5);
@@ -122,7 +130,7 @@
   }
 }
 
-.site-header.scrolled {
+.site-header-desktop.scrolled {
   background-color: $colour-cream;
   color: $colour-black;
 
@@ -164,7 +172,7 @@
 .page-type-search,
 .page-type-search-results,
 .page-type-404 {
-  .site-header {
+  .site-header-desktop {
     color: $colour-black;
 
     .logo-text,
@@ -179,6 +187,189 @@
         svg {
           stroke: $colour-black;
         }
+      }
+    }
+  }
+}
+
+/*
+MOBILE HEADER ------------------
+*/
+
+.site-header-mobile {
+  display: none;
+  border-bottom: 1px solid $colour-cream;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  color: $colour-cream;
+  will-change: background-color, color;
+  @include transition-multiple(background-color 500ms cubic-bezier(0.25,0.1,0.25,1), border-color 500ms cubic-bezier(0.25,0.1,0.25,1), color 500ms cubic-bezier(0.25,0.1,0.25,1));
+
+  @media only screen and (max-width: 768px) {
+    @include flex;
+    @include justify-content(space-between);
+    height: get-rem-mobile(63);
+  }
+
+  .logo-wrap {
+    margin-top: get-rem-mobile(16);
+    margin-bottom: get-rem-mobile(16);
+    height: get-rem-mobile(31);
+    position: relative;
+
+    .logo-text,
+    .logo-icon {
+      width: fit-content;
+      margin: 0 auto;
+      will-change: opacity;
+      @include transition(opacity 500ms cubic-bezier(0.25,0.1,0.25,1));
+
+      svg {
+        height: get-rem-mobile(31);
+        fill: $colour-cream;
+        will-change: fill;
+        @include transition(fill 500ms cubic-bezier(0.25,0.1,0.25,1));
+      }
+
+      a {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+      }
+    }
+
+    .logo-icon {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      opacity: 0;
+      pointer-events: none;
+    }
+  }
+
+  .left,
+  .right {
+    width: get-rem-mobile(85);
+    height: 100%;
+    @include flex;
+    @include align-items(center);
+    @include justify-content(center);
+    cursor: pointer;
+    will-change: background-color, border-color;
+    @include transition-multiple(background-color 500ms cubic-bezier(0.25,0.1,0.25,1), border-color 500ms cubic-bezier(0.25,0.1,0.25,1));
+  }
+
+  .left {
+    border-right: 1px solid $colour-cream;
+    position: relative;
+
+    .close {
+      opacity: 0;
+      pointer-events: none;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      @include transform(translate(-50%, -50%));
+    }
+  }
+
+  .right {
+    border-left: 1px solid $colour-cream;
+    color: $colour-cream;
+    background-color: $colour-orange;
+  }
+}
+
+.site-header-mobile.scrolled {
+  background-color: $colour-cream;
+  color: $colour-black;
+
+  .logo-text,
+  .logo-icon {
+    svg {
+      fill: $colour-black;
+    }
+  }
+
+  .logo-text {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .logo-icon {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .left,
+  .right {
+    border-color: $colour-beige;
+  }
+}
+
+.menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 99;
+  background-color: $colour-black;
+  color: $colour-cream;
+  opacity: 0;
+  pointer-events: none;
+
+  .inner-wrap {
+    height: 100%;
+    @include flex;
+    @include flex-direction(column);
+    @include justify-content(center);
+    @include align-items(center);
+    row-gap: get-rem-mobile(155);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .nav {
+    @include flex;
+    @include flex-direction(column);
+    @include justify-content(center);
+    @include align-items(center);
+    row-gap: get-rem-mobile(12);
+  }
+
+  .icon-wrapper {
+    @include flex;
+    @include justify-content(center);
+    @include align-items(center);
+    column-gap: get-rem-mobile(26);
+
+    svg {
+      stroke: $colour-cream;
+      fill: none;
+    }
+
+    .search-icon {
+      svg {
+        width: get-rem-mobile(25);
+        height: get-rem-mobile(25);
+      }
+    }
+
+    .cart-icon,
+    .account-icon {
+      svg {
+        width: get-rem-mobile(21);
+        height: get-rem-mobile(23);
       }
     }
   }

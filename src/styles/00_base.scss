@@ -16,6 +16,18 @@ body {
   overscroll-behavior: none;
 }
 
+html:not(.scroll-enabled) {
+  overflow: hidden;
+}
+
+html.scroll-enabled {
+  overflow: auto;
+}
+
+html.scroll-enabled body {
+  position: static;
+}
+
 * {
   -webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
