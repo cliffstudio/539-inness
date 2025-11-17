@@ -22,3 +22,8 @@
 html {
   scroll-behavior: smooth;
 }
+
+/* Initial body opacity - BodyFadeIn component will handle fade-in */
+body {
+  opacity: 0;
+}

@@ -4,6 +4,7 @@ import "./globals.css";
 import { client } from "../../sanity.client";
 import { metadataQuery } from "../sanity/lib/queries";
 import { urlFor } from "../sanity/utils/imageUrlBuilder";
+import BodyFadeIn from "../components/BodyFadeIn";
 
 export const revalidate = 0
 
@@ -270,6 +271,7 @@ export default function RootLayout({
             `
           }}
         />
+        <BodyFadeIn />
         {children}
       </body>
     </html>
