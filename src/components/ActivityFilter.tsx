@@ -73,7 +73,14 @@ export default function ActivityFilter({ activities, layout = '4-activities' }: 
             <div className="activity-filter-label">All</div>
           </button>
           {availableActivityTypes.map((activityType) => {
-            const capitalizedLabel = activityType.charAt(0).toUpperCase() + activityType.slice(1).toLowerCase()
+            // Map activity type values to their display titles
+            const activityTypeLabels: Record<string, string> = {
+              'wellness': 'Wellness',
+              'food-and-beverage': 'Food & Beverage',
+              'kids': 'Kids',
+              'golf': 'Golf',
+            }
+            const displayLabel = activityTypeLabels[activityType] || activityType.charAt(0).toUpperCase() + activityType.slice(1).toLowerCase()
             return (
               <button
                 key={activityType}
@@ -83,7 +90,7 @@ export default function ActivityFilter({ activities, layout = '4-activities' }: 
                 <div className="activity-filter-box">
                   <div className="activity-filter-box-inner"></div>
                 </div>
-                <div className="activity-filter-label">{capitalizedLabel}</div>
+                <div className="activity-filter-label">{displayLabel}</div>
               </button>
             )
           })}

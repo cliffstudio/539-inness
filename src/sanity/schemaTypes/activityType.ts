@@ -29,11 +29,13 @@ export const activityType = defineType({
       type: 'string',
       options: {
         list: [
-          { title: 'Spa', value: 'spa' },
+          { title: 'Wellness', value: 'wellness' },
+          { title: 'Food & Beverage', value: 'food-and-beverage' },
+          { title: 'Kids', value: 'kids' },
           { title: 'Golf', value: 'golf' },
         ],
       },
-      initialValue: 'spa',
+      initialValue: 'wellness',
     }),
     defineField({
       name: 'description',
