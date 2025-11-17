@@ -613,13 +613,13 @@ export default function MediaTextSection({
 
             <div className="button-wrap button-wrap--multiple-buttons">
               <ButtonLink 
-                link={{ linkType: 'internal', label: 'Room Details', pageLink: { slug: `rooms/${roomLink.slug}` } }} 
+                link={{ linkType: 'internal', label: 'View', pageLink: { slug: `rooms/${roomLink.slug}` } }} 
                 fallbackColor="cream"
               />
 
               {/* todo: add book room button */}
               <div className="button button--orange">
-                Book Room
+                Book
               </div>
             </div>
           </div>
@@ -769,13 +769,13 @@ export default function MediaTextSection({
 
                               <div className="button-wrap button-wrap--multiple-buttons button-wrap--overlay-media">
                                 <ButtonLink 
-                                  link={{ linkType: 'internal', label: 'View Details', pageLink: { slug: `rooms/${room.slug}` } }}
+                                  link={{ linkType: 'internal', label: 'View', pageLink: { slug: `rooms/${room.slug}` } }}
                                   fallbackColor="cream"
                                 />
 
                                 {/* todo: hook up book room button */}
                                 <div className="button button--orange">
-                                  Book Room
+                                  Book
                                 </div>
                               </div>
                             </div>
@@ -837,13 +837,13 @@ export default function MediaTextSection({
 
                             <div className="button-wrap button-wrap--multiple-buttons button-wrap--overlay-media">
                               <ButtonLink 
-                                link={{ linkType: 'internal', label: 'View Details', pageLink: { slug: `rooms/${room.slug}` } }}
+                                link={{ linkType: 'internal', label: 'View', pageLink: { slug: `rooms/${room.slug}` } }}
                                 fallbackColor="cream"
                               />
 
                               {/* todo: hook up book room button */}
                               <div className="button button--orange">
-                                Book Room
+                                Book
                               </div>
                             </div>
                           </div>
