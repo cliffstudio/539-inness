@@ -157,6 +157,8 @@ export default function RootLayout({
 
                     window.gsap.to(image, {
                       scale: 1.1,
+                      x: 20,
+                      y: -20,
                       ease: "none",
                       scrollTrigger: {
                         trigger: image.closest('.scale-container'),
@@ -168,16 +170,64 @@ export default function RootLayout({
                   });
                 }
 
+                function initHeroSectionMovement() {
+                  try {
+                    if (typeof window === 'undefined' || typeof window.gsap === 'undefined' || typeof window.ScrollTrigger === 'undefined') {
+                      return;
+                    }
+
+                    if (!window.__gsapScrollTriggerRegistered) {
+                      window.gsap.registerPlugin(window.ScrollTrigger);
+                      window.__gsapScrollTriggerRegistered = true;
+                    }
+
+                    window.gsap.utils.toArray('.hero-section.layout-1').forEach(function(heroSection) {
+                      // Skip if this is not actually a hero section or if it's the header
+                      if (!heroSection || heroSection.classList.contains('site-header')) {
+                        return;
+                      }
+
+                      const imageWrap = heroSection.querySelector('.fill-space-image-wrap');
+                      if (!imageWrap) {
+                        return;
+                      }
+
+                      if (imageWrap.dataset.heroMovementInitialized === 'true') {
+                        return;
+                      }
+
+                      imageWrap.dataset.heroMovementInitialized = 'true';
+
+                      window.gsap.to(imageWrap, {
+                        scale: 1.1,
+                        x: 20,
+                        y: -20,
+                        ease: "none",
+                        scrollTrigger: {
+                          trigger: heroSection,
+                          start: "top bottom",
+                          end: "bottom top",
+                          scrub: true
+                        }
+                      });
+                    });
+                  } catch (error) {
+                    console.error('Error initializing hero section movement:', error);
+                  }
+                }
+
                 // Run when DOM is ready
                 $(document).ready(function() {
                   outOfView();
                   initScaleImages();
+                  initHeroSectionMovement();
                 });
                 
                 // Re-run on browser navigation (back/forward)
                 window.addEventListener('popstate', function() {
                   setTimeout(outOfView, 100);
                   setTimeout(initScaleImages, 100);
+                  setTimeout(initHeroSectionMovement, 100);
                 });
                 
                 // Re-run on Next.js route changes
@@ -204,6 +254,7 @@ export default function RootLayout({
                   if (shouldReRun) {
                     setTimeout(outOfView, 100);
                     setTimeout(initScaleImages, 100);
+                    setTimeout(initHeroSectionMovement, 100);
                   }
                 });
                 
@@ -267,6 +318,7 @@ export default function RootLayout({
                 // Initialize smooth scroll
                 initSmoothScroll();
                 initScaleImages();
+                initHeroSectionMovement();
               }
             `
           }}
