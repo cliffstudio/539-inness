@@ -341,6 +341,21 @@ export const activitiesQuery = groq`
   }
 `
 
+// Shop specific query
+export const shopQuery = groq`
+  *[_type == "page" && pageType == "shop"][0] {
+    _id,
+    _type,
+    title,
+    slug,
+    pageType,
+    shopHeading,
+    shopBody,
+    shopImage ${imageFragment},
+    contentBlocks[] ${flexibleContentFragment}
+  }
+`
+
 // Links specific query
 export const linksQuery = groq`
   *[_type == "page" && pageType == "links" && slug.current == $slug][0] {
@@ -404,6 +419,14 @@ export const siteSearchQuery = groq`
       pageType,
       "descriptionPlain": coalesce(pt::text(contentBlocks[_type == "heroSection"][0].body), ""),
       "resultType": "page"
+    },
+    "shops": *[_type == "shop" && (
+      title match $wildcardTerm
+    )] | order(title asc) {
+      _id,
+      title,
+      "slug": slug.current,
+      "resultType": "shop"
     }
   }
 `
@@ -495,6 +518,27 @@ export const roomPostQuery = groq`
     specs[] {
       body
     },
+    "slug": slug.current,
+    contentBlocks[] ${flexibleContentFragment}
+  }
+`
+
+// Shop queries
+export const shopPostsQuery = groq`
+  *[_type == "shop"] | order(title asc) {
+    _id,
+    title,
+    image ${imageFragment},
+    "slug": slug.current,
+    contentBlocks[] ${flexibleContentFragment}
+  }
+`
+
+export const shopPostQuery = groq`
+  *[_type == "shop" && slug.current == $slug][0] {
+    _id,
+    title,
+    image ${imageFragment},
     "slug": slug.current,
     contentBlocks[] ${flexibleContentFragment}
   }

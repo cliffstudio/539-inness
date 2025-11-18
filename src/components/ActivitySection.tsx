@@ -178,14 +178,14 @@ export default function ActivitySection({
 
           <div className="button-wrap button-wrap--multiple-buttons button-wrap--overlay-media">
             <ButtonLink 
-              link={{ linkType: 'internal', label: 'Activity Information', pageLink: { slug: `activities/${activity.slug || ''}` }, color: 'cream' }}
+              link={{ linkType: 'internal', label: 'View', pageLink: { slug: `activities/${activity.slug || ''}` }, color: 'cream' }}
               fallbackColor="cream"
             />
 
             {activity.bookingHref && (
               <div className="activity-booking-link">
                 <ButtonLink 
-                  link={{ linkType: 'external', label: 'Book Activity', href: activity.bookingHref, color: 'orange' }}
+                  link={{ linkType: 'external', label: 'Book', href: activity.bookingHref, color: 'orange' }}
                   fallbackColor="orange"
                 />
               </div>

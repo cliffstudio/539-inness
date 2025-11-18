@@ -42,6 +42,7 @@ export const pageType = defineType({
           { title: 'Homepage', value: 'homepage' },
           { title: 'General Page', value: 'general' },
           { title: 'Activities Page', value: 'activities' },
+          { title: 'Shop Page', value: 'shop' },
           { title: 'Links Page', value: 'links' },
           { title: 'Text Page', value: 'text' },
         ],
@@ -119,6 +120,32 @@ export const pageType = defineType({
       description: 'Maximum file size: 500KB.',
       fieldset: 'heroSection',
       hidden: ({ parent }) => parent?.pageType !== 'activities',
+      validation: imageSizeValidation,
+    }),
+
+    // Shop specific fields
+    defineField({
+      name: 'shopHeading',
+      title: 'Heading',
+      type: 'string',
+      fieldset: 'heroSection',
+      hidden: ({ parent }) => parent?.pageType !== 'shop',
+    }),
+    defineField({
+      name: 'shopBody',
+      title: 'Body',
+      type: 'array',
+      of: [{ type: 'block' }],
+      fieldset: 'heroSection',
+      hidden: ({ parent }) => parent?.pageType !== 'shop',
+    }),
+    defineField({ 
+      name: 'shopImage',
+      title: 'Image',
+      type: 'image',
+      description: 'Maximum file size: 500KB.',
+      fieldset: 'heroSection',
+      hidden: ({ parent }) => parent?.pageType !== 'shop',
       validation: imageSizeValidation,
     }),
 

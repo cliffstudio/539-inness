@@ -4,6 +4,7 @@ import Header from '../../components/Header'
 import Footer from '../../components/Footer'
 import LazyLoadInitializer from '../../components/LazyLoadInitializer'
 import MainWrapper from '../../components/MainWrapper'
+import OverflowController from '../../components/OverflowController'
 
 export default async function MainLayout({
   children,
@@ -18,6 +19,7 @@ export default async function MainLayout({
   return (
     <>
       <LazyLoadInitializer />
+      <OverflowController />
       {menu && <Header menu={menu} />}
       <MainWrapper>{children}</MainWrapper>
       {footerSettings && <Footer footer={footerSettings} />}
