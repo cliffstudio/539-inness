@@ -24,7 +24,8 @@
   }
 
   svg {
-    width: get-rem-desktop(244);
+    width: 100%;
+    max-width: get-rem-desktop(244);
     fill: $colour-black;
     margin-bottom: get-rem-desktop(38);
   }
