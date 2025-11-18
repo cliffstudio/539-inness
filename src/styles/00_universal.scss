@@ -707,25 +707,6 @@
 .more-rooms-section {
   padding-top: get-rem-desktop(200);
   padding-bottom: get-rem-desktop(200);
-  // @include flex;
-  // @include flex-direction(column);
-  // row-gap: get-rem-desktop(20);
-
-  // @media only screen and (max-width: 768px) {
-  //   row-gap: get-rem-mobile(48);
-  // }
-
-  // @media only screen and (max-width: 768px) {
-  //   @include flex;
-  //   @include flex-direction(column);
-  //   row-gap: get-rem-mobile(48);
-
-  //   &.align-right {
-  //     @include flex;
-  //     @include flex-direction(column-reverse);
-  //     row-gap: get-rem-mobile(48);
-  //   }
-  // }
 
   .section-heading {
     text-align: center;
@@ -1109,6 +1090,23 @@
     @include flex;
     column-gap: get-rem-desktop(24);
     margin-bottom: get-rem-desktop(72);
+
+    @media only screen and (max-width: 768px) {
+      overflow-y: hidden;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+      margin-left: get-rem-mobile(-24);
+      margin-right: get-rem-mobile(-24);
+      padding-left: get-rem-mobile(24);
+      padding-right: get-rem-mobile(24);
+      padding-bottom: get-rem-desktop(5);
+
+      &::-webkit-scrollbar {
+        display: none !important;
+      }
+    }
 
     .menu-tab {
       position: relative;

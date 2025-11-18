@@ -139,6 +139,11 @@ export default function RootLayout({
                     return;
                   }
 
+                  // Only run on desktop (width > 768px)
+                  if (window.innerWidth <= 768) {
+                    return;
+                  }
+
                   if (!window.__gsapScrollTriggerRegistered) {
                     window.gsap.registerPlugin(window.ScrollTrigger);
                     window.__gsapScrollTriggerRegistered = true;
@@ -173,6 +178,11 @@ export default function RootLayout({
                 function initHeroSectionMovement() {
                   try {
                     if (typeof window === 'undefined' || typeof window.gsap === 'undefined' || typeof window.ScrollTrigger === 'undefined') {
+                      return;
+                    }
+
+                    // Only run on desktop (width > 768px)
+                    if (window.innerWidth <= 768) {
                       return;
                     }
 
