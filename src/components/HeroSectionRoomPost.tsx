@@ -56,7 +56,7 @@ export default function Hero({ id, title, image, description, specs }: HeroProps
           )}
           
           {/* todo: add check availability button */}
-          <div className="button button--outline">
+          <div className="button button--orange">
             Book
           </div>
         </div>
