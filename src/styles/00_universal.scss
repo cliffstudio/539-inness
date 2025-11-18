@@ -48,9 +48,11 @@
 }
 
 .media-wrap {
-  &:hover {
-    .button-wrap--overlay-media {
-      opacity: 1;
+  @media (hover: hover) {
+    &:hover {
+      .button-wrap--overlay-media {
+        opacity: 1;
+      }
     }
   }
 }
@@ -72,8 +74,10 @@
     background-color: $colour-orange;
     color: $colour-cream;
 
-    &:hover {
-      background-color: $colour-orange-hover;
+    @media (hover: hover) {
+      &:hover {
+        background-color: $colour-orange-hover;
+      }
     }
   }
 
@@ -81,8 +85,10 @@
     background-color: $colour-cream;
     color: $colour-black;
 
-    &:hover {
-      background-color: $colour-tan;
+    @media (hover: hover) {
+      &:hover {
+        background-color: $colour-tan;
+      }
     }
   }
 
@@ -91,10 +97,12 @@
     color: $colour-black;
     background-color: transparent;
 
-    &:hover {
-      border-color: $colour-cream;
-      background-color: $colour-cream;
-      color: $colour-black;
+    @media (hover: hover) {
+      &:hover {
+        border-color: $colour-cream;
+        background-color: $colour-cream;
+        color: $colour-black;
+      }
     }
   }
 }
@@ -255,8 +263,10 @@
           border-color: $colour-cream;
           color: $colour-cream;
   
-          &:hover {
-            color: $colour-black;
+          @media (hover: hover) {
+            &:hover {
+              color: $colour-black;
+            }
           }
         }
       }
@@ -464,9 +474,11 @@
           margin-left: get-rem-desktop(3); // Slight offset to center the triangle
         }
 
-        &:hover {
-          background-color: rgba(255, 255, 255, 1);
-          transform: translate(-50%, -50%) scale(1.1);
+        @media (hover: hover) {
+          &:hover {
+            background-color: rgba(255, 255, 255, 1);
+            transform: translate(-50%, -50%) scale(1.1);
+          }
         }
       }
     }
@@ -795,8 +807,10 @@
         border-color: $colour-cream;
         color: $colour-cream;
 
-        &:hover {
-          color: $colour-black;
+        @media (hover: hover) {
+          &:hover {
+            color: $colour-black;
+          }
         }
       }
     }
@@ -811,8 +825,10 @@
         border-color: $colour-cream;
         color: $colour-cream;
 
-        &:hover {
-          color: $colour-black;
+        @media (hover: hover) {
+          &:hover {
+            color: $colour-black;
+          }
         }
       }
     }
@@ -909,11 +925,19 @@
         transform: scaleX(0);
       }
 
-      &.active,
-      &:hover {
+      &.active {
         &:after {
           transform-origin: 0;
           transform: scaleX(1);
+        }
+      }
+
+      @media (hover: hover) {
+        &:hover {
+          &:after {
+            transform-origin: 0;
+            transform: scaleX(1);
+          }
         }
       }
     }

@@ -67,16 +67,20 @@
       text-align: left;
     }
 
-    &:hover {
-      opacity: 1;
+    @media (hover: hover) {
+      &:hover {
+        opacity: 1;
+      }
     }
 
     .credit-toggle {
       cursor: pointer;
       @include transition(opacity 500ms cubic-bezier(0.25,0.1,0.25,1));
 
-      &:hover {
-        opacity: 0;
+      @media (hover: hover) {
+        &:hover {
+          opacity: 0;
+        }
       }
     }
 
