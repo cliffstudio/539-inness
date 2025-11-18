@@ -156,7 +156,7 @@ export default function RootLayout({
                     image.dataset.scaleImageInitialized = 'true';
 
                     window.gsap.to(image, {
-                      scale: 1.1,
+                      scale: 1.05,
                       x: 20,
                       y: -20,
                       ease: "none",
@@ -199,7 +199,7 @@ export default function RootLayout({
                       imageWrap.dataset.heroMovementInitialized = 'true';
 
                       window.gsap.to(imageWrap, {
-                        scale: 1.1,
+                        scale: 1.05,
                         x: 20,
                         y: -20,
                         ease: "none",
