@@ -23,6 +23,16 @@ interface ShopSectionProps {
   disableCarousel?: boolean
 }
 
+interface SplideRefWithInstance {
+  go: (direction: string) => void
+  splide?: {
+    index: number
+    length: number
+    on: (event: string, callback: () => void) => void
+    off: (event: string, callback: () => void) => void
+  }
+}
+
 export default function ShopSection({ 
   id,
   layout = '4-shops',
@@ -30,7 +40,7 @@ export default function ShopSection({
   shops,
   disableCarousel = false,
 }: ShopSectionProps) {
-  const splideRef = useRef<{ go: (direction: string) => void } | null>(null)
+  const splideRef = useRef<SplideRefWithInstance | null>(null)
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0)
@@ -65,7 +75,7 @@ export default function ShopSection({
 
   useEffect(() => {
     if (!disableCarousel && splideRef.current) {
-      const splideInstance = (splideRef.current as any).splide
+      const splideInstance = splideRef.current.splide
       if (splideInstance) {
         const updatePagination = () => {
           const index = splideInstance.index || 0
