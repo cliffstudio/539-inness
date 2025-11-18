@@ -41,7 +41,7 @@ export default function Hero({ id, layout = 'full-bleed', subHeading, heading, b
             )}
 
             {body && body.length > 0 && (
-              <div className="break-body body-bigger out-of-opacity">
+              <div className="break-body body-medium out-of-opacity">
                 <PortableText value={body} />
               </div>
             )}

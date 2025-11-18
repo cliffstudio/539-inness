@@ -129,7 +129,7 @@ export default async function SearchResultsPage({ searchParams }: SearchResultsP
 
       <div className="inner-wrap">
         <div className="search-results-page__intro">
-          <p className="search-results-page__eyebrow body-bigger">Search Results</p>
+          <p className="search-results-page__eyebrow body-medium">Search Results</p>
 
           <h4>
             {searchTerm

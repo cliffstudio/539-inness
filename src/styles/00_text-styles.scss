@@ -94,14 +94,21 @@ h6 {
   text-transform: uppercase;
 }
 
-.body-bigger {
+.body-big {
+  font-family: 'ABC Arizona Flare';
+  font-weight: 300;
+  @include font-size(24px, 24px);
+  line-height: normal;
+}
+
+.body-medium {
   font-family: 'ABC Arizona Flare';
   font-weight: 100;
   @include font-size(20px, 20px);
   line-height: normal;
 }
 
-.body-smaller {
+.body-small {
   font-family: 'ABC Arizona Flare';
   font-weight: 300;
   @include font-size(14px, 14px);

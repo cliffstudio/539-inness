@@ -141,9 +141,15 @@ export default function Footer({ footer }: FooterProps) {
         )}
       </div>
 
-      <div className="row-lg">
+      <div className="row-lg bottom">
         <div className="col-6-12_lg">
-          {/* add email subscription form here */}
+          {/* todo: hook up mailchimp */}
+          <div className="body-big site-footer__newsletter-heading">Sign up for our newsletter</div>
+
+          <div className="site-footer__newsletter-form">
+            <input type="text" placeholder="Your Email Address" />
+            <button className="button button--outline">Submit</button>
+          </div>
         </div>
 
         <div className="col-3-12_lg">
