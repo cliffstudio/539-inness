@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
 import { client } from '../../../../../sanity.client'
-import { roomPostQuery, roomPostsQuery } from '../../../../sanity/lib/queries'
+import { roomPostQuery, roomPostsQuery, otherRoomsQuery } from '../../../../sanity/lib/queries'
 import RoomPost from '../../../../components/RoomPost'
 import BodyClassProvider from '../../../../components/BodyClassProvider'
 
@@ -27,10 +27,11 @@ export async function generateStaticParams() {
 export default async function RoomPostPage({ params }: RoomPostPageProps) {
   const resolvedParams = await params
   
-  // Fetch the current post and all posts to determine navigation
-  const [post, allPosts] = await Promise.all([
+  // Fetch the current post, all posts to determine navigation, and other rooms
+  const [post, allPosts, otherRooms] = await Promise.all([
     client.fetch(roomPostQuery, { slug: resolvedParams.slug }),
-    client.fetch(roomPostsQuery)
+    client.fetch(roomPostsQuery),
+    client.fetch(otherRoomsQuery, { slug: resolvedParams.slug })
   ])
 
   if (!post) {
@@ -53,6 +54,7 @@ export default async function RoomPostPage({ params }: RoomPostPageProps) {
         {...post} 
         nextPostSlug={nextPost?.slug?.current}
         nextPostTitle={nextPost?.title}
+        otherRooms={otherRooms}
       />
     </>
   )

@@ -704,6 +704,208 @@
   }
 }
 
+.more-rooms-section {
+  padding-top: get-rem-desktop(200);
+  padding-bottom: get-rem-desktop(200);
+  // @include flex;
+  // @include flex-direction(column);
+  // row-gap: get-rem-desktop(20);
+
+  // @media only screen and (max-width: 768px) {
+  //   row-gap: get-rem-mobile(48);
+  // }
+
+  // @media only screen and (max-width: 768px) {
+  //   @include flex;
+  //   @include flex-direction(column);
+  //   row-gap: get-rem-mobile(48);
+
+  //   &.align-right {
+  //     @include flex;
+  //     @include flex-direction(column-reverse);
+  //     row-gap: get-rem-mobile(48);
+  //   }
+  // }
+
+  .section-heading {
+    text-align: center;
+    margin-bottom: get-rem-desktop(48);
+  }
+
+  // Desktop: Show grid, hide carousel
+  .more-rooms-grid {
+    @media only screen and (max-width: 768px) {
+      display: none;
+    }
+  }
+
+  // Mobile: Show carousel, hide grid
+  .more-rooms-carousel {
+    display: none;
+
+    @media only screen and (max-width: 768px) {
+      display: block;
+
+      .splide {
+        margin-left: get-rem-mobile(-24);
+        margin-right: get-rem-mobile(-24);
+
+        .splide__slide {
+          padding-left: get-rem-mobile(24);
+          padding-right: get-rem-mobile(24);
+        }
+      }
+
+      .media-text-link {
+        @include flex;
+        @include flex-direction(column);
+
+        .media-wrap {
+          aspect-ratio: 3 / 4;
+          margin-bottom: get-rem-mobile(24);
+        }
+      }
+
+      .more-rooms-carousel-controls {
+        margin-top: get-rem-mobile(32);
+        @include flex;
+        @include justify-content(space-between);
+        @include align-items(center);
+        column-gap: get-rem-mobile(24);
+      }
+
+      .carousel-arrow {
+        width: get-rem-mobile(36);
+        height: get-rem-mobile(36);
+        cursor: pointer;
+
+        &:disabled {
+          opacity: 0.3;
+          cursor: not-allowed;
+        }
+
+        svg {
+          stroke: $colour-black;
+          fill: none;
+        }
+      }
+
+      .carousel-pagination {
+        text-align: center;
+      }
+    }
+  }
+
+  .media-text-links-carousel {
+    @media only screen and (max-width: 768px) {
+      .splide {
+        margin-left: get-rem-mobile(-24);
+        margin-right: get-rem-mobile(-24);
+
+        .splide__slide {
+          padding-left: get-rem-mobile(24);
+          padding-right: get-rem-mobile(24);
+        }
+      }
+    }
+  }
+
+  .media-text-links-list {
+    @media only screen and (max-width: 768px) {
+      @include flex;
+      @include flex-direction(column);
+      row-gap: get-rem-mobile(48);
+    }
+  }
+
+  .media-text-links-list--mobile {
+    display: none;
+
+    @media only screen and (max-width: 768px) {
+      display: flex;
+      @include flex-direction(column);
+      row-gap: get-rem-mobile(48);
+    }
+  }
+
+  .two-across {
+    .media-text-link {
+      .media-wrap {
+        aspect-ratio: 774 / 500;
+
+        @media only screen and (max-width: 768px) {
+          aspect-ratio: 3 / 4;
+        }
+      }
+    }
+  }
+  
+  .col-1 {
+    .button-wrap {
+      margin-top: get-rem-desktop(24);
+    }
+  }
+
+  .media-text-link {
+    .media-wrap {
+      aspect-ratio: 377 / 500;
+      margin-bottom: get-rem-desktop(24);
+      overflow: hidden;
+      position: relative;
+
+      @media only screen and (max-width: 768px) {
+        aspect-ratio: 3 / 4;
+      }
+    }
+
+    .media-text-heading {
+      margin-bottom: get-rem-desktop(10);
+    }
+
+    .media-text-body {
+      max-width: get-rem-desktop(700);
+    }
+
+    .media-text-date {
+      margin-top: get-rem-desktop(36);
+    }
+  }
+
+  .media-text-links-carousel {
+    .media-text-links-carousel-controls {
+      margin-top: get-rem-desktop(48);
+      @include flex;
+      @include justify-content(space-between);
+      @include align-items(center);
+      column-gap: get-rem-desktop(24);
+    }
+
+    .carousel-arrow {
+      width: get-rem-desktop(36);
+      height: get-rem-desktop(36);
+      cursor: pointer;
+
+      &:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+      }
+
+      svg {
+        stroke: $colour-black;
+        fill: none;
+      }
+    }
+
+    .carousel-pagination {
+      text-align: center;
+
+      @media only screen and (min-width: 769px) {
+        display: none;
+      }
+    }
+  }
+}
+
 .media-text-section.layout-media-with-text-multiple-text-blocks {
   position: relative;
 

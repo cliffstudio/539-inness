@@ -523,6 +523,17 @@ export const roomPostQuery = groq`
   }
 `
 
+export const otherRoomsQuery = groq`
+  *[_type == "room" && slug.current != $slug] | order(title asc) {
+    _id,
+    title,
+    roomType,
+    description,
+    "slug": slug.current,
+    image ${imageFragment}
+  }
+`
+
 // Shop queries
 export const shopPostsQuery = groq`
   *[_type == "shop"] | order(title asc) {

@@ -55,7 +55,7 @@ export default function Hero({ id, title, image, description, specs }: HeroProps
             </div>
           )}
           
-          {/* todo: add check availability button */}
+          {/* todo: add book button */}
           <div className="button button--orange">
             Book
           </div>
