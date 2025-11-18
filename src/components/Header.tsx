@@ -266,14 +266,14 @@ export default function Header({ menu }: HeaderProps) {
 
         <div className="nav-wrap">
           <div className="left">
-            <div className="search-icon">
+            {/* <div className="search-icon">
               <Link href="/search" aria-label="Search">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
                   <path d="M7.9259 14.4243C11.8656 14.4243 15.0593 11.3653 15.0593 7.59173C15.0593 3.81821 11.8656 0.759171 7.9259 0.759171C3.98622 0.759171 0.79248 3.81821 0.79248 7.59173C0.79248 11.3653 3.98622 14.4243 7.9259 14.4243Z"/>
                   <path d="M12.6816 12.9059L17.4373 17.461"/>
                 </svg>
               </Link>
-            </div>
+            </div> */}
 
             <div className="cart-icon">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="18" viewBox="0 0 16 18">
@@ -313,14 +313,14 @@ export default function Header({ menu }: HeaderProps) {
       <header className={`site-header site-header-tablet ${scrolled ? 'scrolled' : ''}`}>
         <div className="top-row">
           <div className="left">
-            <div className="search-icon">
+            {/* <div className="search-icon">
               <Link href="/search" aria-label="Search">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
                   <path d="M7.9259 14.4243C11.8656 14.4243 15.0593 11.3653 15.0593 7.59173C15.0593 3.81821 11.8656 0.759171 7.9259 0.759171C3.98622 0.759171 0.79248 3.81821 0.79248 7.59173C0.79248 11.3653 3.98622 14.4243 7.9259 14.4243Z"/>
                   <path d="M12.6816 12.9059L17.4373 17.461"/>
                 </svg>
               </Link>
-            </div>
+            </div> */}
 
             <div className="cart-icon">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="18" viewBox="0 0 16 18">
@@ -428,14 +428,14 @@ export default function Header({ menu }: HeaderProps) {
           )}
 
           <div className="icon-wrapper">
-            <div className="search-icon">
+            {/* <div className="search-icon">
               <Link href="/search" aria-label="Search">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
                   <path d="M7.9259 14.4243C11.8656 14.4243 15.0593 11.3653 15.0593 7.59173C15.0593 3.81821 11.8656 0.759171 7.9259 0.759171C3.98622 0.759171 0.79248 3.81821 0.79248 7.59173C0.79248 11.3653 3.98622 14.4243 7.9259 14.4243Z"/>
                   <path d="M12.6816 12.9059L17.4373 17.461"/>
                 </svg>
               </Link>
-            </div>
+            </div> */}
 
             <div className="cart-icon">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="18" viewBox="0 0 16 18">
