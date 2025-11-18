@@ -153,9 +153,13 @@ export default function Footer({ footer }: FooterProps) {
         </div>
 
         <div className="col-3-12_lg">
-          <p className="site-footer__credit">
-            Site by <a href="https://cliff.studio" target="_blank" rel="noopener noreferrer">Cliff.Studio</a>
-          </p>
+          <a href="https://cliff.studio" target="_blank" rel="noopener noreferrer" className="site-footer__credit">
+            <span className="credit-toggle">Credit</span>
+
+            <p className="credit-content">
+              Site by Cliff.Studio
+            </p>
+          </a>
         </div>
       </div>
     </footer>

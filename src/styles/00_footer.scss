@@ -60,9 +60,39 @@
 
   .site-footer__credit {
     text-align: right;
+    position: relative;
+    display: block;
 
     @media only screen and (max-width: 768px) {
       text-align: left;
+    }
+
+    &:hover {
+      opacity: 1;
+    }
+
+    .credit-toggle {
+      cursor: pointer;
+      @include transition(opacity 500ms cubic-bezier(0.25,0.1,0.25,1));
+
+      &:hover {
+        opacity: 0;
+      }
+    }
+
+    .credit-toggle:hover + .credit-content {
+      opacity: 1;
+    }
+
+    .credit-content {
+      position: absolute;
+      top: 0;
+      right: 0;
+      opacity: 0;
+      z-index: 1;
+      pointer-events: none;
+      white-space: nowrap;
+      @include transition(opacity 500ms cubic-bezier(0.25,0.1,0.25,1));
     }
   }
 }
