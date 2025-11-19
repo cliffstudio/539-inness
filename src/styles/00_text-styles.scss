@@ -80,16 +80,16 @@ h6 {
 .site-header-desktop .nav,
 .menu-tab {
   font-family: 'ABC Arizona Flare';
-  font-weight: 300;
-  @include font-size(14px, 14px);
-  line-height: normal;
+  font-weight: 300 !important;
+  font-size: 14px !important;
+  line-height: normal !important;
   text-transform: uppercase;
 }
 
 .menu-overlay .nav {
   font-family: 'ABC Arizona Flare';
   font-weight: 100;
-  @include font-size(24px, 24px);
+  font-size: 24px;
   line-height: normal;
   text-transform: uppercase;
 }
@@ -97,20 +97,20 @@ h6 {
 .body-big {
   font-family: 'ABC Arizona Flare';
   font-weight: 300;
-  @include font-size(24px, 24px);
+  font-size: 24px;
   line-height: normal;
 }
 
 .body-medium {
   font-family: 'ABC Arizona Flare';
   font-weight: 100;
-  @include font-size(20px, 20px);
+  font-size: 20px;
   line-height: normal;
 }
 
 .body-small {
   font-family: 'ABC Arizona Flare';
   font-weight: 300;
-  @include font-size(14px, 14px);
+  font-size: 14px;
   line-height: calc(20 / 14) + em;
 }

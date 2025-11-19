@@ -78,105 +78,78 @@ export default function RootLayout({
           strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `
-              // Wait for jQuery to be ready
-              if (typeof window.$ !== 'undefined') {
-                // The inViewport plugin code by Moob
-                (function ($) {
-                  var vph=0;
-                  function getViewportDimensions(){
-                      vph = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+              (function() {
+                function waitForJQuery(callback) {
+                  if (typeof window.jQuery !== 'undefined') {
+                    callback(window.jQuery);
+                  } else {
+                    setTimeout(function() {
+                      waitForJQuery(callback);
+                    }, 100);
                   }
-                  getViewportDimensions();    
-                  $(window).on('resize orientationChanged', function(){
-                      getViewportDimensions();
-                  });            
+                }
+                
+                waitForJQuery(function($) {
+                  // Ensure $ is available globally for this code
+                  if (typeof window.$ === 'undefined') {
+                    window.$ = $;
+                  }
                   
-                  $.fn.inViewport = function (whenInView, whenNotInView) {                  
-                      return this.each(function () {
-                          var el = $(this),
-                              inviewalreadycalled = false,
-                              notinviewalreadycalled = false;                            
-                          $(window).on('resize orientationChanged scroll', function(){
-                              checkInView();
-                          });               
-                          function checkInView(){
-                              var rect = el[0].getBoundingClientRect(),
-                                  t = rect.top,
-                                  b = rect.bottom;
-                              if(t<vph && b>0){
-                                  if(!inviewalreadycalled){
-                                      whenInView.call(el);
-                                      inviewalreadycalled = true;
-                                      notinviewalreadycalled = false;
-                                  }
-                              } else {
-                                  if(!notinviewalreadycalled){
-                                      whenNotInView.call(el);
-                                      notinviewalreadycalled = true;
-                                      inviewalreadycalled = false;
-                                  }
-                              }
-                          }
-                          checkInView();                
-                      });
-                  }             
-                }(jQuery));
-                
-                // Initialize the viewport detection
-                function outOfView() {
-                  $('.out-of-view, .out-of-opacity').inViewport(
-                    function(){
-                      $(this).addClass("am-in-view in-view-detect");
-                    },
-                    function(){
-                      $(this).removeClass("in-view-detect");
+                  // The inViewport plugin code by Moob
+                  (function ($) {
+                    var vph=0;
+                    function getViewportDimensions(){
+                        vph = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
                     }
-                  );
-                }
-                
-                function initScaleImages() {
-                  if (typeof window === 'undefined' || typeof window.gsap === 'undefined' || typeof window.ScrollTrigger === 'undefined') {
-                    return;
-                  }
-
-                  // Only run on desktop (width > 768px)
-                  if (window.innerWidth <= 768) {
-                    return;
-                  }
-
-                  if (!window.__gsapScrollTriggerRegistered) {
-                    window.gsap.registerPlugin(window.ScrollTrigger);
-                    window.__gsapScrollTriggerRegistered = true;
-                  }
-
-                  window.gsap.utils.toArray('.scale-element').forEach(function(image) {
-                    if (!image.closest('.scale-container')) {
-                      return;
-                    }
-
-                    if (image.dataset.scaleImageInitialized === 'true') {
-                      return;
-                    }
-
-                    image.dataset.scaleImageInitialized = 'true';
-
-                    window.gsap.to(image, {
-                      scale: 1.05,
-                      x: 20,
-                      y: -20,
-                      ease: "none",
-                      scrollTrigger: {
-                        trigger: image.closest('.scale-container'),
-                        start: "top bottom",
-                        end: "bottom top",
-                        scrub: true
+                    getViewportDimensions();    
+                    $(window).on('resize orientationChanged', function(){
+                        getViewportDimensions();
+                    });            
+                    
+                    $.fn.inViewport = function (whenInView, whenNotInView) {                  
+                        return this.each(function () {
+                            var el = $(this),
+                                inviewalreadycalled = false,
+                                notinviewalreadycalled = false;                            
+                            $(window).on('resize orientationChanged scroll', function(){
+                                checkInView();
+                            });               
+                            function checkInView(){
+                                var rect = el[0].getBoundingClientRect(),
+                                    t = rect.top,
+                                    b = rect.bottom;
+                                if(t<vph && b>0){
+                                    if(!inviewalreadycalled){
+                                        whenInView.call(el);
+                                        inviewalreadycalled = true;
+                                        notinviewalreadycalled = false;
+                                    }
+                                } else {
+                                    if(!notinviewalreadycalled){
+                                        whenNotInView.call(el);
+                                        notinviewalreadycalled = true;
+                                        inviewalreadycalled = false;
+                                    }
+                                }
+                            }
+                            checkInView();                
+                        });
+                    }             
+                  }($));
+                  
+                  // Initialize the viewport detection
+                  function outOfView() {
+                    $('.out-of-view, .out-of-opacity').inViewport(
+                      function(){
+                        $(this).addClass("am-in-view in-view-detect");
+                      },
+                      function(){
+                        $(this).removeClass("in-view-detect");
                       }
-                    });
-                  });
-                }
-
-                function initHeroSectionMovement() {
-                  try {
+                    );
+                  }
+                  
+                  function initScaleImages() {
                     if (typeof window === 'undefined' || typeof window.gsap === 'undefined' || typeof window.ScrollTrigger === 'undefined') {
                       return;
                     }
@@ -191,145 +164,188 @@ export default function RootLayout({
                       window.__gsapScrollTriggerRegistered = true;
                     }
 
-                    window.gsap.utils.toArray('.hero-section.layout-1').forEach(function(heroSection) {
-                      // Skip if this is not actually a hero section or if it's the header
-                      if (!heroSection || heroSection.classList.contains('site-header')) {
+                    window.gsap.utils.toArray('.scale-element').forEach(function(image) {
+                      if (!image.closest('.scale-container')) {
                         return;
                       }
 
-                      const imageWrap = heroSection.querySelector('.fill-space-image-wrap');
-                      if (!imageWrap) {
+                      if (image.dataset.scaleImageInitialized === 'true') {
                         return;
                       }
 
-                      if (imageWrap.dataset.heroMovementInitialized === 'true') {
-                        return;
-                      }
+                      image.dataset.scaleImageInitialized = 'true';
 
-                      imageWrap.dataset.heroMovementInitialized = 'true';
-
-                      window.gsap.to(imageWrap, {
+                      window.gsap.to(image, {
                         scale: 1.05,
                         x: 20,
                         y: -20,
                         ease: "none",
                         scrollTrigger: {
-                          trigger: heroSection,
+                          trigger: image.closest('.scale-container'),
                           start: "top bottom",
                           end: "bottom top",
                           scrub: true
                         }
                       });
                     });
-                  } catch (error) {
-                    console.error('Error initializing hero section movement:', error);
                   }
-                }
 
-                // Run when DOM is ready
-                $(document).ready(function() {
-                  outOfView();
-                  initScaleImages();
-                  initHeroSectionMovement();
-                });
-                
-                // Re-run on browser navigation (back/forward)
-                window.addEventListener('popstate', function() {
-                  setTimeout(outOfView, 100);
-                  setTimeout(initScaleImages, 100);
-                  setTimeout(initHeroSectionMovement, 100);
-                });
-                
-                // Re-run on Next.js route changes
-                // Use MutationObserver to detect DOM changes
-                const observer = new MutationObserver(function(mutations) {
-                  let shouldReRun = false;
-                  mutations.forEach(function(mutation) {
-                    if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
-                      // Check if any added nodes contain elements with our classes
-                      mutation.addedNodes.forEach(function(node) {
-                        if (node.nodeType === 1) { // Element node
-                          if (node.classList && (node.classList.contains('out-of-view') || node.classList.contains('out-of-opacity'))) {
-                            shouldReRun = true;
+                  function initHeroSectionMovement() {
+                    try {
+                      if (typeof window === 'undefined' || typeof window.gsap === 'undefined' || typeof window.ScrollTrigger === 'undefined') {
+                        return;
+                      }
+
+                      // Only run on desktop (width > 768px)
+                      if (window.innerWidth <= 768) {
+                        return;
+                      }
+
+                      if (!window.__gsapScrollTriggerRegistered) {
+                        window.gsap.registerPlugin(window.ScrollTrigger);
+                        window.__gsapScrollTriggerRegistered = true;
+                      }
+
+                      window.gsap.utils.toArray('.hero-section.layout-1').forEach(function(heroSection) {
+                        // Skip if this is not actually a hero section or if it's the header
+                        if (!heroSection || heroSection.classList.contains('site-header')) {
+                          return;
+                        }
+
+                        const imageWrap = heroSection.querySelector('.fill-space-image-wrap');
+                        if (!imageWrap) {
+                          return;
+                        }
+
+                        if (imageWrap.dataset.heroMovementInitialized === 'true') {
+                          return;
+                        }
+
+                        imageWrap.dataset.heroMovementInitialized = 'true';
+
+                        window.gsap.to(imageWrap, {
+                          scale: 1.05,
+                          x: 20,
+                          y: -20,
+                          ease: "none",
+                          scrollTrigger: {
+                            trigger: heroSection,
+                            start: "top bottom",
+                            end: "bottom top",
+                            scrub: true
                           }
-                          // Also check child elements
-                          if (node.querySelector && (node.querySelector('.out-of-view') || node.querySelector('.out-of-opacity'))) {
-                            shouldReRun = true;
+                        });
+                      });
+                    } catch (error) {
+                      console.error('Error initializing hero section movement:', error);
+                    }
+                  }
+
+                  // Run when DOM is ready
+                  $(document).ready(function() {
+                    outOfView();
+                    initScaleImages();
+                    initHeroSectionMovement();
+                  });
+                  
+                    // Re-run on browser navigation (back/forward)
+                    window.addEventListener('popstate', function() {
+                      setTimeout(outOfView, 100);
+                      setTimeout(initScaleImages, 100);
+                      setTimeout(initHeroSectionMovement, 100);
+                    });
+                    
+                    // Re-run on Next.js route changes
+                    // Use MutationObserver to detect DOM changes
+                    const observer = new MutationObserver(function(mutations) {
+                      let shouldReRun = false;
+                      mutations.forEach(function(mutation) {
+                        if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+                          // Check if any added nodes contain elements with our classes
+                          mutation.addedNodes.forEach(function(node) {
+                            if (node.nodeType === 1) { // Element node
+                              if (node.classList && (node.classList.contains('out-of-view') || node.classList.contains('out-of-opacity'))) {
+                                shouldReRun = true;
+                              }
+                              // Also check child elements
+                              if (node.querySelector && (node.querySelector('.out-of-view') || node.querySelector('.out-of-opacity'))) {
+                                shouldReRun = true;
+                              }
+                            }
+                          });
+                        }
+                      });
+                      
+                      if (shouldReRun) {
+                        setTimeout(outOfView, 100);
+                        setTimeout(initScaleImages, 100);
+                        setTimeout(initHeroSectionMovement, 100);
+                      }
+                    });
+                    
+                    // Start observing
+                    observer.observe(document.body, {
+                      childList: true,
+                      subtree: true
+                    });
+                    
+                    // Smooth scroll functionality for hash links
+                    function initSmoothScroll() {
+                      // Handle initial page load with hash
+                      if (window.location.hash) {
+                        setTimeout(function() {
+                          const target = document.querySelector(window.location.hash);
+                          if (target) {
+                            target.scrollIntoView({ 
+                              behavior: 'smooth',
+                              block: 'start'
+                            });
+                          }
+                        }, 100);
+                      }
+                      
+                      // Handle clicks on links with hash
+                      $(document).on('click', 'a[href*="#"]', function(e) {
+                        const href = $(this).attr('href');
+                        if (href && href.includes('#')) {
+                          const hash = href.split('#')[1];
+                          const target = document.getElementById(hash);
+                          
+                          if (target) {
+                            e.preventDefault();
+                            target.scrollIntoView({ 
+                              behavior: 'smooth',
+                              block: 'start'
+                            });
+                            
+                            // Update URL without triggering scroll
+                            history.pushState(null, null, href);
                           }
                         }
                       });
-                    }
-                  });
-                  
-                  if (shouldReRun) {
-                    setTimeout(outOfView, 100);
-                    setTimeout(initScaleImages, 100);
-                    setTimeout(initHeroSectionMovement, 100);
-                  }
-                });
-                
-                // Start observing
-                observer.observe(document.body, {
-                  childList: true,
-                  subtree: true
-                });
-                
-                // Smooth scroll functionality for hash links
-                function initSmoothScroll() {
-                  // Handle initial page load with hash
-                  if (window.location.hash) {
-                    setTimeout(function() {
-                      const target = document.querySelector(window.location.hash);
-                      if (target) {
-                        target.scrollIntoView({ 
-                          behavior: 'smooth',
-                          block: 'start'
-                        });
-                      }
-                    }, 100);
-                  }
-                  
-                  // Handle clicks on links with hash
-                  $(document).on('click', 'a[href*="#"]', function(e) {
-                    const href = $(this).attr('href');
-                    if (href && href.includes('#')) {
-                      const hash = href.split('#')[1];
-                      const target = document.getElementById(hash);
                       
-                      if (target) {
-                        e.preventDefault();
-                        target.scrollIntoView({ 
-                          behavior: 'smooth',
-                          block: 'start'
-                        });
-                        
-                        // Update URL without triggering scroll
-                        history.pushState(null, null, href);
-                      }
-                    }
-                  });
-                  
-                  // Handle browser back/forward with hash
-                  window.addEventListener('popstate', function() {
-                    if (window.location.hash) {
-                      setTimeout(function() {
-                        const target = document.querySelector(window.location.hash);
-                        if (target) {
-                          target.scrollIntoView({ 
-                            behavior: 'smooth',
-                            block: 'start'
-                          });
+                      // Handle browser back/forward with hash
+                      window.addEventListener('popstate', function() {
+                        if (window.location.hash) {
+                          setTimeout(function() {
+                            const target = document.querySelector(window.location.hash);
+                            if (target) {
+                              target.scrollIntoView({ 
+                                behavior: 'smooth',
+                                block: 'start'
+                              });
+                            }
+                          }, 100);
                         }
-                      }, 100);
+                      });
                     }
-                  });
-                }
-                
-                // Initialize smooth scroll
-                initSmoothScroll();
-                initScaleImages();
-                initHeroSectionMovement();
-              }
+                    
+                    // Initialize smooth scroll
+                    initSmoothScroll();
+                    initScaleImages();
+                    initHeroSectionMovement();
+                });
+              })();
             `
           }}
         />
