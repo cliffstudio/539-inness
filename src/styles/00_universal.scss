@@ -352,13 +352,11 @@
   .align-left {
     .col-1 {
       order: 3;
+      @include flex;
+      @include justify-content(flex-end);
     }
 
     .col-2 {
-      order: 2;
-    }
-
-    .col-3 {
       order: 1;
     }
 
@@ -435,6 +433,11 @@
     @media only screen and (max-width: 768px) {
       margin-bottom: get-rem-mobile(10);
     }
+  }
+
+  .text-wrap {
+    width: 100%;
+    max-width: get-rem-desktop(500);
   }
 
   .media-wrap {
@@ -544,6 +547,10 @@
   padding-top: get-rem-desktop(120);
   padding-bottom: get-rem-desktop(120);
 
+  .text-wrap {
+    max-width: get-rem-desktop(376);
+  }
+
   @media only screen and (max-width: 768px) {
     &.align-right {
       @include flex;
@@ -567,6 +574,10 @@
 .media-text-section.room-type {
   padding-top: get-rem-desktop(120);
   padding-bottom: get-rem-desktop(120);
+
+  .text-wrap {
+    max-width: get-rem-desktop(376);
+  }
 
   @media only screen and (max-width: 768px) {
     &.align-right {
@@ -610,6 +621,10 @@
 }
 
 .media-text-section.layout-media-with-text-h4-body {
+  .text-wrap {
+    max-width: get-rem-desktop(376);
+  }
+
   @media only screen and (max-width: 768px) {
     @include flex;
     @include flex-direction(column);
@@ -633,6 +648,10 @@
 
   @media only screen and (max-width: 768px) {
     row-gap: get-rem-mobile(48);
+  }
+
+  .text-wrap {
+    max-width: get-rem-desktop(376);
   }
 
   .media-text-links-carousel {
@@ -947,7 +966,7 @@
     }
   }
   
-  .col-3 {
+  .col-2 {
     height: fit-content;
     position: sticky;
     top: get-rem-desktop(124);
@@ -957,7 +976,12 @@
 // BREAK SECTION ------------------
 
 .break-section {
-  min-height: 100svh;
+  min-height: 500px;
+  height: calc(100svh - 106px);
+
+  @media only screen and (max-width: 768px) {
+    height: calc(100svh - 63px);
+  }
 
   .break-content {
     height: 100%;

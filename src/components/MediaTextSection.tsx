@@ -247,63 +247,63 @@ export default function MediaTextSection({
     <>
       {(layout === 'media-with-text-h5' || layout === 'media-with-text-h4-body' || layout === 'media-with-text-h4-bullet-list') && (
         <section id={id} className={`media-text-section layout-${layout} align-${mediaAlignment} row-lg h-pad`}>
-          <div className="col-3-12_lg col-1 out-of-view">
-            {heading && layout !== 'media-with-text-h5' && (
-              <h4 className="media-text-heading">{heading}</h4>
-            )}
-            
-            {body && body.length > 0 && (
-              <>
-                {layout === 'media-with-text-h4-body' && (
-                  <div className="media-text-body">
-                    <PortableText value={body ?? []} />
-                  </div>
-                )}
-
-                {layout === 'media-with-text-h5' && (
-                  <h5 className="media-text-body">
-                    <PortableText value={body ?? []} />
-                  </h5>
-                )}
-              </>
-            )}
-
-            {bulletList && bulletList.length > 0 && (
-              <div className="media-text-bullet-list">
-                {bulletList.map((item, index) => {
-                  const bulletBody: PortableTextBlock[] = item?.body ?? []
-                  if (bulletBody.length === 0) {
-                    return null
-                  }
-
-                  return (
-                    <div key={index} className="media-text-bullet-list-item">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="13" height="16" viewBox="0 0 13 16">
-                        <path d="M11.8181 0.5H0.5V15.5H11.8181V0.5Z"/>
-                        <path d="M0.5 0.5L11.8181 15.5"/>
-                      </svg>
-
-                      <div className="media-text-bullet-list-text">
-                        <PortableText value={bulletBody} />
-                      </div>
+          <div className="col-6-12_lg col-1 out-of-view">
+            <div className="text-wrap">
+              {heading && layout !== 'media-with-text-h5' && (
+                <h4 className="media-text-heading">{heading}</h4>
+              )}
+              
+              {body && body.length > 0 && (
+                <>
+                  {layout === 'media-with-text-h4-body' && (
+                    <div className="media-text-body">
+                      <PortableText value={body ?? []} />
                     </div>
-                  )
-                })}
-              </div>
-            )}
+                  )}
 
-            {buttons && buttons.length > 0 && (
-              <div className={`button-wrap${buttons.length > 1 ? ' button-wrap--multiple-buttons' : ''}`}>
-                {buttons.map((button, index) => (
-                  <ButtonLink key={index} link={button} fallbackColor="cream" />
-                ))}
-              </div>
-            )}
+                  {layout === 'media-with-text-h5' && (
+                    <h5 className="media-text-body">
+                      <PortableText value={body ?? []} />
+                    </h5>
+                  )}
+                </>
+              )}
+
+              {bulletList && bulletList.length > 0 && (
+                <div className="media-text-bullet-list">
+                  {bulletList.map((item, index) => {
+                    const bulletBody: PortableTextBlock[] = item?.body ?? []
+                    if (bulletBody.length === 0) {
+                      return null
+                    }
+
+                    return (
+                      <div key={index} className="media-text-bullet-list-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="16" viewBox="0 0 13 16">
+                          <path d="M11.8181 0.5H0.5V15.5H11.8181V0.5Z"/>
+                          <path d="M0.5 0.5L11.8181 15.5"/>
+                        </svg>
+
+                        <div className="media-text-bullet-list-text">
+                          <PortableText value={bulletBody} />
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              )}
+
+              {buttons && buttons.length > 0 && (
+                <div className={`button-wrap${buttons.length > 1 ? ' button-wrap--multiple-buttons' : ''}`}>
+                  {buttons.map((button, index) => (
+                    <ButtonLink key={index} link={button} fallbackColor="cream" />
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
 
-          <div className="col-3-12_lg dummy-col col-2"></div>
-
-          <div className="col-6-12_lg col-3 out-of-opacity">
+          <div className="col-6-12_lg col-2 out-of-opacity">
             {mediaType === 'image' && images && images.length > 0 && (
               <div className="media-wrap test">
                 {images.length === 1 ? (
@@ -348,60 +348,60 @@ export default function MediaTextSection({
         <>
           <div className="desktop">
             <section id={id} className={`media-text-section layout-${layout} align-${mediaAlignment} row-lg h-pad`}>
-              <div className="col-3-12_lg col-1">
-                {textBlocks && textBlocks.length > 0 && (
-                  <div className="media-text-multiple-blocks out-of-view">
-                    {textBlocks.map((block, index) => {
-                      const blockLayout = block.layout ?? 'h4-text'
-                      const blockBody: PortableTextBlock[] = block.body ?? []
-                      const hasBody = blockBody.length > 0
-                      const hasBulletList = block.bulletList?.some((bullet) => bullet?.body && bullet.body.length > 0)
+              <div className="col-6-12_lg col-1">
+                <div className="text-wrap">
+                  {textBlocks && textBlocks.length > 0 && (
+                    <div className="media-text-multiple-blocks out-of-view">
+                      {textBlocks.map((block, index) => {
+                        const blockLayout = block.layout ?? 'h4-text'
+                        const blockBody: PortableTextBlock[] = block.body ?? []
+                        const hasBody = blockBody.length > 0
+                        const hasBulletList = block.bulletList?.some((bullet) => bullet?.body && bullet.body.length > 0)
 
-                      return (
-                        <div key={index} className="media-text-block">
-                          {block.header && (
-                            <h5 className="media-text-heading">{block.header}</h5>
-                          )}
+                        return (
+                          <div key={index} className="media-text-block">
+                            {block.header && (
+                              <h5 className="media-text-heading">{block.header}</h5>
+                            )}
 
-                          {blockLayout === 'h4-text' && hasBody && (
-                            <div className="media-text-body">
-                              <PortableText value={blockBody} />
-                            </div>
-                          )}
+                            {blockLayout === 'h4-text' && hasBody && (
+                              <div className="media-text-body">
+                                <PortableText value={blockBody} />
+                              </div>
+                            )}
 
-                          {blockLayout === 'h4-bullet-list' && hasBulletList && (
-                            <div className="media-text-bullet-list">
-                              {block.bulletList?.map((item, itemIndex) => {
-                                const bulletBody: PortableTextBlock[] = item?.body ?? []
-                                if (bulletBody.length === 0) {
-                                  return null
-                                }
+                            {blockLayout === 'h4-bullet-list' && hasBulletList && (
+                              <div className="media-text-bullet-list">
+                                {block.bulletList?.map((item, itemIndex) => {
+                                  const bulletBody: PortableTextBlock[] = item?.body ?? []
+                                  if (bulletBody.length === 0) {
+                                    return null
+                                  }
 
-                                return (
-                                  <div key={itemIndex} className="media-text-bullet-list-item">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="16" viewBox="0 0 13 16">
-                                      <path d="M11.8181 0.5H0.5V15.5H11.8181V0.5Z"/>
-                                      <path d="M0.5 0.5L11.8181 15.5"/>
-                                    </svg>
+                                  return (
+                                    <div key={itemIndex} className="media-text-bullet-list-item">
+                                      <svg xmlns="http://www.w3.org/2000/svg" width="13" height="16" viewBox="0 0 13 16">
+                                        <path d="M11.8181 0.5H0.5V15.5H11.8181V0.5Z"/>
+                                        <path d="M0.5 0.5L11.8181 15.5"/>
+                                      </svg>
 
-                                    <div className="media-text-bullet-list-text">
-                                      <PortableText value={bulletBody} />
+                                      <div className="media-text-bullet-list-text">
+                                        <PortableText value={bulletBody} />
+                                      </div>
                                     </div>
-                                  </div>
-                                )
-                              })}
-                            </div>
-                          )}
-                        </div>
-                      )
-                    })}
-                  </div>
-                )}
+                                  )
+                                })}
+                              </div>
+                            )}
+                          </div>
+                        )
+                      })}
+                    </div>
+                  )}
+                </div>
               </div>
 
-              <div className="col-3-12_lg dummy-col col-2"></div>
-
-              <div className="col-6-12_lg col-3 out-of-opacity">
+              <div className="col-6-12_lg col-2 out-of-opacity">
                 {mediaType === 'image' && images && images.length > 0 && (
                   <div className="media-wrap">
                     {images.length === 1 ? (
@@ -589,44 +589,44 @@ export default function MediaTextSection({
 
       {layout === 'media-with-text-room-type' && roomLink && (
         <section id={id} className={`media-text-section room-type layout-${mediaAlignment} align-${mediaAlignment} row-lg h-pad`}>
-          <div className="col-3-12_lg col-1 out-of-view">
-            {roomLink.roomType && (
-              <div className="media-text-room-type">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="16" viewBox="0 0 24 16">
-                  <path d="M11.8181 0.5H0.5V15.5H11.8181V0.5Z"/>
-                  <path d="M0.5 0.5L11.8181 15.5"/>
-                  <path d="M23.1365 0.5H11.8184V15.5H23.1365V0.5Z"/>
-                  <path d="M11.8184 0.5L23.1365 15.5"/>
-                </svg>
+          <div className="col-6-12_lg col-1 out-of-view">
+            <div className="text-wrap">
+              {roomLink.roomType && (
+                <div className="media-text-room-type">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="16" viewBox="0 0 24 16">
+                    <path d="M11.8181 0.5H0.5V15.5H11.8181V0.5Z"/>
+                    <path d="M0.5 0.5L11.8181 15.5"/>
+                    <path d="M23.1365 0.5H11.8184V15.5H23.1365V0.5Z"/>
+                    <path d="M11.8184 0.5L23.1365 15.5"/>
+                  </svg>
 
-                <div>{roomLink.roomType}</div>
-              </div>
-            )}
+                  <div>{roomLink.roomType}</div>
+                </div>
+              )}
 
-            <h5 className="media-text-heading">{roomLink.title}</h5>
-            
-            {roomLink.description && (
-              <div className="media-text-body">
-                <PortableText value={roomLink.description ?? []} />
-              </div>
-            )}
+              <h5 className="media-text-heading">{roomLink.title}</h5>
+              
+              {roomLink.description && (
+                <div className="media-text-body">
+                  <PortableText value={roomLink.description ?? []} />
+                </div>
+              )}
 
-            <div className="button-wrap button-wrap--multiple-buttons">
-              <ButtonLink 
-                link={{ linkType: 'internal', label: 'View', pageLink: { slug: `rooms/${roomLink.slug}` } }} 
-                fallbackColor="cream"
-              />
+              <div className="button-wrap button-wrap--multiple-buttons">
+                <ButtonLink 
+                  link={{ linkType: 'internal', label: 'View', pageLink: { slug: `rooms/${roomLink.slug}` } }} 
+                  fallbackColor="cream"
+                />
 
-              {/* todo: add book room button */}
-              <div className="button button--orange">
-                Book
+                {/* todo: add book room button */}
+                <div className="button button--orange">
+                  Book
+                </div>
               </div>
             </div>
           </div>
 
-          <div className="col-3-12_lg dummy-col col-2"></div>
-
-          <div className="col-6-12_lg col-3 out-of-opacity">
+          <div className="col-6-12_lg col-2 out-of-opacity">
             {mediaType === 'image' && images && images.length > 0 && (
               <div className="media-wrap">
                 {images.length === 1 ? (
@@ -670,31 +670,31 @@ export default function MediaTextSection({
       {(layout === 'media-with-text-h4-body-room-links') && (
         <section id={id} className={`media-text-section layout-${layout} h-pad`}>
           <div className={`align-${mediaAlignment} row-lg`}>
-            <div className="col-3-12_lg col-1 out-of-view">
-              {heading && (
-                <h4 className="media-text-heading">{heading}</h4>
-              )}
+            <div className="col-6-12_lg col-1 out-of-view">
+              <div className="text-wrap">
+                {heading && (
+                  <h4 className="media-text-heading">{heading}</h4>
+                )}
 
-              {body && body.length > 0 && (
-                <>
-                  <div className="media-text-body">
-                    <PortableText value={body ?? []} />
+                {body && body.length > 0 && (
+                  <>
+                    <div className="media-text-body">
+                      <PortableText value={body ?? []} />
+                    </div>
+                  </>
+                )}
+
+                {buttons && buttons.length > 0 && (
+                  <div className={`button-wrap${buttons.length > 1 ? ' button-wrap--multiple-buttons' : ''}`}>
+                    {buttons.map((button, index) => (
+                      <ButtonLink key={index} link={button} fallbackColor="cream" />
+                    ))}
                   </div>
-                </>
-              )}
-
-              {buttons && buttons.length > 0 && (
-                <div className={`button-wrap${buttons.length > 1 ? ' button-wrap--multiple-buttons' : ''}`}>
-                  {buttons.map((button, index) => (
-                    <ButtonLink key={index} link={button} fallbackColor="cream" />
-                  ))}
-                </div>
-              )}
+                )}
+              </div>
             </div>
 
-            <div className="col-3-12_lg dummy-col col-2"></div>
-
-            <div className="col-6-12_lg col-3 out-of-opacity">
+            <div className="col-6-12_lg col-2 out-of-opacity">
               {mediaType === 'image' && images && images.length > 0 && (
                 <div className="media-wrap">
                   {images.length === 1 ? (
@@ -824,7 +824,7 @@ export default function MediaTextSection({
               ) : (
                 <div className="row-lg">
                   {roomLinks.map((room, index) => (
-                    <div key={index} className={roomLinks.length === 2 ? 'col-6-12_lg two-across' : 'col-3-12_lg'}>
+                    <div key={index} className={roomLinks.length === 2 ? 'col-6-12_lg two-across' : 'col-2-12_lg'}>
                       <div className="media-text-link out-of-opacity">
                         {room.image && (
                           <div className="media-wrap relative">
@@ -870,31 +870,31 @@ export default function MediaTextSection({
       {(layout === 'media-with-text-h4-body-activity-links') && (
         <section id={id} className={`media-text-section layout-${layout} h-pad`}>
           <div className={`align-${mediaAlignment} row-lg`}>
-            <div className="col-3-12_lg col-1 out-of-view">
-              {heading && (
-                <h4 className="media-text-heading">{heading}</h4>
-              )}
+            <div className="col-6-12_lg col-1 out-of-view">
+              <div className="text-wrap">
+                {heading && (
+                  <h4 className="media-text-heading">{heading}</h4>
+                )}
 
-              {body && body.length > 0 && (
-                <>
-                  <div className="media-text-body">
-                    <PortableText value={body ?? []} />
+                {body && body.length > 0 && (
+                  <>
+                    <div className="media-text-body">
+                      <PortableText value={body ?? []} />
+                    </div>
+                  </>
+                )}
+
+                {buttons && buttons.length > 0 && (
+                  <div className={`button-wrap${buttons.length > 1 ? ' button-wrap--multiple-buttons' : ''}`}>
+                    {buttons.map((button, index) => (
+                      <ButtonLink key={index} link={button} fallbackColor="cream" />
+                    ))}
                   </div>
-                </>
-              )}
-
-              {buttons && buttons.length > 0 && (
-                <div className={`button-wrap${buttons.length > 1 ? ' button-wrap--multiple-buttons' : ''}`}>
-                  {buttons.map((button, index) => (
-                    <ButtonLink key={index} link={button} fallbackColor="cream" />
-                  ))}
-                </div>
-              )}
+                )}
+              </div>
             </div>
 
-            <div className="col-3-12_lg dummy-col col-2"></div>
-
-            <div className="col-6-12_lg col-3 out-of-opacity">
+            <div className="col-6-12_lg col-2 out-of-opacity">
               {mediaType === 'image' && images && images.length > 0 && (
                 <div className="media-wrap">
                   {images.length === 1 ? (
@@ -1042,7 +1042,7 @@ export default function MediaTextSection({
           ) : (
             <div className="row-lg">
               {activityLinks.map((activity, index) => (
-                <div key={index} className={activityLinks.length === 2 ? 'col-6-12_lg two-across' : 'col-3-12_lg'}>
+                <div key={index} className={activityLinks.length === 2 ? 'col-6-12_lg two-across' : 'col-2-12_lg'}>
                   <div className="media-text-link out-of-opacity">
                     {activity.image && (
                       <div className="media-wrap relative">
@@ -1104,29 +1104,29 @@ export default function MediaTextSection({
       {(layout === 'media-with-text-h4-body-links') && links && links.length > 0 && (
         <section id={id} className={`media-text-section layout-${layout} h-pad`}>
           <div className={`align-${mediaAlignment} row-lg`}>
-            <div className="col-3-12_lg col-1 out-of-view">
-              {heading && (
-                <h4 className="media-text-heading">{heading}</h4>
-              )}
+            <div className="col-6-12_lg col-1 out-of-view">
+              <div className="text-wrap">
+                {heading && (
+                  <h4 className="media-text-heading">{heading}</h4>
+                )}
 
-              {body && body.length > 0 && (
-                <div className="media-text-body">
-                  <PortableText value={body ?? []} />
-                </div>
-              )}
+                {body && body.length > 0 && (
+                  <div className="media-text-body">
+                    <PortableText value={body ?? []} />
+                  </div>
+                )}
 
-              {buttons && buttons.length > 0 && (
-                <div className={`button-wrap${buttons.length > 1 ? ' button-wrap--multiple-buttons' : ''}`}>
-                  {buttons.map((button, index) => (
-                    <ButtonLink key={index} link={button} fallbackColor="cream" />
-                  ))}
-                </div>
-              )}
+                {buttons && buttons.length > 0 && (
+                  <div className={`button-wrap${buttons.length > 1 ? ' button-wrap--multiple-buttons' : ''}`}>
+                    {buttons.map((button, index) => (
+                      <ButtonLink key={index} link={button} fallbackColor="cream" />
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
 
-            <div className="col-3-12_lg dummy-col col-2"></div>
-
-            <div className="col-6-12_lg col-3 out-of-opacity">
+            <div className="col-6-12_lg col-2 out-of-opacity">
               {mediaType === 'image' && images && images.length > 0 && (
                 <div className="media-wrap">
                   {images.length === 1 ? (
@@ -1169,7 +1169,7 @@ export default function MediaTextSection({
           {links && links.length > 0 && (
             <div className="media-text-links-list row-lg">
               {links.map((link, index) => (
-                <div key={index} className={links.length === 2 ? 'col-6-12_lg two-across' : 'col-3-12_lg'}>
+                <div key={index} className={links.length === 2 ? 'col-6-12_lg two-across' : 'col-2-12_lg'}>
                   <div className="media-text-link out-of-opacity">
                     {link.image && (
                       <div className="media-wrap relative">

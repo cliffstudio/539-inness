@@ -748,13 +748,13 @@ export default function Footer({ footer }: FooterProps) {
           </div>
         </div>
 
-        <div className="col-3-12_lg">
+        <div className="col-4-12_lg">
           <p className="site-footer__copyright">
             &copy; Copyright {new Date().getFullYear()} Inness, LLC
           </p>
         </div>
 
-        <div className="col-3-12_lg">
+        <div className="col-2-12_lg">
           <a href="https://cliff.studio" target="_blank" rel="noopener noreferrer" className="site-footer__credit">
             <span className="credit-toggle">Credit</span>
 
