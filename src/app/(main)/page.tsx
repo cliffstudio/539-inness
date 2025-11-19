@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation'
 import BodyClassProvider from '../../components/BodyClassProvider'
 import HeroSectionHomepage from '../../components/HeroSectionHomepage'
 import FlexibleContent from '../../components/FlexibleContent'
+// import HomepageLoader from '../../components/HomepageLoader'
 
 export const revalidate = 0
 
@@ -16,6 +17,7 @@ export default async function Home() {
 
   return (
     <>
+      {/* <HomepageLoader /> */}
       <BodyClassProvider 
         pageType={page.pageType} 
         slug={page.slug?.current} 
