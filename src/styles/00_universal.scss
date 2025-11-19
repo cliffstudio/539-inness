@@ -19,13 +19,17 @@
   }
 
   &--multiple-buttons {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    column-gap: get-rem-desktop(12);
+    @include flex;
+    @include flex-direction(column);
+    row-gap: get-rem-desktop(12);
+
+    @media only screen and (min-width: 1550px) {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      column-gap: get-rem-desktop(12);
+    }
 
     @media only screen and (max-width: 768px) {
-      @include flex;
-      @include flex-direction(column);
       row-gap: get-rem-mobile(12);
     }
   }
