@@ -7,11 +7,13 @@ import { DisableBodyScroll, EnableBodyScroll } from '@/utils/bodyScroll'
 import type { BookingTab } from '../contexts/BookingContext'
 import mediaLazyloading from '../utils/lazyLoad'
 
+
 export default function BookingOverlay() {
   const { isOpen, activeTab, setActiveTab } = useBooking()
   const overlayRef = useRef<HTMLDivElement>(null)
   const innerWrapRef = useRef<HTMLDivElement>(null)
   const animationFrameRef = useRef<number | null>(null)
+
 
   // Handle body scroll lock when overlay is open
   useEffect(() => {
@@ -190,8 +192,14 @@ export default function BookingOverlay() {
 
             {activeTab === 'tee-time' && (
               <div className="booking-overlay__form">
-                {/* Embed tee time booking form here */}
-                <p>Tee time booking form will be embedded here</p>
+                <iframe
+                  className="chronogolf-iframe"
+                  src="https://www.chronogolf.com/club/18790/widget?medium=widget&source=club"
+                  width="100%"
+                  height="800"
+                  title="Book A Tee Time"
+                  frameBorder="0"
+                />
               </div>
             )}
 

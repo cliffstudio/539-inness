@@ -5,7 +5,7 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
+  height: 100svh;
   z-index: 99;
   background-color: $colour-cream;
   opacity: 0;
@@ -32,6 +32,15 @@
     @include flex;
     @include flex-direction(column);
     row-gap: get-rem-desktop(80);
+    flex: 1;
+    min-height: 0;
+  }
+
+  .booking-overlay__tab-content {
+    flex: 1;
+    min-height: 0;
+    @include flex;
+    @include flex-direction(column);
   }
 
   .booking-overlay__tabs {
@@ -44,10 +53,12 @@
     @include reset-input;
     background-color: $colour-white;
     color: $colour-black;
+    border: 1px solid $colour-beige;
     padding: 0;
     cursor: pointer;
     @include flex;
     @include align-items(center);
+    @include justify-content(space-between);
     column-gap: get-rem-desktop(16);
     will-change: background-color;
     @include transition(background-color 300ms cubic-bezier(0.25,0.1,0.25,1));
@@ -61,17 +72,38 @@
 
     @media (hover: hover) {
       &:hover:not(.active) {
-        opacity: 0.7;
+        background-color: rgba($colour-beige, 0.5);
       }
     }
   }
 
   .booking-overlay__tab-image {
-    height: 100%;
+    width: 100%;
     aspect-ratio: 183 / 100;
     overflow: hidden;
     position: relative;
-    flex: 1 0 auto;
+    max-width: get-rem-desktop(183);
+  }
+
+  .booking-overlay__tab-label {
+    text-align: center;
+    width: 100%;
+  }
+
+  .booking-overlay__form {
+    width: 100%;
+    flex: 1;
+    min-height: 0;
+    @include flex;
+    @include flex-direction(column);
+
+    .chronogolf-iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+      flex: 1;
+      min-height: 0;
+    }
   }
 }
-
