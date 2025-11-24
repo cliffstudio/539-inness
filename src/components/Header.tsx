@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useState, useEffect, useRef } from 'react'
 import { DisableBodyScroll, EnableBodyScroll } from '@/utils/bodyScroll'
+import { useBooking } from '@/contexts/BookingContext'
 
 // Type for menu items from menuType schema
 type MenuItem = {
@@ -35,6 +36,7 @@ export default function Header({ menu }: HeaderProps) {
   const animationFrameRef = useRef<number | null>(null)
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
   const isInitialMount = useRef(true)
+  const { isOpen: isBookingOpen, openBooking, closeBooking } = useBooking()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -302,9 +304,8 @@ export default function Header({ menu }: HeaderProps) {
             </div>
           )}
 
-          <div className="right">
-            <div>Book</div>
-            {/* todo: add link */}
+          <div className="right" onClick={() => isBookingOpen ? closeBooking() : openBooking('room')}>
+            <div>{isBookingOpen ? 'Close' : 'Book'}</div>
           </div>
         </div>
       </header>
@@ -361,9 +362,8 @@ export default function Header({ menu }: HeaderProps) {
             </div>
           </div>
 
-          <div className="right">
-            <div>Book</div>
-            {/* todo: add link */}
+          <div className="right" onClick={() => isBookingOpen ? closeBooking() : openBooking('room')}>
+            <div>{isBookingOpen ? 'Close' : 'Book'}</div>
           </div>
         </div>
 
@@ -409,9 +409,8 @@ export default function Header({ menu }: HeaderProps) {
           </div>
         </div>
 
-        <div className="right">
+        <div className="right" onClick={() => openBooking('room')}>
           <div>Book</div>
-          {/* todo: add link */}
         </div>
       </header>
 

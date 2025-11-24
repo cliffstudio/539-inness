@@ -9,6 +9,7 @@ import ButtonLink from './ButtonLink'
 import { Splide, SplideSlide } from '@splidejs/react-splide'
 import '@splidejs/splide/css'
 import mediaLazyloading from '../utils/lazyLoad'
+import { useBooking } from '../contexts/BookingContext'
 
 interface OtherRoom {
   _id: string
@@ -28,6 +29,7 @@ export default function MoreRoomsSection({
   heading = 'More Rooms',
   roomLinks,
 }: MoreRoomsSectionProps) {
+  const { openBooking } = useBooking()
   const splideRef = useRef<{ go: (direction: string) => void } | null>(null)
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
@@ -158,8 +160,7 @@ export default function MoreRoomsSection({
               fallbackColor="cream"
             />
 
-            {/* todo: hook up book room button */}
-            <div className="button button--orange">
+            <div className="button button--orange" onClick={() => openBooking('room')}>
               Book
             </div>
           </div>

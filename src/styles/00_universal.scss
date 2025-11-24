@@ -429,6 +429,7 @@
 
   .media-text-heading {
     margin-bottom: get-rem-desktop(14);
+    max-width: 95%;
 
     @media only screen and (max-width: 768px) {
       margin-bottom: get-rem-mobile(10);
@@ -442,7 +443,7 @@
 
   .media-wrap {
     position: relative;
-    aspect-ratio: 774 / 500;
+    aspect-ratio: 14 / 9;
 
     @media only screen and (max-width: 768px) {
       aspect-ratio: 3 / 4;
@@ -452,7 +453,7 @@
       position: relative;
 
       .splide__slide {
-        aspect-ratio: 774 / 500;
+        aspect-ratio: 14 / 9;
 
         @media only screen and (max-width: 768px) {
           aspect-ratio: 3 / 4;
@@ -689,7 +690,7 @@
   .two-across {
     .media-text-link {
       .media-wrap {
-        aspect-ratio: 774 / 500;
+        aspect-ratio: 14 / 9;
 
         @media only screen and (max-width: 768px) {
           aspect-ratio: 3 / 4;
@@ -721,7 +722,8 @@
     }
 
     .media-text-body {
-      max-width: get-rem-desktop(700);
+      max-width: 95%;
+      // max-width: get-rem-desktop(700);
     }
 
     .media-text-date {
@@ -872,7 +874,7 @@
   .two-across {
     .media-text-link {
       .media-wrap {
-        aspect-ratio: 774 / 500;
+        aspect-ratio: 14 / 9;
 
         @media only screen and (max-width: 768px) {
           aspect-ratio: 3 / 4;
@@ -904,7 +906,8 @@
     }
 
     .media-text-body {
-      max-width: get-rem-desktop(700);
+      max-width: 95%;
+      // max-width: get-rem-desktop(700);
     }
 
     .media-text-date {
@@ -1134,7 +1137,7 @@
         width: auto !important;
         height: 100%;
         position: relative;
-        aspect-ratio: 1068 / 960;
+        aspect-ratio: 14 / 9;
       }
     }
   }
@@ -1447,7 +1450,7 @@
   }
 
   .media-wrap {
-    aspect-ratio: 774 / 500;
+    aspect-ratio: 14 / 9;
     position: relative;
     margin-bottom: get-rem-desktop(24);
     position: relative;
@@ -1593,7 +1596,7 @@ body.page-type-activities {
 
   .feature-item {
     .media-wrap {
-      aspect-ratio: 774 / 500;
+      aspect-ratio: 14 / 9;
       position: relative;
       margin-bottom: get-rem-desktop(20);
 

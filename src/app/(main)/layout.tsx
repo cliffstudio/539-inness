@@ -5,6 +5,8 @@ import Footer from '../../components/Footer'
 import LazyLoadInitializer from '../../components/LazyLoadInitializer'
 import MainWrapper from '../../components/MainWrapper'
 import OverflowController from '../../components/OverflowController'
+import { BookingProvider } from '../../contexts/BookingContext'
+import BookingOverlay from '../../components/BookingOverlay'
 
 export default async function MainLayout({
   children,
@@ -17,12 +19,13 @@ export default async function MainLayout({
   ])
 
   return (
-    <>
+    <BookingProvider>
       <LazyLoadInitializer />
       <OverflowController />
       {menu && <Header menu={menu} />}
       <MainWrapper>{children}</MainWrapper>
       {footerSettings && <Footer footer={footerSettings} />}
-    </>
+      <BookingOverlay />
+    </BookingProvider>
   )
 }
