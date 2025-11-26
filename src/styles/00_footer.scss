@@ -79,13 +79,17 @@
     left: 0;
     opacity: 0;
     transition: opacity 500ms cubic-bezier(0.25, 0.1, 0.25, 1);
+    pointer-events: none;
 
     &.fade-in {
       opacity: 1;
+      pointer-events: auto;
     }
   }
 
   .form-wrap {
+    @include flex;
+    column-gap: $gutter_lg;
     transition: opacity 500ms cubic-bezier(0.25, 0.1, 0.25, 1);
     opacity: 1;
 
@@ -95,66 +99,60 @@
     }
   }
 
-  #mc-embedded-subscribe-form {
-    margin: 0;
+  input[type="email"] {
+    @include reset-input;
+    // 4 columns + 3 gutters: (4 * container_width - gutter) / 6
+    width: calc((4 * 100% - #{$gutter_lg}) / 6);
+    border-bottom: 1px solid $colour-black;
 
-    .form-wrap {
-      @include flex;
-      column-gap: $gutter_lg;
+    &.mce_inline_error {
+      border: none !important;
+      border-bottom: 1px solid $colour-black !important;
     }
 
-    input.email {
-      @include reset-input;
-      // 4 columns + 3 gutters: (4 * container_width - gutter) / 6
-      width: calc((4 * 100% - #{$gutter_lg}) / 6);
-      border-bottom: 1px solid $colour-black;
-
-      &.mce_inline_error {
-        border: none !important;
-        border-bottom: 1px solid $colour-black !important;
-      }
-
-      @media only screen and (max-width: 768px) {
-        width: 100%;
-      }
-
-      &::placeholder {
-        color: rgba($colour-black, 0.5);
-      }
+    @media only screen and (max-width: 768px) {
+      width: 100%;
     }
 
-    input#mc-embedded-subscribe {
-      // 1 column + 4 gutters: (1 * container_width - gutter) / 6
-      width: calc((100% - 4 * #{$gutter_lg}) / 6);
-      min-width: get-rem-desktop(115.66);
-      background-color: transparent;
-      border: 1px solid $colour-black;
-      border-radius: 0;
-      color: $colour-black;
-      height: unset;
-      margin: 0;
-      padding: get-rem-desktop(10.5) get-rem-desktop(16) !important;
-      will-change: background-color, border-color, color;
-      transition: background-color 500ms cubic-bezier(0.25,0.1,0.25,1), border-color 500ms cubic-bezier(0.25,0.1,0.25,1), color 500ms cubic-bezier(0.25,0.1,0.25,1) !important;
-
-      @media (hover: hover) {
-        &:hover {
-          border-color: $colour-cream !important;
-          background-color: $colour-cream !important;
-          color: $colour-black !important;
-        }
-      }
-
-      @media only screen and (max-width: 768px) {
-        width: get-rem-mobile(110);
-        min-width: get-rem-mobile(110);
-      }
-    }
-
-    #mce-success-response {
-      display: none !important;
+    &::placeholder {
+      color: rgba($colour-black, 0.5);
     }
   }
+
+  button[type="submit"] {
+    // 1 column + 4 gutters: (1 * container_width - gutter) / 6
+    width: calc((100% - 4 * #{$gutter_lg}) / 6);
+    min-width: get-rem-desktop(115.66);
+    background-color: transparent;
+    border: 1px solid $colour-black;
+    border-radius: 0;
+    color: $colour-black;
+    height: unset;
+    margin: 0;
+    padding: get-rem-desktop(10.5) get-rem-desktop(16) !important;
+    will-change: background-color, border-color, color;
+    transition: background-color 500ms cubic-bezier(0.25,0.1,0.25,1), border-color 500ms cubic-bezier(0.25,0.1,0.25,1), color 500ms cubic-bezier(0.25,0.1,0.25,1) !important;
+    @include font-size(14px, 14px);
+    line-height: normal;
+    cursor: pointer;
+
+    @media (hover: hover) {
+      &:hover {
+        border-color: $colour-cream !important;
+        background-color: $colour-cream !important;
+        color: $colour-black !important;
+      }
+    }
+
+    @media only screen and (max-width: 768px) {
+      width: get-rem-mobile(110);
+      min-width: get-rem-mobile(110);
+    }
+  }
+
+  // #mce-success-response {
+  //   display: none !important;
+  // }
 
   .site-footer__copyright {
     @media only screen and (max-width: 768px) {
