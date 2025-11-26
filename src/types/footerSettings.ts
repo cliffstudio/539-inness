@@ -1,5 +1,5 @@
 export type Link = {
-  linkType: 'internal' | 'external' | 'jump' | 'file'
+  linkType: 'internal' | 'external' | 'jump' | 'file' | 'booking'
   label?: string
   href?: string
   isExternal?: boolean
@@ -15,6 +15,7 @@ export type Link = {
       originalFilename?: string
     }
   }
+  bookingTab?: 'room' | 'table' | 'golf' | 'spa' | 'activity'
   color?: 'cream' | 'orange' | 'outline'
 }
 

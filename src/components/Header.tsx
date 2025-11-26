@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { useState, useEffect, useRef } from 'react'
 import { DisableBodyScroll, EnableBodyScroll } from '@/utils/bodyScroll'
 import { useBooking } from '@/contexts/BookingContext'
@@ -37,6 +38,56 @@ export default function Header({ menu }: HeaderProps) {
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
   const isInitialMount = useRef(true)
   const { isOpen: isBookingOpen, openBooking, closeBooking } = useBooking()
+  const pathname = usePathname() || '/'
+
+  const normalizePath = (path: string) => {
+    if (!path || path === '/') return '/'
+    return path.replace(/\/$/, '')
+  }
+
+  const activePathname = normalizePath(pathname)
+
+  const getNavHref = (slug?: string) => {
+    if (!slug) return '/'
+    const trimmedSlug = slug.replace(/^\/+|\/+$/g, '')
+    return trimmedSlug ? `/${trimmedSlug}` : '/'
+  }
+
+  const isCurrentPageLink = (href: string) => {
+    const normalizedHref = normalizePath(href)
+
+    if (normalizedHref === '/') {
+      return activePathname === '/'
+    }
+
+    return (
+      activePathname === normalizedHref ||
+      activePathname.startsWith(`${normalizedHref}/`)
+    )
+  }
+
+  const hasCurrentNav = menu.items.some((item) =>
+    isCurrentPageLink(getNavHref(item.pageLink.slug))
+  )
+
+  const navClassName = `nav${hasCurrentNav ? ' nav-current-active' : ''}`
+
+  const renderNavLinks = () =>
+    menu.items.map((item, index) => {
+      const href = getNavHref(item.pageLink.slug)
+      const isCurrent = isCurrentPageLink(href)
+
+      return (
+        <a
+          key={`${item.pageLink._id ?? href}-${index}`}
+          className={isCurrent ? 'current-page' : undefined}
+          href={href}
+          aria-current={isCurrent ? 'page' : undefined}
+        >
+          {item.label || item.pageLink.title}
+        </a>
+      )
+    })
 
   useEffect(() => {
     const handleScroll = () => {
@@ -243,7 +294,7 @@ export default function Header({ menu }: HeaderProps) {
   return (
     <>
       {/* Desktop header */}
-      <header className={`site-header site-header-desktop ${scrolled ? 'scrolled' : ''}`}>
+      <header className={`site-header site-header-desktop${scrolled ? ' scrolled' : ''}${isBookingOpen ? ' booking-overlay-open' : ''}`}>
         <div className="logo-wrap">
           <div className="logo-text relative">
             <svg xmlns="http://www.w3.org/2000/svg" width="103" height="31" viewBox="0 0 103 31">
@@ -295,12 +346,8 @@ export default function Header({ menu }: HeaderProps) {
           </div>
 
           {menu.items.length > 0 && (
-            <div className="nav">
-              {menu.items.map((item, index) => (
-                <a key={index} href={`/${item.pageLink.slug}`}>
-                  {item.label || item.pageLink.title}
-                </a>
-              ))}
+            <div className={navClassName}>
+              {renderNavLinks()}
             </div>
           )}
 
@@ -311,7 +358,7 @@ export default function Header({ menu }: HeaderProps) {
       </header>
 
       {/* Tablet header */}
-      <header className={`site-header site-header-tablet ${scrolled ? 'scrolled' : ''}`}>
+      <header className={`site-header site-header-tablet${scrolled ? ' scrolled' : ''}${isBookingOpen ? ' booking-overlay-open' : ''}`}>
         <div className="top-row">
           <div className="left">
             {/* <div className="search-icon">
@@ -369,19 +416,15 @@ export default function Header({ menu }: HeaderProps) {
 
         <div className="nav-wrap">
           {menu.items.length > 0 && (
-            <div className="nav">
-              {menu.items.map((item, index) => (
-                <a key={index} href={`/${item.pageLink.slug}`}>
-                  {item.label || item.pageLink.title}
-                </a>
-              ))}
+            <div className={navClassName}>
+              {renderNavLinks()}
             </div>
           )}
         </div>
       </header>
 
       {/* Mobile header */}
-      <header className={`site-header site-header-mobile ${scrolled ? 'scrolled' : ''} ${isMenuVisible ? 'menu-overlay-visible' : ''}`}>
+      <header className={`site-header site-header-mobile${scrolled ? ' scrolled' : ''}${isMenuVisible ? ' menu-overlay-visible' : ''}${isBookingOpen ? ' booking-overlay-open' : ''}`}>
         <div className="left menu-opener" onClick={handleMenuClick}>
           <div ref={menuRef} className="menu">Menu</div>
           <div ref={closeRef} className="close">Close</div>
@@ -409,20 +452,16 @@ export default function Header({ menu }: HeaderProps) {
           </div>
         </div>
 
-        <div className="right" onClick={() => openBooking('room')}>
-          <div>Book</div>
+        <div className="right" onClick={() => (isBookingOpen ? closeBooking() : openBooking('room'))}>
+          <div>{isBookingOpen ? 'Close' : 'Book'}</div>
         </div>
       </header>
 
       <div ref={menuOverlayRef} className="menu-overlay">
         <div ref={innerWrapRef} className="inner-wrap">
           {menu.items.length > 0 && (
-            <div className="nav">
-              {menu.items.map((item, index) => (
-                <a key={index} href={`/${item.pageLink.slug}`}>
-                  {item.label || item.pageLink.title}
-                </a>
-              ))}
+            <div className={navClassName}>
+              {renderNavLinks()}
             </div>
           )}
 

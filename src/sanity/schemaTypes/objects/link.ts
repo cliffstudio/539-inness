@@ -12,7 +12,7 @@ export default defineType({
       type: 'string',
       initialValue: 'internal',
       options: { 
-        list: ['internal','external', 'jump', 'file'] 
+        list: ['internal','external', 'jump', 'file', 'booking'] 
       }
     }),
     defineField({ 
@@ -32,7 +32,7 @@ export default defineType({
       title: 'Page Link',
       type: 'reference',
       to: [{ type: 'page' }],
-      hidden: ({ parent }) => parent?.linkType === 'external' || parent?.linkType === 'jump' || parent?.linkType === 'file'
+      hidden: ({ parent }) => parent?.linkType === 'external' || parent?.linkType === 'jump' || parent?.linkType === 'file' || parent?.linkType === 'booking'
     }),
     defineField({
       name: 'jumpLink',
@@ -47,6 +47,23 @@ export default defineType({
       type: 'file',
       description: 'Upload a file to link to',
       hidden: ({ parent }) => parent?.linkType !== 'file'
+    }),
+    defineField({
+      name: 'bookingTab',
+      title: 'Booking Tab',
+      type: 'string',
+      description: 'Select which booking tab to open',
+      options: {
+      list: [
+        { title: 'Book a Room', value: 'room' },
+        { title: 'Book a Table', value: 'table' },
+        { title: 'Book a Tee Time', value: 'golf' },
+        { title: 'Book a Treatment', value: 'spa' },
+        { title: 'Book Activity', value: 'activity' },
+      ],
+      },
+      initialValue: 'room',
+      hidden: ({ parent }) => parent?.linkType !== 'booking'
     }),
     defineField({
       name: 'color',
@@ -70,8 +87,9 @@ export default defineType({
       pageTitle: 'pageLink.title',
       jumpLink: 'jumpLink',
       fileName: 'file.asset.originalFilename',
+      bookingTab: 'bookingTab',
     },
-    prepare({ linkType, url, label, pageTitle, jumpLink, fileName }) {
+    prepare({ linkType, url, label, pageTitle, jumpLink, fileName, bookingTab }) {
       let title = ''
       let subtitle = ''
       
@@ -84,6 +102,16 @@ export default defineType({
       } else if (linkType === 'file') {
         title = label || 'File Link'
         subtitle = fileName || 'No File Selected'
+      } else if (linkType === 'booking') {
+        const tabLabels: Record<string, string> = {
+          'room': 'Book a Room',
+          'table': 'Book a Table',
+          'golf': 'Book a Tee Time',
+          'spa': 'Book a Treatment',
+          'activity': 'Book Activity',
+        }
+        title = label || 'Booking Link'
+        subtitle = tabLabels[bookingTab] || bookingTab || 'No Tab Selected'
       } else {
         title = label || 'Internal Link'
         subtitle = pageTitle || 'No Page Selected'

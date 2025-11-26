@@ -132,7 +132,12 @@ export default function RootLayout({
                                     }
                                 }
                             }
-                            checkInView();                
+                            // Delay initial check to avoid hydration mismatch - wait for React to finish hydrating
+                            requestAnimationFrame(function() {
+                                requestAnimationFrame(function() {
+                                    checkInView();
+                                });
+                            });                
                         });
                     }             
                   }($));
@@ -173,20 +178,40 @@ export default function RootLayout({
                         return;
                       }
 
-                      image.dataset.scaleImageInitialized = 'true';
-
-                      window.gsap.to(image, {
-                        scale: 1.05,
-                        x: 20,
-                        y: -20,
-                        ease: "none",
-                        scrollTrigger: {
-                          trigger: image.closest('.scale-container'),
-                          start: "top bottom",
-                          end: "bottom top",
-                          scrub: true
+                      // Use setTimeout to ensure React hydration is complete
+                      // This prevents GSAP from adding inline styles and data attributes during hydration
+                      setTimeout(function() {
+                        if (!image.closest('.scale-container')) {
+                          return;
                         }
-                      });
+                        
+                        // Check again in case it was initialized elsewhere
+                        if (image.dataset.scaleImageInitialized === 'true') {
+                          return;
+                        }
+                        
+                        // Mark as initialized and create GSAP animation
+                        image.dataset.scaleImageInitialized = 'true';
+                        
+                        window.gsap.to(image, {
+                          startAt: {
+                            scale: 1,
+                            x: 0,
+                            y: 0
+                          },
+                          scale: 1.05,
+                          x: 20,
+                          y: -20,
+                          ease: "none",
+                          immediateRender: false,
+                          scrollTrigger: {
+                            trigger: image.closest('.scale-container'),
+                            start: "top top",
+                            end: "bottom top",
+                            scrub: true
+                          }
+                        });
+                      }, 300);
                     });
                   }
 
@@ -224,13 +249,19 @@ export default function RootLayout({
                         imageWrap.dataset.heroMovementInitialized = 'true';
 
                         window.gsap.to(imageWrap, {
+                          startAt: {
+                            scale: 1,
+                            x: 0,
+                            y: 0
+                          },
                           scale: 1.05,
                           x: 20,
                           y: -20,
                           ease: "none",
+                          immediateRender: false,
                           scrollTrigger: {
                             trigger: heroSection,
-                            start: "top bottom",
+                            start: "top top",
                             end: "bottom top",
                             scrub: true
                           }
@@ -241,11 +272,30 @@ export default function RootLayout({
                     }
                   }
 
-                  // Run when DOM is ready
+                  // Run when DOM is ready, but delay to avoid hydration mismatch
                   $(document).ready(function() {
-                    outOfView();
-                    initScaleImages();
-                    initHeroSectionMovement();
+                    // Wait for document to be fully loaded and add extra delay for React hydration
+                    function runAfterHydration() {
+                      // Use multiple requestAnimationFrame calls plus a small timeout
+                      // to ensure React has finished hydrating
+                      requestAnimationFrame(function() {
+                        requestAnimationFrame(function() {
+                          setTimeout(function() {
+                            outOfView();
+                            initScaleImages();
+                            initHeroSectionMovement();
+                          }, 100);
+                        });
+                      });
+                    }
+                    
+                    if (document.readyState === 'complete') {
+                      runAfterHydration();
+                    } else {
+                      window.addEventListener('load', runAfterHydration, { once: true });
+                      // Also run after a timeout as fallback
+                      setTimeout(runAfterHydration, 500);
+                    }
                   });
                   
                     // Re-run on browser navigation (back/forward)
@@ -342,8 +392,8 @@ export default function RootLayout({
                     
                     // Initialize smooth scroll
                     initSmoothScroll();
-                    initScaleImages();
-                    initHeroSectionMovement();
+                    // Note: initScaleImages() and initHeroSectionMovement() are called in $(document).ready() 
+                    // with proper delays to avoid hydration mismatches
                 });
               })();
             `

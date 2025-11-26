@@ -76,6 +76,7 @@ interface mediaTextSectionProps {
       startTime?: string
       endTime?: string
     }
+    bookingHref?: string
   }[]
   mediaType?: 'image' | 'video'
   images?: SanityImage[]
@@ -620,10 +621,13 @@ export default function MediaTextSection({
                   fallbackColor="cream"
                 />
 
-                {/* todo: add book room button */}
-                <div className="button button--orange">
+                <button
+                  type="button"
+                  className="button button--orange"
+                  onClick={() => openBooking('room')}
+                >
                   Book
-                </div>
+                </button>
               </div>
             </div>
           </div>
@@ -775,10 +779,7 @@ export default function MediaTextSection({
                                   fallbackColor="cream"
                                 />
 
-                                {/* todo: hook up book room button */}
-                                <div className="button button--orange">
-                                  Book
-                                </div>
+                                <div className="button button--orange" onClick={() => openBooking('room')}>Book</div>
                               </div>
                             </div>
                           )}
@@ -974,10 +975,17 @@ export default function MediaTextSection({
                               fallbackColor="cream"
                             />
 
-                            {/* todo: hook up book activity button */}
-                            <div className="button button--orange">
-                              Book
-                            </div>
+                            {activity.bookingHref && (
+                              <ButtonLink
+                                link={{
+                                  linkType: 'external',
+                                  label: 'Book',
+                                  href: activity.bookingHref,
+                                  color: 'orange',
+                                }}
+                                fallbackColor="orange"
+                              />
+                            )}
                           </div>
                         </div>
                       )}
@@ -1060,10 +1068,17 @@ export default function MediaTextSection({
                             fallbackColor="cream"
                           />
 
-                          {/* todo: hook up book activity button */}
-                          <div className="button button--orange">
-                            Book Activity
-                          </div>
+                          {activity.bookingHref && (
+                            <ButtonLink
+                              link={{
+                                linkType: 'external',
+                                label: 'Book',
+                                href: activity.bookingHref,
+                                color: 'orange',
+                              }}
+                              fallbackColor="orange"
+                            />
+                          )}
                         </div>
                       </div>
                     )}

@@ -60,9 +60,13 @@ export default function Hero({ id, title, image, description, specs }: HeroProps
             </div>
           )}
           
-          <div className="button button--orange" onClick={() => openBooking('room')}>
+          <button
+            type="button"
+            className="button button--orange"
+            onClick={() => openBooking('room')}
+          >
             Book
-          </div>
+          </button>
         </div>
       </div>
     </section>

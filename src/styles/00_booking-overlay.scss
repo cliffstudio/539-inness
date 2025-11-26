@@ -5,11 +5,17 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 100svh;
+  height: 100%;
+  min-height: 100svh;
   z-index: 99;
   background-color: $colour-cream;
   opacity: 0;
   pointer-events: none;
+
+  @media only screen and (min-width: 769px) {
+    opacity: 1;
+    pointer-events: auto;
+  }
 
   .booking-overlay__inner-wrap {
     height: 100%;
@@ -23,7 +29,10 @@
     padding-right: get-rem-desktop(80);
 
     @media only screen and (max-width: 768px) {
-      padding: get-rem-mobile(24);
+      padding-top: calc(get-rem-mobile(63) + get-rem-mobile(40));
+      padding-bottom: get-rem-mobile(56);
+      padding-left: get-rem-mobile(24);
+      padding-right: get-rem-mobile(24);
     }
   }
 
@@ -34,6 +43,10 @@
     row-gap: get-rem-desktop(80);
     flex: 1;
     min-height: 0;
+
+    @media only screen and (max-width: 768px) {
+      row-gap: get-rem-mobile(40);
+    }
   }
 
   .booking-overlay__tab-content {
@@ -47,6 +60,30 @@
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     column-gap: get-rem-desktop(4);
+
+    @media only screen and (max-width: 1240px) {
+      @include flex;
+      overflow-y: hidden;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+      margin-left: get-rem-desktop(-80);
+      margin-right: get-rem-desktop(-80);
+      padding-left: get-rem-desktop(80);
+      padding-right: get-rem-desktop(80);
+
+      &::-webkit-scrollbar {
+        display: none !important;
+      }
+    }
+
+    @media only screen and (max-width: 768px) {
+      margin-left: get-rem-mobile(-24);
+      margin-right: get-rem-mobile(-24);
+      padding-left: get-rem-mobile(24);
+      padding-right: get-rem-mobile(24);
+    }
   }
 
   .booking-overlay__tab {
@@ -66,6 +103,11 @@
     padding: get-rem-desktop(12);
     padding-right: get-rem-desktop(16);
 
+    @media only screen and (max-width: 1240px) {
+      min-width: get-rem-desktop(300);
+      width: 100%;
+    }
+
     &.active {
       background-color: $colour-beige;
     }
@@ -78,11 +120,17 @@
   }
 
   .booking-overlay__tab-image {
+    height: 100%;
     width: 100%;
     aspect-ratio: 183 / 100;
     overflow: hidden;
     position: relative;
-    max-width: get-rem-desktop(183);
+    width: get-rem-desktop(180);
+
+    @media only screen and (max-width: 1240px) {
+      aspect-ratio: 1 / 1;
+      width: get-rem-desktop(100);
+    }
   }
 
   .booking-overlay__tab-label {

@@ -11,6 +11,18 @@ export const getLinkInfo = (cta?: Link) => {
   } else if (cta.linkType === 'file') {
     const href = cta.file ? fileUrlFor(cta.file) : ''
     return { text: cta.label || '', href }
+  } else if (cta.linkType === 'booking') {
+    // For booking links, create URL with booking parameter
+    const bookingTab = cta.bookingTab || 'room'
+    const tabLabels: Record<string, string> = {
+      'room': 'Book a Room',
+      'table': 'Book a Table',
+      'golf': 'Book a Tee Time',
+      'spa': 'Book a Treatment',
+      'activity': 'Book Activity',
+    }
+    const text = cta.label || tabLabels[bookingTab] || 'Book'
+    return { text, href: '#booking' }
   } else {
     // For internal links, use label if provided, otherwise fallback to page title
     const text = cta.label || cta.pageLink?.title || ''

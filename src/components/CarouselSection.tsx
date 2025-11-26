@@ -36,11 +36,11 @@ export default function CarouselSection({ images }: CarouselSectionProps) {
         arrows: false,
         pagination: false,
         autoplay: false,
-        drag: false,
+        drag: true,
         preloadPages: 4,
         autoScroll: {
           speed: 1,
-          pauseOnHover: false,
+          pauseOnHover: true,
         },
       })
 

@@ -1,4 +1,5 @@
 import '@/styles/style.scss'
+import { Suspense } from 'react'
 import { getFooterSettings, getMenu } from '../../utils/footerSettings'
 import Header from '../../components/Header'
 import Footer from '../../components/Footer'
@@ -19,13 +20,15 @@ export default async function MainLayout({
   ])
 
   return (
-    <BookingProvider>
-      <LazyLoadInitializer />
-      <OverflowController />
-      {menu && <Header menu={menu} />}
-      <MainWrapper>{children}</MainWrapper>
-      {footerSettings && <Footer footer={footerSettings} />}
-      <BookingOverlay />
-    </BookingProvider>
+    <Suspense fallback={null}>
+      <BookingProvider>
+        <LazyLoadInitializer />
+        <OverflowController />
+        {menu && <Header menu={menu} />}
+        <MainWrapper>{children}</MainWrapper>
+        {footerSettings && <Footer footer={footerSettings} />}
+        <BookingOverlay />
+      </BookingProvider>
+    </Suspense>
   )
 }

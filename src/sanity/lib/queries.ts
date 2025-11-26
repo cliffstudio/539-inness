@@ -27,6 +27,7 @@ const linkFragment = groq`{
   label,
   href,
   jumpLink,
+  bookingTab,
   color,
   file {
     asset {
@@ -125,6 +126,7 @@ const mediaTextSectionFragment = groq`{
     description,
     "slug": slug.current,
     image ${imageFragment},
+    bookingHref,
     date,
     timeRange
   },

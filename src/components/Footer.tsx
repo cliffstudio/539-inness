@@ -1,8 +1,9 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { MouseEvent, useEffect, useState } from 'react'
 import Script from 'next/script'
-import type { Footer } from '../types/footerSettings'
+import type { Footer, Link as FooterLink } from '../types/footerSettings'
+import { BookingTab, useBooking } from '../contexts/BookingContext'
 import { getLinkInfo } from '../utils/linkHelpers'
 
 interface FooterProps {
@@ -12,6 +13,7 @@ interface FooterProps {
 export default function Footer({ footer }: FooterProps) {
   const [isSubscribed, setIsSubscribed] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
+  const { openBooking } = useBooking()
 
   // Add Mailchimp CSS to head
   useEffect(() => {
@@ -83,6 +85,58 @@ export default function Footer({ footer }: FooterProps) {
 
   if (!footer) return null
 
+  const isPlainLeftClick = (event: MouseEvent<HTMLAnchorElement>) => {
+    return (
+      event.button === 0 &&
+      !event.metaKey &&
+      !event.ctrlKey &&
+      !event.shiftKey &&
+      !event.altKey
+    )
+  }
+
+  const renderFooterLink = (link: FooterLink, linkIndex: number) => {
+    const { href, text } = getLinkInfo(link)
+    if (!text) return null
+
+    if (link.linkType === 'booking') {
+      const bookingTab = (link.bookingTab || 'room') as BookingTab
+      const bookingHref = href || '#booking'
+      const handleClick = (event: MouseEvent<HTMLAnchorElement>) => {
+        if (!isPlainLeftClick(event)) return
+        event.preventDefault()
+        openBooking(bookingTab)
+      }
+
+      return (
+        <div key={linkIndex}>
+          <a
+            href={bookingHref}
+            className="site-footer__link"
+            onClick={handleClick}
+          >
+            {text}
+          </a>
+        </div>
+      )
+    }
+
+    if (!href) return null
+
+    return (
+      <div key={linkIndex}>
+        <a
+          href={href}
+          className="site-footer__link"
+          {...(link.linkType === 'external' && { target: '_blank', rel: 'noopener noreferrer' })}
+          {...(link.linkType === 'file' && { target: '_blank', rel: 'noopener noreferrer', download: link.file?.asset?.originalFilename })}
+        >
+          {text}
+        </a>
+      </div>
+    )
+  }
+
   return (
     <footer className="site-footer h-pad">
       <div className="row-lg top">
@@ -105,22 +159,7 @@ export default function Footer({ footer }: FooterProps) {
 
             {footer.navigationColumn1.links && footer.navigationColumn1.links.length > 0 && (
               <div className="site-footer__links">
-                {footer.navigationColumn1.links.map((link, linkIndex) => {
-                  const { href, text } = getLinkInfo(link)
-                  if (!href || !text) return null
-                  return (
-                    <div key={linkIndex}>
-                      <a
-                        href={href}
-                        className="site-footer__link"
-                        {...(link.linkType === 'external' && { target: '_blank', rel: 'noopener noreferrer' })}
-                        {...(link.linkType === 'file' && { target: '_blank', rel: 'noopener noreferrer', download: link.file?.asset?.originalFilename })}
-                      >
-                        {text}
-                      </a>
-                    </div>
-                  )
-                })}
+                {footer.navigationColumn1.links.map(renderFooterLink)}
               </div>
             )}
           </div>
@@ -135,22 +174,7 @@ export default function Footer({ footer }: FooterProps) {
 
             {footer.navigationColumn2.links && footer.navigationColumn2.links.length > 0 && (
               <div className="site-footer__links">
-                {footer.navigationColumn2.links.map((link, linkIndex) => {
-                  const { href, text } = getLinkInfo(link)
-                  if (!href || !text) return null
-                  return (
-                    <div key={linkIndex}>
-                      <a
-                        href={href}
-                        className="site-footer__link"
-                        {...(link.linkType === 'external' && { target: '_blank', rel: 'noopener noreferrer' })}
-                        {...(link.linkType === 'file' && { target: '_blank', rel: 'noopener noreferrer', download: link.file?.asset?.originalFilename })}
-                      >
-                        {text}
-                      </a>
-                    </div>
-                  )
-                })}
+                {footer.navigationColumn2.links.map(renderFooterLink)}
               </div>
             )}
           </div>
@@ -165,22 +189,7 @@ export default function Footer({ footer }: FooterProps) {
 
             {footer.followColumn.links && footer.followColumn.links.length > 0 && (
               <div className="site-footer__links">
-                {footer.followColumn.links.map((link, linkIndex) => {
-                  const { href, text } = getLinkInfo(link)
-                  if (!href || !text) return null
-                  return (
-                    <div key={linkIndex}>
-                      <a
-                        href={href}
-                        className="site-footer__link"
-                        {...(link.linkType === 'external' && { target: '_blank', rel: 'noopener noreferrer' })}
-                        {...(link.linkType === 'file' && { target: '_blank', rel: 'noopener noreferrer', download: link.file?.asset?.originalFilename })}
-                      >
-                        {text}
-                      </a>
-                    </div>
-                  )
-                })}
+                {footer.followColumn.links.map(renderFooterLink)}
               </div>
             )}
           </div>

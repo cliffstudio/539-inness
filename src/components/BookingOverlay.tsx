@@ -7,6 +7,11 @@ import { DisableBodyScroll, EnableBodyScroll } from '@/utils/bodyScroll'
 import type { BookingTab } from '../contexts/BookingContext'
 import mediaLazyloading from '../utils/lazyLoad'
 
+import bookGolfImage from '@/app/images/book-golf-image.jpg'
+import bookRoomImage from '@/app/images/book-room-image.jpg'
+import bookSpaImage from '@/app/images/book-spa-image.jpg'
+import bookTableImage from '@/app/images/book-table-image.jpg'
+
 
 export default function BookingOverlay() {
   const { isOpen, activeTab, setActiveTab } = useBooking()
@@ -143,10 +148,10 @@ export default function BookingOverlay() {
   }, [isOpen])
 
   const tabs: { id: BookingTab; label: string; image: string }[] = [
-    { id: 'room', label: 'Book a room', image: '/images/book-room-image.jpg' },
-    { id: 'table', label: 'Book a table', image: '/images/book-table-image.jpg' },
-    { id: 'tee-time', label: 'Book a tee time', image: '/images/book-golf-image.jpg' },
-    { id: 'spa', label: 'Spa Reservations', image: '/images/book-spa-image.jpg' },
+    { id: 'room', label: 'Book a room', image: bookRoomImage.src },
+    { id: 'table', label: 'Book a table', image: bookTableImage.src },
+    { id: 'golf', label: 'Book a tee time', image: bookGolfImage.src },
+    { id: 'spa', label: 'Book a treatment', image: bookSpaImage.src },
   ]
 
   if (!isOpen) return null
@@ -190,7 +195,7 @@ export default function BookingOverlay() {
               </div>
             )}
 
-            {activeTab === 'tee-time' && (
+            {activeTab === 'golf' && (
               <div className="booking-overlay__form">
                 <iframe
                   className="chronogolf-iframe"

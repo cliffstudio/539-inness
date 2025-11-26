@@ -1,10 +1,9 @@
 @use '00_mixins' as *;
 
 /*
-DESKTOP HEADER ------------------
+SITE HEADER BASE ------------------
 */
-
-.site-header-desktop {
+.site-header {
   position: fixed;
   top: 0;
   left: 0;
@@ -13,6 +12,14 @@ DESKTOP HEADER ------------------
   color: $colour-cream;
   will-change: background-color, color;
   @include transition-multiple(background-color 500ms cubic-bezier(0.25,0.1,0.25,1), color 500ms cubic-bezier(0.25,0.1,0.25,1));
+}
+
+/*
+DESKTOP HEADER ------------------
+*/
+
+.site-header-desktop {
+  @extend .site-header;
 
   @media only screen and (max-width: 1240px) {
     display: none;
@@ -147,7 +154,8 @@ DESKTOP HEADER ------------------
   }
 }
 
-.site-header-desktop.scrolled {
+.site-header-desktop.scrolled,
+.site-header-desktop.booking-overlay-open {
   background-color: $colour-cream;
   color: $colour-black;
 
@@ -216,14 +224,7 @@ TABLET HEADER ------------------
 
 .site-header-tablet {
   display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 100;
-  color: $colour-cream;
-  will-change: background-color, color;
-  @include transition-multiple(background-color 500ms cubic-bezier(0.25,0.1,0.25,1), color 500ms cubic-bezier(0.25,0.1,0.25,1));
+  @extend .site-header;
 
   @media only screen and (max-width: 1240px) {
     display: block;
@@ -368,7 +369,8 @@ TABLET HEADER ------------------
   }
 }
 
-.site-header-tablet.scrolled {
+.site-header-tablet.scrolled,
+.site-header-tablet.booking-overlay-open {
   background-color: $colour-cream;
   color: $colour-black;
 
@@ -438,13 +440,7 @@ MOBILE HEADER ------------------
 .site-header-mobile {
   display: none;
   border-bottom: 1px solid $colour-cream;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 100;
-  color: $colour-cream;
-  will-change: background-color, color;
+  @extend .site-header;
   @include transition-multiple(background-color 500ms cubic-bezier(0.25,0.1,0.25,1), border-color 500ms cubic-bezier(0.25,0.1,0.25,1), color 500ms cubic-bezier(0.25,0.1,0.25,1));
 
   @media only screen and (max-width: 768px) {
@@ -529,9 +525,11 @@ MOBILE HEADER ------------------
   }
 }
 
-.site-header-mobile.scrolled {
+.site-header-mobile.scrolled,
+.site-header-mobile.booking-overlay-open {
   background-color: $colour-cream;
   color: $colour-black;
+  border-color: $colour-beige;
 
   .logo-text,
   .logo-icon {
@@ -676,6 +674,27 @@ MOBILE HEADER ------------------
         width: get-rem-mobile(21);
         height: get-rem-mobile(23);
       }
+    }
+  }
+}
+
+.nav.nav-current-active {
+  a:not(.current-page) {
+    opacity: 0.5;
+  }
+
+  a.current-page {
+    opacity: 1;
+  }
+
+  @media (hover: hover) {
+    &:hover a:not(.current-page):not(:hover) {
+      opacity: 0.5;
+    }
+
+    &:hover a.current-page,
+    a:not(.current-page):hover {
+      opacity: 1;
     }
   }
 }
