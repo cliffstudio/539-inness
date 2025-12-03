@@ -56,10 +56,11 @@ export default function HeroSectionHomepage({
 
     const loaderLogo = heroSection.querySelector<HTMLElement>('.loader-logo')
     const loaderOverlay = heroSection.querySelector<HTMLElement>('.loader-overlay')
+    const gradientOverlay = heroSection.querySelector<HTMLElement>('.gradient-overlay')
     const heroContent = heroSection.querySelector<HTMLElement>('.hero-content')
     const heroArrow = heroSection.querySelector<HTMLElement>('.hero-arrow')
 
-    if (!loaderLogo || !loaderOverlay || !heroArrow) {
+    if (!loaderLogo || !loaderOverlay || !gradientOverlay || !heroArrow) {
       return
     }
 
@@ -81,6 +82,7 @@ export default function HeroSectionHomepage({
     if (heroContent) {
       heroContent.classList.remove('is-visible')
     }
+    gradientOverlay.classList.remove('is-visible')
     heroArrow.classList.remove('is-visible')
     loaderOverlay.classList.remove('is-hidden')
 
@@ -109,6 +111,7 @@ export default function HeroSectionHomepage({
     setTimer(() => {
       loaderOverlay.classList.add('is-hidden')
       body.classList.remove('page-home-loader-active')
+      gradientOverlay.classList.add('is-visible')
       heroArrow.classList.add('is-visible')
     }, overlayFadeOutStart)
 
@@ -178,6 +181,8 @@ export default function HeroSectionHomepage({
           <div className="loading-overlay" />
         </div>
       )}
+
+      <div className="gradient-overlay"></div>
 
       {homepageHeading && (
         <div className="hero-content h-pad">
