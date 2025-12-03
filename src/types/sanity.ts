@@ -18,13 +18,15 @@ export type SanityImage = {
   }
 }
 
-export type SanityVideo = {
-  _type: 'file'
-  asset: {
-    _ref: string
-    _type: 'reference'
-  }
-}
+export type SanityVideo = 
+  | string // New format: Bunny.net URL
+  | {
+      _type: 'file'
+      asset: {
+        _ref: string
+        _type: 'reference'
+      }
+    } // Old format: Sanity file reference (for backward compatibility)
 
 export type PortableTextBlock = {
   _type: string

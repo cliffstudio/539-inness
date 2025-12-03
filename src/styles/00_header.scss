@@ -193,7 +193,6 @@ DESKTOP HEADER ------------------
   }
 }
 
-.page-type-homepage,
 .page-type-text,
 .page-type-search,
 .page-type-search-results,
@@ -410,7 +409,6 @@ TABLET HEADER ------------------
   }
 }
 
-.page-type-homepage,
 .page-type-text,
 .page-type-search,
 .page-type-search-results,
@@ -565,23 +563,12 @@ MOBILE HEADER ------------------
     }
   }
 
-  // .logo-text {
-  //   opacity: 0;
-  //   pointer-events: none;
-  // }
-
-  // .logo-icon {
-  //   opacity: 1;
-  //   pointer-events: auto;
-  // }
-
   .left,
   .right {
     border-color: $colour-cream;
   }
 }
 
-.page-type-homepage,
 .page-type-text,
 .page-type-search,
 .page-type-search-results,

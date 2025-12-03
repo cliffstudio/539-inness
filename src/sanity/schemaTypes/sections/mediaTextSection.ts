@@ -1,6 +1,5 @@
 import { defineType, defineField } from 'sanity'
 import { imageSizeValidation } from '../utils/imageValidation'
-import { videoSizeValidation } from '../utils/videoValidation'
 
 export default defineType({
   name: 'mediaTextSection',
@@ -183,14 +182,10 @@ export default defineType({
     }),
     defineField({ 
       name: 'video', 
-      title: 'Video',
-      description: 'Only MP4 files are accepted. Maximum file size: 10MB.',
-      type: 'file', 
-      options: { 
-        accept: 'video/mp4,.mp4' 
-      },
+      title: 'Video URL',
+      description: 'Enter the Bunny.net video URL.',
+      type: 'url',
       hidden: ({ parent }) => parent?.mediaType !== 'video',
-      validation: videoSizeValidation,
     }),
     defineField({
       name: 'videoPlaceholder',

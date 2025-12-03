@@ -15,6 +15,7 @@ const imageFragment = groq`{
   crop
 }`
 
+// Note: videoFragment kept for backward compatibility but video fields now use URL strings
 const videoFragment = groq`{
   asset {
     _ref,
@@ -102,7 +103,7 @@ const mediaTextSectionFragment = groq`{
   buttons[] ${linkFragment},
   mediaType,
   images[] ${imageFragment},
-  video ${videoFragment},
+  video,
   videoPlaceholder ${imageFragment},
   mediaAlignment,
   roomLink-> {
@@ -323,7 +324,7 @@ export const homepageQuery = groq`
     homepageHeading,
     homepageMediaType,
     homepageImage ${imageFragment},
-    homepageVideo ${videoFragment},
+    homepageVideo,
     homepageVideoPlaceholder ${imageFragment},
     contentBlocks[] ${flexibleContentFragment}
   }

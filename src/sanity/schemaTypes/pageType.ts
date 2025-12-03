@@ -1,7 +1,6 @@
 import { defineType, defineField } from 'sanity'
 import { DocumentTextIcon } from '@sanity/icons'
 import { imageSizeValidation } from './utils/imageValidation'
-import { videoSizeValidation } from './utils/videoValidation'
 
 export const pageType = defineType({
   name: 'page',
@@ -77,15 +76,11 @@ export const pageType = defineType({
     }),
     defineField({ 
       name: 'homepageVideo', 
-      title: 'Video',
-      description: 'Only MP4 files are accepted. Maximum file size: 10MB.',
-      type: 'file', 
-      options: { 
-        accept: 'video/mp4,.mp4' 
-      },
+      title: 'Video URL',
+      description: 'Enter the Bunny.net video URL.',
+      type: 'url',
       fieldset: 'heroSection',
       hidden: ({ parent }) => parent?.pageType !== 'homepage' || parent?.homepageMediaType !== 'video',
-      validation: videoSizeValidation,
     }),
     defineField({
       name: 'homepageVideoPlaceholder',
