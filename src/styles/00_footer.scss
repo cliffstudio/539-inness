@@ -3,23 +3,22 @@
 .site-footer {
   background-color: $colour-orange;
   color: $colour-black;
-  padding-top: get-rem-desktop(200);
+  padding-top: get-rem-desktop(80);
   padding-bottom: get-rem-desktop(80);
   @include flex;
   @include flex-direction(column);
-  row-gap: get-rem-desktop(90);
+  row-gap: get-rem-desktop(70);
 
   @media only screen and (max-width: 768px) {
-    padding-top: get-rem-mobile(140);
-    padding-bottom: get-rem-mobile(16);
-    row-gap: get-rem-mobile(70);
+    padding-top: get-rem-mobile(48);
+    padding-bottom: get-rem-mobile(24);
   }
 
   .top {
     @media only screen and (max-width: 768px) {
       @include flex;
       @include flex-direction(column);
-      row-gap: get-rem-mobile(35);
+      row-gap: get-rem-mobile(48);
     }
   }
 
@@ -28,6 +27,10 @@
     max-width: get-rem-desktop(244);
     fill: $colour-black;
     margin-bottom: get-rem-desktop(38);
+
+    @media only screen and (max-width: 768px) {
+      margin-bottom: 0;
+    }
   }
 
   .site-footer__heading {

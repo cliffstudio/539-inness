@@ -307,12 +307,12 @@
 // IMAGE MEDIA SECTION ------------------
 
 .media-text-section {
-  padding-top: get-rem-desktop(200);
-  padding-bottom: get-rem-desktop(200);
+  padding-top: get-rem-desktop(160);
+  padding-bottom: get-rem-desktop(160);
 
   @media only screen and (max-width: 768px) {
-    padding-top: get-rem-mobile(140);
-    padding-bottom: get-rem-mobile(140);
+    padding-top: get-rem-mobile(48);
+    padding-bottom: get-rem-mobile(48);
   }
 
   &.align-left,
@@ -339,7 +339,7 @@
     @media only screen and (max-width: 768px) {
       @include flex;
       @include flex-direction(column);
-      row-gap: get-rem-mobile(35);
+      row-gap: get-rem-mobile(48);
     }
   }
 
@@ -507,7 +507,7 @@
   @media only screen and (max-width: 768px) {
     @include flex;
     @include flex-direction(column);
-    row-gap: get-rem-mobile(80);
+    row-gap: get-rem-mobile(48);
   }
 }
 
@@ -523,7 +523,7 @@
     &.align-right {
       @include flex;
       @include flex-direction(column-reverse);
-      row-gap: get-rem-mobile(35);
+      row-gap: get-rem-mobile(48);
     }
   }
 
@@ -1533,12 +1533,12 @@ body.page-type-activities {
 // FEATURE SECTION ------------------
 
 .feature-section {
-  padding-top: get-rem-desktop(120);
-  padding-bottom: get-rem-desktop(120);
+  padding-top: get-rem-desktop(160);
+  padding-bottom: get-rem-desktop(160);
 
   @media only screen and (max-width: 768px) {
-    padding-top: get-rem-mobile(140);
-    padding-bottom: get-rem-mobile(140);
+    padding-top: get-rem-mobile(48);
+    padding-bottom: get-rem-mobile(48);
   }
 
   .feature-section-subheading {
@@ -1563,7 +1563,7 @@ body.page-type-activities {
     @media only screen and (max-width: 768px) {
       @include flex;
       @include flex-direction(column);
-      row-gap: get-rem-mobile(80);
+      row-gap: get-rem-mobile(48);
     }
   }
 
