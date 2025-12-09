@@ -191,7 +191,7 @@ export default function BookingOverlay() {
             {activeTab === 'table' && (
               <div className="booking-overlay__form">
                 {/* Embed table booking form here */}
-                <p>Table booking form will be embedded here</p>
+                <p>Table booking button to go here</p>
               </div>
             )}
 
@@ -211,7 +211,7 @@ export default function BookingOverlay() {
             {activeTab === 'spa' && (
               <div className="booking-overlay__form">
                 {/* Embed spa reservation form here */}
-                <p>Spa reservation form will be embedded here</p>
+                <p>Spa reservation booking button to go here</p>
               </div>
             )}
           </div>
