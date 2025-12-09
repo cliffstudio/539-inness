@@ -72,11 +72,6 @@
   text-align: center;
   cursor: pointer;
 
-  // @media only screen and (max-width: 768px) {
-  //   min-width: unset;
-  //   width: 100%;
-  // }
-
   &--orange {
     background-color: $colour-orange;
     color: $colour-cream;
@@ -130,6 +125,29 @@
 }
 
 // FIXED HERO STYLES ------------------
+
+.flexible-content {
+  background-color: $colour-beige;
+  padding-top: get-rem-desktop(160);
+  padding-bottom: get-rem-desktop(160);
+  @include flex;
+  @include flex-direction(column);
+  row-gap: get-rem-desktop(160);
+
+  @media only screen and (max-width: 768px) {
+    padding-top: get-rem-mobile(48);
+    padding-bottom: get-rem-mobile(48);
+    row-gap: get-rem-mobile(48);
+  }
+}
+
+.page-template-general {
+  .flexible-content {
+    @media only screen and (max-width: 768px) {
+      margin-top: get-rem-mobile(-48);
+    }
+  }
+}
 
 @media only screen and (min-width: 769px) {
   .hero-section {
@@ -285,9 +303,6 @@
 // TEXT SECTION ------------------
 
 .text-section {
-  padding-top: get-rem-desktop(100);
-  padding-bottom: get-rem-desktop(100);
-
   .text-wrap {
     max-width: get-rem-desktop(376);
     margin: 0 auto;
@@ -307,14 +322,6 @@
 // IMAGE MEDIA SECTION ------------------
 
 .media-text-section {
-  padding-top: get-rem-desktop(160);
-  padding-bottom: get-rem-desktop(160);
-
-  @media only screen and (max-width: 768px) {
-    padding-top: get-rem-mobile(48);
-    padding-bottom: get-rem-mobile(48);
-  }
-
   &.align-left,
   .align-left {
     .col-1 {
@@ -512,9 +519,6 @@
 }
 
 .media-text-section.layout-media-with-text-h4-bullet-list {
-  padding-top: get-rem-desktop(120);
-  padding-bottom: get-rem-desktop(120);
-
   .text-wrap {
     max-width: get-rem-desktop(376);
   }
@@ -532,17 +536,8 @@
   }
 }
 
-.h4-body-group {
-  .media-text-section {
-    padding-top: get-rem-desktop(120);
-    padding-bottom: get-rem-desktop(120);
-  }
-}
 
 .media-text-section.room-type {
-  padding-top: get-rem-desktop(120);
-  padding-bottom: get-rem-desktop(120);
-
   .text-wrap {
     max-width: get-rem-desktop(376);
   }
@@ -556,37 +551,6 @@
   }
 }
 
-.room-type-group {
-  .media-text-section.room-type {
-    &:first-child {
-      padding-top: get-rem-desktop(200);
-
-      @media only screen and (max-width: 768px) {
-        padding-top: get-rem-mobile(140);
-        padding-bottom: get-rem-mobile(40);
-      }
-    }
-    
-    &:last-child {
-      padding-bottom: get-rem-desktop(200);
-
-      @media only screen and (max-width: 768px) {
-        padding-top: get-rem-mobile(40);
-        padding-bottom: get-rem-mobile(140);
-      }
-    }
-
-    &:not(:first-child):not(:last-child) {
-      padding-top: get-rem-desktop(120);
-      padding-bottom: get-rem-desktop(120);
-
-      @media only screen and (max-width: 768px) {
-        padding-top: get-rem-mobile(40);
-        padding-bottom: get-rem-mobile(40);
-      }
-    }
-  }
-}
 
 .media-text-section.layout-media-with-text-h4-body {
   .text-wrap {
@@ -690,7 +654,6 @@
 
     .media-text-body {
       max-width: 95%;
-      // max-width: get-rem-desktop(700);
     }
 
     .media-text-date {
@@ -734,8 +697,11 @@
 }
 
 .more-rooms-section {
-  padding-top: get-rem-desktop(200);
-  padding-bottom: get-rem-desktop(200);
+  padding-bottom: get-rem-desktop(160);
+
+  @media only screen and (max-width: 768px) {
+    padding-bottom: get-rem-mobile(48);
+  }
 
   .section-heading {
     text-align: center;
@@ -874,7 +840,6 @@
 
     .media-text-body {
       max-width: 95%;
-      // max-width: get-rem-desktop(700);
     }
 
     .media-text-date {
@@ -923,7 +888,7 @@
   @media only screen and (max-width: 768px) {
     @include flex;
     @include flex-direction(column);
-    row-gap: get-rem-mobile(80);
+    row-gap: get-rem-mobile(48);
   }
 
   .media-text-multiple-blocks {
@@ -932,7 +897,7 @@
     row-gap: get-rem-desktop(360);
 
     @media only screen and (max-width: 768px) {
-      row-gap: get-rem-mobile(80);
+      row-gap: get-rem-mobile(48);
     }
   }
   
@@ -1010,6 +975,9 @@
   padding-bottom: get-rem-desktop(80);
 
   @media only screen and (max-width: 768px) {
+    padding-top: get-rem-mobile(48);
+    padding-bottom: get-rem-mobile(48);
+    
     .break-image {
       aspect-ratio: 3 / 4;
     }
@@ -1083,13 +1051,9 @@
 .carousel-section {
   height: 100svh;
   width: 100%;
-  padding-top: get-rem-desktop(200);
-  padding-bottom: get-rem-desktop(200);
 
   @media only screen and (max-width: 768px) {
-    height: calc(get-rem-mobile(500) + get-rem-mobile(80) + get-rem-mobile(80));
-    padding-top: get-rem-mobile(80);
-    padding-bottom: get-rem-mobile(80);
+    height: get-rem-mobile(500);
   }
 
   .splide {
@@ -1119,14 +1083,6 @@
 // MENU SECTION ------------------
 
 .menu-section {
-  padding-top: get-rem-desktop(200);
-  padding-bottom: get-rem-desktop(200);
-
-  @media only screen and (max-width: 768px) {
-    padding-top: get-rem-mobile(140);
-    padding-bottom: get-rem-mobile(140);
-  }
-
   .menu-tabs {
     @include flex;
     column-gap: get-rem-desktop(24);
@@ -1140,6 +1096,7 @@
       scrollbar-width: none;
       margin-left: get-rem-mobile(-24);
       margin-right: get-rem-mobile(-24);
+      margin-bottom: get-rem-mobile(48);
       padding-left: get-rem-mobile(24);
       padding-right: get-rem-mobile(24);
       padding-bottom: get-rem-desktop(5);
@@ -1353,7 +1310,7 @@
   @include justify-content(space-between);
   @include align-items(center);
   padding-top: get-rem-desktop(80);
-  padding-bottom: get-rem-desktop(100);
+  padding-bottom: get-rem-desktop(80);
 
   @media only screen and (max-width: 768px) {
     display: none;
@@ -1409,14 +1366,6 @@
 }
 
 .activity-section {
-  padding-top: get-rem-desktop(200);
-  padding-bottom: get-rem-desktop(200);
-
-  @media only screen and (max-width: 768px) {
-    padding-top: get-rem-mobile(140);
-    padding-bottom: get-rem-mobile(140);
-  }
-
   .activity-section-heading {
     text-align: center;
     margin-bottom: get-rem-desktop(48);
@@ -1518,29 +1467,22 @@
 
 body.page-type-activities {
   .activity-section {
-    padding-top: 0;
+    padding-bottom: get-rem-desktop(160);
 
     @media only screen and (max-width: 768px) {
-      padding-top: get-rem-mobile(140);
+      padding-top: get-rem-mobile(48);
+      padding-bottom: get-rem-mobile(48);
     }
   }
 
   .activity-grid {
-    row-gap: get-rem-desktop(80);
+    row-gap: get-rem-desktop(48);
   }
 }
 
 // FEATURE SECTION ------------------
 
 .feature-section {
-  padding-top: get-rem-desktop(160);
-  padding-bottom: get-rem-desktop(160);
-
-  @media only screen and (max-width: 768px) {
-    padding-top: get-rem-mobile(48);
-    padding-bottom: get-rem-mobile(48);
-  }
-
   .feature-section-subheading {
     @include flex;
     column-gap: get-rem-desktop(8);
@@ -1593,12 +1535,12 @@ body.page-type-activities {
 // LINKS SECTION ------------------
 
 .links-section {
-  padding-top: get-rem-desktop(200);
-  padding-bottom: get-rem-desktop(200);
+  padding-top: get-rem-desktop(160);
+  padding-bottom: get-rem-desktop(160);
 
   @media only screen and (max-width: 768px) {
-    padding-top: get-rem-mobile(140);
-    padding-bottom: get-rem-mobile(140);
+    padding-top: get-rem-mobile(48);
+    padding-bottom: get-rem-mobile(48);
   }
 
   .inner-wrap {
@@ -1607,7 +1549,6 @@ body.page-type-activities {
     @media only screen and (max-width: 768px) {
       @include flex;
       @include flex-direction(column);
-      row-gap: get-rem-mobile(80);
     }
   }
 }
