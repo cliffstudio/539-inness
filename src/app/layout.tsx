@@ -46,7 +46,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
+      <body suppressHydrationWarning>
         <Script
           id="scroll-reset"
           strategy="beforeInteractive"
@@ -57,6 +57,24 @@ export default function RootLayout({
               // Disable scroll restoration to prevent browser from restoring scroll position
               if ('scrollRestoration' in history) {
                 history.scrollRestoration = 'manual';
+              }
+              // Add class to body immediately on homepage to trigger CSS hiding of header
+              if (window.location.pathname === '/' || window.location.pathname === '') {
+                (function() {
+                  function applyHomepageClasses() {
+                    document.body.classList.add('page-home-loader-active');
+                    const headers = document.querySelectorAll('.site-header');
+                    headers.forEach(function(header) {
+                      header.classList.add('is-translated-up');
+                    });
+                  }
+                  
+                  if (document.readyState === 'loading') {
+                    document.addEventListener('DOMContentLoaded', applyHomepageClasses, false);
+                  } else {
+                    applyHomepageClasses();
+                  }
+                })();
               }
             `
           }}

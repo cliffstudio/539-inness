@@ -1,14 +1,28 @@
 @use '00_mixins' as *;
 
-body.page-type-homepage {
+// Header transform styles - apply to all site headers
+.site-header {
+  @include transition(transform 400ms cubic-bezier(0.25,0.1,0.25,1));
+  
+  // When is-translated-up class is present, translate up
+  &.is-translated-up {
+    transform: translateY(-100%);
+  }
+}
+
+// Start header translated up by default on homepage to prevent flash
+// Apply when body has page-home-loader-active class (added by script immediately)
+body.page-home-loader-active {
   .site-header {
     opacity: 1;
-    @include transition(opacity 400ms cubic-bezier(0.25,0.1,0.25,1));
   }
+}
 
+// Also apply for page-type-homepage (added later by BodyClassProvider)
+body.page-type-homepage {
   &.page-home-loader-active {
     .site-header {
-      opacity: 0;
+      opacity: 1;
     }
   }
 }
@@ -16,7 +30,6 @@ body.page-type-homepage {
 .page-home {
   .hero-section {
     .gradient-overlay,
-    .loader-logo,
     .hero-content,
     .hero-arrow {
       opacity: 0;
@@ -24,37 +37,9 @@ body.page-type-homepage {
     }
 
     .gradient-overlay.is-visible,
-    .loader-logo.is-visible,
     .hero-content.is-visible,
     .hero-arrow.is-visible {
       opacity: 1;
-    }
-
-    .loader-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: $colour-orange;
-      z-index: 9;
-      pointer-events: auto;
-      @include transition(opacity 400ms cubic-bezier(0.25,0.1,0.25,1));
-    }
-
-    .loader-overlay.is-hidden {
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .loader-logo {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: get-rem-desktop(245);
-      height: fit-content;
-      z-index: 10;
     }
 
     .gradient-overlay {

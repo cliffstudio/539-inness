@@ -294,7 +294,7 @@ export default function Header({ menu }: HeaderProps) {
   return (
     <>
       {/* Desktop header */}
-      <header className={`site-header site-header-desktop${scrolled ? ' scrolled' : ''}${isBookingOpen ? ' booking-overlay-open' : ''}`}>
+      <header className={`site-header site-header-desktop${scrolled ? ' scrolled' : ''}${isBookingOpen ? ' booking-overlay-open' : ''}`} suppressHydrationWarning>
         <div className="logo-wrap">
           <div className="logo-text relative">
             <svg xmlns="http://www.w3.org/2000/svg" width="103" height="31" viewBox="0 0 103 31">
@@ -358,7 +358,7 @@ export default function Header({ menu }: HeaderProps) {
       </header>
 
       {/* Tablet header */}
-      <header className={`site-header site-header-tablet${scrolled ? ' scrolled' : ''}${isBookingOpen ? ' booking-overlay-open' : ''}`}>
+      <header className={`site-header site-header-tablet${scrolled ? ' scrolled' : ''}${isBookingOpen ? ' booking-overlay-open' : ''}`} suppressHydrationWarning>
         <div className="top-row">
           <div className="left">
             {/* <div className="search-icon">
@@ -424,7 +424,7 @@ export default function Header({ menu }: HeaderProps) {
       </header>
 
       {/* Mobile header */}
-      <header className={`site-header site-header-mobile${scrolled ? ' scrolled' : ''}${isMenuVisible ? ' menu-overlay-visible' : ''}${isBookingOpen ? ' booking-overlay-open' : ''}`}>
+      <header className={`site-header site-header-mobile${scrolled ? ' scrolled' : ''}${isMenuVisible ? ' menu-overlay-visible' : ''}${isBookingOpen ? ' booking-overlay-open' : ''}`} suppressHydrationWarning>
         <div className="left menu-opener" onClick={handleMenuClick}>
           <div ref={menuRef} className="menu">Menu</div>
           <div ref={closeRef} className="close">Close</div>
