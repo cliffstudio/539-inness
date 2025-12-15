@@ -22,6 +22,14 @@ export const getLinkInfo = (cta?: Link) => {
       'activity': 'Book Activity',
     }
     const text = cta.label || tabLabels[bookingTab] || 'Book'
+    // Spa bookings should open mailto link instead of booking overlay
+    if (bookingTab === 'spa') {
+      return { text, href: 'mailto:spa@inness.co' }
+    }
+    // Table bookings should open Resy URL instead of booking overlay
+    if (bookingTab === 'table') {
+      return { text, href: 'https://resy.com/cities/accord-ny/venues/inness' }
+    }
     return { text, href: '#booking' }
   } else {
     // For internal links, use label if provided, otherwise fallback to page title

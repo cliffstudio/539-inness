@@ -14,11 +14,27 @@ import bookTableImage from '@/app/images/book-table-image.jpg'
 
 
 export default function BookingOverlay() {
-  const { isOpen, activeTab, setActiveTab } = useBooking()
+  const { isOpen, activeTab, setActiveTab, closeBooking } = useBooking()
   const overlayRef = useRef<HTMLDivElement>(null)
   const innerWrapRef = useRef<HTMLDivElement>(null)
   const animationFrameRef = useRef<number | null>(null)
 
+
+  // Handle spa tab - open mailto link immediately if spa is active when overlay opens
+  useEffect(() => {
+    if (isOpen && activeTab === 'spa') {
+      window.location.href = 'mailto:spa@inness.co'
+      closeBooking()
+    }
+  }, [isOpen, activeTab, closeBooking])
+
+  // Handle table tab - open Resy URL immediately if table is active when overlay opens
+  useEffect(() => {
+    if (isOpen && activeTab === 'table') {
+      window.open('https://resy.com/cities/accord-ny/venues/inness', '_blank', 'noopener,noreferrer')
+      closeBooking()
+    }
+  }, [isOpen, activeTab, closeBooking])
 
   // Handle body scroll lock when overlay is open
   useEffect(() => {
@@ -161,23 +177,37 @@ export default function BookingOverlay() {
       <div ref={innerWrapRef} className="booking-overlay__inner-wrap">
         <div className="booking-overlay__content">
           <div className="booking-overlay__tabs">
-            {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                className={`booking-overlay__tab ${activeTab === tab.id ? 'active' : ''}`}
-                onClick={() => setActiveTab(tab.id)}
-              >
-                <div className="booking-overlay__tab-image">
-                  <img 
-                    data-src={tab.image} 
-                    alt={tab.label}
-                    className="lazy full-bleed-image"
-                  />
-                  <div className="loading-overlay" />
-                </div>
-                <div className="booking-overlay__tab-label">{tab.label}</div>
-              </button>
-            ))}
+            {tabs.map((tab) => {
+              const handleTabClick = () => {
+                if (tab.id === 'spa') {
+                  window.location.href = 'mailto:spa@inness.co'
+                  closeBooking()
+                } else if (tab.id === 'table') {
+                  window.open('https://resy.com/cities/accord-ny/venues/inness', '_blank', 'noopener,noreferrer')
+                  closeBooking()
+                } else {
+                  setActiveTab(tab.id)
+                }
+              }
+              
+              return (
+                <button
+                  key={tab.id}
+                  className={`booking-overlay__tab ${activeTab === tab.id ? 'active' : ''}`}
+                  onClick={handleTabClick}
+                >
+                  <div className="booking-overlay__tab-image">
+                    <img 
+                      data-src={tab.image} 
+                      alt={tab.label}
+                      className="lazy full-bleed-image"
+                    />
+                    <div className="loading-overlay" />
+                  </div>
+                  <div className="booking-overlay__tab-label">{tab.label}</div>
+                </button>
+              )
+            })}
           </div>
 
           <div className="booking-overlay__tab-content">
@@ -190,8 +220,7 @@ export default function BookingOverlay() {
 
             {activeTab === 'table' && (
               <div className="booking-overlay__form">
-                {/* Embed table booking form here */}
-                <p>Table booking button to go here</p>
+                {/* Table bookings open Resy URL instead of showing content */}
               </div>
             )}
 
@@ -210,8 +239,7 @@ export default function BookingOverlay() {
 
             {activeTab === 'spa' && (
               <div className="booking-overlay__form">
-                {/* Embed spa reservation form here */}
-                <p>Spa reservation booking button to go here</p>
+                {/* Spa bookings open mailto link instead of showing content */}
               </div>
             )}
           </div>

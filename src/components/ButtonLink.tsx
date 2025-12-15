@@ -27,6 +27,10 @@ export default function ButtonLink({ link, className = '', fallbackColor = 'crea
   const bookingTab = (link.bookingTab || 'room') as BookingTab
   const handleClick = (event: MouseEvent<HTMLAnchorElement>) => {
     if (link.linkType !== 'booking') return
+    // Spa bookings should open mailto link, not booking overlay
+    if (bookingTab === 'spa') return
+    // Table bookings should open Resy URL, not booking overlay
+    if (bookingTab === 'table') return
     if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
     event.preventDefault()
     openBooking(bookingTab)
@@ -39,6 +43,7 @@ export default function ButtonLink({ link, className = '', fallbackColor = 'crea
       onClick={handleClick}
       {...(link.linkType === 'external' && { target: '_blank', rel: 'noopener noreferrer' })}
       {...(link.linkType === 'file' && { target: '_blank', rel: 'noopener noreferrer', download: link.file?.asset?.originalFilename })}
+      {...(link.linkType === 'booking' && bookingTab === 'table' && { target: '_blank', rel: 'noopener noreferrer' })}
     >
       {text}
     </a>

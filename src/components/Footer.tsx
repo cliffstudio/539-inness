@@ -51,7 +51,10 @@ export default function Footer({ footer }: FooterProps) {
     if (link.linkType === 'booking') {
       const bookingTab = (link.bookingTab || 'room') as BookingTab
       const bookingHref = href || '#booking'
+      // Spa bookings should open mailto link, not booking overlay
+      // Table bookings should open Resy URL, not booking overlay
       const handleClick = (event: MouseEvent<HTMLAnchorElement>) => {
+        if (bookingTab === 'spa' || bookingTab === 'table') return
         if (!isPlainLeftClick(event)) return
         event.preventDefault()
         openBooking(bookingTab)
@@ -63,6 +66,7 @@ export default function Footer({ footer }: FooterProps) {
             href={bookingHref}
             className="site-footer__link"
             onClick={handleClick}
+            {...(bookingTab === 'table' && { target: '_blank', rel: 'noopener noreferrer' })}
           >
             {text}
           </a>
