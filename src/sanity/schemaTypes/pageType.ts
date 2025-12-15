@@ -183,6 +183,9 @@ export const pageType = defineType({
       title: 'Links',
       type: 'array',
       of: [{ type: 'detailedLink' }],
+      options: {
+        sortable: false,
+      },
       fieldset: 'linksSection',
       hidden: ({ parent }) => parent?.pageType !== 'links',
     }),

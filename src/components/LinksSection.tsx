@@ -49,7 +49,7 @@ export default function LinksSection({ id, links }: LinksSectionProps) {
     return null
   }
 
-  // Sort links by date (newest first), links without dates go to the end
+  // Sort links by date (latest first), links without dates go to the end
   const sortedLinks = [...links].sort((a, b) => {
     if (!a.date && !b.date) return 0
     if (!a.date) return 1
