@@ -49,10 +49,18 @@ export default function LinksSection({ id, links }: LinksSectionProps) {
     return null
   }
 
+  // Sort links by date (newest first), links without dates go to the end
+  const sortedLinks = [...links].sort((a, b) => {
+    if (!a.date && !b.date) return 0
+    if (!a.date) return 1
+    if (!b.date) return -1
+    return new Date(b.date).getTime() - new Date(a.date).getTime()
+  })
+
   return (
     <section id={id} className="links-section h-pad row-lg">
       <div className="inner-wrap row-lg">
-        {links.map((link, index) => (
+        {sortedLinks.map((link, index) => (
           <div key={index} className="col-3-12_lg out-of-opacity">
             <div className="media-text-link">
               {link.image && (
