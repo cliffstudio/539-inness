@@ -8,8 +8,10 @@ import { useBooking } from '@/contexts/BookingContext'
 
 // Type for menu items from menuType schema
 type MenuItem = {
+  linkType?: 'internal' | 'external'
   label?: string
-  pageLink: {
+  href?: string
+  pageLink?: {
     _id: string
     title?: string
     slug?: string
@@ -66,25 +68,45 @@ export default function Header({ menu }: HeaderProps) {
     )
   }
 
-  const hasCurrentNav = menu.items.some((item) =>
-    isCurrentPageLink(getNavHref(item.pageLink.slug))
-  )
+  const hasCurrentNav = menu.items.some((item) => {
+    if (item.linkType === 'external') return false
+    return isCurrentPageLink(getNavHref(item.pageLink?.slug))
+  })
 
   const navClassName = `nav${hasCurrentNav ? ' nav-current-active' : ''}`
 
   const renderNavLinks = () =>
     menu.items.map((item, index) => {
-      const href = getNavHref(item.pageLink.slug)
+      // Handle external links
+      if (item.linkType === 'external') {
+        const href = item.href || '#'
+        const label = item.label || 'External Link'
+        
+        return (
+          <a
+            key={`external-${index}`}
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {label}
+          </a>
+        )
+      }
+
+      // Handle internal links
+      const href = getNavHref(item.pageLink?.slug)
       const isCurrent = isCurrentPageLink(href)
+      const label = item.label || item.pageLink?.title || 'Untitled'
 
       return (
         <a
-          key={`${item.pageLink._id ?? href}-${index}`}
+          key={`${item.pageLink?._id ?? href}-${index}`}
           className={isCurrent ? 'current-page' : undefined}
           href={href}
           aria-current={isCurrent ? 'page' : undefined}
         >
-          {item.label || item.pageLink.title}
+          {label}
         </a>
       )
     })
@@ -319,7 +341,7 @@ export default function Header({ menu }: HeaderProps) {
 
         <div className="nav-wrap">
           <div className="left">
-            {/* <div className="search-icon">
+            {/* <div className="link-icon search-icon">
               <Link href="/search" aria-label="Search">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
                   <path d="M7.9259 14.4243C11.8656 14.4243 15.0593 11.3653 15.0593 7.59173C15.0593 3.81821 11.8656 0.759171 7.9259 0.759171C3.98622 0.759171 0.79248 3.81821 0.79248 7.59173C0.79248 11.3653 3.98622 14.4243 7.9259 14.4243Z"/>
@@ -328,20 +350,19 @@ export default function Header({ menu }: HeaderProps) {
               </Link>
             </div> */}
 
-            <div className="cart-icon">
+            {/* <div className="link-icon cart-icon">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="18" viewBox="0 0 16 18">
                 <path d="M15.349 0.652412H0.650879V17.3476H15.349V0.652412Z"/>
                 <path d="M4.56958 4.57992V6.05436C4.56958 7.95288 6.10579 9.49257 8.00001 9.49257C9.89423 9.49257 11.4304 7.95288 11.4304 6.05436V4.57992"/>
               </svg>
-              {/* todo: add link */}
-            </div>
+            </div> */}
 
-            <div className="account-icon">
+            <div className="link-icon account-icon">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="18" viewBox="0 0 16 18">
                 <path d="M15.3334 18V14.6667C15.3334 12.3267 10.5467 10.6667 8.00008 10.6667C5.45341 10.6667 0.666748 12.3267 0.666748 14.6667V18"/>
                 <path d="M8.00008 8.66666C9.92508 8.66666 11.3334 7.22666 11.3334 5.33333V4C11.3334 2.10666 9.92508 0.666664 8.00008 0.666664C6.06008 0.666664 4.66675 2.10666 4.66675 4V5.33333C4.66675 7.22666 6.06008 8.66666 8.00008 8.66666Z"/>
               </svg>
-              {/* todo: add link */}
+              <a href="https://members.inness.co/page/login" target="_blank" rel="noopener noreferrer"></a>
             </div>
           </div>
 
@@ -361,7 +382,7 @@ export default function Header({ menu }: HeaderProps) {
       <header className={`site-header site-header-tablet${scrolled ? ' scrolled' : ''}${isBookingOpen ? ' booking-overlay-open' : ''}`} suppressHydrationWarning>
         <div className="top-row">
           <div className="left">
-            {/* <div className="search-icon">
+            {/* <div className="link-icon search-icon">
               <Link href="/search" aria-label="Search">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
                   <path d="M7.9259 14.4243C11.8656 14.4243 15.0593 11.3653 15.0593 7.59173C15.0593 3.81821 11.8656 0.759171 7.9259 0.759171C3.98622 0.759171 0.79248 3.81821 0.79248 7.59173C0.79248 11.3653 3.98622 14.4243 7.9259 14.4243Z"/>
@@ -370,20 +391,19 @@ export default function Header({ menu }: HeaderProps) {
               </Link>
             </div> */}
 
-            <div className="cart-icon">
+            {/* <div className="link-icon cart-icon">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="18" viewBox="0 0 16 18">
                 <path d="M15.349 0.652412H0.650879V17.3476H15.349V0.652412Z"/>
                 <path d="M4.56958 4.57992V6.05436C4.56958 7.95288 6.10579 9.49257 8.00001 9.49257C9.89423 9.49257 11.4304 7.95288 11.4304 6.05436V4.57992"/>
               </svg>
-              {/* todo: add link */}
-            </div>
+            </div> */}
 
-            <div className="account-icon">
+            <div className="link-icon account-icon">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="18" viewBox="0 0 16 18">
                 <path d="M15.3334 18V14.6667C15.3334 12.3267 10.5467 10.6667 8.00008 10.6667C5.45341 10.6667 0.666748 12.3267 0.666748 14.6667V18"/>
                 <path d="M8.00008 8.66666C9.92508 8.66666 11.3334 7.22666 11.3334 5.33333V4C11.3334 2.10666 9.92508 0.666664 8.00008 0.666664C6.06008 0.666664 4.66675 2.10666 4.66675 4V5.33333C4.66675 7.22666 6.06008 8.66666 8.00008 8.66666Z"/>
               </svg>
-              {/* todo: add link */}
+              <a href="https://members.inness.co/page/login" target="_blank" rel="noopener noreferrer"></a>
             </div>
           </div>
 
@@ -466,7 +486,7 @@ export default function Header({ menu }: HeaderProps) {
           )}
 
           <div className="icon-wrapper">
-            {/* <div className="search-icon">
+            {/* <div className="link-icon search-icon">
               <Link href="/search" aria-label="Search">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
                   <path d="M7.9259 14.4243C11.8656 14.4243 15.0593 11.3653 15.0593 7.59173C15.0593 3.81821 11.8656 0.759171 7.9259 0.759171C3.98622 0.759171 0.79248 3.81821 0.79248 7.59173C0.79248 11.3653 3.98622 14.4243 7.9259 14.4243Z"/>
@@ -475,20 +495,19 @@ export default function Header({ menu }: HeaderProps) {
               </Link>
             </div> */}
 
-            <div className="cart-icon">
+            {/* <div className="link-icon cart-icon">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="18" viewBox="0 0 16 18">
                 <path d="M15.349 0.652412H0.650879V17.3476H15.349V0.652412Z"/>
                 <path d="M4.56958 4.57992V6.05436C4.56958 7.95288 6.10579 9.49257 8.00001 9.49257C9.89423 9.49257 11.4304 7.95288 11.4304 6.05436V4.57992"/>
               </svg>
-              {/* todo: add link */}
-            </div>
+            </div> */}
 
-            <div className="account-icon">
+            <div className="link-icon account-icon">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="18" viewBox="0 0 16 18">
                 <path d="M15.3334 18V14.6667C15.3334 12.3267 10.5467 10.6667 8.00008 10.6667C5.45341 10.6667 0.666748 12.3267 0.666748 14.6667V18"/>
                 <path d="M8.00008 8.66666C9.92508 8.66666 11.3334 7.22666 11.3334 5.33333V4C11.3334 2.10666 9.92508 0.666664 8.00008 0.666664C6.06008 0.666664 4.66675 2.10666 4.66675 4V5.33333C4.66675 7.22666 6.06008 8.66666 8.00008 8.66666Z"/>
               </svg>
-              {/* todo: add link */}
+              <a href="https://members.inness.co/page/login" target="_blank" rel="noopener noreferrer"></a>
             </div>
           </div>
         </div>

@@ -487,7 +487,9 @@ export const menuQuery = groq`
     _id,
     title,
     items[] {
+      linkType,
       label,
+      href,
       pageLink-> {
         _id,
         title,
