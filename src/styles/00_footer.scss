@@ -66,6 +66,53 @@
     @include align-items(flex-end);
   }
 
+  .right-column {
+    @include flex;
+    @include justify-content(space-between);
+    @include align-items(center);
+    column-gap: get-rem-desktop(48);
+
+    @media only screen and (max-width: 1498px) {
+      @include align-items(flex-end);
+    }
+
+    @media only screen and (max-width: 768px) {
+      @include flex-direction(column);
+      @include align-items(flex-start);
+    }
+  }
+
+  .michelin-logo-wrap {
+    @media only screen and (max-width: 1498px) {
+      @include flex;
+      @include flex-direction(column);
+      row-gap: get-rem-desktop(15);
+    }
+
+    @media only screen and (max-width: 768px) {
+      margin-top: get-rem-mobile(80);
+      row-gap: get-rem-mobile(72);
+    }
+    
+    img {
+      width: get-rem-desktop(184);
+    }
+
+    .site-footer__copyright {
+      display: none;
+
+      @media only screen and (max-width: 1498px) {
+        display: block;
+      }
+    }
+  }
+
+  .copyright-wrap {
+    @media only screen and (max-width: 1498px) {
+      display: none;
+    }
+  }
+
   .site-footer__newsletter-heading {
     margin-bottom: get-rem-desktop(20);
   }
@@ -153,16 +200,6 @@
     }
   }
 
-  // #mce-success-response {
-  //   display: none !important;
-  // }
-
-  .site-footer__copyright {
-    @media only screen and (max-width: 768px) {
-      margin-top: get-rem-mobile(80);
-    }
-  }
-
   .site-footer__credit {
     text-align: right;
     position: relative;
@@ -189,7 +226,9 @@
       }
 
       @media only screen and (max-width: 768px) {
-        display: none;
+        position: relative;
+        opacity: 1;
+        z-index: 2;
       }
     }
 
@@ -208,9 +247,27 @@
       @include transition(opacity 500ms cubic-bezier(0.25,0.1,0.25,1));
 
       @media only screen and (max-width: 768px) {
-        position: static;
-        opacity: 1;
-        pointer-events: auto;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: auto;
+        opacity: 0;
+        pointer-events: none;
+        z-index: 1;
+      }
+    }
+
+    &.credit-expanded {
+      @media only screen and (max-width: 768px) {
+        .credit-toggle {
+          opacity: 0;
+          pointer-events: none;
+        }
+
+        .credit-content {
+          opacity: 1;
+          pointer-events: auto;
+        }
       }
     }
   }

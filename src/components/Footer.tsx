@@ -2,9 +2,11 @@
 
 import { FormEvent, FormHTMLAttributes, MouseEvent, useState } from 'react'
 import Script from 'next/script'
+import Image from 'next/image'
 import type { Footer, Link as FooterLink } from '../types/footerSettings'
 import { BookingTab, useBooking } from '../contexts/BookingContext'
 import { getLinkInfo } from '../utils/linkHelpers'
+import michelinLogo from '@/app/images/michelin-logo.png'
 
 interface FooterProps {
   footer: Footer
@@ -13,6 +15,7 @@ interface FooterProps {
 export default function Footer({ footer }: FooterProps) {
   const { openBooking } = useBooking()
   const [revinateSuccess, setRevinateSuccess] = useState(false)
+  const [creditExpanded, setCreditExpanded] = useState(false)
 
   if (!footer) return null
 
@@ -204,20 +207,47 @@ export default function Footer({ footer }: FooterProps) {
             </fieldset>
           </form>
         </div>
-        <div className="col-4-12_lg">
-          <p className="site-footer__copyright">
-            &copy; Copyright {new Date().getFullYear()} Inness, LLC
-          </p>
-        </div>
 
-        <div className="col-2-12_lg">
-          <a href="https://cliff.studio" target="_blank" rel="noopener noreferrer" className="site-footer__credit">
-            <span className="credit-toggle">Credit</span>
+        <div className="col-6-12_lg right-column">
+          <div className="michelin-logo-wrap">
+            <Image src={michelinLogo} alt="Michelin Guide" width={michelinLogo.width} height={michelinLogo.height} />
 
-            <p className="credit-content">
-              Site by Cliff.Studio
+            <p className="site-footer__copyright">
+              &copy; Copyright {new Date().getFullYear()} Inness, LLC
             </p>
-          </a>
+          </div>
+
+          <div className="copyright-wrap">
+            <p className="site-footer__copyright">
+              &copy; Copyright {new Date().getFullYear()} Inness, LLC
+            </p>
+          </div>
+
+          <div>
+            <a 
+              href="https://cliff.studio" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className={`site-footer__credit${creditExpanded ? ' credit-expanded' : ''}`}
+              onClick={(e) => {
+                // On touch devices, toggle expanded state on tap
+                if (typeof window !== 'undefined' && (window.matchMedia('(max-width: 768px)').matches || 'ontouchstart' in window)) {
+                  // If not expanded, expand and prevent navigation
+                  if (!creditExpanded) {
+                    e.preventDefault()
+                    setCreditExpanded(true)
+                  }
+                  // If already expanded, allow normal navigation
+                }
+              }}
+            >
+              <span className="credit-toggle">Credits</span>
+
+              <p className="credit-content">
+                Site by Cliff.Studio
+              </p>
+            </a>
+          </div>
         </div>
       </div>
     </footer>
