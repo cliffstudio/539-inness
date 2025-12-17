@@ -4,7 +4,6 @@
 import { urlFor } from '../sanity/utils/imageUrlBuilder'
 import { SanityImageSource } from '@sanity/image-url/lib/types/types'
 import { PortableText, PortableTextBlock } from '@portabletext/react'
-import { useBooking } from '../contexts/BookingContext'
 
 interface Spec {
   body?: string
@@ -19,8 +18,6 @@ interface HeroProps {
 }
 
 export default function Hero({ id, title, image, description, specs }: HeroProps) {
-  const { openBooking } = useBooking()
-
   return (
     <section id={id} className="hero-section layout-2 h-pad">
       {image && (

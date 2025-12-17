@@ -11,7 +11,6 @@ import ButtonLink from './ButtonLink'
 import SplideCarousel from './SplideCarousel'
 import { Splide, SplideSlide } from '@splidejs/react-splide'
 import '@splidejs/splide/css'
-import { useBooking } from '../contexts/BookingContext'
 
 const formatDate = (dateString?: string) => {
   if (!dateString) return ''
@@ -117,7 +116,6 @@ export default function MediaTextSection({
   activityLinks,
   links,
 }: mediaTextSectionProps) {
-  const { openBooking } = useBooking()
   const videoRef1 = useRef<HTMLVideoElement>(null)
   const videoRef2 = useRef<HTMLVideoElement>(null)
   const splideRef = useRef<{ go: (direction: string) => void } | null>(null)
