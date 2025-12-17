@@ -279,7 +279,9 @@ const featureSectionFragment = groq`{
 
 const bookingSectionFragment = groq`{
   id,
-  show
+  show,
+  noTopPad,
+  noBottomPad
 }`
 
 const flexibleContentFragment = groq`{

@@ -6,7 +6,12 @@ import type { Instance } from 'flatpickr/dist/types/instance'
 import 'flatpickr/dist/flatpickr.min.css'
 import { formatDateForNamastay } from '../utils/namastay'
 
-export default function BookingSection() {
+interface BookingSectionProps {
+  noTopPad?: boolean
+  noBottomPad?: boolean
+}
+
+export default function BookingSection({ noTopPad = false, noBottomPad = false }: BookingSectionProps) {
   const [adultCount, setAdultCount] = useState(2)
   const [childCount, setChildCount] = useState(0)
   const [checkInDate, setCheckInDate] = useState<string>('')
@@ -327,119 +332,127 @@ export default function BookingSection() {
     ? `${adultText} / ${childText}`
     : adultText
 
+  const className = [
+    'booking-section',
+    'h-pad',
+    noTopPad ? 'no-top-pad' : '',
+    noBottomPad ? 'no-bottom-pad' : '',
+  ].filter(Boolean).join(' ')
+
   return (
-    <form ref={bookingFormRef} className="booking-form h-pad" onSubmit={handleSubmit}>
-      <div className="guest-wrapper" ref={guestWrapperRef}>
-        <div 
-          id="guest-picker" 
-          ref={guestPickerRef}
-          onClick={handleGuestPickerClick}
-        >
-          <div>Guests</div>
-          <h5>{guestDisplayText}</h5>
-        </div>
-
-        <div 
-          id="guest-popup" 
-          ref={guestPopupRef}
-          className={`popup${isGuestPopupOpen ? '' : ' hidden'}`}
-        >
-          <div className="guest-control">
-            <div>Adults</div>
-
-            <div className="button-group">
-              <button 
-                type="button" 
-                className="minus button" 
-                onClick={() => handleGuestChange('adult', -1)}
-              >
-                -
-              </button>
-              <input 
-                type="number" 
-                id="adult-count" 
-                value={adultCount} 
-                readOnly 
-              />
-              <button 
-                type="button" 
-                className="plus button" 
-                onClick={() => handleGuestChange('adult', 1)}
-              >
-                +
-              </button>
-            </div>
-          </div>
-
-          <div className="guest-control">
-            <div>Children</div>
-
-            <div className="button-group">
-              <button 
-                type="button" 
-                className="minus button" 
-                onClick={() => handleGuestChange('child', -1)}
-              >
-                -
-              </button>
-              <input 
-                type="number" 
-                id="child-count" 
-                value={childCount} 
-                readOnly 
-              />
-              <button 
-                type="button" 
-                className="plus button" 
-                onClick={() => handleGuestChange('child', 1)}
-              >
-                +
-              </button>
-            </div>
-          </div>
-
-          <button 
-            type="button" 
-            id="close-popup" 
-            className="button button--orange"
-            onClick={handleClosePopup}
+    <div className={className}>
+      <form ref={bookingFormRef} className="booking-form" onSubmit={handleSubmit}>
+        <div className="guest-wrapper" ref={guestWrapperRef}>
+          <div 
+            id="guest-picker" 
+            ref={guestPickerRef}
+            onClick={handleGuestPickerClick}
           >
-            Done
-          </button>
-        </div>
-      </div>
+            <div>Guests</div>
+            <h5>{guestDisplayText}</h5>
+          </div>
 
-      <div className="start-wrapper" ref={startWrapperRef}>
-        <div 
-          className="date-input" 
-          id="start-display"
-          onClick={handleStartWrapperClick}
-        >
-          <div>Arrive</div>
-          <h5>{checkInDisplay}</h5>
+          <div 
+            id="guest-popup" 
+            ref={guestPopupRef}
+            className={`popup${isGuestPopupOpen ? '' : ' hidden'}`}
+          >
+            <div className="guest-control">
+              <div>Adults</div>
+
+              <div className="button-group">
+                <button 
+                  type="button" 
+                  className="minus button" 
+                  onClick={() => handleGuestChange('adult', -1)}
+                >
+                  -
+                </button>
+                <input 
+                  type="number" 
+                  id="adult-count" 
+                  value={adultCount} 
+                  readOnly 
+                />
+                <button 
+                  type="button" 
+                  className="plus button" 
+                  onClick={() => handleGuestChange('adult', 1)}
+                >
+                  +
+                </button>
+              </div>
+            </div>
+
+            <div className="guest-control">
+              <div>Children</div>
+
+              <div className="button-group">
+                <button 
+                  type="button" 
+                  className="minus button" 
+                  onClick={() => handleGuestChange('child', -1)}
+                >
+                  -
+                </button>
+                <input 
+                  type="number" 
+                  id="child-count" 
+                  value={childCount} 
+                  readOnly 
+                />
+                <button 
+                  type="button" 
+                  className="plus button" 
+                  onClick={() => handleGuestChange('child', 1)}
+                >
+                  +
+                </button>
+              </div>
+            </div>
+
+            <button 
+              type="button" 
+              id="close-popup" 
+              className="button button--orange"
+              onClick={handleClosePopup}
+            >
+              Done
+            </button>
+          </div>
         </div>
 
-        <input 
-          ref={startInputRef}
-          type="text" 
-          id="start" 
-          name="start" 
-          required 
-          readOnly
-          tabIndex={-1}
-        />
-      </div>
+        <div className="start-wrapper" ref={startWrapperRef}>
+          <div 
+            className="date-input" 
+            id="start-display"
+            onClick={handleStartWrapperClick}
+          >
+            <div>Arrive</div>
+            <h5>{checkInDisplay}</h5>
+          </div>
 
-      <div className="end-wrapper">
-        <div 
-          className="date-input" 
-          id="end-display"
-          onClick={handleEndWrapperClick}
-        >
-          <div>Depart</div>
-          <h5>{checkOutDisplay}</h5>
+          <input 
+            ref={startInputRef}
+            type="text" 
+            id="start" 
+            name="start" 
+            required 
+            readOnly
+            tabIndex={-1}
+          />
         </div>
-      </div>
+
+        <div className="end-wrapper">
+          <div 
+            className="date-input" 
+            id="end-display"
+            onClick={handleEndWrapperClick}
+          >
+            <div>Depart</div>
+            <h5>{checkOutDisplay}</h5>
+          </div>
+        </div>
 
         <button 
           className="namastay-offer-button button button--orange"
@@ -451,6 +464,7 @@ export default function BookingSection() {
         </button>
 
         <div className="namastay-widget-button"></div>
-    </form>
+      </form>
+    </div>
   )
 }

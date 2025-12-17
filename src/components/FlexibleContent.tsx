@@ -45,8 +45,12 @@ const FlexibleContent: React.FC<FlexibleContentProps> = ({ contentBlocks }) => {
           case 'featureSection':
             return <FeatureSection key={index} {...(block as ContentBlock & { layout?: 'single-feature' | '2-features' | '4-features' })} />
           case 'bookingSection':
-            return (block as ContentBlock & { show?: boolean }).show !== false ? (
-              <BookingSection key={index} />
+            return (block as ContentBlock & { show?: boolean; noTopPad?: boolean; noBottomPad?: boolean }).show !== false ? (
+              <BookingSection 
+                key={index} 
+                noTopPad={(block as ContentBlock & { noTopPad?: boolean }).noTopPad}
+                noBottomPad={(block as ContentBlock & { noBottomPad?: boolean }).noBottomPad}
+              />
             ) : null
 
           default:
