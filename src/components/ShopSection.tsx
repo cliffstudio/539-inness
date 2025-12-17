@@ -6,6 +6,7 @@ import '@splidejs/react-splide/css'
 import { urlFor } from '../sanity/utils/imageUrlBuilder'
 import { SanityImage } from '../types/sanity'
 import Link from 'next/link'
+import Image from 'next/image'
 import mediaLazyloading from '../utils/lazyLoad'
 
 interface Shop {
@@ -109,10 +110,13 @@ export default function ShopSection({
       {shop.image && (
         <div className="shop-image media-wrap">
           <Link href={`/shop/${shop.slug || ''}`}>
-            <img 
-              data-src={urlFor(shop.image).url()} 
+            <Image 
+              src={urlFor(shop.image).url()} 
               alt={shop.title || ''} 
-              className="lazy full-bleed-image"
+              className="full-bleed-image"
+              width={800}
+              height={600}
+              style={{ width: '100%', height: 'auto' }}
             />
             <div className="loading-overlay" />
           </Link>

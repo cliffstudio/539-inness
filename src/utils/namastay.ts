@@ -9,12 +9,15 @@ declare global {
   interface Window {
     initNamastay?: (config: NamastayConfig) => void;
     Namastay?: {
-      open?: (offer?: any) => void;
-      openWidget?: (offer?: any) => void;
+      open?: (offer?: unknown) => void;
+      openWidget?: (offer?: unknown) => void;
     };
     namastay?: {
-      open?: (offer?: any) => void;
-      openWidget?: (offer?: any) => void;
+      open?: (offer?: unknown) => void;
+      openWidget?: (offer?: unknown) => void;
+    };
+    jQuery?: (element: HTMLElement | string) => {
+      trigger: (event: string) => void;
     };
   }
 }
@@ -170,7 +173,7 @@ export function openNamastayWithOffer(offer: NamastayOffer): void {
     button.setAttribute('data-offer', offerJson);
     
     // Also set as a data property in case the SDK reads it that way
-    (button as any).dataset.offer = offerJson;
+    button.dataset.offer = offerJson;
     
     // Log for debugging
     console.log('Namastay offer data:', offerData);
@@ -195,9 +198,9 @@ export function openNamastayWithOffer(offer: NamastayOffer): void {
           attrName: 'data-offer',
           newValue: offerJson,
           prevValue: null
-        } as any);
+        } as MutationEventInit);
         button.dispatchEvent(mutationEvent);
-      } catch (e) {
+      } catch {
         // MutationEvent may not be available in all browsers
       }
     }
@@ -218,8 +221,8 @@ export function openNamastayWithOffer(offer: NamastayOffer): void {
       }
       
       // Also try jQuery if available
-      if (typeof window !== 'undefined' && (window as any).jQuery) {
-        (window as any).jQuery(button).trigger('click');
+      if (typeof window !== 'undefined' && window.jQuery) {
+        window.jQuery(button).trigger('click');
       }
     }, 100);
   } catch (error) {
