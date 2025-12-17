@@ -213,8 +213,12 @@ export default function BookingOverlay() {
           <div className="booking-overlay__tab-content">
             {activeTab === 'room' && (
               <div className="booking-overlay__form">
-                {/* Embed room booking form here */}
-                <p>Room booking form will be embedded here</p>
+                <button
+                  type="button"
+                  className="namastay-widget-button button button--orange"
+                >
+                  Book a room
+                </button>
               </div>
             )}
 

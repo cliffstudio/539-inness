@@ -7,6 +7,7 @@ import CarouselSection from './CarouselSection'
 import MenuSection from './MenuSection'
 import ActivitySection from './ActivitySection'
 import FeatureSection from './FeatureSection'
+import BookingSection from './BookingSection'
 
 interface ContentBlock {
   _type: string
@@ -43,6 +44,10 @@ const FlexibleContent: React.FC<FlexibleContentProps> = ({ contentBlocks }) => {
             return <ActivitySection key={index} {...(block as ContentBlock & { layout?: 'single-activity' | '2-activities' | '4-activities' })} />
           case 'featureSection':
             return <FeatureSection key={index} {...(block as ContentBlock & { layout?: 'single-feature' | '2-features' | '4-features' })} />
+          case 'bookingSection':
+            return (block as ContentBlock & { show?: boolean }).show !== false ? (
+              <BookingSection key={index} />
+            ) : null
 
           default:
             console.warn(`Unknown content block type: ${block._type}`)

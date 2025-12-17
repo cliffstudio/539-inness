@@ -1,0 +1,456 @@
+'use client'
+
+import { useState, useRef, useEffect, useCallback } from 'react'
+import flatpickr from 'flatpickr'
+import type { Instance } from 'flatpickr/dist/types/instance'
+import 'flatpickr/dist/flatpickr.min.css'
+import { formatDateForNamastay } from '../utils/namastay'
+
+export default function BookingSection() {
+  const [adultCount, setAdultCount] = useState(2)
+  const [childCount, setChildCount] = useState(0)
+  const [checkInDate, setCheckInDate] = useState<string>('')
+  const [checkOutDate, setCheckOutDate] = useState<string>('')
+  const [isGuestPopupOpen, setIsGuestPopupOpen] = useState(false)
+  const [checkInDisplay, setCheckInDisplay] = useState('Arrive')
+  const [checkOutDisplay, setCheckOutDisplay] = useState('Depart')
+  
+  const bookingFormRef = useRef<HTMLFormElement>(null)
+  const guestWrapperRef = useRef<HTMLDivElement>(null)
+  const guestPopupRef = useRef<HTMLDivElement>(null)
+  const guestPickerRef = useRef<HTMLDivElement>(null)
+  const startInputRef = useRef<HTMLInputElement>(null)
+  const startWrapperRef = useRef<HTMLDivElement>(null)
+  const flatpickrInstanceRef = useRef<Instance | null>(null)
+
+  // Format date for display (e.g., "Jan 15" or "Jan 15, 2025")
+  const formatDateDisplay = (date: Date | string): string => {
+    if (!date) return ''
+    const dateObj = date instanceof Date ? date : new Date(date)
+    if (isNaN(dateObj.getTime())) return ''
+    const options: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric' }
+    return dateObj.toLocaleDateString('en-US', options)
+  }
+
+  // Handle guest picker click
+  const handleGuestPickerClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    setIsGuestPopupOpen(!isGuestPopupOpen)
+  }
+
+  // Update guest popup position based on booking form height
+  // Position the top of the popup to align with the bottom of the form
+  const updateGuestPopupPosition = () => {
+    if (bookingFormRef.current && guestWrapperRef.current && guestPopupRef.current) {
+      const formRect = bookingFormRef.current.getBoundingClientRect()
+      const wrapperRect = guestWrapperRef.current.getBoundingClientRect()
+      // Calculate distance from top of wrapper to bottom of form
+      const topPosition = formRect.bottom - wrapperRect.top
+      guestPopupRef.current.style.top = `${topPosition}px`
+    }
+  }
+
+  // Set popup position when it opens or when form height changes
+  useEffect(() => {
+    if (isGuestPopupOpen) {
+      updateGuestPopupPosition()
+    }
+  }, [isGuestPopupOpen])
+
+  // Update popup position on window resize
+  useEffect(() => {
+    const handleResize = () => {
+      if (isGuestPopupOpen) {
+        updateGuestPopupPosition()
+      }
+    }
+
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [isGuestPopupOpen])
+
+  // Handle guest count changes
+  const handleGuestChange = (type: 'adult' | 'child', delta: number) => {
+    if (type === 'adult') {
+      setAdultCount(Math.max(1, adultCount + delta))
+    } else {
+      setChildCount(Math.max(0, childCount + delta))
+    }
+  }
+
+  // Initialize Flatpickr date range picker
+  useEffect(() => {
+    if (!startInputRef.current || !startWrapperRef.current) return
+
+    // Update custom display for date inputs (defined inside useEffect to avoid dependency issues)
+    const updateCustomDisplay = (inputId: string, displayId: string, date: Date | string) => {
+      const displayElement = document.getElementById(displayId)
+      if (displayElement) {
+        const h5Element = displayElement.querySelector('h5')
+        if (h5Element) {
+          const formatted = formatDateDisplay(date)
+          h5Element.textContent = formatted || (inputId === 'start' ? 'Arrive' : 'Depart')
+        }
+      }
+    }
+
+    const today = new Date()
+    const threeDaysLater = new Date(today)
+    threeDaysLater.setDate(threeDaysLater.getDate() + 3)
+
+    // Set default dates
+    const defaultStartDate = formatDateForNamastay(today)
+    const defaultEndDate = formatDateForNamastay(threeDaysLater)
+    setCheckInDate(defaultStartDate)
+    setCheckOutDate(defaultEndDate)
+    setCheckInDisplay(formatDateDisplay(today))
+    setCheckOutDisplay(formatDateDisplay(threeDaysLater))
+
+    // Make sure input is accessible to Flatpickr
+    const input = startInputRef.current
+    // Flatpickr needs the input to be accessible, so we'll style it to be invisible but functional
+    // Keep pointer-events enabled so Flatpickr can attach event handlers
+    input.style.position = 'absolute'
+    input.style.opacity = '0'
+    input.style.width = '1px'
+    input.style.height = '1px'
+    input.style.pointerEvents = 'auto'
+    input.style.cursor = 'pointer'
+
+    // Initialize Flatpickr
+    const fp = flatpickr(input, {
+      mode: 'range',
+      defaultDate: [today, threeDaysLater],
+      minDate: today,
+      showMonths: 2,
+      locale: {
+        weekdays: {
+          shorthand: ['S', 'M', 'T', 'W', 'T', 'F', 'S'],
+          longhand: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+      }
+      },
+      appendTo: startWrapperRef.current || document.body,
+      static: false,
+      clickOpens: false, // We'll control opening manually
+      onReady: function () {
+        updateCustomDisplay('start', 'start-display', today)
+        updateCustomDisplay('end', 'end-display', threeDaysLater)
+      },
+      onOpen: function(selectedDates, dateStr, instance) {
+        setTimeout(function() {
+          if (bookingFormRef.current && instance.calendarContainer && startWrapperRef.current) {
+            const wrapperRect = startWrapperRef.current.getBoundingClientRect()
+            const formRect = bookingFormRef.current.getBoundingClientRect()
+            const calendarContainer = instance.calendarContainer as HTMLElement
+            
+            // Ensure calendar is visible
+            calendarContainer.style.display = 'block'
+            calendarContainer.style.visibility = 'visible'
+            calendarContainer.style.opacity = '1'
+            
+            // Position calendar below the form
+            const topPosition = formRect.bottom - wrapperRect.top
+            calendarContainer.style.top = `${topPosition}px`
+            calendarContainer.style.left = '0'
+            calendarContainer.style.right = 'auto'
+            calendarContainer.style.position = 'absolute'
+            calendarContainer.style.zIndex = '1001'
+          }
+        }, 10)
+      },
+      onChange: function (selectedDates) {
+        if (selectedDates.length === 2) {
+          const startDate = selectedDates[0]
+          const endDate = selectedDates[1]
+          
+          const startDateStr = formatDateForNamastay(startDate)
+          const endDateStr = formatDateForNamastay(endDate)
+          
+          setCheckInDate(startDateStr)
+          setCheckOutDate(endDateStr)
+          updateCustomDisplay('start', 'start-display', startDate)
+          updateCustomDisplay('end', 'end-display', endDate)
+        } else if (selectedDates.length === 1) {
+          const startDate = selectedDates[0]
+          const startDateStr = formatDateForNamastay(startDate)
+          
+          setCheckInDate(startDateStr)
+          updateCustomDisplay('start', 'start-display', startDate)
+          
+          // Suggest end date three days after start date
+          const suggestedEndDate = new Date(startDate)
+          suggestedEndDate.setDate(suggestedEndDate.getDate() + 3)
+          
+          // Only update the display to show suggested date
+          updateCustomDisplay('end', 'end-display', suggestedEndDate)
+        }
+      }
+    })
+
+    flatpickrInstanceRef.current = fp
+
+    return () => {
+      if (fp) {
+        fp.destroy()
+  }
+    }
+  }, [])
+
+  // Handle date input wrapper clicks to trigger date picker
+  const handleStartWrapperClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    if (flatpickrInstanceRef.current) {
+      flatpickrInstanceRef.current.open()
+      // Force calendar to be visible
+      setTimeout(() => {
+        const calendar = document.querySelector('.flatpickr-calendar') as HTMLElement
+        if (calendar) {
+          calendar.style.display = 'block'
+          calendar.style.visibility = 'visible'
+          calendar.style.opacity = '1'
+        }
+      }, 50)
+      } else {
+      console.error('Flatpickr instance not found')
+    }
+  }
+
+  const handleEndWrapperClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    if (flatpickrInstanceRef.current) {
+      flatpickrInstanceRef.current.open()
+      // Force calendar to be visible
+      setTimeout(() => {
+        const calendar = document.querySelector('.flatpickr-calendar') as HTMLElement
+        if (calendar) {
+          calendar.style.display = 'block'
+          calendar.style.visibility = 'visible'
+          calendar.style.opacity = '1'
+        }
+      }, 50)
+    }
+  }
+
+  // Close guest popup when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        guestPopupRef.current &&
+        guestPickerRef.current &&
+        !guestPopupRef.current.contains(event.target as Node) &&
+        !guestPickerRef.current.contains(event.target as Node)
+      ) {
+        setIsGuestPopupOpen(false)
+      }
+    }
+
+    if (isGuestPopupOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isGuestPopupOpen])
+
+  // Handle close popup button click
+  const handleClosePopup = () => {
+    setIsGuestPopupOpen(false)
+  }
+
+  // Build initial offer data for the button (used in JSX and updated dynamically)
+  const buildOfferData = useCallback(() => {
+    const offerData: {
+      apiKey: string
+      startDate?: string
+      endDate?: string
+      adult?: number
+      child?: number
+      rooms?: number
+    } = {
+      apiKey: '6e1a1ee72c854f43b9bcb4113572e824nuuwro4cfvmrd62b',
+      rooms: 2,
+    }
+
+    // Add dates if they are set
+    if (checkInDate) {
+      offerData.startDate = checkInDate
+    }
+    if (checkOutDate) {
+      offerData.endDate = checkOutDate
+    }
+
+    // Add guest counts
+    if (adultCount > 0) {
+      offerData.adult = adultCount
+    }
+    if (childCount > 0) {
+      offerData.child = childCount
+    }
+
+    return offerData
+  }, [adultCount, childCount, checkInDate, checkOutDate])
+
+  // Handle button click - update hidden button and trigger it
+  const handleButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+    
+    // Get the hidden button that the SDK detected during initialization
+    const hiddenButton = document.getElementById('namastay-trigger-button') as HTMLButtonElement
+    
+    if (hiddenButton) {
+      // Update the hidden button's data-offer with our form values
+      const offerData = buildOfferData()
+      const offerJson = JSON.stringify(offerData)
+      hiddenButton.setAttribute('data-offer', offerJson)
+      
+      // Small delay to ensure attribute is set, then trigger the button
+      setTimeout(() => {
+        hiddenButton.click()
+      }, 50)
+    } else {
+      console.error('Namastay hidden button not found')
+    }
+  }
+
+
+  // Handle form submission - prevent default form submission
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    // The SDK will handle the button click automatically
+  }
+
+  // Calculate total guests for display
+  const adultText = adultCount === 1 ? '1 Adult' : `${adultCount} Adults`
+  const childText = childCount === 1 ? '1 Child' : `${childCount} Children`
+  const guestDisplayText = childCount > 0 
+    ? `${adultText} / ${childText}`
+    : adultText
+
+  return (
+    <form ref={bookingFormRef} className="booking-form h-pad" onSubmit={handleSubmit}>
+      <div className="guest-wrapper" ref={guestWrapperRef}>
+        <div 
+          id="guest-picker" 
+          ref={guestPickerRef}
+          onClick={handleGuestPickerClick}
+        >
+          <div>Guests</div>
+          <h5>{guestDisplayText}</h5>
+        </div>
+
+        <div 
+          id="guest-popup" 
+          ref={guestPopupRef}
+          className={`popup${isGuestPopupOpen ? '' : ' hidden'}`}
+        >
+          <div className="guest-control">
+            <div>Adults</div>
+
+            <div className="button-group">
+              <button 
+                type="button" 
+                className="minus button" 
+                onClick={() => handleGuestChange('adult', -1)}
+              >
+                -
+              </button>
+              <input 
+                type="number" 
+                id="adult-count" 
+                value={adultCount} 
+                readOnly 
+              />
+              <button 
+                type="button" 
+                className="plus button" 
+                onClick={() => handleGuestChange('adult', 1)}
+              >
+                +
+              </button>
+            </div>
+          </div>
+
+          <div className="guest-control">
+            <div>Children</div>
+
+            <div className="button-group">
+              <button 
+                type="button" 
+                className="minus button" 
+                onClick={() => handleGuestChange('child', -1)}
+              >
+                -
+              </button>
+              <input 
+                type="number" 
+                id="child-count" 
+                value={childCount} 
+                readOnly 
+              />
+              <button 
+                type="button" 
+                className="plus button" 
+                onClick={() => handleGuestChange('child', 1)}
+              >
+                +
+              </button>
+            </div>
+          </div>
+
+          <button 
+            type="button" 
+            id="close-popup" 
+            className="button button--orange"
+            onClick={handleClosePopup}
+          >
+            Done
+          </button>
+        </div>
+      </div>
+
+      <div className="start-wrapper" ref={startWrapperRef}>
+        <div 
+          className="date-input" 
+          id="start-display"
+          onClick={handleStartWrapperClick}
+        >
+          <div>Arrive</div>
+          <h5>{checkInDisplay}</h5>
+        </div>
+
+        <input 
+          ref={startInputRef}
+          type="text" 
+          id="start" 
+          name="start" 
+          required 
+          readOnly
+          tabIndex={-1}
+        />
+      </div>
+
+      <div className="end-wrapper">
+        <div 
+          className="date-input" 
+          id="end-display"
+          onClick={handleEndWrapperClick}
+        >
+          <div>Depart</div>
+          <h5>{checkOutDisplay}</h5>
+        </div>
+      </div>
+
+        <button 
+          className="namastay-offer-button button button--orange"
+          type="button"
+          data-offer={JSON.stringify(buildOfferData())}
+          onClick={handleButtonClick}
+        >
+          Check Availability
+        </button>
+
+        <div className="namastay-widget-button"></div>
+    </form>
+  )
+}

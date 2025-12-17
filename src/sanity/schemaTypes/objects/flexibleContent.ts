@@ -37,6 +37,10 @@ export default defineType({
       type: 'featureSection',
       title: 'Feature Section'
     },
+    {
+      type: 'bookingSection',
+      title: 'Booking Section'
+    },
   ],
   options: {
     sortable: true,

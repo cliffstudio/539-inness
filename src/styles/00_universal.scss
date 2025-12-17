@@ -1552,3 +1552,245 @@ body.page-type-activities {
     }
   }
 }
+
+// BOOKING SECTION ------------------
+
+.booking-form {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  @include align-items(center);
+  padding-top: get-rem-desktop(24);
+  padding-bottom: get-rem-desktop(24);
+  background-color: palegoldenrod;
+
+  // GUEST WRAPPER
+  .guest-wrapper {
+    position: relative;
+  }
+
+  // INPUT LABELS
+  #guest-picker,
+  .date-input {
+    @include flex;
+    @include flex-direction(column);
+    row-gap: get-rem-desktop(16);
+    padding: 0;
+    cursor: pointer;
+  }
+  
+  // GUEST POPUP
+  .popup {
+    position: absolute;
+    left: 0;
+    padding: get-rem-desktop(24);
+    width: 100%;
+    max-width: get-rem-desktop(300);
+    z-index: 1000;
+    opacity: 1;
+    transform: translate3d(0,0,0);
+    @include transition-multiple(opacity 300ms cubic-bezier(.23,1,.32,1), transform 300ms cubic-bezier(.23,1,.32,1));
+    pointer-events: auto;
+    background-color: $colour-white;
+    @include flex;
+    @include flex-direction(column);
+    row-gap: get-rem-desktop(24);
+
+    .guest-control {
+      @include flex;
+      @include justify-content(space-between);
+      @include align-items(center);
+
+      .button-group {
+        @include flex;
+
+        .button {
+          background-color: $colour-beige;
+          min-width: unset;
+          width: get-rem-desktop(38);
+          padding: 0;
+          padding-top: get-rem-desktop(2.5);
+          padding-bottom: get-rem-desktop(4);
+        }
+      }
+  
+      input[type=number] {
+        @include reset-input;
+        width: get-rem-desktop(38);
+        text-align: center;
+        appearance: textfield;
+        -moz-appearance: textfield;
+      }
+  
+
+          &:first-child {
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+          }
+
+          &:last-child {
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+          }
+      input[type=number]::-webkit-outer-spin-button,
+      input[type=number]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+    }
+  }
+  
+  .hidden {
+    opacity: 0;
+    transform: translate3d(0,-20px,0);
+    pointer-events: none;
+  }
+
+  .visually-hidden {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+    z-index: -1;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+  }
+
+  .button {
+    height: fit-content;
+  }
+
+  /*
+  FLATPICKR CALENDAR --------------------
+  */
+
+  .flatpickr-calendar {
+    border-radius: 0;
+    background-color: $colour-white;
+    box-shadow: none;
+    left: 0 !important;
+
+    &:before,
+    &:after {
+      display: none;
+    }
+  }
+
+  // MONTH TITLES
+  .flatpickr-months {
+    margin: get-rem-desktop(35) get-rem-desktop(24) get-rem-desktop(100);
+
+    // MONTH
+    .flatpickr-month {
+      pointer-events: none;
+    }
+
+    // DATE PICKER ARROW
+    .flatpickr-prev-month,
+    .flatpickr-next-month {
+      width: get-rem-desktop(36);
+      height: get-rem-desktop(36);
+      border: 1px solid $colour-black;
+      border-radius: 50px;
+      margin: get-rem-desktop(35) get-rem-desktop(24);
+
+      svg {
+        fill: $colour-black;
+      }
+    }
+  }
+
+  // DAYS
+  .flatpickr-day {
+    border-radius: 0;
+
+    // TODAY'S DATE
+    &.today {
+      border-color: $colour-beige;
+    }
+
+    // SELECTED DATES
+    &.selected {
+      color: $colour-black;
+    }
+  }
+
+  // DATE ON HOVER
+  .flatpickr-day.inRange, 
+  .flatpickr-day.prevMonthDay.inRange, 
+  .flatpickr-day.nextMonthDay.inRange, 
+  .flatpickr-day.today.inRange, 
+  .flatpickr-day.prevMonthDay.today.inRange, 
+  .flatpickr-day.nextMonthDay.today.inRange, 
+  .flatpickr-day:hover, 
+  .flatpickr-day.prevMonthDay:hover, 
+  .flatpickr-day.nextMonthDay:hover, 
+  .flatpickr-day:focus, 
+  .flatpickr-day.prevMonthDay:focus, 
+  .flatpickr-day.nextMonthDay:focus, 
+  .flatpickr-day.today:hover, 
+  .flatpickr-day.today:focus,
+  .flatpickr-day.selected, 
+  .flatpickr-day.startRange, 
+  .flatpickr-day.endRange, 
+  .flatpickr-day.selected.inRange, 
+  .flatpickr-day.startRange.inRange, 
+  .flatpickr-day.endRange.inRange, 
+  .flatpickr-day.selected:focus, 
+  .flatpickr-day.startRange:focus, 
+  .flatpickr-day.endRange:focus, 
+  .flatpickr-day.selected:hover, 
+  .flatpickr-day.startRange:hover, 
+  .flatpickr-day.endRange:hover, 
+  .flatpickr-day.selected.prevMonthDay, 
+  .flatpickr-day.startRange.prevMonthDay, 
+  .flatpickr-day.endRange.prevMonthDay, 
+  .flatpickr-day.selected.nextMonthDay, 
+  .flatpickr-day.startRange.nextMonthDay, 
+  .flatpickr-day.endRange.nextMonthDay {
+    background: $colour-beige;
+    border-color: $colour-beige;
+  }
+  
+  // SELECTED RANGE
+  .flatpickr-day.inRange {
+    box-shadow: -5px 0 0 #FFFFFF, 5px 0 0 #FFFFFF;
+  }
+
+  // SELECTED RANGE
+  .flatpickr-day.selected.startRange + .endRange:not(:nth-child(7n+1)), .flatpickr-day.startRange.startRange + .endRange:not(:nth-child(7n+1)), .flatpickr-day.endRange.startRange + .endRange:not(:nth-child(7n+1)) {
+    box-shadow: -10px 0 0 #DFD9C6;
+  }
+
+  // MONTH
+  .flatpickr-current-month span.cur-month {
+    font-weight: 400;
+  }
+
+  // LINE BETWEEN MONTHS
+  .dayContainer + .dayContainer {
+    box-shadow: none;
+  }
+
+  .flatpickr-month,
+  .flatpickr-weekdaycontainer,
+  .dayContainer {
+    padding-right: 10px;
+
+    &:last-of-type {
+      padding-right: 0;
+      padding-left: 10px;
+    }
+  }
+
+  // WEEKDAY
+  span.flatpickr-weekday {
+    font-weight: 400;
+  }
+
+  .flatpickr-day.flatpickr-disabled, .flatpickr-day.flatpickr-disabled:hover {
+    color: #dad5ce;
+  }
+
+  .start-wrapper {
+    position: relative;
+  }
+}

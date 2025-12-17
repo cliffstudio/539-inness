@@ -23,6 +23,7 @@ import carouselSection from './sections/carouselSection'
 import menuSection from './sections/menuSection'
 import activitySection from './sections/activitySection'
 import featureSection from './sections/featureSection'
+import bookingSection from './sections/bookingSection'
 
 export const schemaTypes = [
   // Global
@@ -50,4 +51,5 @@ export const schemaTypes = [
   menuSection,
   activitySection,
   featureSection,
+  bookingSection,
 ]

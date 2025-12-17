@@ -75,6 +75,67 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: `
+              // Fix Next.js 15 history.pushState error FIRST - before anything else
+              // Some scripts call pushState with empty string, but Next.js expects an object
+              (function() {
+                // Store original before anything wraps it
+                const originalPushState = History.prototype.pushState;
+                const originalReplaceState = History.prototype.replaceState;
+                
+                // Helper to normalize state
+                const normalizeState = function(state) {
+                  if (state === '' || state === null || state === undefined) {
+                    return {};
+                  }
+                  if (typeof state === 'string') {
+                    // Convert string to object to allow Next.js to add __NA property
+                    return { _original: state };
+                  }
+                  // If it's already an object, return as-is
+                  if (typeof state === 'object') {
+                    return state;
+                  }
+                  // Fallback to empty object for any other type
+                  return {};
+                };
+                
+                // Patch History.prototype.pushState
+                History.prototype.pushState = function(state, title, url) {
+                  const safeState = normalizeState(state);
+                  try {
+                    return originalPushState.call(this, safeState, title, url);
+                  } catch (error) {
+                    // If error occurs, try with empty object
+                    try {
+                      return originalPushState.call(this, {}, title, url);
+                    } catch (e) {
+                      // Silently suppress if all else fails
+                      return;
+                    }
+                  }
+                };
+                
+                // Also patch replaceState in case it's used
+                History.prototype.replaceState = function(state, title, url) {
+                  const safeState = normalizeState(state);
+                  try {
+                    return originalReplaceState.call(this, safeState, title, url);
+                  } catch (error) {
+                    try {
+                      return originalReplaceState.call(this, {}, title, url);
+                    } catch (e) {
+                      return;
+                    }
+                  }
+                };
+                
+                // Also patch window.history if it exists
+                if (typeof window !== 'undefined' && window.history) {
+                  window.history.pushState = History.prototype.pushState;
+                  window.history.replaceState = History.prototype.replaceState;
+                }
+              })();
+              
               // Reset scroll position immediately before anything else runs
               window.scrollTo(0, 0);
               // Disable scroll restoration to prevent browser from restoring scroll position
@@ -113,6 +174,136 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <Script
           src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"
           strategy="afterInteractive"
+        />
+        {/* Namastay Booking Script - Step 1 */}
+        <Script
+          id="namastay-script"
+          src="https://sdk.namastay.io/index.js"
+          strategy="afterInteractive"
+        />
+        {/* Namastay Initialization - Step 1 */}
+        <Script
+          id="namastay-init"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                // Suppress specific console errors from third-party SDKs
+                const originalError = console.error;
+                console.error = function(...args) {
+                  const message = args.join(' ');
+                  // Suppress known harmless errors from Namastay SDK and third-party services
+                  const suppressedPatterns = [
+                    /Widget button elements not found/i,
+                    /Access to fetch.*thehotelsnetwork/i,
+                    /CORS policy/i,
+                    /Failed to load resource.*namastay/i,
+                    /404.*namastay/i,
+                    /Cannot create property.*__NA/i,
+                    /Cannot create property '__NA' on string/i
+                  ];
+                  
+                  const shouldSuppress = suppressedPatterns.some(pattern => pattern.test(message));
+                  if (!shouldSuppress) {
+                    originalError.apply(console, args);
+                  }
+                };
+                
+                // Suppress unhandled promise rejections for known SDK issues
+                window.addEventListener('unhandledrejection', function(event) {
+                  const reason = event.reason;
+                  if (reason) {
+                    const message = reason.toString() || (reason.message || '');
+                    if (message.includes('Widget button elements not found') || 
+                        message.includes('[Namastay SDK]') ||
+                        message.includes("__NA") ||
+                        message.includes("Cannot create property")) {
+                      event.preventDefault();
+                      return;
+                    }
+                  }
+                });
+                
+                // Also catch runtime errors - use capture phase to catch early
+                window.addEventListener('error', function(event) {
+                  if (event.error) {
+                    const message = event.error.message ? event.error.message.toString() : '';
+                    if (message.includes("__NA") || 
+                        message.includes("Cannot create property '__NA'") ||
+                        message.includes("Cannot create property") && message.includes("string")) {
+                      event.preventDefault();
+                      event.stopPropagation();
+                      return false;
+                    }
+                  }
+                  // Also check error message directly
+                  if (event.message) {
+                    const msg = event.message.toString();
+                    if (msg.includes("__NA") || 
+                        msg.includes("Cannot create property '__NA'") ||
+                        (msg.includes("Cannot create property") && msg.includes("string"))) {
+                      event.preventDefault();
+                      event.stopPropagation();
+                      return false;
+                    }
+                  }
+                }, true);
+                
+                // Note: history.pushState is already patched in the beforeInteractive script above
+                
+                // Create a permanent hidden button that the SDK can detect during initialization
+                // This ensures the SDK always finds at least one button, even before React components mount
+                if (!document.getElementById('namastay-trigger-button')) {
+                  const button = document.createElement('button');
+                  button.id = 'namastay-trigger-button';
+                  button.className = 'namastay-widget-button namastay-offer-button';
+                  button.style.position = 'fixed';
+                  button.style.left = '-9999px';
+                  button.style.top = '-9999px';
+                  button.style.opacity = '0';
+                  button.style.pointerEvents = 'auto';
+                  button.style.width = '1px';
+                  button.style.height = '1px';
+                  button.setAttribute('aria-hidden', 'true');
+                  button.setAttribute('data-offer', '{"apiKey":"6e1a1ee72c854f43b9bcb4113572e824nuuwro4cfvmrd62b"}');
+                  document.body.appendChild(button);
+                }
+                
+                // Step 1: Initialize Namastay as per documentation
+                function initializeNamastay() {
+                  if (typeof window !== 'undefined' && typeof window.initNamastay === 'function') {
+                    const hotelConfig = {
+                      apiKey: '6e1a1ee72c854f43b9bcb4113572e824nuuwro4cfvmrd62b',
+                      spreedlyApiKey: 'D1a8Zma8lZfap6nZpUjPxp6OHBV',
+                      widgetButtonsClass: 'namastay-widget-button',
+                      specialOfferButtonsClass: 'namastay-offer-button',
+                    };
+                    try {
+                      window.initNamastay(hotelConfig);
+                    } catch (error) {
+                      // Only log if it's not the expected "button elements not found" error
+                      const errorMessage = error && error.message ? error.message.toString() : '';
+                      if (!errorMessage.includes('Widget button elements not found')) {
+                        originalError('Error initializing Namastay:', error);
+                      }
+                    }
+                  } else {
+                    // Retry after a short delay if namastay isn't loaded yet
+                    setTimeout(initializeNamastay, 100);
+                  }
+                }
+                
+                // Wait for namastay script to load
+                if (document.readyState === 'complete') {
+                  initializeNamastay();
+                } else {
+                  window.addEventListener('load', initializeNamastay);
+                  // Also try after a delay as fallback
+                  setTimeout(initializeNamastay, 500);
+                }
+              })();
+            `
+          }}
         />
         <Script
           id="viewport-detection"

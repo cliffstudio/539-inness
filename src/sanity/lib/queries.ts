@@ -277,6 +277,11 @@ const featureSectionFragment = groq`{
   }
 }`
 
+const bookingSectionFragment = groq`{
+  id,
+  show
+}`
+
 const flexibleContentFragment = groq`{
   _type,
   ...select(_type == "heroSection" => ${heroSectionFragment}),
@@ -286,7 +291,8 @@ const flexibleContentFragment = groq`{
   ...select(_type == "carouselSection" => ${carouselSectionFragment}),
   ...select(_type == "menuSection" => ${menuSectionFragment}),
   ...select(_type == "activitySection" => ${activitySectionFragment}),
-  ...select(_type == "featureSection" => ${featureSectionFragment})
+  ...select(_type == "featureSection" => ${featureSectionFragment}),
+  ...select(_type == "bookingSection" => ${bookingSectionFragment})
 }`
 
 // Main page query
