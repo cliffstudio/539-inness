@@ -40,7 +40,7 @@ export default function CarouselSection({ images }: CarouselSectionProps) {
         preloadPages: 4,
         autoScroll: {
           speed: 1,
-          pauseOnHover: true,
+          pauseOnHover: false,
         },
       })
 
