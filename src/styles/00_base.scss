@@ -86,6 +86,10 @@ a {
   }
 }
 
+a[target=_blank] {
+  cursor: alias;
+}
+
 /*
 DIV / IMG / VIDEO ------------------
 */
