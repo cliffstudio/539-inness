@@ -11,6 +11,17 @@ interface BookingSectionProps {
   noBottomPad?: boolean
 }
 
+// Format date for display (e.g., "17 Dec 25")
+const formatDateDisplay = (date: Date | string): string => {
+  if (!date) return ''
+  const dateObj = date instanceof Date ? date : new Date(date)
+  if (isNaN(dateObj.getTime())) return ''
+  const day = dateObj.getDate()
+  const month = dateObj.toLocaleDateString('en-US', { month: 'short' })
+  const year = dateObj.getFullYear().toString().slice(-2)
+  return `${day} ${month} ${year}`
+}
+
 export default function BookingSection({ noTopPad = false, noBottomPad = false }: BookingSectionProps) {
   const [adultCount, setAdultCount] = useState(2)
   const [childCount, setChildCount] = useState(0)
@@ -27,15 +38,6 @@ export default function BookingSection({ noTopPad = false, noBottomPad = false }
   const startInputRef = useRef<HTMLInputElement>(null)
   const startWrapperRef = useRef<HTMLDivElement>(null)
   const flatpickrInstanceRef = useRef<Instance | null>(null)
-
-  // Format date for display (e.g., "Jan 15" or "Jan 15, 2025")
-  const formatDateDisplay = (date: Date | string): string => {
-    if (!date) return ''
-    const dateObj = date instanceof Date ? date : new Date(date)
-    if (isNaN(dateObj.getTime())) return ''
-    const options: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric' }
-    return dateObj.toLocaleDateString('en-US', options)
-  }
 
   // Handle guest picker click
   const handleGuestPickerClick = (e: React.MouseEvent) => {
@@ -130,7 +132,7 @@ export default function BookingSection({ noTopPad = false, noBottomPad = false }
       showMonths: 2,
       locale: {
         weekdays: {
-          shorthand: ['S', 'M', 'T', 'W', 'T', 'F', 'S'],
+          shorthand: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
           longhand: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
       }
       },

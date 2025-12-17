@@ -1579,7 +1579,14 @@ body.page-type-activities {
     grid-template-columns: repeat(4, 1fr);
     @include align-items(center);
     padding-top: get-rem-desktop(24);
-    padding-bottom: get-rem-desktop(24);
+    padding-bottom: get-rem-desktop(20);
+
+    @media only screen and (max-width: 768px) {
+      @include flex;
+      @include flex-direction(column);
+      @include align-items(flex-start);
+      row-gap: get-rem-mobile(22);
+    }
     
     // GUEST WRAPPER
     .guest-wrapper {
@@ -1591,7 +1598,7 @@ body.page-type-activities {
     .date-input {
       @include flex;
       @include flex-direction(column);
-      row-gap: get-rem-desktop(16);
+      row-gap: get-rem-desktop(10);
       padding: 0;
       cursor: pointer;
     }
@@ -1674,6 +1681,10 @@ body.page-type-activities {
 
     .button {
       height: fit-content;
+
+      @media only screen and (max-width: 768px) {
+        width: 100%;
+      }
     }
 
     /*
