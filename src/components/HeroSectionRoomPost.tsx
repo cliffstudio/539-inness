@@ -59,11 +59,10 @@ export default function Hero({ id, title, image, description, specs }: HeroProps
               ))}
             </div>
           )}
-          
+
           <button
             type="button"
-            className="button button--orange"
-            onClick={() => openBooking('room')}
+            className="button button--orange namastay-widget-button"
           >
             Book
           </button>

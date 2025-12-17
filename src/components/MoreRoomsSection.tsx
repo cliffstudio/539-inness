@@ -160,9 +160,12 @@ export default function MoreRoomsSection({
               fallbackColor="cream"
             />
 
-            <div className="button button--orange" onClick={() => openBooking('room')}>
+            <button
+              type="button"
+              className="button button--orange namastay-widget-button"
+            >
               Book
-            </div>
+            </button>
           </div>
         </div>
       )}

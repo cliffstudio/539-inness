@@ -623,8 +623,7 @@ export default function MediaTextSection({
 
                 <button
                   type="button"
-                  className="button button--orange"
-                  onClick={() => openBooking('room')}
+                  className="button button--orange namastay-widget-button"
                 >
                   Book
                 </button>
@@ -779,7 +778,12 @@ export default function MediaTextSection({
                                   fallbackColor="cream"
                                 />
 
-                                <div className="button button--orange" onClick={() => openBooking('room')}>Book</div>
+                                <button
+                                  type="button"
+                                  className="button button--orange namastay-widget-button"
+                                >
+                                  Book
+                                </button>
                               </div>
                             </div>
                           )}
@@ -844,9 +848,12 @@ export default function MediaTextSection({
                                 fallbackColor="cream"
                               />
 
-                              <div className="button button--orange" onClick={() => openBooking('room')}>
+                              <button
+                                type="button"
+                                className="button button--orange namastay-widget-button"
+                              >
                                 Book
-                              </div>
+                              </button>
                             </div>
                           </div>
                         )}
