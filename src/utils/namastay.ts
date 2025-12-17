@@ -5,6 +5,20 @@
  * The SDK is initialized in the root layout with the hotel parameters.
  */
 
+// Declare MutationEvent for deprecated DOM API support
+declare class MutationEvent extends Event {
+  constructor(type: string, eventInitDict?: MutationEventInit);
+  attrName: string;
+  newValue: string | null;
+  prevValue: string | null;
+}
+
+interface MutationEventInit extends EventInit {
+  attrName?: string;
+  newValue?: string | null;
+  prevValue?: string | null;
+}
+
 declare global {
   interface Window {
     initNamastay?: (config: NamastayConfig) => void;
@@ -190,9 +204,14 @@ export function openNamastayWithOffer(offer: NamastayOffer): void {
     button.dispatchEvent(attributeChangeEvent);
     
     // Also dispatch a mutation event (deprecated but some SDKs still use it)
-    if (typeof MutationEvent !== 'undefined') {
-      try {
-        const mutationEvent = new MutationEvent('DOMAttrModified', {
+    // MutationEvent is deprecated and may not be available in all browsers
+    // We use try-catch instead of typeof check since MutationEvent is not in TypeScript DOM types
+    try {
+      // Access MutationEvent via window to avoid TypeScript errors
+      // Use unknown type to avoid referencing MutationEvent directly in type definition
+      const windowWithMutationEvent = window as unknown as { MutationEvent?: new (type: string, eventInitDict?: MutationEventInit) => MutationEvent };
+      if (windowWithMutationEvent.MutationEvent) {
+        const mutationEvent = new windowWithMutationEvent.MutationEvent('DOMAttrModified', {
           bubbles: true,
           cancelable: true,
           attrName: 'data-offer',
@@ -200,9 +219,9 @@ export function openNamastayWithOffer(offer: NamastayOffer): void {
           prevValue: null
         } as MutationEventInit);
         button.dispatchEvent(mutationEvent);
-      } catch {
-        // MutationEvent may not be available in all browsers
       }
+    } catch {
+      // MutationEvent may not be available in all browsers
     }
     
     // Small delay to ensure attribute is processed and SDK has time to read it
