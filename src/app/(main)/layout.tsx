@@ -9,6 +9,7 @@ import OverflowController from '../../components/OverflowController'
 import { BookingProvider } from '../../contexts/BookingContext'
 import BookingOverlay from '../../components/BookingOverlay'
 import AnnouncementPopupSection from '../../components/AnnouncementPopupSection'
+import CookieConsent from '../../components/CookieConsent'
 
 export default async function MainLayout({
   children,
@@ -36,6 +37,7 @@ export default async function MainLayout({
           />
         )}
         <BookingOverlay />
+        <CookieConsent />
       </BookingProvider>
     </Suspense>
   )

@@ -1,0 +1,153 @@
+@use '00_mixins' as *;
+
+// // Cookie Consent Overrides
+// // Customizes the cookieconsent library styles to match site aesthetics
+
+// .cc-window {
+//   font-family: inherit;
+//   font-size: 14px;
+//   line-height: 1.5;
+  
+//   &.cc-banner {
+//     padding: 1rem 1.5rem;
+    
+//     @media (min-width: 768px) {
+//       padding: 1rem 2rem;
+//     }
+//   }
+// }
+
+// .cc-message {
+//   margin-right: 1rem;
+  
+//   a {
+//     color: inherit;
+//     text-decoration: underline;
+    
+//     &:hover {
+//       opacity: 0.8;
+//     }
+//   }
+// }
+
+// .cc-compliance {
+//   display: flex;
+//   gap: 0.5rem;
+//   flex-wrap: wrap;
+// }
+
+// .cc-btn {
+//   padding: 0.5rem 1.25rem;
+//   font-size: 13px;
+//   font-weight: 500;
+//   letter-spacing: 0.05em;
+//   text-transform: uppercase;
+//   border: 1px solid #ffffff;
+//   transition: all 0.2s ease;
+//   cursor: pointer;
+  
+//   &:hover {
+//     background-color: #ffffff !important;
+//     color: #505050 !important;
+//   }
+  
+//   &.cc-allow {
+//     background-color: transparent;
+//   }
+  
+//   &.cc-deny {
+//     background-color: transparent;
+//   }
+// }
+
+// // Ensure the banner appears above other elements but below critical UI
+// .cc-window {
+//   z-index: 9999;
+// }
+
+// // Animation refinements
+// .cc-revoke,
+// .cc-window {
+//   &.cc-animate {
+//     transition: transform 0.3s ease, opacity 0.3s ease;
+//   }
+// }
+
+
+.cc-revoke {
+  display: none !important;
+}
+
+.cc-window {
+  width: get-rem-desktop(200) !important;
+  left: get-rem-desktop(16) !important;
+  bottom: get-rem-desktop(16) !important;
+  font-family: 'ABC Arizona Flare' !important;
+  font-weight: 100 !important;
+  box-sizing: border-box !important;
+  font-size: 16px !important;
+  line-height: calc(24 / 16) + em !important;
+  background-color: $colour-black !important;
+  display: flex !important;
+  flex-direction: column !important;
+  row-gap: get-rem-desktop(20) !important;
+  padding: get-rem-desktop(10) get-rem-desktop(16) get-rem-desktop(18) !important;
+  color: $colour-cream !important;
+
+  .cc-message {
+    flex: unset;
+
+    a.cc-link {
+      display: none !important;
+    }
+  }
+
+  .cc-compliance {
+    display: flex !important;
+    flex-direction: column !important;
+    row-gap: get-rem-desktop(10) !important;
+    width: 100% !important;
+  }
+
+  .cc-btn {
+    width: 100% !important;
+    padding: get-rem-desktop(3) 0 0 !important;
+    margin: 0 !important;
+    will-change: background-color, border-color, color;
+    @include transition-multiple(background-color 500ms cubic-bezier(0.25,0.1,0.25,1), border-color 500ms cubic-bezier(0.25,0.1,0.25,1), color 500ms cubic-bezier(0.25,0.1,0.25,1));
+    height: get-rem-desktop(26) !important;
+
+    @media (hover: hover) {
+      &:hover {
+        opacity: 1 !important;
+      }
+    }
+
+    &.cc-allow {
+      background-color: $colour-orange !important;
+      color: $colour-cream !important;
+
+      @media (hover: hover) {
+        &:hover {
+          background-color: $colour-orange-hover !important;
+        }
+      }
+    }
+
+    &.cc-deny {
+      background-color: $colour-cream !important;
+      color: $colour-black !important;
+
+      @media (hover: hover) {
+        &:hover {
+          background-color: $colour-tan !important;
+        }
+      }
+    }
+  }
+
+  .cookies-link {
+    text-decoration: underline !important;
+    margin-top: get-rem-desktop(5) !important;
+  }
+}
