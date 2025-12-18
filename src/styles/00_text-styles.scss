@@ -106,6 +106,10 @@ h6 {
   font-weight: 100;
   font-size: 20px;
   line-height: normal;
+
+  &.bolder {
+    font-weight: 300;
+  }
 }
 
 .body-small {
@@ -113,4 +117,11 @@ h6 {
   font-weight: 300;
   font-size: 14px;
   line-height: calc(20 / 14) + em;
+}
+
+.body-tiny {
+  font-family: 'ABC Arizona Flare';
+  font-weight: 100;
+  font-size: 12px;
+  line-height: calc(24 / 12) + em;
 }

@@ -486,6 +486,15 @@ export const footerQuery = groq`
         phoneNumber,
         extension
       }
+    },
+    announcementPopup {
+      enabled,
+      slides[] {
+        image ${imageFragment},
+        title,
+        text,
+        button ${linkFragment}
+      }
     }
   }
 `

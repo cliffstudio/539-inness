@@ -1,4 +1,5 @@
 import { defineType, defineField } from 'sanity'
+import { imageSizeValidation } from './utils/imageValidation'
 
 export const footerType = defineType({
   name: 'footer',
@@ -117,6 +118,66 @@ export const footerType = defineType({
                   return {
                     title: label || 'Untitled Contact',
                     subtitle: phone ? `${phone}${ext ? ` ${ext}` : ''}` : 'No phone number',
+                  }
+                },
+              },
+            },
+          ],
+        }),
+      ],
+    }),
+    defineField({
+      name: 'announcementPopup',
+      title: 'Announcement Pop Up',
+      type: 'object',
+      fields: [
+        defineField({
+          name: 'enabled',
+          title: 'Enable Pop Up',
+          type: 'boolean',
+          initialValue: true,
+          description: 'Toggle to show or hide the announcement popup on all pages',
+        }),
+        defineField({
+          name: 'slides',
+          title: 'Slides',
+          type: 'array',
+          of: [
+            {
+              type: 'object',
+              fields: [
+                defineField({
+                  name: 'image',
+                  title: 'Image',
+                  type: 'image',
+                  description: 'Maximum file size: 500KB.',
+                  validation: imageSizeValidation,
+                }),
+                defineField({
+                  name: 'title',
+                  title: 'Title',
+                  type: 'string',
+                }),
+                defineField({
+                  name: 'text',
+                  title: 'Text',
+                  type: 'text',
+                }),
+                defineField({
+                  name: 'button',
+                  title: 'Button',
+                  type: 'link',
+                }),
+              ],
+              preview: {
+                select: {
+                  title: 'title',
+                  media: 'image',
+                },
+                prepare({ title, media }) {
+                  return {
+                    title: title || 'Untitled Slide',
+                    media,
                   }
                 },
               },

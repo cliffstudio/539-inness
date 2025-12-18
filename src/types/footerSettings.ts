@@ -45,11 +45,30 @@ export type ContactColumn = {
   contactItems?: ContactItem[]
 }
 
+export type AnnouncementPopup = {
+  enabled?: boolean
+  slides?: AnnouncementSlide[]
+}
+
 export type Footer = {
   navigationColumn1?: NavigationColumn
   navigationColumn2?: NavigationColumn
   followColumn?: FollowColumn
   contactColumn?: ContactColumn
+  announcementPopup?: AnnouncementPopup
 }
 
 export type FooterSettings = Footer
+
+export type AnnouncementSlide = {
+  image?: {
+    _type: 'image'
+    asset: {
+      _ref: string
+      _type: 'reference'
+    }
+  }
+  title?: string
+  text?: string
+  button?: Link
+}

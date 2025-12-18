@@ -49,7 +49,7 @@ export const schemaTypes = [
   breakSection,
   carouselSection,
   menuSection,
-  activitySection,
-  featureSection,
-  bookingSection,
+    activitySection,
+    featureSection,
+    bookingSection,
 ]
