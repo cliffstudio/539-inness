@@ -48,7 +48,7 @@ export type AnnouncementPopupSection = {
     title?: string
     text?: string
     button?: {
-      linkType?: 'internal' | 'external' | 'jump' | 'file' | 'booking'
+      linkType: 'internal' | 'external' | 'jump' | 'file' | 'booking'
       label?: string
       href?: string
       jumpLink?: string
