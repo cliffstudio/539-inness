@@ -1556,8 +1556,6 @@ body.page-type-activities {
 // BOOKING SECTION ------------------
 
 .booking-section {
-  background-color: palegoldenrod;
-
   &.no-top-pad {
     margin-top: get-rem-desktop(-160);
 
@@ -1696,20 +1694,50 @@ body.page-type-activities {
       background-color: $colour-white;
       box-shadow: none;
       left: 0 !important;
+      width: 62.5vw !important;
+      max-width: unset !important;
+      left: -37.5% !important;
 
-      &:before,
-      &:after {
+      &::after {
         display: none;
       }
+
+      &:before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        @include transform(translate(-50%, -50%));
+        height: calc(100% - get-rem-desktop(48));
+        width: 1px;
+        background-color: $colour-beige;
+        border: none;
+        margin: 0;
+        bottom: unset;
+      }
+    }
+
+    .flatpickr-rContainer {
+      width: 100% !important;
     }
 
     // MONTH TITLES
     .flatpickr-months {
-      margin: get-rem-desktop(35) get-rem-desktop(24) get-rem-desktop(100);
+      padding: get-rem-desktop(35) get-rem-desktop(24) get-rem-desktop(100);
 
       // MONTH
       .flatpickr-month {
         pointer-events: none;
+        padding-right: get-rem-desktop(24) !important;
+
+        &:last-of-type {
+          padding-right: 0 !important;
+          padding-left: get-rem-desktop(24) !important;
+        }
+
+        .flatpickr-current-month {
+          padding: 0 !important;
+        }
       }
 
       // DATE PICKER ARROW
@@ -1727,9 +1755,58 @@ body.page-type-activities {
       }
     }
 
+    // WEEKDAYS
+    .flatpickr-weekdays {
+      padding-left: get-rem-desktop(24);
+      padding-right: get-rem-desktop(24);
+      padding-bottom: get-rem-desktop(8);
+      height: unset !important;
+
+      .flatpickr-weekdaycontainer {
+        padding-right: get-rem-desktop(24);
+        
+
+        &:first-of-type {
+          padding-left: 0;
+        }
+
+        &:last-of-type {
+          padding-left: get-rem-desktop(24);
+          padding-right: 0;
+        }
+      }
+
+      .flatpickr-weekday {
+        color: $colour-black;
+        font-weight: 400;
+        @include font-size(16px, 16px);
+      }
+    }
+
     // DAYS
+    .dayContainer {
+      padding-left: get-rem-desktop(24) !important;
+      padding-right: get-rem-desktop(24) !important;
+      padding-bottom: get-rem-desktop(24) !important;
+      display: grid !important;
+      grid-template-columns: repeat(7, 1fr) !important;
+      gap: get-rem-desktop(4) !important;
+      width: 100% !important;
+      min-width: unset !important;
+      max-width: unset !important;
+    }
+
+    .flatpickr-days {
+      width: 100% !important;
+    }
+
     .flatpickr-day {
       border-radius: 0;
+      color: $colour-black !important;
+      width: unset !important;
+      max-width: unset !important;
+      height: get-rem-desktop(35) !important;
+      line-height: get-rem-desktop(35) !important;
 
       // TODAY'S DATE
       &.today {
@@ -1739,6 +1816,16 @@ body.page-type-activities {
       // SELECTED DATES
       &.selected {
         color: $colour-black;
+      }
+
+      // DISABLED DATES
+      &.flatpickr-disabled {
+        opacity: 0.3;
+
+        &:hover {
+          background: transparent;
+          border-color: transparent;
+        }
       }
     }
 
@@ -1778,15 +1865,25 @@ body.page-type-activities {
       background: $colour-beige;
       border-color: $colour-beige;
     }
+
+    // START/END DATE
+    .flatpickr-day.selected.startRange, 
+    .flatpickr-day.startRange.startRange, 
+    .flatpickr-day.endRange.startRange,
+    .flatpickr-day.selected.endRange, 
+    .flatpickr-day.startRange.endRange, 
+    .flatpickr-day.endRange.endRange {
+      border-radius: 0 !important;
+    }
     
     // SELECTED RANGE
     .flatpickr-day.inRange {
-      box-shadow: -5px 0 0 #FFFFFF, 5px 0 0 #FFFFFF;
+      box-shadow: none;
     }
 
     // SELECTED RANGE
     .flatpickr-day.selected.startRange + .endRange:not(:nth-child(7n+1)), .flatpickr-day.startRange.startRange + .endRange:not(:nth-child(7n+1)), .flatpickr-day.endRange.startRange + .endRange:not(:nth-child(7n+1)) {
-      box-shadow: -10px 0 0 #DFD9C6;
+      box-shadow: none;
     }
 
     // MONTH
@@ -1808,15 +1905,6 @@ body.page-type-activities {
         padding-right: 0;
         padding-left: 10px;
       }
-    }
-
-    // WEEKDAY
-    span.flatpickr-weekday {
-      font-weight: 400;
-    }
-
-    .flatpickr-day.flatpickr-disabled, .flatpickr-day.flatpickr-disabled:hover {
-      color: #dad5ce;
     }
 
     .start-wrapper {
