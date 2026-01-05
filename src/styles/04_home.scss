@@ -33,7 +33,7 @@ body.page-type-homepage {
     .hero-content,
     .hero-arrow {
       opacity: 0;
-      @include transition(opacity 400ms cubic-bezier(0.25,0.1,0.25,1));
+      @include transition(opacity 400ms cubic-bezier(0.25,0.1,0.25,1)); 
     }
 
     .gradient-overlay.is-visible,
