@@ -62,7 +62,7 @@ export default function CookieConsent() {
             href: ''
           },
           compliance: {
-            'opt-in': '<div class="cc-compliance"><a aria-label="allow cookies" tabindex="0" class="cc-btn cc-allow">Accept</a><a aria-label="deny cookies" tabindex="0" class="cc-btn cc-deny">Decline</a><a class="cookies-link" href="/cookies">Cookie Policy</a></div>'
+            'opt-in': '<div class="cc-compliance"><a aria-label="allow cookies" tabindex="0" class="cc-btn cc-allow">Accept</a><a aria-label="deny cookies" tabindex="0" class="cc-btn cc-deny">Decline</a><a class="cookies-link" href="/cookie-policy">Cookie Policy</a></div>'
           }
         })
       }
@@ -96,7 +96,7 @@ export default function CookieConsent() {
           href: ''
         },
         compliance: {
-          'opt-in': '<div class="cc-compliance"><a aria-label="allow cookies" tabindex="0" class="cc-btn cc-allow">Accept</a><a aria-label="deny cookies" tabindex="0" class="cc-btn cc-deny">Decline</a><a class="cookies-link" href="/cookies" target="_blank">Cookie Policy</a></div>'
+          'opt-in': '<div class="cc-compliance"><a aria-label="allow cookies" tabindex="0" class="cc-btn cc-allow">Accept</a><a aria-label="deny cookies" tabindex="0" class="cc-btn cc-deny">Decline</a><a class="cookies-link" href="/cookie-policy" target="_blank">Cookie Policy</a></div>'
         }
       })
     }
