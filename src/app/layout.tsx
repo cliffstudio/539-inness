@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Script from "next/script";
-import "./globals.css";
 import { client } from "../../sanity.client";
 import { metadataQuery } from "../sanity/lib/queries";
 import { urlFor } from "../sanity/utils/imageUrlBuilder";
@@ -82,36 +81,48 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 const originalPushState = History.prototype.pushState;
                 const originalReplaceState = History.prototype.replaceState;
                 
-                // Helper to normalize state
+                // Helper to normalize state - must always return an object
                 const normalizeState = function(state) {
-                  if (state === '' || state === null || state === undefined) {
+                  // If state is a string (including empty string), convert to object
+                  if (typeof state === 'string') {
+                    return state ? { _original: state } : {};
+                  }
+                  // If state is null or undefined, return empty object
+                  if (state === null || state === undefined) {
                     return {};
                   }
-                  if (typeof state === 'string') {
-                    // Convert string to object to allow Next.js to add __NA property
-                    return { _original: state };
-                  }
-                  // If it's already an object, return as-is
+                  // If already an object, make sure it's not frozen/sealed
                   if (typeof state === 'object') {
-                    return state;
+                    try {
+                      // Test if we can add a property
+                      const testObj = Object.assign({}, state);
+                      return testObj;
+                    } catch (e) {
+                      return {};
+                    }
                   }
-                  // Fallback to empty object for any other type
+                  // Fallback for any other type
                   return {};
                 };
                 
                 // Patch History.prototype.pushState
                 History.prototype.pushState = function(state, title, url) {
                   const safeState = normalizeState(state);
+                  
+                  // Validate URL - catch Namastay SDK invalid URLs like //apiKey?params
+                  if (url && typeof url === 'string') {
+                    // Invalid: starts with // but isn't a proper protocol-relative URL
+                    if (url.startsWith('//') && !url.startsWith('//www.') && !url.startsWith('//cdn.')) {
+                      console.warn('Blocked invalid URL in pushState:', url);
+                      return;
+                    }
+                  }
+                  
                   try {
                     return originalPushState.call(this, safeState, title, url);
                   } catch (error) {
-                    // If error occurs, try with empty object
-                    try {
-                      return originalPushState.call(this, {}, title, url);
-                    } catch (e) {
-                      // Silently suppress if all else fails
-                      return;
-                    }
+                    // If error occurs, silently suppress
+                    return;
                   }
                 };
                 
@@ -121,11 +132,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                   try {
                     return originalReplaceState.call(this, safeState, title, url);
                   } catch (error) {
-                    try {
-                      return originalReplaceState.call(this, {}, title, url);
-                    } catch (e) {
-                      return;
-                    }
+                    return;
                   }
                 };
                 
@@ -134,6 +141,21 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                   window.history.pushState = History.prototype.pushState;
                   window.history.replaceState = History.prototype.replaceState;
                 }
+                
+                // Re-apply patch after other scripts load, in case they wrap our version
+                setTimeout(function() {
+                  if (window.history) {
+                    window.history.pushState = History.prototype.pushState;
+                    window.history.replaceState = History.prototype.replaceState;
+                  }
+                }, 100);
+                
+                setTimeout(function() {
+                  if (window.history) {
+                    window.history.pushState = History.prototype.pushState;
+                    window.history.replaceState = History.prototype.replaceState;
+                  }
+                }, 1000);
               })();
               
               // Reset scroll position immediately before anything else runs
@@ -181,126 +203,48 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           src="https://sdk.namastay.io/index.js"
           strategy="afterInteractive"
         />
-        {/* Namastay Initialization - Step 1 */}
+        {/* Namastay Initialization */}
         <Script
           id="namastay-init"
           strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
-                // Suppress specific console errors from third-party SDKs
-                const originalError = console.error;
-                console.error = function(...args) {
-                  const message = args.join(' ');
-                  // Suppress known harmless errors from Namastay SDK and third-party services
-                  const suppressedPatterns = [
-                    /Widget button elements not found/i,
-                    /Access to fetch.*thehotelsnetwork/i,
-                    /CORS policy/i,
-                    /Failed to load resource.*namastay/i,
-                    /404.*namastay/i,
-                    /Cannot create property.*__NA/i,
-                    /Cannot create property '__NA' on string/i
-                  ];
-                  
-                  const shouldSuppress = suppressedPatterns.some(pattern => pattern.test(message));
-                  if (!shouldSuppress) {
-                    originalError.apply(console, args);
-                  }
-                };
+                var namastayRetryCount = 0;
+                var maxRetries = 20;
                 
-                // Suppress unhandled promise rejections for known SDK issues
-                window.addEventListener('unhandledrejection', function(event) {
-                  const reason = event.reason;
-                  if (reason) {
-                    const message = reason.toString() || (reason.message || '');
-                    if (message.includes('Widget button elements not found') || 
-                        message.includes('[Namastay SDK]') ||
-                        message.includes("__NA") ||
-                        message.includes("Cannot create property")) {
-                      event.preventDefault();
-                      return;
-                    }
-                  }
-                });
-                
-                // Also catch runtime errors - use capture phase to catch early
-                window.addEventListener('error', function(event) {
-                  if (event.error) {
-                    const message = event.error.message ? event.error.message.toString() : '';
-                    if (message.includes("__NA") || 
-                        message.includes("Cannot create property '__NA'") ||
-                        message.includes("Cannot create property") && message.includes("string")) {
-                      event.preventDefault();
-                      event.stopPropagation();
-                      return false;
-                    }
-                  }
-                  // Also check error message directly
-                  if (event.message) {
-                    const msg = event.message.toString();
-                    if (msg.includes("__NA") || 
-                        msg.includes("Cannot create property '__NA'") ||
-                        (msg.includes("Cannot create property") && msg.includes("string"))) {
-                      event.preventDefault();
-                      event.stopPropagation();
-                      return false;
-                    }
-                  }
-                }, true);
-                
-                // Note: history.pushState is already patched in the beforeInteractive script above
-                
-                // Create a permanent hidden button that the SDK can detect during initialization
-                // This ensures the SDK always finds at least one button, even before React components mount
-                if (!document.getElementById('namastay-trigger-button')) {
-                  const button = document.createElement('button');
-                  button.id = 'namastay-trigger-button';
-                  button.className = 'namastay-widget-button namastay-offer-button';
-                  button.style.position = 'fixed';
-                  button.style.left = '-9999px';
-                  button.style.top = '-9999px';
-                  button.style.opacity = '0';
-                  button.style.pointerEvents = 'auto';
-                  button.style.width = '1px';
-                  button.style.height = '1px';
-                  button.setAttribute('aria-hidden', 'true');
-                  button.setAttribute('data-offer', '{"apiKey":"6e1a1ee72c854f43b9bcb4113572e824nuuwro4cfvmrd62b"}');
-                  document.body.appendChild(button);
-                }
-                
-                // Step 1: Initialize Namastay as per documentation
                 function initializeNamastay() {
-                  if (typeof window !== 'undefined' && typeof window.initNamastay === 'function') {
-                    const hotelConfig = {
+                  if (namastayRetryCount >= maxRetries) {
+                    console.log('⚠️ Namastay SDK failed to load after ' + maxRetries + ' attempts');
+                    return;
+                  }
+                  
+                  namastayRetryCount++;
+                  
+                  if (typeof window.initNamastay === 'function') {
+                    console.log('✅ Namastay SDK loaded, initializing...');
+                    
+                    var hotelParameters = {
                       apiKey: '6e1a1ee72c854f43b9bcb4113572e824nuuwro4cfvmrd62b',
                       spreedlyApiKey: 'D1a8Zma8lZfap6nZpUjPxp6OHBV',
                       widgetButtonsClass: 'namastay-widget-button',
                       specialOfferButtonsClass: 'namastay-offer-button',
                     };
+                    
                     try {
-                      window.initNamastay(hotelConfig);
+                      window.initNamastay(hotelParameters);
+                      console.log('✅ Namastay initialized successfully');
                     } catch (error) {
-                      // Only log if it's not the expected "button elements not found" error
-                      const errorMessage = error && error.message ? error.message.toString() : '';
-                      if (!errorMessage.includes('Widget button elements not found')) {
-                        originalError('Error initializing Namastay:', error);
-                      }
+                      console.error('❌ Error initializing Namastay:', error);
                     }
                   } else {
-                    // Retry after a short delay if namastay isn't loaded yet
-                    setTimeout(initializeNamastay, 100);
+                    // SDK not loaded yet, retry
+                    setTimeout(initializeNamastay, 200);
                   }
                 }
                 
-                // Wait for namastay script to load
-                if (document.readyState === 'complete') {
-                  initializeNamastay();
-                } else {
-                  window.addEventListener('load', initializeNamastay);
-                  // Also try after a delay as fallback
-                  setTimeout(initializeNamastay, 500);
-                }
+                // Start initialization after a short delay
+                setTimeout(initializeNamastay, 500);
               })();
             `
           }}
