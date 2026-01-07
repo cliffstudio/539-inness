@@ -26,6 +26,7 @@ const STORAGE_KEY = 'announcement-popup-closed'
 export default function AnnouncementPopupSection({ enabled, slides }: AnnouncementPopupSectionProps) {
   const [isVisible, setIsVisible] = useState(false)
   const [isClosing, setIsClosing] = useState(false)
+  const [currentPage, setCurrentPage] = useState(1)
   const splideRef = useRef<{ go: (direction: string) => void } | null>(null)
 
   useEffect(() => {
@@ -45,6 +46,40 @@ export default function AnnouncementPopupSection({ enabled, slides }: Announceme
       }, 100)
     }
   }, [enabled, slides])
+
+  useEffect(() => {
+    // Reset to first page when slides change
+    if (isVisible && slides) {
+      setCurrentPage(1)
+    }
+  }, [isVisible, slides])
+
+  // Track splide carousel page changes
+  useEffect(() => {
+    if (!isVisible) return
+
+    const splide = splideRef.current
+    if (!splide) return
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const splideInstance = (splide as any).splide
+    if (!splideInstance) return
+
+    const updatePagination = () => {
+      const slideIndex = splideInstance.index
+      setCurrentPage(slideIndex + 1)
+    }
+
+    updatePagination()
+
+    splideInstance.on('mounted', updatePagination)
+    splideInstance.on('moved', updatePagination)
+
+    return () => {
+      splideInstance.off('mounted', updatePagination)
+      splideInstance.off('moved', updatePagination)
+    }
+  }, [isVisible, slides])
 
   const handleClose = () => {
     setIsClosing(true)
@@ -66,6 +101,10 @@ export default function AnnouncementPopupSection({ enabled, slides }: Announceme
     }
   }
 
+  // Filter slides to only include those with images
+  const filteredSlides = slides?.filter((slide) => slide.image?.asset) || []
+  const totalPages = filteredSlides.length
+
   if (!enabled || !slides || slides.length === 0 || !isVisible) {
     return null
   }
@@ -74,7 +113,7 @@ export default function AnnouncementPopupSection({ enabled, slides }: Announceme
     type: 'fade' as const,
     rewind: true,
     arrows: false,
-    pagination: true,
+    pagination: false,
     lazyLoad: 'nearby' as const,
     autoplay: false,
     interval: 0,
@@ -98,9 +137,7 @@ export default function AnnouncementPopupSection({ enabled, slides }: Announceme
           options={splideOptions}
           className="announcement-popup__carousel"
         >
-          {slides
-            .filter((slide) => slide.image?.asset)
-            .map((slide, index) => {
+          {filteredSlides.map((slide, index) => {
               const imageUrl = urlFor(slide.image!.asset)
                 .width(800)
                 .height(600)
@@ -143,23 +180,32 @@ export default function AnnouncementPopupSection({ enabled, slides }: Announceme
             })}
         </Splide>
 
-        {slides.length > 1 && (
-          <>
+        {totalPages > 1 && (
+          <div className="carousel-controls">
             <button 
-              className="announcement-popup__nav announcement-popup__nav--prev" 
+              className="carousel-arrow carousel-arrow--prev" 
               onClick={handlePrevious}
               aria-label="Previous slide"
             >
-              ‹
+              <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36">
+                <circle cx="18" cy="18" r="17.5"/>
+                <path d="M20.5 12L14 18.5L20.5 25"/>
+              </svg>
             </button>
+
+            <div className="carousel-pagination body-small">{currentPage}/{totalPages}</div>
+
             <button 
-              className="announcement-popup__nav announcement-popup__nav--next" 
+              className="carousel-arrow carousel-arrow--next" 
               onClick={handleNext}
               aria-label="Next slide"
             >
-              ›
+              <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36" fill="none">
+                <circle cx="18" cy="18" r="17.5" transform="matrix(-1 0 0 1 36 0)"/>
+                <path d="M15.5 12L22 18.5L15.5 25"/>
+              </svg>
             </button>
-          </>
+          </div>
         )}
       </div>
     </div>

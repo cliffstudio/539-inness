@@ -1,87 +1,14 @@
 @use '00_mixins' as *;
 
 // // Cookie Consent Overrides
-// // Customizes the cookieconsent library styles to match site aesthetics
-
-// .cc-window {
-//   font-family: inherit;
-//   font-size: 14px;
-//   line-height: 1.5;
-  
-//   &.cc-banner {
-//     padding: 1rem 1.5rem;
-    
-//     @media (min-width: 768px) {
-//       padding: 1rem 2rem;
-//     }
-//   }
-// }
-
-// .cc-message {
-//   margin-right: 1rem;
-  
-//   a {
-//     color: inherit;
-//     text-decoration: underline;
-    
-//     &:hover {
-//       opacity: 0.8;
-//     }
-//   }
-// }
-
-// .cc-compliance {
-//   display: flex;
-//   gap: 0.5rem;
-//   flex-wrap: wrap;
-// }
-
-// .cc-btn {
-//   padding: 0.5rem 1.25rem;
-//   font-size: 13px;
-//   font-weight: 500;
-//   letter-spacing: 0.05em;
-//   text-transform: uppercase;
-//   border: 1px solid #ffffff;
-//   transition: all 0.2s ease;
-//   cursor: pointer;
-  
-//   &:hover {
-//     background-color: #ffffff !important;
-//     color: #505050 !important;
-//   }
-  
-//   &.cc-allow {
-//     background-color: transparent;
-//   }
-  
-//   &.cc-deny {
-//     background-color: transparent;
-//   }
-// }
-
-// // Ensure the banner appears above other elements but below critical UI
-// .cc-window {
-//   z-index: 9999;
-// }
-
-// // Animation refinements
-// .cc-revoke,
-// .cc-window {
-//   &.cc-animate {
-//     transition: transform 0.3s ease, opacity 0.3s ease;
-//   }
-// }
-
-
 .cc-revoke {
   display: none !important;
 }
 
 .cc-window {
   width: get-rem-desktop(200) !important;
-  left: get-rem-desktop(16) !important;
-  bottom: get-rem-desktop(16) !important;
+  left: get-rem-desktop(24) !important;
+  bottom: get-rem-desktop(24) !important;
   font-family: 'ABC Arizona Flare' !important;
   font-weight: 100 !important;
   box-sizing: border-box !important;
@@ -93,6 +20,11 @@
   row-gap: get-rem-desktop(20) !important;
   padding: get-rem-desktop(10) get-rem-desktop(16) get-rem-desktop(18) !important;
   color: $colour-cream !important;
+
+  @media only screen and (max-width: 768px) {
+    left: get-rem-mobile(11) !important;
+    bottom: get-rem-mobile(11) !important;
+  }
 
   .cc-message {
     flex: unset;

@@ -2,12 +2,18 @@
 
 .announcement-popup {
   position: fixed;
-  bottom: get-rem-desktop(24);
+  width: get-rem-desktop(300);
   right: get-rem-desktop(24);
+  bottom: get-rem-desktop(24);
   z-index: 100;
   opacity: 0;
   pointer-events: none;
   @include transition(opacity 300ms cubic-bezier(0.25, 0.1, 0.25, 1));
+
+  @media only screen and (max-width: 768px) {
+    right: get-rem-mobile(11) !important;
+    bottom: get-rem-mobile(11) !important;
+  }
 
   &.closing {
     opacity: 0 !important;
@@ -63,82 +69,36 @@
     @include flex-direction(column);
     gap: get-rem-desktop(14);
     padding: get-rem-desktop(18) 0;
-
-    // @media only screen and (max-width: 768px) {
-    //   padding: get-rem-mobile(24);
-    //   gap: get-rem-mobile(12);
-    // }
   }
 
-  .announcement-popup__nav {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 10;
-    @include reset-input;
-    width: get-rem-desktop(48);
-    height: get-rem-desktop(48);
+  .carousel-controls {
     @include flex;
+    @include justify-content(space-between);
     @include align-items(center);
-    @include justify-content(center);
-    background-color: rgba(255, 255, 255, 0.9);
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: get-rem-desktop(32);
-    line-height: 1;
-    color: $colour-black;
-    @include transition(background-color 200ms ease);
+    column-gap: get-rem-desktop(24);
 
-    // @media only screen and (max-width: 768px) {
-    //   width: get-rem-mobile(40);
-    //   height: get-rem-mobile(40);
-    //   font-size: get-rem-mobile(24);
-    // }
+    padding-left: get-rem-desktop(16);
+    padding-right: get-rem-desktop(16);
+    padding-bottom: get-rem-desktop(24);
 
-    @media (hover: hover) {
-      &:hover {
-        background-color: $colour-white;
+    .carousel-arrow {
+      width: get-rem-desktop(36);
+      height: get-rem-desktop(36);
+      cursor: pointer;
+
+      &:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+      }
+
+      svg {
+        stroke: $colour-black;
+        fill: none;
       }
     }
 
-    &--prev {
-      left: get-rem-desktop(16);
-
-      // @media only screen and (max-width: 768px) {
-      //   left: get-rem-mobile(12);
-      // }
-    }
-
-    &--next {
-      right: get-rem-desktop(16);
-
-      // @media only screen and (max-width: 768px) {
-      //   right: get-rem-mobile(12);
-      // }
-    }
-  }
-
-  // Splide pagination styling
-  :global(.announcement-popup__carousel) {
-    .splide__pagination {
-      bottom: get-rem-desktop(16);
-      left: 50%;
-      transform: translateX(-50%);
-      position: absolute;
-      z-index: 10;
-
-      // @media only screen and (max-width: 768px) {
-      //   bottom: get-rem-mobile(12);
-      // }
-    }
-
-    .splide__pagination__page {
-      background-color: rgba(255, 255, 255, 0.5);
-      opacity: 1;
-
-      &.is-active {
-        background-color: $colour-white;
-      }
+    .carousel-pagination {
+      text-align: center;
     }
   }
 }
