@@ -1589,6 +1589,7 @@ body.page-type-activities {
     // GUEST WRAPPER
     .guest-wrapper {
       position: relative;
+      width: 100%;
     }
 
     // INPUT LABELS
@@ -1603,11 +1604,8 @@ body.page-type-activities {
     
     // GUEST POPUP
     .popup {
-      position: absolute;
-      left: 0;
       padding: get-rem-desktop(24);
       width: 100%;
-      max-width: get-rem-desktop(300);
       z-index: 1000;
       opacity: 1;
       transform: translate3d(0,0,0);
@@ -1617,6 +1615,16 @@ body.page-type-activities {
       @include flex;
       @include flex-direction(column);
       row-gap: get-rem-desktop(24);
+
+      @media only screen and (min-width: 769px) {
+        position: absolute;
+        left: 0;
+        max-width: get-rem-desktop(300);
+      }
+
+      @media only screen and (max-width: 768px) {
+        margin-top: get-rem-mobile(16);
+      }
 
       .guest-control {
         @include flex;
