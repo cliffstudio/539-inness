@@ -5,6 +5,25 @@
   display: none !important;
 }
 
+// Mobile-only black background overlay when cookie window is visible
+@media only screen and (max-width: 768px) {
+  body:has(.cc-window) {
+    position: relative;
+    
+    &::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba($colour-black, 0.6);
+      z-index: 9998; // Just below the cookie window (which is typically 9999)
+      pointer-events: none;
+    }
+  }
+}
+
 .cc-window {
   width: get-rem-desktop(200) !important;
   left: get-rem-desktop(24) !important;
@@ -22,8 +41,10 @@
   color: $colour-cream !important;
 
   @media only screen and (max-width: 768px) {
+    width: calc(100% - 2 * get-rem-mobile(11)) !important;
     left: get-rem-mobile(11) !important;
     bottom: get-rem-mobile(11) !important;
+    text-align: center;
   }
 
   .cc-message {
