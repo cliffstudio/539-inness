@@ -1651,17 +1651,17 @@ body.page-type-activities {
           appearance: textfield;
           -moz-appearance: textfield;
         }
-    
 
-            &:first-child {
-              border-top-right-radius: 0;
-              border-bottom-right-radius: 0;
-            }
+        &:first-child {
+          border-top-right-radius: 0;
+          border-bottom-right-radius: 0;
+        }
 
-            &:last-child {
-              border-top-left-radius: 0;
-              border-bottom-left-radius: 0;
-            }
+        &:last-child {
+          border-top-left-radius: 0;
+          border-bottom-left-radius: 0;
+        }
+
         input[type=number]::-webkit-outer-spin-button,
         input[type=number]::-webkit-inner-spin-button {
           -webkit-appearance: none;
@@ -1672,8 +1672,15 @@ body.page-type-activities {
     
     .hidden {
       opacity: 0;
-      transform: translate3d(0,-20px,0);
       pointer-events: none;
+
+      @media screen and (min-width: 769px) {
+        transform: translate3d(0,-20px,0);
+      }
+
+      @media screen and (max-width: 768px) {
+        display: none;
+      }
     }
 
     .visually-hidden {
