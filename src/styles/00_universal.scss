@@ -1713,6 +1713,13 @@ body.page-type-activities {
       max-width: unset !important;
       left: -37.5% !important;
 
+      @media only screen and (max-width: 768px) {
+        position: static !important;
+        width: 100% !important;
+        left: 0 !important;
+        margin-top: get-rem-mobile(16);
+      }
+
       &::after {
         display: none;
       }
@@ -1729,6 +1736,10 @@ body.page-type-activities {
         border: none;
         margin: 0;
         bottom: unset;
+
+        @media only screen and (max-width: 768px) {
+          display: none;
+        }
       }
     }
 
@@ -1740,18 +1751,64 @@ body.page-type-activities {
     .flatpickr-months {
       padding: get-rem-desktop(35) get-rem-desktop(24) get-rem-desktop(100);
 
+      @media only screen and (max-width: 768px) {
+        padding: get-rem-mobile(14) get-rem-mobile(12) get-rem-mobile(53);
+        position: relative;
+      }
+
       // MONTH
       .flatpickr-month {
         pointer-events: none;
         padding-right: get-rem-desktop(24) !important;
 
+        @media only screen and (max-width: 768px) {
+          padding-left: 0 !important;
+          padding-right: 0 !important;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+
         &:last-of-type {
           padding-right: 0 !important;
           padding-left: get-rem-desktop(24) !important;
+
+          @media only screen and (max-width: 768px) {
+            padding-left: get-rem-mobile(18) !important;
+          }
         }
 
         .flatpickr-current-month {
           padding: 0 !important;
+        }
+
+        // Hide month/year dropdowns on mobile (use text display instead)
+        .flatpickr-monthDropdown-months,
+        .flatpickr-monthDropdown-years {
+          @media only screen and (max-width: 768px) {
+            display: none !important;
+          }
+        }
+
+        // Ensure month text is visible and centered on mobile
+        .flatpickr-current-month {
+          @media only screen and (max-width: 768px) {
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            width: 100%;
+            left: unset !important;
+          }
+        }
+
+        // Make month/year text visible and centered on mobile
+        .flatpickr-current-month .cur-month,
+        .flatpickr-current-month .cur-year {
+          @media only screen and (max-width: 768px) {
+            display: inline !important;
+            text-align: left;
+          }
         }
       }
 
@@ -1763,6 +1820,11 @@ body.page-type-activities {
         border: 1px solid $colour-black;
         border-radius: 50px;
         margin: get-rem-desktop(35) get-rem-desktop(24);
+
+        @media only screen and (max-width: 768px) {
+          margin: get-rem-mobile(12);
+          pointer-events: auto !important; // Enable clicking on mobile
+        }
 
         svg {
           fill: $colour-black;
@@ -1777,10 +1839,15 @@ body.page-type-activities {
       padding-bottom: get-rem-desktop(8);
       height: unset !important;
 
+      @media only screen and (max-width: 768px) {
+        padding-left: get-rem-mobile(12);
+        padding-right: get-rem-mobile(12);
+        padding-bottom: get-rem-mobile(8);
+      }
+
       .flatpickr-weekdaycontainer {
         padding-right: get-rem-desktop(24);
         
-
         &:first-of-type {
           padding-left: 0;
         }
@@ -1788,6 +1855,10 @@ body.page-type-activities {
         &:last-of-type {
           padding-left: get-rem-desktop(24);
           padding-right: 0;
+
+          @media only screen and (max-width: 768px) {
+            padding-left: 0;
+          }
         }
       }
 
@@ -1809,6 +1880,12 @@ body.page-type-activities {
       width: 100% !important;
       min-width: unset !important;
       max-width: unset !important;
+
+      @media only screen and (max-width: 768px) {
+        padding-left: get-rem-mobile(12) !important;
+        padding-right: get-rem-mobile(12) !important;
+        padding-bottom: get-rem-mobile(12) !important;
+      }
     }
 
     .flatpickr-days {
@@ -1841,6 +1918,10 @@ body.page-type-activities {
           background: transparent;
           border-color: transparent;
         }
+      }
+
+      &.nextMonthDay {
+        opacity: 0.3;
       }
     }
 
@@ -1924,6 +2005,7 @@ body.page-type-activities {
 
     .start-wrapper {
       position: relative;
+      width: 100%;
     }
   }
 }

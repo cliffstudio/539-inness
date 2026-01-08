@@ -125,16 +125,20 @@ export default function BookingSection({ noTopPad = false, noBottomPad = false }
     input.style.cursor = 'pointer'
 
     // Initialize Flatpickr
+    // Check if mobile to show 1 month instead of 2
+    const isMobile = window.innerWidth <= 768
+    
     const fp = flatpickr(input, {
       mode: 'range',
       defaultDate: [today, threeDaysLater],
       minDate: today,
-      showMonths: 2,
+      showMonths: isMobile ? 1 : 2,
+      monthSelectorType: 'static', // Use text month display instead of dropdown on mobile
       locale: {
         weekdays: {
           shorthand: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
           longhand: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-      }
+        }
       },
       appendTo: startWrapperRef.current || document.body,
       static: false,
@@ -155,13 +159,25 @@ export default function BookingSection({ noTopPad = false, noBottomPad = false }
             calendarContainer.style.visibility = 'visible'
             calendarContainer.style.opacity = '1'
             
-            // Position calendar below the form
-            const topPosition = formRect.bottom - wrapperRect.top
-            calendarContainer.style.top = `${topPosition}px`
-            calendarContainer.style.left = '0'
-            calendarContainer.style.right = 'auto'
-            calendarContainer.style.position = 'absolute'
-            calendarContainer.style.zIndex = '1001'
+            // Check if mobile (max-width: 768px)
+            const isMobile = window.innerWidth <= 768
+            
+            if (isMobile) {
+              // On mobile, use static positioning for inline display
+              calendarContainer.style.position = 'static'
+              calendarContainer.style.top = 'auto'
+              calendarContainer.style.left = 'auto'
+              calendarContainer.style.right = 'auto'
+              calendarContainer.style.zIndex = 'auto'
+            } else {
+              // On desktop, position calendar below the form
+              const topPosition = formRect.bottom - wrapperRect.top
+              calendarContainer.style.top = `${topPosition}px`
+              calendarContainer.style.left = '0'
+              calendarContainer.style.right = 'auto'
+              calendarContainer.style.position = 'absolute'
+              calendarContainer.style.zIndex = '1001'
+            }
           }
         }, 10)
       },
