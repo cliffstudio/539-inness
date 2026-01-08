@@ -7,7 +7,7 @@
 
 // Mobile-only black background overlay when cookie window is visible
 @media only screen and (max-width: 768px) {
-  body:has(.cc-window) {
+  body.cc-window-visible {
     position: relative;
     
     &::before {
@@ -20,7 +20,14 @@
       background-color: rgba($colour-black, 0.6);
       z-index: 9998; // Just below the cookie window (which is typically 9999)
       pointer-events: none;
+      opacity: 1;
+      @include transition(opacity 500ms cubic-bezier(0.25,0.1,0.25,1));
     }
+  }
+
+  // Fade out overlay when cookie window is fading out
+  body.cc-window-fading::before {
+    opacity: 0;
   }
 }
 
@@ -39,6 +46,7 @@
   row-gap: get-rem-desktop(20) !important;
   padding: get-rem-desktop(10) get-rem-desktop(16) get-rem-desktop(18) !important;
   color: $colour-cream !important;
+  transition: opacity 500ms cubic-bezier(0.25,0.1,0.25,1) !important;
 
   @media only screen and (max-width: 768px) {
     width: calc(100% - 2 * get-rem-mobile(11)) !important;
