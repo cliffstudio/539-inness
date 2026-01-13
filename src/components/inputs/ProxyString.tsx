@@ -3,7 +3,8 @@ import {TextInput} from '@sanity/ui'
 
 export default function ProxyStringInput(props: StringInputProps) {
   const {schemaType, elementProps} = props
-  const path = schemaType.options?.field as string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const path = (schemaType.options as any)?.field as string | undefined
   const value = useFormValue(path ? path.split('.') : []) as string | undefined
 
   return (
