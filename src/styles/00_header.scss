@@ -209,7 +209,8 @@ DESKTOP HEADER ------------------
 .page-type-text,
 .page-type-search,
 .page-type-search-results,
-.page-type-404 {
+.page-type-404,
+.page-type-product {
   .site-header-desktop {
     color: $colour-black;
 
@@ -425,7 +426,8 @@ TABLET HEADER ------------------
 .page-type-text,
 .page-type-search,
 .page-type-search-results,
-.page-type-404 {
+.page-type-404,
+.page-type-product {
   .site-header-tablet {
     color: $colour-black;
 
@@ -585,7 +587,8 @@ MOBILE HEADER ------------------
 .page-type-text,
 .page-type-search,
 .page-type-search-results,
-.page-type-404 {
+.page-type-404,
+.page-type-product {
   .site-header-mobile {
     color: $colour-black;
 
@@ -674,6 +677,35 @@ MOBILE HEADER ------------------
         width: get-rem-mobile(21);
         height: get-rem-mobile(23);
       }
+    }
+  }
+}
+
+.cart-icon {
+  position: relative;
+
+  &__badge {
+    position: absolute;
+    top: get-rem-desktop(-4);
+    right: get-rem-desktop(-4);
+    background-color: $colour-orange;
+    color: $colour-cream;
+    border-radius: 50%;
+    width: get-rem-desktop(18);
+    height: get-rem-desktop(18);
+    @include flex;
+    @include align-items(center);
+    @include justify-content(center);
+    font-size: get-rem-desktop(10);
+    font-weight: 600;
+    line-height: 1;
+
+    @media only screen and (max-width: 768px) {
+      width: get-rem-mobile(16);
+      height: get-rem-mobile(16);
+      font-size: get-rem-mobile(9);
+      top: get-rem-mobile(-4);
+      right: get-rem-mobile(-4);
     }
   }
 }

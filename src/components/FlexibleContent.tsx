@@ -8,6 +8,7 @@ import MenuSection from './MenuSection'
 import ActivitySection from './ActivitySection'
 import FeatureSection from './FeatureSection'
 import BookingSection from './BookingSection'
+import ProductSection from './ProductSection'
 
 interface ContentBlock {
   _type: string
@@ -52,6 +53,8 @@ const FlexibleContent: React.FC<FlexibleContentProps> = ({ contentBlocks }) => {
                 noBottomPad={(block as ContentBlock & { noBottomPad?: boolean }).noBottomPad}
               />
             ) : null
+          case 'productSection':
+            return <ProductSection key={index} {...(block as ContentBlock & { heading?: string; products?: unknown[] })} />
 
           default:
             console.warn(`Unknown content block type: ${block._type}`)

@@ -1,12 +1,11 @@
 // src/components/DynamicPage.tsx
 import React from 'react'
 import { client } from '../../sanity.client'
-import { pageQuery, activitiesQuery, allActivitiesQuery, linksQuery, activityQuery, shopQuery } from '../sanity/lib/queries'
+import { pageQuery, activitiesQuery, allActivitiesQuery, linksQuery, activityQuery } from '../sanity/lib/queries'
 import { notFound } from 'next/navigation'
 import BodyClassProvider from './BodyClassProvider'
 import FlexibleContent from './FlexibleContent'
 import HeroSectionActivities from './HeroSectionActivities'
-import HeroSectionShop from './HeroSectionShop'
 import HeroSectionLinks from './HeroSectionLinks'
 import ActivityFilter from './ActivityFilter'
 import LinksSection from './LinksSection'
@@ -80,34 +79,6 @@ export default async function DynamicPage({ params }: PageProps) {
 
         {allActivities && allActivities.length > 0 && (
           <ActivityFilter activities={allActivities} layout="4-activities" />
-        )}
-      </>
-    )
-  }
-
-  // If this is a Shop page, fetch the full shop data
-  if (page.pageType === 'shop') {
-    const shopPage = await client.fetch(shopQuery)
-
-    if (!shopPage) {
-      notFound()
-    }
-
-    return (
-      <>
-        <BodyClassProvider 
-          pageType={page.pageType} 
-          slug={page.slug?.current} 
-        />
-        
-        <HeroSectionShop 
-          shopHeading={shopPage.shopHeading}
-          shopBody={shopPage.shopBody}
-          shopImage={shopPage.shopImage}
-        />
-
-        {shopPage.contentBlocks && shopPage.contentBlocks.length > 0 && (
-          <FlexibleContent contentBlocks={shopPage.contentBlocks} />
         )}
       </>
     )

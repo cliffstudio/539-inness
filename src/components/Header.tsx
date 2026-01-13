@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import { useState, useEffect, useRef } from 'react'
 import { DisableBodyScroll, EnableBodyScroll } from '@/utils/bodyScroll'
 import { useBooking } from '@/contexts/BookingContext'
+import { useBasket } from '@/contexts/BasketContext'
 
 // Type for menu items from menuType schema
 type MenuItem = {
@@ -40,6 +41,7 @@ export default function Header({ menu }: HeaderProps) {
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
   const isInitialMount = useRef(true)
   const { isOpen: isBookingOpen, openBooking, closeBooking } = useBooking()
+  const { openBasket, getItemCount } = useBasket()
   const pathname = usePathname() || '/'
 
   const normalizePath = (path: string) => {
@@ -350,12 +352,15 @@ export default function Header({ menu }: HeaderProps) {
               </Link>
             </div> */}
 
-            {/* <div className="link-icon cart-icon">
+            <div className="link-icon cart-icon" onClick={openBasket} style={{ cursor: 'pointer', position: 'relative' }}>
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="18" viewBox="0 0 16 18">
                 <path d="M15.349 0.652412H0.650879V17.3476H15.349V0.652412Z"/>
                 <path d="M4.56958 4.57992V6.05436C4.56958 7.95288 6.10579 9.49257 8.00001 9.49257C9.89423 9.49257 11.4304 7.95288 11.4304 6.05436V4.57992"/>
               </svg>
-            </div> */}
+              {getItemCount() > 0 && (
+                <span className="cart-icon__badge">{getItemCount()}</span>
+              )}
+            </div>
 
             <div className="link-icon account-icon">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="18" viewBox="0 0 16 18">

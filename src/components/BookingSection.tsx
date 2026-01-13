@@ -353,6 +353,7 @@ export default function BookingSection({ noTopPad = false, noBottomPad = false }
   const className = [
     'booking-section',
     'h-pad',
+    'out-of-opacity',
     noTopPad ? 'no-top-pad' : '',
     noBottomPad ? 'no-bottom-pad' : '',
   ].filter(Boolean).join(' ')

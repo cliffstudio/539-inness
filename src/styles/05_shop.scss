@@ -1,10 +1,24 @@
 @use '00_mixins' as *;
 
-.page-type-shop {
-  
-  .flexible-content {
-    padding-top: 0;
-    padding-bottom: 0;
+.product-page {
+
+  .hero-section {
+    position: unset;
+    background-color: $colour-beige;
+    height: unset;
+    min-height: 100svh;
+
+    .hero-content {
+      color: $colour-black;
+      text-align: left;
+      @include justify-content(center);
+      row-gap: get-rem-desktop(80);
+      max-width: get-rem-desktop(500);
+
+      .product-title {
+        margin-bottom: get-rem-desktop(30);
+      }
+    }
   }
 
 }

@@ -284,6 +284,35 @@ const bookingSectionFragment = groq`{
   noBottomPad
 }`
 
+const productSectionFragment = groq`{
+  id,
+  heading,
+  products[]-> {
+    _id,
+    store {
+      title,
+      slug {
+        current
+      },
+      previewImageUrl,
+      priceRange {
+        minVariantPrice,
+        maxVariantPrice
+      },
+      status,
+      isDeleted,
+      variants[]-> {
+        store {
+          inventory {
+            available,
+            isAvailable
+          }
+        }
+      }
+    }
+  }
+}`
+
 const flexibleContentFragment = groq`{
   _type,
   ...select(_type == "heroSection" => ${heroSectionFragment}),
@@ -294,7 +323,8 @@ const flexibleContentFragment = groq`{
   ...select(_type == "menuSection" => ${menuSectionFragment}),
   ...select(_type == "activitySection" => ${activitySectionFragment}),
   ...select(_type == "featureSection" => ${featureSectionFragment}),
-  ...select(_type == "bookingSection" => ${bookingSectionFragment})
+  ...select(_type == "bookingSection" => ${bookingSectionFragment}),
+  ...select(_type == "productSection" => ${productSectionFragment})
 }`
 
 // Main page query
@@ -349,21 +379,6 @@ export const activitiesQuery = groq`
     activitiesHeading,
     activitiesBody,
     activitiesImage ${imageFragment}
-  }
-`
-
-// Shop specific query
-export const shopQuery = groq`
-  *[_type == "page" && pageType == "shop"][0] {
-    _id,
-    _type,
-    title,
-    slug,
-    pageType,
-    shopHeading,
-    shopBody,
-    shopImage ${imageFragment},
-    contentBlocks[] ${flexibleContentFragment}
   }
 `
 
@@ -545,6 +560,58 @@ export const otherRoomsQuery = groq`
     description,
     "slug": slug.current,
     image ${imageFragment}
+  }
+`
+
+// Product queries
+export const productQuery = groq`
+  *[_type == "product" && store.slug.current == $slug][0] {
+    _id,
+    body,
+    store {
+      title,
+      slug {
+        current
+      },
+      previewImageUrl,
+      descriptionHtml,
+      priceRange {
+        minVariantPrice,
+        maxVariantPrice
+      },
+      status,
+      isDeleted,
+      id,
+      gid,
+      options[] {
+        name,
+        values
+      },
+      variants[]-> {
+        _id,
+        store {
+          id,
+          gid,
+          title,
+          price,
+          sku,
+          previewImageUrl,
+          option1,
+          option2,
+          option3,
+          inventory {
+            available,
+            isAvailable
+          }
+        }
+      }
+    }
+  }
+`
+
+export const productSlugsQuery = groq`
+  *[_type == "product" && defined(store.slug.current) && store.status == "active" && !store.isDeleted] {
+    "slug": store.slug.current
   }
 `
 

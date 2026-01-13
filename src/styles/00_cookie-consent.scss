@@ -111,4 +111,16 @@
     text-decoration: underline !important;
     margin-top: get-rem-desktop(5) !important;
   }
+
+  // Disable pointer events when not visible
+  &.cc-fade-out,
+  &.cc-invisible {
+    pointer-events: none !important;
+  }
+}
+
+// Disable pointer events when cookie window is fading or not visible
+// (when body doesn't have cc-window-visible class)
+body:not(.cc-window-visible) .cc-window {
+  pointer-events: none !important;
 }

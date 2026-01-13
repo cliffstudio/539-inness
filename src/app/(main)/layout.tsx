@@ -8,6 +8,8 @@ import MainWrapper from '../../components/MainWrapper'
 import OverflowController from '../../components/OverflowController'
 import { BookingProvider } from '../../contexts/BookingContext'
 import BookingOverlay from '../../components/BookingOverlay'
+import { BasketProvider } from '../../contexts/BasketContext'
+import BasketDrawer from '../../components/BasketDrawer'
 import AnnouncementPopupSection from '../../components/AnnouncementPopupSection'
 import CookieConsent from '../../components/CookieConsent'
 
@@ -25,19 +27,22 @@ export default async function MainLayout({
   return (
     <Suspense fallback={null}>
       <BookingProvider>
-        <LazyLoadInitializer />
-        <OverflowController />
-        {menu && <Header menu={menu} />}
-        <MainWrapper>{children}</MainWrapper>
-        {footerSettings && <Footer footer={footerSettings} />}
-        {announcementPopupSection && (
-          <AnnouncementPopupSection 
-            enabled={announcementPopupSection.enabled}
-            slides={announcementPopupSection.slides}
-          />
-        )}
-        <BookingOverlay />
-        <CookieConsent />
+        <BasketProvider>
+          <LazyLoadInitializer />
+          <OverflowController />
+          {menu && <Header menu={menu} />}
+          <MainWrapper>{children}</MainWrapper>
+          {footerSettings && <Footer footer={footerSettings} />}
+          {announcementPopupSection && (
+            <AnnouncementPopupSection 
+              enabled={announcementPopupSection.enabled}
+              slides={announcementPopupSection.slides}
+            />
+          )}
+          <BookingOverlay />
+          <BasketDrawer />
+          <CookieConsent />
+        </BasketProvider>
       </BookingProvider>
     </Suspense>
   )

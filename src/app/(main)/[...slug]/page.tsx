@@ -19,7 +19,9 @@ export async function generateStaticParams() {
     .filter((page: { slug: { current: string } }) => {
       // Exclude room posts from this route since they have their own dedicated route
       const isRoomPost = page.slug.current.startsWith('rooms/') && page.slug.current !== 'rooms'
-      return !isRoomPost
+      // Exclude products from this route since they have their own dedicated route
+      const isProduct = page.slug.current.startsWith('products/') && page.slug.current !== 'products'
+      return !isRoomPost && !isProduct
     })
     .map((page: { slug: { current: string } }) => ({
       slug: page.slug.current.split('/'),
@@ -34,6 +36,12 @@ export default async function Page({ params }: PageProps) {
   // Check if this is a room post route and redirect to not found
   // since room posts should be handled by the dedicated rooms/[slug] route
   if (slug.startsWith('rooms/') && slug !== 'rooms') {
+    return notFound()
+  }
+  
+  // Check if this is a product route and redirect to not found
+  // since products should be handled by the dedicated products/[slug] route
+  if (slug.startsWith('products/') && slug !== 'products') {
     return notFound()
   }
   
