@@ -29,6 +29,7 @@ interface ProductVariant {
     option1?: string
     option2?: string
     option3?: string
+    colorHex?: string
     inventory?: {
       available?: number
       isAvailable?: boolean
@@ -294,6 +295,49 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
                   const selectedValue = selectedOptions[optionName] || firstValueString
                   const isColorOption = optionName === 'colour' || optionName === 'color'
 
+                  // Helper function to find variant for a specific color value
+                  const findVariantForColor = (colorValue: string): ProductVariant | null => {
+                    if (!product.store?.variants) return null
+                    
+                    const optionNames = product.store.options?.map((opt) => opt.name?.toLowerCase()) || []
+                    const colorOptionIndex = optionNames.findIndex(name => name === 'colour' || name === 'color')
+                    
+                    return product.store.variants.find((variant) => {
+                      if (!variant.store) return false
+                      
+                      // Check if this variant matches the color value
+                      let colorMatches = false
+                      if (colorOptionIndex === 0) {
+                        colorMatches = variant.store.option1 === colorValue
+                      } else if (colorOptionIndex === 1) {
+                        colorMatches = variant.store.option2 === colorValue
+                      } else if (colorOptionIndex === 2) {
+                        colorMatches = variant.store.option3 === colorValue
+                      }
+                      
+                      if (!colorMatches) return false
+                      
+                      // If other options are selected, try to match them too (but don't require it)
+                      // This helps get the right variant when multiple options exist
+                      if (optionNames.length > 1) {
+                        // Check other selected options if they exist
+                        for (let i = 0; i < optionNames.length; i++) {
+                          if (i === colorOptionIndex) continue
+                          const otherOptionName = optionNames[i]
+                          const otherSelectedValue = selectedOptions[otherOptionName]
+                          
+                          if (otherSelectedValue) {
+                            if (i === 0 && variant.store.option1 !== otherSelectedValue) return false
+                            if (i === 1 && variant.store.option2 !== otherSelectedValue) return false
+                            if (i === 2 && variant.store.option3 !== otherSelectedValue) return false
+                          }
+                        }
+                      }
+                      
+                      return true
+                    }) || null
+                  }
+
                   return (
                     <div key={option.name} className="product-option">
                       {isColorOption && (
@@ -310,6 +354,11 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
                               const value = getValueString(optionValue)
                               if (!value) return null
                               const isSelected = selectedValue === value
+                              
+                              // Find variant for this color and get its colorHex
+                              const variantForColor = findVariantForColor(value)
+                              const colorHex = variantForColor?.store?.colorHex
+                              
                               return (
                                 <button
                                   key={typeof optionValue === 'object' && optionValue._key ? optionValue._key : `${value}-${index}`}
@@ -318,6 +367,7 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
                                   onClick={() => handleOptionChange(optionName, value)}
                                   aria-label={`Select ${value}`}
                                   title={value}
+                                  style={colorHex ? { backgroundColor: colorHex } : undefined}
                                 />
                               )
                             })}

@@ -599,6 +599,7 @@ export const productQuery = groq`
           option1,
           option2,
           option3,
+          colorHex,
           inventory {
             available,
             isAvailable

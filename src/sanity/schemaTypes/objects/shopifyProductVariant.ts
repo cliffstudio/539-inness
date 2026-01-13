@@ -139,13 +139,27 @@ export default defineType({
       type: 'string',
       description: 'Image displayed in both cart and checkout',
     }),
+    // Color Hex
+    defineField({
+      name: 'colorHex',
+      title: 'Color Hex',
+      type: 'string',
+      description: 'Hexadecimal color code',
+    }),
     // Shop details
-    // defineField({
-    //   name: 'shop',
-    //   title: 'Shop',
-    //   type: 'shop',
-    //   description: 'Shopify Shop details',
-    // }),
+    defineField({
+      name: 'shop',
+      title: 'Shop',
+      type: 'object',
+      description: 'Shopify Shop details',
+      fields: [
+        defineField({
+          name: 'domain',
+          title: 'Domain',
+          type: 'string',
+        }),
+      ],
+    }),
   ],
   readOnly: true,
 })
