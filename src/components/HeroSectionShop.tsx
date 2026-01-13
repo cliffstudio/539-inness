@@ -3,14 +3,14 @@ import { urlFor } from '../sanity/utils/imageUrlBuilder'
 import { SanityImageSource } from '@sanity/image-url/lib/types/types'
 import { PortableText, PortableTextBlock } from '@portabletext/react'
 
-interface HeroProps {
+interface ShopHeroProps {
   id?: string
   shopHeading?: string
   shopBody?: PortableTextBlock[]
   shopImage?: SanityImageSource
 }
 
-export default function Hero({ id, shopHeading, shopBody, shopImage }: HeroProps) {
+export default function HeroSectionShop({ id, shopHeading, shopBody, shopImage }: ShopHeroProps) {
   return (
     <section id={id} className="hero-section layout-2 h-pad">
       {shopImage && (
@@ -42,4 +42,3 @@ export default function Hero({ id, shopHeading, shopBody, shopImage }: HeroProps
     </section>
   )
 }
-

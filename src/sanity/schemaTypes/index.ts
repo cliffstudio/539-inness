@@ -2,7 +2,6 @@
 import { pageType } from './pageType'
 import { roomType } from './roomType'
 import { activityType } from './activityType'
-import { shopType } from './shopType'
 import { menuType } from './menuType'
 import { footerType } from './footerType'
 import { metaDataType } from './metaDataType'
@@ -30,7 +29,6 @@ export const schemaTypes = [
   pageType,
   roomType,
   activityType,
-  shopType,
   menuType,
   footerType,
   metaDataType,

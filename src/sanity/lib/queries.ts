@@ -430,14 +430,6 @@ export const siteSearchQuery = groq`
       pageType,
       "descriptionPlain": coalesce(pt::text(contentBlocks[_type == "heroSection"][0].body), ""),
       "resultType": "page"
-    },
-    "shops": *[_type == "shop" && (
-      title match $wildcardTerm
-    )] | order(title asc) {
-      _id,
-      title,
-      "slug": slug.current,
-      "resultType": "shop"
     }
   }
 `
@@ -556,26 +548,6 @@ export const otherRoomsQuery = groq`
   }
 `
 
-// Shop queries
-export const shopPostsQuery = groq`
-  *[_type == "shop"] | order(title asc) {
-    _id,
-    title,
-    image ${imageFragment},
-    "slug": slug.current,
-    contentBlocks[] ${flexibleContentFragment}
-  }
-`
-
-export const shopPostQuery = groq`
-  *[_type == "shop" && slug.current == $slug][0] {
-    _id,
-    title,
-    image ${imageFragment},
-    "slug": slug.current,
-    contentBlocks[] ${flexibleContentFragment}
-  }
-`
 
 // Metadata query
 export const metadataQuery = groq`
