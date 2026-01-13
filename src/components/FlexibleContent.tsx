@@ -54,7 +54,8 @@ const FlexibleContent: React.FC<FlexibleContentProps> = ({ contentBlocks }) => {
               />
             ) : null
           case 'productSection':
-            return <ProductSection key={index} {...(block as ContentBlock & { heading?: string; products?: unknown[] })} />
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            return <ProductSection key={index} {...(block as any)} />
 
           default:
             console.warn(`Unknown content block type: ${block._type}`)
