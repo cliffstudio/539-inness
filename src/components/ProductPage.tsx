@@ -324,6 +324,7 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
                         for (let i = 0; i < optionNames.length; i++) {
                           if (i === colorOptionIndex) continue
                           const otherOptionName = optionNames[i]
+                          if (!otherOptionName) continue
                           const otherSelectedValue = selectedOptions[otherOptionName]
                           
                           if (otherSelectedValue) {
