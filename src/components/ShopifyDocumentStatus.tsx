@@ -79,4 +79,6 @@ const ShopifyDocumentStatus = forwardRef<HTMLDivElement, Props>((props, ref) => 
   )
 })
 
+ShopifyDocumentStatus.displayName = 'ShopifyDocumentStatus'
+
 export default ShopifyDocumentStatus
