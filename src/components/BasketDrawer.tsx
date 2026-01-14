@@ -129,16 +129,58 @@ export default function BasketDrawer() {
     }
   }, [isOpen, shouldRender])
 
-  const handleCheckout = () => {
+  const handleCheckout = async () => {
     if (items.length === 0) return
 
-    // Build Shopify checkout URL with cart items
-    // Format: https://{store}.myshopify.com/cart/{variant_id}:{quantity},{variant_id}:{quantity}
-    const cartItems = items.map(item => `${item.variantId}:${item.quantity}`).join(',')
-    const checkoutUrl = `${SHOPIFY_STORE_URL}/cart/${cartItems}`
-    
-    // Redirect to Shopify checkout
-    window.location.href = checkoutUrl
+    try {
+      // Fetch the cart from Shopify to get the checkout URL
+      const response = await fetch('/api/shopify/cart', {
+        method: 'GET',
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch cart')
+      }
+
+      const data = await response.json()
+      
+      if (data.cart?.checkoutUrl) {
+        // Redirect to Shopify checkout
+        window.location.href = data.cart.checkoutUrl
+      } else {
+        // Fallback: if no cart exists, create one and then redirect
+        const createResponse = await fetch('/api/shopify/cart', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            action: 'create',
+            items: items.map(item => ({
+              variantId: item.variantId,
+              quantity: item.quantity,
+            })),
+          }),
+        })
+
+        if (!createResponse.ok) {
+          throw new Error('Failed to create cart')
+        }
+
+        const createData = await createResponse.json()
+        if (createData.checkoutUrl) {
+          window.location.href = createData.checkoutUrl
+        } else {
+          throw new Error('No checkout URL received')
+        }
+      }
+    } catch (error) {
+      console.error('Checkout error:', error)
+      // Fallback to old method if API fails
+      const cartItems = items.map(item => `${item.variantId}:${item.quantity}`).join(',')
+      const checkoutUrl = `${SHOPIFY_STORE_URL}/cart/${cartItems}`
+      window.location.href = checkoutUrl
+    }
   }
 
   const subtotal = getTotal()
