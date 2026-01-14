@@ -50,23 +50,59 @@ async function shopifyGraphQL(query: string, variables?: Record<string, unknown>
   return json.data;
 }
 
-async function fetchVariantColorHex(variantGid: string) {
+async function fetchVariantData(variantGid: string) {
   const query = `
-    query VariantColorHex($id: ID!) {
+    query VariantData($id: ID!) {
       productVariant(id: $id) {
         id
         metafield(namespace: "custom", key: "color_hex") {
           value
           type
         }
+        inventoryQuantity
+        inventoryPolicy
+        inventoryItem {
+          tracked
+        }
       }
     }
   `;
 
   const data = await shopifyGraphQL(query, { id: variantGid });
-  const mf = data?.productVariant?.metafield;
-  // Shopify "color" metafield value is typically a hex string
-  return mf?.value || null;
+  const variant = data?.productVariant;
+  if (!variant) return null;
+
+  const colorHex = variant.metafield?.value || null;
+  
+  // Calculate inventory availability
+  // If inventory tracking is disabled (tracked = false), the variant is always available
+  // If inventory tracking is enabled (tracked = true), check quantity and policy
+  const isTracked = variant.inventoryItem?.tracked ?? true; // Default to true if not specified
+  const inventoryQuantity = variant.inventoryQuantity ?? 0;
+  const inventoryPolicy = variant.inventoryPolicy; // CONTINUE or DENY
+  
+  // isAvailable logic:
+  // - If not tracked: always available
+  // - If tracked with CONTINUE policy: always available (backorders allowed)
+  // - If tracked with DENY policy: only available if quantity > 0
+  const isAvailable = !isTracked 
+    ? true 
+    : inventoryPolicy === 'CONTINUE' 
+      ? true 
+      : inventoryQuantity > 0;
+  
+  // available quantity: only set if inventory is tracked
+  const available = isTracked ? inventoryQuantity : undefined;
+
+  return {
+    colorHex,
+    inventory: {
+      available,
+      isAvailable,
+      management: isTracked ? 'shopify' : null,
+      policy: inventoryPolicy,
+    },
+  };
 }
 
 export async function POST(request: NextRequest) {
@@ -84,23 +120,38 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Fetch hex for each variant (simple sequential; you can add limited concurrency if needed)
+    // Fetch data for each variant (simple sequential; you can add limited concurrency if needed)
     const patches = [];
     for (const variantGid of variantGids) {
       const variantId = extractIdFromGid(variantGid); // numeric ID string
       const sanityVariantDocId = `shopifyProductVariant-${variantId}`;
 
-      const colorHex = await fetchVariantColorHex(variantGid);
+      try {
+        const variantData = await fetchVariantData(variantGid);
+        
+        if (!variantData) {
+          console.warn(`No data returned for variant ${variantGid}`);
+          continue;
+        }
 
-      // Patch into your existing variant doc shape
-      patches.push({
-        id: sanityVariantDocId,
-        patch: {
-          set: {
-            "store.colorHex": colorHex, // <-- pick your preferred field name
+        // Patch into your existing variant doc shape
+        // Update both colorHex and inventory to ensure stock is always accurate
+        patches.push({
+          id: sanityVariantDocId,
+          patch: {
+            set: {
+              "store.colorHex": variantData.colorHex,
+              "store.inventory": variantData.inventory,
+            },
           },
-        },
-      });
+        });
+        
+        // Log inventory updates for debugging
+        console.log(`Updated variant ${variantId}: inventory=${JSON.stringify(variantData.inventory)}`);
+      } catch (error) {
+        console.error(`Error fetching data for variant ${variantGid}:`, error);
+        // Continue with other variants even if one fails
+      }
     }
 
     // Apply patches in a transaction
