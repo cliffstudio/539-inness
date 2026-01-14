@@ -112,54 +112,123 @@ export async function POST(request: NextRequest) {
     // Sanity Connect can batch products in one request
     const products = body.products || [];
 
-    // Collect variant gids from payload
-    const variantGids = [];
-    for (const p of products) {
-      for (const v of p.variants || []) {
-        if (v?.id) variantGids.push(v.id); // v.id is a Shopify GID in the payload
-      }
-    }
-
-    // Fetch data for each variant (simple sequential; you can add limited concurrency if needed)
     const patches = [];
-    for (const variantGid of variantGids) {
-      const variantId = extractIdFromGid(variantGid); // numeric ID string
-      const sanityVariantDocId = `shopifyProductVariant-${variantId}`;
 
-      try {
-        const variantData = await fetchVariantData(variantGid);
-        
-        if (!variantData) {
-          console.warn(`No data returned for variant ${variantGid}`);
-          continue;
+    // Process each product from the payload
+    for (const product of products) {
+      if (!product?.id) continue;
+
+      const productId = extractIdFromGid(product.id);
+      const sanityProductDocId = `shopifyProduct-${productId}`;
+
+      // Build product patch from payload
+      const productPatch: Record<string, unknown> = {};
+
+      // Product-level fields from payload
+      if (product.title !== undefined) productPatch["store.title"] = product.title;
+      if (product.slug !== undefined) {
+        productPatch["store.slug"] = { current: product.slug };
+      }
+      if (product.previewImageUrl !== undefined) {
+        productPatch["store.previewImageUrl"] = product.previewImageUrl;
+      }
+      if (product.descriptionHtml !== undefined) {
+        productPatch["store.descriptionHtml"] = product.descriptionHtml;
+      }
+      if (product.status !== undefined) productPatch["store.status"] = product.status;
+      if (product.isDeleted !== undefined) productPatch["store.isDeleted"] = product.isDeleted;
+      if (product.id !== undefined) {
+        const numericId = extractIdFromGid(product.id);
+        if (numericId) productPatch["store.id"] = parseInt(numericId, 10);
+      }
+      if (product.id !== undefined) productPatch["store.gid"] = product.id;
+      if (product.options !== undefined) {
+        productPatch["store.options"] = product.options;
+      }
+
+      // Calculate priceRange from variants
+      if (product.variants && product.variants.length > 0) {
+        const prices = product.variants
+          .map((v: { price?: string }) => {
+            const price = v?.price;
+            return price ? parseFloat(price) : null;
+          })
+          .filter((p: number | null): p is number => p !== null);
+
+        if (prices.length > 0) {
+          const minPrice = Math.min(...prices);
+          const maxPrice = Math.max(...prices);
+          productPatch["store.priceRange"] = {
+            minVariantPrice: minPrice,
+            maxVariantPrice: maxPrice,
+          };
+        }
+      }
+
+      if (Object.keys(productPatch).length > 0) {
+        patches.push({
+          id: sanityProductDocId,
+          patch: { set: productPatch },
+        });
+      }
+
+      // Process variants for this product
+      for (const variant of product.variants || []) {
+        if (!variant?.id) continue;
+
+        const variantId = extractIdFromGid(variant.id);
+        const sanityVariantDocId = `shopifyProductVariant-${variantId}`;
+
+        // Build variant patch from payload
+        const variantPatch: Record<string, unknown> = {};
+
+        // Variant-level fields from payload
+        if (variant.title !== undefined) variantPatch["store.title"] = variant.title;
+        if (variant.sku !== undefined) variantPatch["store.sku"] = variant.sku;
+        if (variant.id !== undefined) {
+          const numericId = extractIdFromGid(variant.id);
+          if (numericId) variantPatch["store.id"] = parseInt(numericId, 10);
+        }
+        if (variant.id !== undefined) variantPatch["store.gid"] = variant.id;
+        if (variant.price !== undefined) {
+          variantPatch["store.price"] = parseFloat(variant.price);
+        }
+        if (variant.previewImageUrl !== undefined) {
+          variantPatch["store.previewImageUrl"] = variant.previewImageUrl;
+        }
+        if (variant.option1 !== undefined) variantPatch["store.option1"] = variant.option1;
+        if (variant.option2 !== undefined) variantPatch["store.option2"] = variant.option2;
+        if (variant.option3 !== undefined) variantPatch["store.option3"] = variant.option3;
+
+        // Fetch colorHex and inventory from Shopify API
+        try {
+          const variantData = await fetchVariantData(variant.id);
+          if (variantData) {
+            variantPatch["store.colorHex"] = variantData.colorHex;
+            variantPatch["store.inventory"] = variantData.inventory;
+          }
+        } catch (error) {
+          console.error(`Error fetching data for variant ${variant.id}:`, error);
+          // Continue even if API fetch fails - we still want to update other fields
         }
 
-        // Patch into your existing variant doc shape
-        // Update both colorHex and inventory to ensure stock is always accurate
-        patches.push({
-          id: sanityVariantDocId,
-          patch: {
-            set: {
-              "store.colorHex": variantData.colorHex,
-              "store.inventory": variantData.inventory,
-            },
-          },
-        });
-        
-        // Log inventory updates for debugging
-        console.log(`Updated variant ${variantId}: inventory=${JSON.stringify(variantData.inventory)}`);
-      } catch (error) {
-        console.error(`Error fetching data for variant ${variantGid}:`, error);
-        // Continue with other variants even if one fails
+        if (Object.keys(variantPatch).length > 0) {
+          patches.push({
+            id: sanityVariantDocId,
+            patch: { set: variantPatch },
+          });
+        }
       }
     }
 
-    // Apply patches in a transaction
-    const tx = sanity.transaction();
-    for (const p of patches) {
-      tx.patch(p.id, (patch) => patch.set(p.patch.set));
+    // Apply all patches in a transaction
+    if (patches.length > 0) {
+      const tx = sanity.transaction();
+      for (const p of patches) {
+        tx.patch(p.id, (patch) => patch.set(p.patch.set));
+      }
+      await tx.commit();
     }
-    await tx.commit();
 
     return NextResponse.json({ message: "OK", patched: patches.length }, { status: 200 });
   } catch (err) {
