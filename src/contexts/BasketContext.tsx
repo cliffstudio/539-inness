@@ -21,6 +21,7 @@ interface BasketContextType {
   addToBasket: (item: Omit<BasketItem, 'quantity'>) => void
   removeFromBasket: (variantId: number) => void
   updateQuantity: (variantId: number, quantity: number) => void
+  clearBasket: () => void
   getTotal: () => number
   getItemCount: () => number
   isSyncing: boolean
@@ -230,11 +231,38 @@ export function BasketProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const savedItems = loadBasketFromStorage()
     if (savedItems.length > 0) {
-      setItems(savedItems)
-      // Sync with Shopify on load if items exist
-      syncBasketWithShopify(savedItems).catch(console.error)
+      // Check if we're returning from checkout by verifying if Shopify cart is empty
+      // If we have local items but Shopify cart is empty, checkout was completed
+      getCartFromShopify()
+        .then((cart) => {
+          if (!cart || cart.lines.length === 0) {
+            // Cart is empty but we have local items - checkout was completed
+            // Clear the local basket
+            setItems([])
+            if (typeof window !== 'undefined') {
+              try {
+                localStorage.removeItem(STORAGE_KEY)
+              } catch (error) {
+                console.error('Failed to clear basket from localStorage:', error)
+              }
+            }
+          } else {
+            // Cart has items, sync with Shopify
+            setItems(savedItems)
+            syncBasketWithShopify(savedItems).catch(console.error)
+          }
+          setIsHydrated(true)
+        })
+        .catch((error) => {
+          // If we can't check the cart, assume items are still valid and sync
+          console.error('Error checking cart status:', error)
+          setItems(savedItems)
+          syncBasketWithShopify(savedItems).catch(console.error)
+          setIsHydrated(true)
+        })
+    } else {
+      setIsHydrated(true)
     }
-    setIsHydrated(true)
   }, [])
 
   // Save basket to localStorage whenever items change (but only after hydration)
@@ -334,6 +362,17 @@ export function BasketProvider({ children }: { children: ReactNode }) {
     })
   }, [removeFromBasket])
 
+  const clearBasket = useCallback(() => {
+    setItems([])
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.removeItem(STORAGE_KEY)
+      } catch (error) {
+        console.error('Failed to clear basket from localStorage:', error)
+      }
+    }
+  }, [])
+
   const getTotal = () => {
     return items.reduce((total, item) => total + item.price * item.quantity, 0)
   }
@@ -352,6 +391,7 @@ export function BasketProvider({ children }: { children: ReactNode }) {
         addToBasket,
         removeFromBasket,
         updateQuantity,
+        clearBasket,
         getTotal,
         getItemCount,
         isSyncing,
