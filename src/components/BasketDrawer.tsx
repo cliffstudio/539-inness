@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useBasket } from '../contexts/BasketContext'
 import { DisableBodyScroll, EnableBodyScroll } from '@/utils/bodyScroll'
 import mediaLazyloading from '../utils/lazyLoad'
+import QuantityDropdown from './QuantityDropdown'
 
 const SHOPIFY_STORE_URL = process.env.NEXT_PUBLIC_SHOPIFY_STORE_URL || 'https://inness-hotel.myshopify.com'
 
@@ -14,6 +15,7 @@ export default function BasketDrawer() {
   const innerWrapRef = useRef<HTMLDivElement>(null)
   const animationFrameRef = useRef<number | null>(null)
   const [giftCardCode, setGiftCardCode] = useState('')
+  const [shouldRender, setShouldRender] = useState(false)
 
   // Handle body scroll lock when drawer is open
   useEffect(() => {
@@ -37,6 +39,13 @@ export default function BasketDrawer() {
     }
   }, [isOpen])
 
+  // Handle render state - keep component mounted during closing animation
+  useEffect(() => {
+    if (isOpen) {
+      setShouldRender(true)
+    }
+  }, [isOpen])
+
   // Handle drawer animations
   useEffect(() => {
     const overlay = overlayRef.current
@@ -51,7 +60,7 @@ export default function BasketDrawer() {
     }
 
     if (isOpen) {
-      // Opening animation
+      // Opening animation - animate both overlay and drawer simultaneously
       overlay.style.pointerEvents = 'all'
       innerWrap.style.pointerEvents = 'none'
 
@@ -62,37 +71,27 @@ export default function BasketDrawer() {
         const elapsed = currentTime - startTime
         const progress = Math.min(elapsed / duration, 1)
 
+        // Fade in overlay background
         overlay.style.opacity = progress.toString()
+        
+        // Slide drawer in from left
+        innerWrap.style.transform = `translateX(${(1 - progress) * -100}%)`
 
         if (progress < 1) {
           animationFrameRef.current = requestAnimationFrame(animate)
         } else {
           overlay.style.opacity = '1'
+          innerWrap.style.transform = 'translateX(0)'
           innerWrap.style.pointerEvents = 'all'
-          const innerStartTime = performance.now()
-
-          const animateInner = (currentTime: number) => {
-            const elapsed = currentTime - innerStartTime
-            const progress = Math.min(elapsed / duration, 1)
-
-            innerWrap.style.opacity = progress.toString()
-
-            if (progress < 1) {
-              animationFrameRef.current = requestAnimationFrame(animateInner)
-            } else {
-              innerWrap.style.opacity = '1'
-              animationFrameRef.current = null
-            }
-          }
-
-          animationFrameRef.current = requestAnimationFrame(animateInner)
+          animationFrameRef.current = null
         }
       }
 
       animationFrameRef.current = requestAnimationFrame(animate)
-    } else {
-      // Closing animation
+    } else if (shouldRender) {
+      // Closing animation - fade out overlay and slide drawer back
       innerWrap.style.pointerEvents = 'none'
+      overlay.style.pointerEvents = 'none'
 
       const startTime = performance.now()
       const duration = 250
@@ -101,30 +100,21 @@ export default function BasketDrawer() {
         const elapsed = currentTime - startTime
         const progress = Math.min(elapsed / duration, 1)
 
-        innerWrap.style.opacity = (1 - progress).toString()
+        // Slide drawer out to left
+        innerWrap.style.transform = `translateX(${-progress * 100}%)`
+        
+        // Fade out overlay background
+        overlay.style.opacity = (1 - progress).toString()
 
         if (progress < 1) {
           animationFrameRef.current = requestAnimationFrame(animate)
         } else {
-          innerWrap.style.opacity = '0'
+          innerWrap.style.transform = 'translateX(-100%)'
+          overlay.style.opacity = '0'
           overlay.style.pointerEvents = 'none'
-          const overlayStartTime = performance.now()
-
-          const animateOverlay = (currentTime: number) => {
-            const elapsed = currentTime - overlayStartTime
-            const progress = Math.min(elapsed / duration, 1)
-
-            overlay.style.opacity = (1 - progress).toString()
-
-            if (progress < 1) {
-              animationFrameRef.current = requestAnimationFrame(animateOverlay)
-            } else {
-              overlay.style.opacity = '0'
-              animationFrameRef.current = null
-            }
-          }
-
-          animationFrameRef.current = requestAnimationFrame(animateOverlay)
+          animationFrameRef.current = null
+          // Unmount component after animation completes
+          setShouldRender(false)
         }
       }
 
@@ -137,7 +127,7 @@ export default function BasketDrawer() {
         animationFrameRef.current = null
       }
     }
-  }, [isOpen])
+  }, [isOpen, shouldRender])
 
   const handleCheckout = () => {
     if (items.length === 0) return
@@ -157,13 +147,20 @@ export default function BasketDrawer() {
   const salesTax = subtotal * 0.196 // Approximate tax rate (19.6%)
   const total = subtotal + estimatedShipping + salesTax
 
-  if (!isOpen) return null
+  if (!shouldRender) return null
 
   return (
-    <div ref={overlayRef} className="basket-drawer">
+    <div className="basket-drawer">
+      <div 
+        ref={overlayRef} 
+        className="basket-drawer__overlay"
+        onClick={closeBasket}
+        aria-label="Close basket"
+      />
       <div ref={innerWrapRef} className="basket-drawer__inner-wrap">
         <div className="basket-drawer__header">
-          <h2 className="basket-drawer__title">Basket</h2>
+          <h5 className="basket-drawer__title">Basket</h5>
+
           <button
             type="button"
             className="basket-drawer__close"
@@ -195,38 +192,36 @@ export default function BasketDrawer() {
                       </div>
                     )}
                     <div className="basket-drawer__item-details">
-                      <div className="basket-drawer__item-title">{item.title}</div>
-                      {item.variantTitle && (
-                        <div className="basket-drawer__item-variant">{item.variantTitle}</div>
-                      )}
-                      <div className="basket-drawer__item-controls">
+                      <div className="basket-drawer__item-title body-big">{item.title}</div>
+
+                      <div className="basket-drawer__item-meta">
+                        {item.variantTitle && 
+                        item.variantTitle.toLowerCase() !== 'default title' && (
+                          <div className="basket-drawer__item-variant">{item.variantTitle}</div>
+                        )}
+
                         <div className="basket-drawer__item-quantity">
-                          <label htmlFor={`quantity-${item.variantId}`}>Qty:</label>
-                          <select
+                          <QuantityDropdown
                             id={`quantity-${item.variantId}`}
                             value={item.quantity}
-                            onChange={(e) => updateQuantity(item.variantId, parseInt(e.target.value, 10))}
-                            className="basket-drawer__quantity-select"
-                          >
-                            {Array.from({ length: 10 }, (_, i) => i + 1).map((num) => (
-                              <option key={num} value={num}>
-                                {num}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                        <div className="basket-drawer__item-price">
-                          ${(item.price * item.quantity).toFixed(2)}
+                            onChange={(newQuantity) => updateQuantity(item.variantId, newQuantity)}
+                            max={10}
+                          />
                         </div>
                       </div>
+                        
+                      <div className="basket-drawer__item-price">
+                        ${(item.price * item.quantity).toFixed(2)}
+                      </div>
+
                       <button
                         type="button"
                         className="basket-drawer__item-remove"
                         onClick={() => removeFromBasket(item.variantId)}
                         aria-label="Remove item"
                       >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="18" viewBox="0 0 16 18">
-                          <path d="M2 4h12M5 4V2a1 1 0 011-1h4a1 1 0 011 1v2m3 0v12a2 2 0 01-2 2H4a2 2 0 01-2-2V4h14zM7 8v6M9 8v6"/>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="16" viewBox="0 0 12 16" fill="none">
+                          <path d="M4.47672 4.8676L3.99446 4.8885L4.34035 14.3275L4.82262 14.3066L4.47672 4.8676ZM9.75166 14.4704L8.77716 15.4913H3.17295L2.24834 14.5226L1.29047 4.85366L0.81153 4.90592L1.78603 14.7561L2.97339 16H8.97339L10.2106 14.7038L11.1851 4.90592L10.7062 4.85366L9.74834 14.4739L9.75166 14.4704ZM9.41907 2.69686V1.59582C9.41907 0.714286 8.73392 0 7.89579 0H4.10421C3.26275 0 2.58093 0.714286 2.58093 1.59582V2.69686H0V3.20209H12V2.69686H9.41907ZM8.93681 2.69686H3.06319V1.59582C3.06319 0.993031 3.52882 0.505226 4.10421 0.505226H7.89579C8.47117 0.505226 8.93681 0.993031 8.93681 1.59582V2.69686ZM7.39357 4.87108L7.07428 14.3101L7.55654 14.3275L7.87583 4.8885L7.39357 4.87108Z"/>
                         </svg>
                       </button>
                     </div>
@@ -253,7 +248,7 @@ export default function BasketDrawer() {
                 </div>
               </div>
 
-              <div className="basket-drawer__giftcard">
+              {/* <div className="basket-drawer__giftcard">
                 <p>Have a giftcard?</p>
                 <input
                   type="text"
@@ -262,7 +257,7 @@ export default function BasketDrawer() {
                   onChange={(e) => setGiftCardCode(e.target.value)}
                   className="basket-drawer__giftcard-input"
                 />
-              </div>
+              </div> */}
 
               <div className="basket-drawer__actions">
                 <button
@@ -272,13 +267,8 @@ export default function BasketDrawer() {
                 >
                   Checkout
                 </button>
-                <button
-                  type="button"
-                  className="basket-drawer__continue"
-                  onClick={closeBasket}
-                >
-                  Looking for more? Continue shopping
-                </button>
+
+                <div>Looking for more? <button className="basket-drawer__continue" onClick={closeBasket}>Continue shopping</button></div>
               </div>
             </>
           )}

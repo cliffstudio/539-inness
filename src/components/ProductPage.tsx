@@ -1,10 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
 'use client'
 
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import { PortableTextBlock } from '@portabletext/react'
 import { getPriceRange } from '../sanity/utils/getPriceRange'
 import { useBasket } from '../contexts/BasketContext'
+import mediaLazyloading from '../utils/lazyLoad'
 
 type OptionValue = string | {
   _type?: string
@@ -200,6 +201,22 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
 
   const displayImageUrl = selectedVariant?.store?.previewImageUrl || product.store?.previewImageUrl
 
+  // Trigger lazy loading update when image URL changes
+  useEffect(() => {
+    if (!displayImageUrl) return
+    
+    // Small delay to ensure the new image element is in the DOM
+    const timer = setTimeout(() => {
+      mediaLazyloading().then((lazyLoadInstance) => {
+        if (lazyLoadInstance) {
+          lazyLoadInstance.update()
+        }
+      })
+    }, 0)
+
+    return () => clearTimeout(timer)
+  }, [displayImageUrl])
+
   return (
     <article className="product-page">
       <div className="hero-section layout-2 h-pad">
@@ -207,6 +224,7 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
           <div className="hero-image relative out-of-opacity">
             <div className="fill-space-image-wrap media-wrap">
               <img 
+                key={displayImageUrl}
                 data-src={displayImageUrl}
                 alt=""
                 className="lazy full-bleed-image"
@@ -368,8 +386,9 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
                                   onClick={() => handleOptionChange(optionName, value)}
                                   aria-label={`Select ${value}`}
                                   title={value}
-                                  style={colorHex ? { backgroundColor: colorHex } : undefined}
-                                />
+                                >
+                                  <span style={colorHex ? { backgroundColor: colorHex } : undefined} />
+                                </button>
                               )
                             })}
                           </div>

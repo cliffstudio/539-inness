@@ -8,6 +8,14 @@
     height: unset;
     min-height: 100svh;
 
+    .hero-image {
+      
+      .media-wrap {
+        aspect-ratio: 774 / 960;
+        height: auto;
+      }
+    }
+
     .hero-content {
       color: $colour-black;
       text-align: left;

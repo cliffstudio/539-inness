@@ -8,75 +8,57 @@
   height: 100%;
   min-height: 100svh;
   z-index: 100;
-  background-color: rgba($colour-black, 0.5);
-  opacity: 0;
   pointer-events: none;
+
+  .basket-drawer__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba($colour-black, 0.5);
+    opacity: 0;
+    pointer-events: none;
+    cursor: pointer;
+  }
 
   .basket-drawer__inner-wrap {
     position: absolute;
     top: 0;
     left: 0;
     width: 50%;
+    max-width: get-rem-desktop(576);
     height: 100%;
     background-color: $colour-beige;
     overflow-y: auto;
-    opacity: 0;
+    opacity: 1;
     pointer-events: none;
+    transform: translateX(-100%);
+    will-change: transform;
     @include flex;
     @include flex-direction(column);
-    padding: get-rem-desktop(40) get-rem-desktop(40);
-
-    @media only screen and (max-width: 768px) {
-      width: 100%;
-      padding: get-rem-mobile(24);
-    }
+    padding-top: get-rem-desktop(38);
+    padding-bottom: get-rem-desktop(40);
+    padding-left: get-rem-desktop(40);
+    padding-right: get-rem-desktop(40);
   }
 
   .basket-drawer__header {
     @include flex;
     @include justify-content(space-between);
-    @include align-items(center);
-    margin-bottom: get-rem-desktop(40);
-    padding-bottom: get-rem-desktop(20);
-    border-bottom: 1px solid rgba($colour-black, 0.1);
-
-    @media only screen and (max-width: 768px) {
-      margin-bottom: get-rem-mobile(24);
-      padding-bottom: get-rem-mobile(16);
-    }
-  }
-
-  .basket-drawer__title {
-    font-size: get-rem-desktop(24);
-    font-weight: 400;
-    color: $colour-black;
-    margin: 0;
-
-    @media only screen and (max-width: 768px) {
-      font-size: get-rem-mobile(20);
-    }
+    @include align-items(flex-end);
+    margin-bottom: get-rem-desktop(75);
   }
 
   .basket-drawer__close {
-    @include reset-input;
-    background: none;
-    border: none;
-    color: $colour-black;
-    font-size: get-rem-desktop(16);
     cursor: pointer;
-    padding: get-rem-desktop(8);
     will-change: opacity;
-    @include transition(opacity 300ms cubic-bezier(0.25,0.1,0.25,1));
+    @include transition(opacity 500ms cubic-bezier(0.25,0.1,0.25,1));
 
     @media (hover: hover) {
       &:hover {
         opacity: 0.6;
       }
-    }
-
-    @media only screen and (max-width: 768px) {
-      font-size: get-rem-mobile(14);
-      padding: get-rem-mobile(6);
     }
   }
 
@@ -93,52 +75,36 @@
     @include justify-content(center);
     flex: 1;
     color: $colour-black;
-    font-size: get-rem-desktop(18);
-
-    @media only screen and (max-width: 768px) {
-      font-size: get-rem-mobile(16);
-    }
   }
 
   .basket-drawer__items {
     @include flex;
     @include flex-direction(column);
     row-gap: get-rem-desktop(24);
-    margin-bottom: get-rem-desktop(32);
+    // margin-bottom: get-rem-desktop(32);
     flex: 1;
     overflow-y: auto;
-
-    @media only screen and (max-width: 768px) {
-      row-gap: get-rem-mobile(20);
-      margin-bottom: get-rem-mobile(24);
-    }
   }
 
   .basket-drawer__item {
     @include flex;
-    column-gap: get-rem-desktop(16);
-    padding-bottom: get-rem-desktop(24);
-    border-bottom: 1px solid rgba($colour-black, 0.1);
+    column-gap: get-rem-desktop(24);
+    padding-bottom: get-rem-desktop(30);
+    border-bottom: 1px solid $colour-cream;
     position: relative;
 
-    @media only screen and (max-width: 768px) {
-      column-gap: get-rem-mobile(12);
-      padding-bottom: get-rem-mobile(20);
+    &:last-child {
+      border-bottom: none;
     }
   }
 
   .basket-drawer__item-image {
-    width: get-rem-desktop(100);
-    height: get-rem-desktop(100);
+    aspect-ratio: 140 / 186;
+    width: get-rem-desktop(140);
     flex-shrink: 0;
     position: relative;
     overflow: hidden;
     background-color: $colour-white;
-
-    @media only screen and (max-width: 768px) {
-      width: get-rem-mobile(80);
-      height: get-rem-mobile(80);
-    }
 
     img {
       width: 100%;
@@ -151,124 +117,43 @@
     flex: 1;
     @include flex;
     @include flex-direction(column);
-    row-gap: get-rem-desktop(8);
+    @include justify-content(space-between);
     position: relative;
-    padding-right: get-rem-desktop(32);
-
-    @media only screen and (max-width: 768px) {
-      row-gap: get-rem-mobile(6);
-      padding-right: get-rem-mobile(24);
-    }
   }
 
   .basket-drawer__item-title {
-    font-size: get-rem-desktop(16);
-    font-weight: 400;
-    color: $colour-black;
-    margin: 0;
-
-    @media only screen and (max-width: 768px) {
-      font-size: get-rem-mobile(14);
-    }
+    margin-top: -0.2em;
   }
 
-  .basket-drawer__item-variant {
-    font-size: get-rem-desktop(14);
-    color: rgba($colour-black, 0.7);
-    margin: 0;
-
-    @media only screen and (max-width: 768px) {
-      font-size: get-rem-mobile(12);
-    }
-  }
-
-  .basket-drawer__item-controls {
+  .basket-drawer__item-meta {
     @include flex;
-    @include align-items(center);
     @include justify-content(space-between);
-    column-gap: get-rem-desktop(16);
-    margin-top: get-rem-desktop(8);
-
-    @media only screen and (max-width: 768px) {
-      column-gap: get-rem-mobile(12);
-      margin-top: get-rem-mobile(6);
-    }
-  }
-
-  .basket-drawer__item-quantity {
-    @include flex;
     @include align-items(center);
-    column-gap: get-rem-desktop(8);
-    font-size: get-rem-desktop(14);
-
-    @media only screen and (max-width: 768px) {
-      column-gap: get-rem-mobile(6);
-      font-size: get-rem-mobile(12);
-    }
-
-    label {
-      color: $colour-black;
-    }
-  }
-
-  .basket-drawer__quantity-select {
-    @include reset-input;
-    background-color: $colour-white;
-    border: 1px solid rgba($colour-black, 0.2);
-    padding: get-rem-desktop(4) get-rem-desktop(8);
-    font-size: get-rem-desktop(14);
-    color: $colour-black;
-    cursor: pointer;
-    border-radius: 0;
-
-    @media only screen and (max-width: 768px) {
-      padding: get-rem-mobile(3) get-rem-mobile(6);
-      font-size: get-rem-mobile(12);
-    }
   }
 
   .basket-drawer__item-price {
     font-size: get-rem-desktop(16);
     font-weight: 400;
     color: $colour-black;
-
-    @media only screen and (max-width: 768px) {
-      font-size: get-rem-mobile(14);
-    }
   }
 
   .basket-drawer__item-remove {
-    @include reset-input;
-    position: absolute;
-    top: 0;
-    right: 0;
-    background: none;
-    border: none;
     cursor: pointer;
-    padding: get-rem-desktop(4);
-    color: rgba($colour-black, 0.6);
-    will-change: color;
-    @include transition(color 300ms cubic-bezier(0.25,0.1,0.25,1));
+    width: fit-content;
+
+    svg {
+      width: get-rem-desktop(12);
+      height: get-rem-desktop(16);
+      fill: $colour-black;
+      will-change: fill;
+      @include transition(fill 300ms cubic-bezier(0.25,0.1,0.25,1));
+    }
 
     @media (hover: hover) {
       &:hover {
-        color: $colour-black;
-      }
-    }
-
-    @media only screen and (max-width: 768px) {
-      padding: get-rem-mobile(3);
-    }
-
-    svg {
-      width: get-rem-desktop(14);
-      height: get-rem-desktop(14);
-      stroke: currentColor;
-      fill: none;
-
-      @media only screen and (max-width: 768px) {
-        width: get-rem-mobile(12);
-        height: get-rem-mobile(12);
+        svg {
+          fill: rgba($colour-black, 0.6);
+        }
       }
     }
   }
@@ -276,49 +161,26 @@
   .basket-drawer__summary {
     @include flex;
     @include flex-direction(column);
-    row-gap: get-rem-desktop(12);
-    margin-bottom: get-rem-desktop(24);
-    padding-top: get-rem-desktop(24);
-    border-top: 1px solid rgba($colour-black, 0.1);
-
-    @media only screen and (max-width: 768px) {
-      row-gap: get-rem-mobile(10);
-      margin-bottom: get-rem-mobile(20);
-      padding-top: get-rem-mobile(20);
-    }
+    row-gap: get-rem-desktop(20);
+    padding-top: get-rem-desktop(20);
+    border-top: 1px solid $colour-cream;
+    margin-bottom: get-rem-desktop(105);
   }
 
   .basket-drawer__summary-row {
     @include flex;
     @include justify-content(space-between);
-    font-size: get-rem-desktop(14);
-    color: $colour-black;
-
-    @media only screen and (max-width: 768px) {
-      font-size: get-rem-mobile(12);
-    }
 
     &--total {
-      font-weight: 600;
-      font-size: get-rem-desktop(18);
-      padding-top: get-rem-desktop(12);
-      border-top: 1px solid rgba($colour-black, 0.1);
-      margin-top: get-rem-desktop(4);
-
-      @media only screen and (max-width: 768px) {
-        font-size: get-rem-mobile(16);
-        padding-top: get-rem-mobile(10);
-        margin-top: get-rem-mobile(4);
-      }
+      padding-top: get-rem-desktop(22);
+      border-top: 1px solid $colour-cream;
+      font-size: 24px;
+      line-height: normal;
     }
   }
 
   .basket-drawer__giftcard {
     margin-bottom: get-rem-desktop(24);
-
-    @media only screen and (max-width: 768px) {
-      margin-bottom: get-rem-mobile(20);
-    }
 
     p {
       font-size: get-rem-desktop(14);
@@ -341,11 +203,6 @@
     font-size: get-rem-desktop(14);
     color: $colour-black;
 
-    @media only screen and (max-width: 768px) {
-      padding: get-rem-mobile(8) get-rem-mobile(10);
-      font-size: get-rem-mobile(12);
-    }
-
     &::placeholder {
       color: rgba($colour-black, 0.5);
     }
@@ -354,11 +211,7 @@
   .basket-drawer__actions {
     @include flex;
     @include flex-direction(column);
-    row-gap: get-rem-desktop(16);
-
-    @media only screen and (max-width: 768px) {
-      row-gap: get-rem-mobile(12);
-    }
+    row-gap: get-rem-desktop(28);
   }
 
   .basket-drawer__checkout {
@@ -366,27 +219,15 @@
   }
 
   .basket-drawer__continue {
-    @include reset-input;
-    background: none;
-    border: none;
-    color: $colour-black;
-    font-size: get-rem-desktop(14);
-    text-decoration: underline;
     cursor: pointer;
-    padding: get-rem-desktop(8);
+    text-decoration: underline;
     will-change: opacity;
-    @include transition(opacity 300ms cubic-bezier(0.25,0.1,0.25,1));
-    text-align: center;
+    @include transition(opacity 600ms cubic-bezier(0.25,0.1,0.25,1));
 
     @media (hover: hover) {
       &:hover {
         opacity: 0.6;
       }
-    }
-
-    @media only screen and (max-width: 768px) {
-      font-size: get-rem-mobile(12);
-      padding: get-rem-mobile(6);
     }
   }
 }
@@ -411,9 +252,42 @@
 
 .product-option-swatch {
   @include reset-input;
-  width: get-rem-desktop(26);
-  height: get-rem-desktop(26);
+  width: get-rem-desktop(40);
+  height: get-rem-desktop(40);
+  padding: get-rem-desktop(7);
   border: 1px solid transparent;
+  cursor: pointer;
+  will-change: border-color;
+  @include transition(border-color 300ms cubic-bezier(0.25,0.1,0.25,1));
+
+  span {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  &.selected {
+    border-color: $colour-black;
+  }
+
+  @media (hover: hover) {
+    &:hover:not(.selected) {
+      border-color: $colour-black;
+    }
+  }
+}
+
+.product-option-buttons {
+  @include flex;
+  column-gap: get-rem-desktop(10);
+}
+
+.product-option-button {
+  @include reset-input;
+  width: get-rem-desktop(40);
+  height: get-rem-desktop(40);
+  border: 1px solid transparent;
+  color: $colour-black;
   cursor: pointer;
   will-change: border-color;
   @include transition(border-color 300ms cubic-bezier(0.25,0.1,0.25,1));
@@ -424,46 +298,7 @@
 
   @media (hover: hover) {
     &:hover:not(.selected) {
-      border-color: rgba($colour-black, 0.5);
-    }
-  }
-}
-
-.product-option-buttons {
-  @include flex;
-  column-gap: get-rem-desktop(8);
-  flex-wrap: wrap;
-
-  @media only screen and (max-width: 768px) {
-    column-gap: get-rem-mobile(6);
-  }
-}
-
-.product-option-button {
-  @include reset-input;
-  padding: get-rem-desktop(8) get-rem-desktop(16);
-  background-color: $colour-white;
-  border: 1px solid rgba($colour-black, 0.2);
-  color: $colour-black;
-  font-size: get-rem-desktop(14);
-  cursor: pointer;
-  will-change: background-color, border-color;
-  @include transition-multiple(background-color 300ms cubic-bezier(0.25,0.1,0.25,1), border-color 300ms cubic-bezier(0.25,0.1,0.25,1));
-
-  @media only screen and (max-width: 768px) {
-    padding: get-rem-mobile(6) get-rem-mobile(12);
-    font-size: get-rem-mobile(12);
-  }
-
-  &.selected {
-    background-color: $colour-beige;
-    border-color: $colour-black;
-  }
-
-  @media (hover: hover) {
-    &:hover:not(.selected) {
-      background-color: rgba($colour-beige, 0.5);
-      border-color: rgba($colour-black, 0.5);
+      border-color: $colour-black;
     }
   }
 }
@@ -482,6 +317,93 @@
 
     &:hover {
       background-color: $colour-black;
+    }
+  }
+}
+
+// Quantity Dropdown Styles
+.quantity-dropdown {
+  @include flex;
+  @include align-items(center);
+  column-gap: 0.3em;
+  position: relative;
+
+  label {
+    color: $colour-black;
+  }
+
+  &__wrapper {
+    position: relative;
+  }
+
+  &__button {
+    @include reset-input;
+    @include flex;
+    @include align-items(center);
+    column-gap: get-rem-desktop(16);
+    background-color: transparent;
+    color: $colour-black;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  &__value {
+    display: inline-block;
+  }
+
+  &__arrow {
+    @include flex;
+    @include align-items(center);
+    @include justify-content(center);
+    width: get-rem-desktop(17);
+    height: get-rem-desktop(17);
+    border: 1px solid $colour-black;
+    border-radius: 50%;
+    color: $colour-black;
+    @include transition(transform 200ms cubic-bezier(0.25,0.1,0.25,1));
+
+    svg {
+      width: get-rem-desktop(7);
+      stroke: $colour-black;
+      margin-top: get-rem-desktop(2);
+    }
+  }
+
+  &__button[aria-expanded="true"] &__arrow {
+    transform: rotate(180deg);
+  }
+
+  &__list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: get-rem-desktop(4);
+    background-color: $colour-white;
+    min-width: get-rem-desktop(60);
+    z-index: 10;
+    max-height: get-rem-desktop(200);
+    overflow-y: auto;
+    box-shadow: 0 get-rem-desktop(4) get-rem-desktop(8) rgba($colour-black, 0.1);
+  }
+
+  &__option {
+    @include reset-input;
+    display: block;
+    width: 100%;
+    padding: get-rem-desktop(8) get-rem-desktop(12);
+    text-align: left;
+    color: $colour-black;
+    background-color: transparent;
+    cursor: pointer;
+    @include transition(background-color 200ms cubic-bezier(0.25,0.1,0.25,1));
+
+    &:hover {
+      background-color: rgba($colour-black, 0.05);
+    }
+
+    &--selected {
+      background-color: rgba($colour-black, 0.1);
+      font-weight: 500;
     }
   }
 }
