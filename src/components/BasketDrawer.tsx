@@ -195,9 +195,12 @@ export default function BasketDrawer() {
                       <div className="basket-drawer__item-title body-big">{item.title}</div>
 
                       <div className="basket-drawer__item-meta">
-                        {item.variantTitle && 
-                        item.variantTitle.toLowerCase() !== 'default title' && (
-                          <div className="basket-drawer__item-variant">{item.variantTitle}</div>
+                        {item.variantTitle && (
+                          <div className="basket-drawer__item-variant">
+                            {item.variantTitle.toLowerCase() === 'default title' 
+                              ? 'One Size' 
+                              : item.variantTitle}
+                          </div>
                         )}
 
                         <div className="basket-drawer__item-quantity">

@@ -9,10 +9,16 @@
     min-height: 100svh;
 
     .hero-image {
+      aspect-ratio: 774 / 960;
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      overflow: hidden;
       
       .media-wrap {
         aspect-ratio: 774 / 960;
         height: auto;
+        width: 100%;
       }
     }
 
