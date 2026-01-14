@@ -2048,5 +2048,20 @@ body.page-type-activities {
         color: $colour-white;
       }
     }
+
+    .product-section-swatches {
+      @include flex;
+      column-gap: get-rem-desktop(10);
+      position: absolute;
+      bottom: get-rem-desktop(16);
+      left: get-rem-desktop(16);
+      z-index: 2;
+    }
+
+    .product-section-swatch {
+      width: get-rem-desktop(20);
+      height: get-rem-desktop(20);
+      cursor: pointer;
+    }
   }
 }

@@ -14,9 +14,24 @@ interface Inventory {
   isAvailable?: boolean
 }
 
+type OptionValue = string | {
+  _type?: string
+  _key?: string
+  value: string
+}
+
+interface ProductOption {
+  name?: string
+  values?: OptionValue[]
+}
+
 interface ProductVariant {
   store?: {
     inventory?: Inventory
+    option1?: string
+    option2?: string
+    option3?: string
+    colorHex?: string
   }
 }
 
@@ -31,6 +46,7 @@ interface Product {
     priceRange?: PriceRange
     status?: string
     isDeleted?: boolean
+    options?: ProductOption[]
     variants?: ProductVariant[]
   }
 }
@@ -118,6 +134,12 @@ export default function ProductSection({
     return `/products/${slug.current}`
   }
 
+  // Helper function to get value string from OptionValue
+  const getValueString = (optionValue: OptionValue | null | undefined): string => {
+    if (!optionValue) return ''
+    return typeof optionValue === 'string' ? optionValue : optionValue.value || ''
+  }
+
   // Check if product is sold out based on inventory
   const isSoldOut = (product: Product): boolean => {
     if (!product.store?.variants || product.store.variants.length === 0) {
@@ -138,6 +160,61 @@ export default function ProductSection({
     
     // Product is sold out if no variants have available inventory
     return !hasAvailableInventory
+  }
+
+  // Get color variants for a product
+  const getColorVariants = (product: Product): Array<{ colorValue: string; colorHex?: string }> => {
+    if (!product.store?.options || !product.store?.variants) {
+      return []
+    }
+
+    // Find the color option
+    const colorOption = product.store.options.find(
+      (option) => option.name?.toLowerCase() === 'colour' || option.name?.toLowerCase() === 'color'
+    )
+
+    if (!colorOption || !colorOption.values || colorOption.values.length === 0) {
+      return []
+    }
+
+    // Get the index of the color option
+    const optionNames = product.store.options.map((opt) => opt.name?.toLowerCase()) || []
+    const colorOptionIndex = optionNames.findIndex(
+      (name) => name === 'colour' || name === 'color'
+    )
+
+    if (colorOptionIndex === -1) {
+      return []
+    }
+
+    // Map each color value to its variant and colorHex
+    const colorVariants: Array<{ colorValue: string; colorHex?: string }> = []
+    
+    colorOption.values.forEach((optionValue) => {
+      const colorValue = getValueString(optionValue)
+      if (!colorValue) return
+
+      // Find a variant that matches this color value
+      const variant = product.store?.variants?.find((v) => {
+        if (!v.store) return false
+
+        if (colorOptionIndex === 0) {
+          return v.store.option1 === colorValue
+        } else if (colorOptionIndex === 1) {
+          return v.store.option2 === colorValue
+        } else if (colorOptionIndex === 2) {
+          return v.store.option3 === colorValue
+        }
+        return false
+      })
+
+      colorVariants.push({
+        colorValue,
+        colorHex: variant?.store?.colorHex,
+      })
+    })
+
+    return colorVariants
   }
 
   return (
@@ -169,7 +246,24 @@ export default function ProductSection({
                   </div>
                 )}
 
-                {/* todo: display colour variants if available */}
+                {(() => {
+                  const colorVariants = getColorVariants(product)
+                  if (colorVariants.length === 0) return null
+
+                  return (
+                    <div className="product-section-swatches">
+                      {colorVariants.map((variant, index) => (
+                        <div
+                          key={`${variant.colorValue}-${index}`}
+                          className="product-section-swatch"
+                          style={variant.colorHex ? { backgroundColor: variant.colorHex } : undefined}
+                          title={variant.colorValue}
+                          aria-label={variant.colorValue}
+                        />
+                      ))}
+                    </div>
+                  )
+                })()}
               </div>
             )}
 

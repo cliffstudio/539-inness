@@ -301,12 +301,20 @@ const productSectionFragment = groq`{
       },
       status,
       isDeleted,
+      options[] {
+        name,
+        values
+      },
       variants[]-> {
         store {
           inventory {
             available,
             isAvailable
-          }
+          },
+          option1,
+          option2,
+          option3,
+          colorHex
         }
       }
     }
