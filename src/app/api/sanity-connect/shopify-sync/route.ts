@@ -149,9 +149,15 @@ export async function POST(request: NextRequest) {
       // Calculate priceRange from variants
       if (product.variants && product.variants.length > 0) {
         const prices = product.variants
-          .map((v: { price?: string }) => {
+          .map((v: { price?: string | number }) => {
             const price = v?.price;
-            return price ? parseFloat(price) : null;
+            if (price === undefined || price === null) return null;
+            const priceValue = typeof price === 'string' 
+              ? parseFloat(price) 
+              : typeof price === 'number' 
+                ? price 
+                : null;
+            return priceValue !== null && !isNaN(priceValue) ? priceValue : null;
           })
           .filter((p: number | null): p is number => p !== null);
 
@@ -191,7 +197,14 @@ export async function POST(request: NextRequest) {
         }
         if (variant.id !== undefined) variantPatch["store.gid"] = variant.id;
         if (variant.price !== undefined) {
-          variantPatch["store.price"] = parseFloat(variant.price);
+          const priceValue = typeof variant.price === 'string' 
+            ? parseFloat(variant.price) 
+            : typeof variant.price === 'number' 
+              ? variant.price 
+              : null;
+          if (priceValue !== null && !isNaN(priceValue)) {
+            variantPatch["store.price"] = priceValue;
+          }
         }
         if (variant.previewImageUrl !== undefined) {
           variantPatch["store.previewImageUrl"] = variant.previewImageUrl;
@@ -222,12 +235,44 @@ export async function POST(request: NextRequest) {
     }
 
     // Apply all patches in a transaction
+    // Use createIfNotExists for variants/products that might not exist yet
     if (patches.length > 0) {
-      const tx = sanity.transaction();
-      for (const p of patches) {
-        tx.patch(p.id, (patch) => patch.set(p.patch.set));
+      try {
+        const tx = sanity.transaction();
+        for (const p of patches) {
+          // Check if this is a variant or product document
+          const isVariant = p.id.startsWith('shopifyProductVariant-');
+          const isProduct = p.id.startsWith('shopifyProduct-');
+          
+          if (isVariant) {
+            // For variants, create the document if it doesn't exist, then patch
+            tx.createIfNotExists({
+              _id: p.id,
+              _type: 'productVariant',
+              store: {},
+            });
+            tx.patch(p.id, (patch) => patch.set(p.patch.set));
+          } else if (isProduct) {
+            // For products, create the document if it doesn't exist, then patch
+            tx.createIfNotExists({
+              _id: p.id,
+              _type: 'product',
+              store: {},
+            });
+            tx.patch(p.id, (patch) => patch.set(p.patch.set));
+          } else {
+            // Fallback to regular patch
+            tx.patch(p.id, (patch) => patch.set(p.patch.set));
+          }
+        }
+        await tx.commit();
+        console.log(`Successfully patched ${patches.length} documents`);
+      } catch (txError) {
+        console.error('Transaction error:', txError);
+        // Log details about which patches failed
+        console.error(`Failed to apply ${patches.length} patches`);
+        throw txError;
       }
-      await tx.commit();
     }
 
     return NextResponse.json({ message: "OK", patched: patches.length }, { status: 200 });
