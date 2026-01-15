@@ -199,14 +199,10 @@ export async function POST(request: NextRequest) {
         }
       }
 
-      if (Object.keys(productPatch).length > 0) {
-        patches.push({
-          id: sanityProductDocId,
-          patch: { set: productPatch },
-        });
-      }
-
       // Process variants for this product
+      // Collect variant document IDs to update product's variants array
+      const variantDocIds: string[] = [];
+      
       for (const variant of product.variants || []) {
         if (!variant?.id) continue;
 
@@ -305,7 +301,26 @@ export async function POST(request: NextRequest) {
             id: sanityVariantDocId,
             patch: { set: variantPatch },
           });
+          // Add variant document ID to the array for product reference
+          variantDocIds.push(sanityVariantDocId);
         }
+      }
+
+      // Update product's variants array with references to all variants
+      // This ensures new variants are linked to the product
+      if (variantDocIds.length > 0) {
+        productPatch["store.variants"] = variantDocIds.map((variantId) => ({
+          _type: 'reference',
+          _ref: variantId,
+          _weak: true,
+        }));
+      }
+
+      if (Object.keys(productPatch).length > 0) {
+        patches.push({
+          id: sanityProductDocId,
+          patch: { set: productPatch },
+        });
       }
     }
 
