@@ -308,12 +308,24 @@ export async function POST(request: NextRequest) {
           product.images?.nodes?.[0]?.url || product.featuredImage?.url || undefined;
 
         const options =
-          (product.options || []).map((opt: { id: string; name: string; values?: string[] }) => ({
-            _type: "option",
-            _key: opt.id,
-            name: opt.name,
-            values: opt.values ?? [],
-          })) || [];
+          (product.options || []).map((opt: { id: string; name: string; values?: string[] }, index: number) => {
+            // Ensure we have a unique key - use opt.id if available, otherwise generate one
+            const optionKey = opt.id || `option-${index}-${opt.name || 'unnamed'}`;
+            
+            // Transform values from strings to objects with _key and value fields
+            const optionValues = (opt.values || []).map((value: string, valueIndex: number) => ({
+              _type: "optionValue",
+              _key: `${optionKey}-value-${valueIndex}`,
+              value: value,
+            }));
+
+            return {
+              _type: "option",
+              _key: optionKey,
+              name: opt.name,
+              values: optionValues,
+            };
+          }) || [];
 
         tx.createIfNotExists({
           _id: productDocId,
@@ -322,21 +334,23 @@ export async function POST(request: NextRequest) {
         });
 
         tx.patch(productDocId, (p) =>
-          p.set({
-            "store.gid": product.id,
-            "store.id": Number(shopifyProductId),
-            "store.title": product.title,
-            "store.slug": { current: product.handle },
-            "store.descriptionHtml": product.descriptionHtml,
-            "store.vendor": product.vendor,
-            "store.productType": product.productType,
-            "store.previewImageUrl": firstImageUrl,
-            "store.options": options,
-            "store.priceRange": priceRange,
-            "store.variants": variantRefs,
-            "store.requiresSellingPlan": product.requiresSellingPlan,
-            "store.sellingPlanGroups": product.sellingPlanGroups,
-          })
+          p
+            .set({
+              "store.gid": product.id,
+              "store.id": Number(shopifyProductId),
+              "store.title": product.title,
+              "store.slug": { current: product.handle },
+              "store.descriptionHtml": product.descriptionHtml,
+              "store.vendor": product.vendor,
+              "store.productType": product.productType,
+              "store.previewImageUrl": firstImageUrl,
+              "store.options": options,
+              "store.priceRange": priceRange,
+              "store.variants": variantRefs,
+              "store.requiresSellingPlan": product.requiresSellingPlan,
+              "store.sellingPlanGroups": product.sellingPlanGroups,
+            })
+            .unset(["store.shop"]) // Remove shop field if it exists (not in product schema)
         );
 
         patched += 1;
