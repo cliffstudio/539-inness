@@ -132,8 +132,23 @@ export async function POST(request: NextRequest) {
           productPatch["store.slug"] = { current: slugValue };
         }
       }
+      // Handle image fields - Sanity Connect may send images in different formats
+      // Priority: previewImageUrl > featuredImageUrl > featuredImage.url > image.url > images[0]
       if (product.previewImageUrl !== undefined) {
         productPatch["store.previewImageUrl"] = product.previewImageUrl;
+      } else if (product.featuredImageUrl !== undefined) {
+        productPatch["store.previewImageUrl"] = product.featuredImageUrl;
+      } else if (product.featuredImage?.url !== undefined) {
+        productPatch["store.previewImageUrl"] = product.featuredImage.url;
+      } else if (product.image?.url !== undefined) {
+        productPatch["store.previewImageUrl"] = product.image.url;
+      } else if (product.images && Array.isArray(product.images) && product.images.length > 0) {
+        // Use first image from images array if previewImageUrl is not available
+        const firstImage = product.images[0];
+        const imageUrl = firstImage?.url || firstImage?.src || (typeof firstImage === 'string' ? firstImage : null);
+        if (imageUrl) {
+          productPatch["store.previewImageUrl"] = imageUrl;
+        }
       }
       if (product.descriptionHtml !== undefined) {
         productPatch["store.descriptionHtml"] = product.descriptionHtml;
@@ -239,8 +254,28 @@ export async function POST(request: NextRequest) {
             variantPatch["store.compareAtPrice"] = compareAtPriceValue;
           }
         }
+        // Handle image fields - Sanity Connect may send images in different formats
+        // Priority: variant.previewImageUrl > variant.imageUrl > variant.image.url > variant.images[0] > product.images[0]
         if (variant.previewImageUrl !== undefined) {
           variantPatch["store.previewImageUrl"] = variant.previewImageUrl;
+        } else if (variant.imageUrl !== undefined) {
+          variantPatch["store.previewImageUrl"] = variant.imageUrl;
+        } else if (variant.image?.url !== undefined) {
+          variantPatch["store.previewImageUrl"] = variant.image.url;
+        } else if (variant.images && Array.isArray(variant.images) && variant.images.length > 0) {
+          // Use first image from variant images array if previewImageUrl is not available
+          const firstImage = variant.images[0];
+          const imageUrl = firstImage?.url || firstImage?.src || (typeof firstImage === 'string' ? firstImage : null);
+          if (imageUrl) {
+            variantPatch["store.previewImageUrl"] = imageUrl;
+          }
+        } else if (product.images && Array.isArray(product.images) && product.images.length > 0) {
+          // Fallback to product images if variant doesn't have its own image
+          const firstImage = product.images[0];
+          const imageUrl = firstImage?.url || firstImage?.src || (typeof firstImage === 'string' ? firstImage : null);
+          if (imageUrl) {
+            variantPatch["store.previewImageUrl"] = imageUrl;
+          }
         }
         if (variant.option1 !== undefined) variantPatch["store.option1"] = variant.option1;
         if (variant.option2 !== undefined) variantPatch["store.option2"] = variant.option2;
