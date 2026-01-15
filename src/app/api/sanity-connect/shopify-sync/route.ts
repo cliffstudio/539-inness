@@ -218,124 +218,157 @@ export async function POST(request: NextRequest) {
     const tx = sanity.transaction();
 
     let patched = 0;
+    const errors: Array<{ productId?: string; error: string }> = [];
 
     for (const incoming of products) {
       const productGid: string | undefined = incoming?.id;
-      if (!productGid) continue;
+      if (!productGid) {
+        errors.push({ error: "Product missing ID" });
+        continue;
+      }
 
-      const sf = await storefront.request(STOREFRONT_PRODUCT_QUERY, { id: productGid });
-      const product = sf?.product;
-      if (!product) continue; // not on sales channel etc.
-
-      const shopifyProductId = idFromGid(product.id);
-      if (!shopifyProductId) continue;
-
-      const productDocId = `shopifyProduct-${shopifyProductId}`;
-
-      // Build variant docs first (and gather refs with uuidv5 keys)
-      const variantNodes = product.variants?.nodes || [];
-      const variantRefs: Array<{ _key: string; _type: "reference"; _ref: string; _weak: boolean }> = [];
-
-      for (const v of variantNodes) {
-        const variantId = idFromGid(v.id);
-        if (!variantId) continue;
-
-        const variantDocId = `shopifyProductVariant-${variantId}`;
-
-        let enriched: Awaited<ReturnType<typeof fetchVariantData>> | null = null;
-        try {
-          enriched = await fetchVariantData(v.id);
-        } catch (e) {
-          console.error("Variant enrichment failed", v.id, e);
+      try {
+        const sf = await storefront.request(STOREFRONT_PRODUCT_QUERY, { id: productGid });
+        const product = sf?.product;
+        if (!product) {
+          errors.push({ productId: productGid, error: "Product not found in storefront" });
+          continue; // not on sales channel etc.
         }
 
-        const price = v.price?.amount ? Number(v.price.amount) : undefined;
-        const compareAtPrice = v.compareAtPrice?.amount ? Number(v.compareAtPrice.amount) : undefined;
+        const shopifyProductId = idFromGid(product.id);
+        if (!shopifyProductId) continue;
+
+        const productDocId = `shopifyProduct-${shopifyProductId}`;
+
+        // Build variant docs first (and gather refs with uuidv5 keys)
+        const variantNodes = product.variants?.nodes || [];
+        const variantRefs: Array<{ _key: string; _type: "reference"; _ref: string; _weak: boolean }> = [];
+
+        for (const v of variantNodes) {
+          const variantId = idFromGid(v.id);
+          if (!variantId) continue;
+
+          const variantDocId = `shopifyProductVariant-${variantId}`;
+
+          let enriched: Awaited<ReturnType<typeof fetchVariantData>> | null = null;
+          try {
+            enriched = await fetchVariantData(v.id);
+          } catch (e) {
+            console.error("Variant enrichment failed", v.id, e);
+          }
+
+          const price = v.price?.amount ? Number(v.price.amount) : undefined;
+          const compareAtPrice = v.compareAtPrice?.amount ? Number(v.compareAtPrice.amount) : undefined;
+
+          tx.createIfNotExists({
+            _id: variantDocId,
+            _type: "productVariant",
+            store: {},
+          });
+
+          tx.patch(variantDocId, (p) =>
+            p.set({
+              "store.gid": v.id,
+              "store.id": Number(variantId),
+              "store.title": v.title,
+              "store.sku": v.sku,
+              "store.price": Number.isFinite(price) ? price : undefined,
+              "store.compareAtPrice": Number.isFinite(compareAtPrice) ? compareAtPrice : undefined,
+              "store.previewImageUrl": v.image?.url,
+              "store.option1": v.selectedOptions?.[0]?.value,
+              "store.option2": v.selectedOptions?.[1]?.value,
+              "store.option3": v.selectedOptions?.[2]?.value,
+              "store.colorHex": enriched?.colorHex ?? null,
+              "store.inventory": enriched?.inventory ?? undefined,
+            })
+          );
+
+          const refKey = uuidv5(variantDocId, UUID_NAMESPACE_PRODUCT_VARIANT!);
+
+          variantRefs.push({
+            _key: refKey,
+            _type: "reference",
+            _ref: variantDocId,
+            _weak: true,
+          });
+
+          patched += 1;
+        }
+
+        const prices = variantNodes
+          .map((vn: { price?: { amount?: string } | null }) => (vn?.price?.amount ? Number(vn.price.amount) : null))
+          .filter((n: number | null): n is number => n !== null && Number.isFinite(n));
+
+        const priceRange =
+          prices.length > 0
+            ? { minVariantPrice: Math.min(...prices), maxVariantPrice: Math.max(...prices) }
+            : undefined;
+
+        const firstImageUrl =
+          product.images?.nodes?.[0]?.url || product.featuredImage?.url || undefined;
+
+        const options =
+          (product.options || []).map((opt: { id: string; name: string; values?: string[] }) => ({
+            _type: "option",
+            _key: opt.id,
+            name: opt.name,
+            values: opt.values ?? [],
+          })) || [];
 
         tx.createIfNotExists({
-          _id: variantDocId,
-          _type: "productVariant",
+          _id: productDocId,
+          _type: "product",
           store: {},
         });
 
-        tx.patch(variantDocId, (p) =>
+        tx.patch(productDocId, (p) =>
           p.set({
-            "store.gid": v.id,
-            "store.id": Number(variantId),
-            "store.title": v.title,
-            "store.sku": v.sku,
-            "store.price": Number.isFinite(price) ? price : undefined,
-            "store.compareAtPrice": Number.isFinite(compareAtPrice) ? compareAtPrice : undefined,
-            "store.previewImageUrl": v.image?.url,
-            "store.option1": v.selectedOptions?.[0]?.value,
-            "store.option2": v.selectedOptions?.[1]?.value,
-            "store.option3": v.selectedOptions?.[2]?.value,
-            "store.colorHex": enriched?.colorHex ?? null,
-            "store.inventory": enriched?.inventory ?? undefined,
+            "store.gid": product.id,
+            "store.id": Number(shopifyProductId),
+            "store.title": product.title,
+            "store.slug": { current: product.handle },
+            "store.descriptionHtml": product.descriptionHtml,
+            "store.vendor": product.vendor,
+            "store.productType": product.productType,
+            "store.previewImageUrl": firstImageUrl,
+            "store.options": options,
+            "store.priceRange": priceRange,
+            "store.variants": variantRefs,
+            "store.requiresSellingPlan": product.requiresSellingPlan,
+            "store.sellingPlanGroups": product.sellingPlanGroups,
           })
         );
 
-        const refKey = uuidv5(variantDocId, UUID_NAMESPACE_PRODUCT_VARIANT!);
-
-        variantRefs.push({
-          _key: refKey,
-          _type: "reference",
-          _ref: variantDocId,
-          _weak: true,
-        });
-
         patched += 1;
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : "Unknown error";
+        console.error(`Failed to sync product ${productGid}:`, err);
+        errors.push({ productId: productGid, error: errorMessage });
       }
-
-      const prices = variantNodes
-        .map((vn: { price?: { amount?: string } | null }) => (vn?.price?.amount ? Number(vn.price.amount) : null))
-        .filter((n: number | null): n is number => n !== null && Number.isFinite(n));
-
-      const priceRange =
-        prices.length > 0
-          ? { minVariantPrice: Math.min(...prices), maxVariantPrice: Math.max(...prices) }
-          : undefined;
-
-      const firstImageUrl =
-        product.images?.nodes?.[0]?.url || product.featuredImage?.url || undefined;
-
-      const options =
-        (product.options || []).map((opt: { id: string; name: string; values?: string[] }) => ({
-          _type: "option",
-          _key: opt.id,
-          name: opt.name,
-          values: opt.values ?? [],
-        })) || [];
-
-      tx.createIfNotExists({
-        _id: productDocId,
-        _type: "product",
-        store: {},
-      });
-
-      tx.patch(productDocId, (p) =>
-        p.set({
-          "store.gid": product.id,
-          "store.id": Number(shopifyProductId),
-          "store.title": product.title,
-          "store.slug": { current: product.handle },
-          "store.descriptionHtml": product.descriptionHtml,
-          "store.vendor": product.vendor,
-          "store.productType": product.productType,
-          "store.previewImageUrl": firstImageUrl,
-          "store.options": options,
-          "store.priceRange": priceRange,
-          "store.variants": variantRefs,
-          "store.requiresSellingPlan": product.requiresSellingPlan,
-          "store.sellingPlanGroups": product.sellingPlanGroups,
-        })
-      );
-
-      patched += 1;
     }
 
-    if (patched > 0) await tx.commit();
-    return NextResponse.json({ message: "OK", patched }, { status: 200 });
+    if (patched > 0) {
+      try {
+        await tx.commit();
+      } catch (commitErr) {
+        console.error("Transaction commit failed:", commitErr);
+        return NextResponse.json(
+          { 
+            error: "Failed to commit transaction", 
+            details: commitErr instanceof Error ? commitErr.message : "Unknown error",
+            patched,
+            errors 
+          },
+          { status: 500 }
+        );
+      }
+    }
+
+    return NextResponse.json({ 
+      message: "OK", 
+      patched, 
+      ...(errors.length > 0 && { errors, errorCount: errors.length })
+    }, { status: 200 });
   } catch (err) {
     console.error(err);
     return NextResponse.json(
