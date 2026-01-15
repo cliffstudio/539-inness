@@ -1,29 +1,41 @@
-// Custom sync handler for Sanity Connect
-// This endpoint receives POST requests from Sanity Connect
-
+// app/api/sanity-connect/route.ts
 import { createClient } from "@sanity/client";
 import { NextRequest, NextResponse } from "next/server";
 import { dataset, projectId, apiVersion } from "@/sanity/env";
+
+import { GraphQLClient } from "graphql-request";
+import { v5 as uuidv5 } from "uuid";
+
+const UUID_NAMESPACE_PRODUCT_VARIANT =
+  process.env.UUID_NAMESPACE_PRODUCT_VARIANT;
 
 const sanity = createClient({
   apiVersion,
   dataset,
   projectId,
-  token: process.env.SANITY_API_TOKEN, // Server-side only, no NEXT_PUBLIC_ prefix needed
+  token: process.env.SANITY_API_TOKEN,
   useCdn: false,
 });
 
-const SHOPIFY_DOMAIN = process.env.SHOPIFY_DOMAIN; // e.g. inness-hotel.myshopify.com
-const SHOPIFY_ADMIN_TOKEN = process.env.SHOPIFY_ADMIN_TOKEN; // Admin API access token
-const SHOPIFY_API_VERSION = process.env.SHOPIFY_API_VERSION || "2025-01";
+// Admin API
+const SHOPIFY_DOMAIN = process.env.SHOPIFY_DOMAIN;
+const SHOPIFY_ADMIN_TOKEN = process.env.SHOPIFY_ADMIN_TOKEN;
+const SHOPIFY_API_VERSION = process.env.SHOPIFY_API_VERSION;
 
-function extractIdFromGid(gid: string | undefined) {
+// Storefront
+const SHOPIFY_API_ENDPOINT = process.env.SHOPIFY_API_ENDPOINT;
+const SHOPIFY_STOREFRONT_ACCESS_TOKEN = process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN;
+
+function idFromGid(gid: string | undefined) {
   return gid?.match(/[^\/]+$/i)?.[0];
 }
 
-async function shopifyGraphQL(query: string, variables?: Record<string, unknown>) {
+/** ----------------------------
+ *  Shopify Admin GraphQL
+ *  ---------------------------- */
+async function shopifyAdminGraphQL(query: string, variables?: Record<string, unknown>) {
   if (!SHOPIFY_DOMAIN || !SHOPIFY_ADMIN_TOKEN) {
-    throw new Error("Shopify credentials not configured");
+    throw new Error("Shopify Admin credentials not configured");
   }
 
   const res = await fetch(
@@ -40,12 +52,12 @@ async function shopifyGraphQL(query: string, variables?: Record<string, unknown>
 
   if (!res.ok) {
     const text = await res.text();
-    throw new Error(`Shopify GraphQL failed: ${res.status} ${text}`);
+    throw new Error(`Shopify Admin GraphQL failed: ${res.status} ${text}`);
   }
 
   const json = await res.json();
   if (json.errors?.length) {
-    throw new Error(`Shopify GraphQL errors: ${JSON.stringify(json.errors)}`);
+    throw new Error(`Shopify Admin GraphQL errors: ${JSON.stringify(json.errors)}`);
   }
   return json.data;
 }
@@ -61,37 +73,27 @@ async function fetchVariantData(variantGid: string) {
         }
         inventoryQuantity
         inventoryPolicy
-        inventoryItem {
-          tracked
-        }
+        inventoryItem { tracked }
       }
     }
   `;
 
-  const data = await shopifyGraphQL(query, { id: variantGid });
+  const data = await shopifyAdminGraphQL(query, { id: variantGid });
   const variant = data?.productVariant;
   if (!variant) return null;
 
   const colorHex = variant.metafield?.value || null;
-  
-  // Calculate inventory availability
-  // If inventory tracking is disabled (tracked = false), the variant is always available
-  // If inventory tracking is enabled (tracked = true), check quantity and policy
-  const isTracked = variant.inventoryItem?.tracked ?? true; // Default to true if not specified
+
+  const isTracked = variant.inventoryItem?.tracked ?? true;
   const inventoryQuantity = variant.inventoryQuantity ?? 0;
   const inventoryPolicy = variant.inventoryPolicy; // CONTINUE or DENY
-  
-  // isAvailable logic:
-  // - If not tracked: always available
-  // - If tracked with CONTINUE policy: always available (backorders allowed)
-  // - If tracked with DENY policy: only available if quantity > 0
-  const isAvailable = !isTracked 
-    ? true 
-    : inventoryPolicy === 'CONTINUE' 
-      ? true 
+
+  const isAvailable = !isTracked
+    ? true
+    : inventoryPolicy === "CONTINUE"
+      ? true
       : inventoryQuantity > 0;
-  
-  // available quantity: only set if inventory is tracked
+
   const available = isTracked ? inventoryQuantity : undefined;
 
   return {
@@ -99,186 +101,243 @@ async function fetchVariantData(variantGid: string) {
     inventory: {
       available,
       isAvailable,
-      management: isTracked ? 'shopify' : null,
+      management: isTracked ? "shopify" : null,
       policy: inventoryPolicy,
     },
   };
 }
 
+/** ----------------------------
+ *  Shopify Storefront fetch
+ *  ---------------------------- */
+function getStorefrontClient() {
+  if (!SHOPIFY_API_ENDPOINT || !SHOPIFY_STOREFRONT_ACCESS_TOKEN) {
+    throw new Error("Shopify Storefront credentials not configured");
+  }
+
+  return new GraphQLClient(SHOPIFY_API_ENDPOINT, {
+    headers: {
+      "X-Shopify-Storefront-Access-Token": SHOPIFY_STOREFRONT_ACCESS_TOKEN,
+      "Content-Type": "application/json",
+    },
+  });
+}
+
+const STOREFRONT_PRODUCT_QUERY = /* GraphQL */ `
+  query ProductById($id: ID!) {
+    product(id: $id) {
+      id
+      title
+      handle
+      descriptionHtml
+      vendor
+      productType
+      tags
+      createdAt
+      updatedAt
+
+      featuredImage { url }
+      images(first: 1) { nodes { url } }
+
+      options {
+        id
+        name
+        values
+      }
+
+      requiresSellingPlan
+      sellingPlanGroups(first: 10) {
+        edges {
+          node {
+            id
+            name
+            sellingPlans(first: 50) {
+              edges {
+                node {
+                  id
+                  name
+                  priceAdjustments {
+                    adjustmentValue {
+                      __typename
+                      ... on SellingPlanPercentagePriceAdjustment { adjustmentPercentage }
+                      ... on SellingPlanFixedAmountPriceAdjustment { adjustmentAmount }
+                      ... on SellingPlanFixedPriceAdjustment { price { amount } }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      variants(first: 250) {
+        nodes {
+          id
+          title
+          sku
+          availableForSale
+          price { amount }
+          compareAtPrice { amount }
+          image { url }
+          selectedOptions { name value }
+          product { id }
+        }
+      }
+    }
+  }
+`;
+
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
+    if (!UUID_NAMESPACE_PRODUCT_VARIANT) {
+      throw new Error("UUID_NAMESPACE_PRODUCT_VARIANT environment variable is not configured");
+    }
 
-    // Sanity Connect can batch products in one request
-    const products = body.products || [];
+    const requestData = await request.json();
+    const action: string = requestData?.action || "update";
 
-    const patches = [];
+    switch (action) {
+      case "create":
+      case "update":
+      case "sync":
+        break;
+      case "delete":
+        // Optional: implement delete handling (productIds/collectionIds). :contentReference[oaicite:3]{index=3}
+        return NextResponse.json({ message: "OK (delete not implemented here)" }, { status: 200 });
+      default:
+        return NextResponse.json({ error: `Unsupported action: ${action}` }, { status: 400 });
+    }
 
-    // Process each product from the payload
-    for (const product of products) {
-      if (!product?.id) continue;
+    const products = Array.isArray(requestData?.products) ? requestData.products : [];
+    if (products.length === 0) {
+      return NextResponse.json({ message: "OK", patched: 0 }, { status: 200 });
+    }
 
-      const productId = extractIdFromGid(product.id);
-      const sanityProductDocId = `shopifyProduct-${productId}`;
+    const storefront = getStorefrontClient();
+    const tx = sanity.transaction();
 
-      // Build product patch from payload
-      const productPatch: Record<string, unknown> = {};
+    let patched = 0;
 
-      // Product-level fields from payload
-      if (product.title !== undefined) productPatch["store.title"] = product.title;
-      if (product.slug !== undefined) {
-        productPatch["store.slug"] = { current: product.slug };
-      }
-      if (product.previewImageUrl !== undefined) {
-        productPatch["store.previewImageUrl"] = product.previewImageUrl;
-      }
-      if (product.descriptionHtml !== undefined) {
-        productPatch["store.descriptionHtml"] = product.descriptionHtml;
-      }
-      if (product.status !== undefined) productPatch["store.status"] = product.status;
-      if (product.isDeleted !== undefined) productPatch["store.isDeleted"] = product.isDeleted;
-      if (product.id !== undefined) {
-        const numericId = extractIdFromGid(product.id);
-        if (numericId) productPatch["store.id"] = parseInt(numericId, 10);
-      }
-      if (product.id !== undefined) productPatch["store.gid"] = product.id;
-      if (product.options !== undefined) {
-        productPatch["store.options"] = product.options;
-      }
+    for (const incoming of products) {
+      const productGid: string | undefined = incoming?.id;
+      if (!productGid) continue;
 
-      // Calculate priceRange from variants
-      if (product.variants && product.variants.length > 0) {
-        const prices = product.variants
-          .map((v: { price?: string | number }) => {
-            const price = v?.price;
-            if (price === undefined || price === null) return null;
-            const priceValue = typeof price === 'string' 
-              ? parseFloat(price) 
-              : typeof price === 'number' 
-                ? price 
-                : null;
-            return priceValue !== null && !isNaN(priceValue) ? priceValue : null;
-          })
-          .filter((p: number | null): p is number => p !== null);
+      const sf = await storefront.request(STOREFRONT_PRODUCT_QUERY, { id: productGid });
+      const product = sf?.product;
+      if (!product) continue; // not on sales channel etc.
 
-        if (prices.length > 0) {
-          const minPrice = Math.min(...prices);
-          const maxPrice = Math.max(...prices);
-          productPatch["store.priceRange"] = {
-            minVariantPrice: minPrice,
-            maxVariantPrice: maxPrice,
-          };
-        }
-      }
+      const shopifyProductId = idFromGid(product.id);
+      if (!shopifyProductId) continue;
 
-      if (Object.keys(productPatch).length > 0) {
-        patches.push({
-          id: sanityProductDocId,
-          patch: { set: productPatch },
-        });
-      }
+      const productDocId = `shopifyProduct-${shopifyProductId}`;
 
-      // Process variants for this product
-      for (const variant of product.variants || []) {
-        if (!variant?.id) continue;
+      // Build variant docs first (and gather refs with uuidv5 keys)
+      const variantNodes = product.variants?.nodes || [];
+      const variantRefs: Array<{ _key: string; _type: "reference"; _ref: string; _weak: boolean }> = [];
 
-        const variantId = extractIdFromGid(variant.id);
-        const sanityVariantDocId = `shopifyProductVariant-${variantId}`;
+      for (const v of variantNodes) {
+        const variantId = idFromGid(v.id);
+        if (!variantId) continue;
 
-        // Build variant patch from payload
-        const variantPatch: Record<string, unknown> = {};
+        const variantDocId = `shopifyProductVariant-${variantId}`;
 
-        // Variant-level fields from payload
-        if (variant.title !== undefined) variantPatch["store.title"] = variant.title;
-        if (variant.sku !== undefined) variantPatch["store.sku"] = variant.sku;
-        if (variant.id !== undefined) {
-          const numericId = extractIdFromGid(variant.id);
-          if (numericId) variantPatch["store.id"] = parseInt(numericId, 10);
-        }
-        if (variant.id !== undefined) variantPatch["store.gid"] = variant.id;
-        if (variant.price !== undefined) {
-          const priceValue = typeof variant.price === 'string' 
-            ? parseFloat(variant.price) 
-            : typeof variant.price === 'number' 
-              ? variant.price 
-              : null;
-          if (priceValue !== null && !isNaN(priceValue)) {
-            variantPatch["store.price"] = priceValue;
-          }
-        }
-        if (variant.previewImageUrl !== undefined) {
-          variantPatch["store.previewImageUrl"] = variant.previewImageUrl;
-        }
-        if (variant.option1 !== undefined) variantPatch["store.option1"] = variant.option1;
-        if (variant.option2 !== undefined) variantPatch["store.option2"] = variant.option2;
-        if (variant.option3 !== undefined) variantPatch["store.option3"] = variant.option3;
-
-        // Fetch colorHex and inventory from Shopify API
+        let enriched: Awaited<ReturnType<typeof fetchVariantData>> | null = null;
         try {
-          const variantData = await fetchVariantData(variant.id);
-          if (variantData) {
-            variantPatch["store.colorHex"] = variantData.colorHex;
-            variantPatch["store.inventory"] = variantData.inventory;
-          }
-        } catch (error) {
-          console.error(`Error fetching data for variant ${variant.id}:`, error);
-          // Continue even if API fetch fails - we still want to update other fields
+          enriched = await fetchVariantData(v.id);
+        } catch (e) {
+          console.error("Variant enrichment failed", v.id, e);
         }
 
-        if (Object.keys(variantPatch).length > 0) {
-          patches.push({
-            id: sanityVariantDocId,
-            patch: { set: variantPatch },
-          });
-        }
+        const price = v.price?.amount ? Number(v.price.amount) : undefined;
+        const compareAtPrice = v.compareAtPrice?.amount ? Number(v.compareAtPrice.amount) : undefined;
+
+        tx.createIfNotExists({
+          _id: variantDocId,
+          _type: "productVariant",
+          store: {},
+        });
+
+        tx.patch(variantDocId, (p) =>
+          p.set({
+            "store.gid": v.id,
+            "store.id": Number(variantId),
+            "store.title": v.title,
+            "store.sku": v.sku,
+            "store.price": Number.isFinite(price) ? price : undefined,
+            "store.compareAtPrice": Number.isFinite(compareAtPrice) ? compareAtPrice : undefined,
+            "store.previewImageUrl": v.image?.url,
+            "store.option1": v.selectedOptions?.[0]?.value,
+            "store.option2": v.selectedOptions?.[1]?.value,
+            "store.option3": v.selectedOptions?.[2]?.value,
+            "store.colorHex": enriched?.colorHex ?? null,
+            "store.inventory": enriched?.inventory ?? undefined,
+          })
+        );
+
+        const refKey = uuidv5(variantDocId, UUID_NAMESPACE_PRODUCT_VARIANT!);
+
+        variantRefs.push({
+          _key: refKey,
+          _type: "reference",
+          _ref: variantDocId,
+          _weak: true,
+        });
+
+        patched += 1;
       }
+
+      const prices = variantNodes
+        .map((vn: { price?: { amount?: string } | null }) => (vn?.price?.amount ? Number(vn.price.amount) : null))
+        .filter((n: number | null): n is number => n !== null && Number.isFinite(n));
+
+      const priceRange =
+        prices.length > 0
+          ? { minVariantPrice: Math.min(...prices), maxVariantPrice: Math.max(...prices) }
+          : undefined;
+
+      const firstImageUrl =
+        product.images?.nodes?.[0]?.url || product.featuredImage?.url || undefined;
+
+      const options =
+        (product.options || []).map((opt: { id: string; name: string; values?: string[] }) => ({
+          _type: "option",
+          _key: opt.id,
+          name: opt.name,
+          values: opt.values ?? [],
+        })) || [];
+
+      tx.createIfNotExists({
+        _id: productDocId,
+        _type: "product",
+        store: {},
+      });
+
+      tx.patch(productDocId, (p) =>
+        p.set({
+          "store.gid": product.id,
+          "store.id": Number(shopifyProductId),
+          "store.title": product.title,
+          "store.slug": { current: product.handle },
+          "store.descriptionHtml": product.descriptionHtml,
+          "store.vendor": product.vendor,
+          "store.productType": product.productType,
+          "store.previewImageUrl": firstImageUrl,
+          "store.options": options,
+          "store.priceRange": priceRange,
+          "store.variants": variantRefs,
+          "store.requiresSellingPlan": product.requiresSellingPlan,
+          "store.sellingPlanGroups": product.sellingPlanGroups,
+        })
+      );
+
+      patched += 1;
     }
 
-    // Apply all patches in a transaction
-    // Use createIfNotExists for variants/products that might not exist yet
-    if (patches.length > 0) {
-      try {
-        const tx = sanity.transaction();
-        for (const p of patches) {
-          // Check if this is a variant or product document
-          const isVariant = p.id.startsWith('shopifyProductVariant-');
-          const isProduct = p.id.startsWith('shopifyProduct-');
-          
-          if (isVariant) {
-            // For variants, create the document if it doesn't exist, then patch
-            tx.createIfNotExists({
-              _id: p.id,
-              _type: 'productVariant',
-              store: {},
-            });
-            tx.patch(p.id, (patch) => patch.set(p.patch.set));
-          } else if (isProduct) {
-            // For products, create the document if it doesn't exist, then patch
-            tx.createIfNotExists({
-              _id: p.id,
-              _type: 'product',
-              store: {},
-            });
-            tx.patch(p.id, (patch) => patch.set(p.patch.set));
-          } else {
-            // Fallback to regular patch
-            tx.patch(p.id, (patch) => patch.set(p.patch.set));
-          }
-        }
-        await tx.commit();
-        console.log(`Successfully patched ${patches.length} documents`);
-      } catch (txError) {
-        console.error('Transaction error:', txError);
-        // Log details about which patches failed
-        console.error(`Failed to apply ${patches.length} patches`);
-        throw txError;
-      }
-    }
-
-    return NextResponse.json({ message: "OK", patched: patches.length }, { status: 200 });
+    if (patched > 0) await tx.commit();
+    return NextResponse.json({ message: "OK", patched }, { status: 200 });
   } catch (err) {
     console.error(err);
-    // Still return non-200 so Sanity Connect retries (per docs)
     return NextResponse.json(
       { error: err instanceof Error ? err.message : "Unknown error" },
       { status: 500 }
