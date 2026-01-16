@@ -199,7 +199,34 @@ export async function POST(request: NextRequest) {
           : product.tags;
       }
       if (product.options !== undefined) {
-        productPatch["store.options"] = product.options;
+        // Add _key properties to options array items (required by Sanity)
+        productPatch["store.options"] = Array.isArray(product.options)
+          ? product.options.map((option: Record<string, unknown>, index: number) => {
+              const optionWithKey: Record<string, unknown> = {
+                ...option,
+                _key: (option._key as string) || `option-${index}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+              };
+              // Also add _key to values array if it exists
+              if (option.values && Array.isArray(option.values)) {
+                optionWithKey.values = option.values.map((value: unknown, valueIndex: number) => {
+                  if (typeof value === 'object' && value !== null) {
+                    const valueObj = value as Record<string, unknown>;
+                    return {
+                      ...valueObj,
+                      _key: (valueObj._key as string) || `value-${valueIndex}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+                    };
+                  }
+                  // If value is a string, wrap it in an object
+                  return {
+                    _type: 'optionValue',
+                    value: value,
+                    _key: `value-${valueIndex}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+                  };
+                });
+              }
+              return optionWithKey;
+            })
+          : product.options;
       }
 
       // Calculate priceRange from variants
@@ -435,10 +462,12 @@ export async function POST(request: NextRequest) {
       ]);
       
       if (allVariantIds.size > 0) {
-        productPatch["store.variants"] = Array.from(allVariantIds).map((variantId) => ({
+        // Add _key properties to variant references (required by Sanity for array items)
+        productPatch["store.variants"] = Array.from(allVariantIds).map((variantId, index) => ({
           _type: 'reference',
           _ref: variantId,
           _weak: true,
+          _key: `variant-${index}-${variantId}`,
         }));
       }
 
