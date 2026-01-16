@@ -64,6 +64,10 @@ async function fetchVariantData(variantGid: string) {
         inventoryItem {
           tracked
         }
+        selectedOptions {
+          name
+          value
+        }
         product {
           status
         }
@@ -105,9 +109,20 @@ async function fetchVariantData(variantGid: string) {
     : shopifyStatus === 'draft' ? 'draft'
     : 'active'; // Default to active if not specified
 
+  // Extract option values from selectedOptions
+  // Shopify returns selectedOptions as an array of {name, value}
+  // We need to map them to option1, option2, option3 based on position
+  const selectedOptions = variant.selectedOptions || [];
+  const option1 = selectedOptions[0]?.value || null;
+  const option2 = selectedOptions[1]?.value || null;
+  const option3 = selectedOptions[2]?.value || null;
+
   return {
     colorHex,
     status,
+    option1,
+    option2,
+    option3,
     inventory: {
       available,
       isAvailable,
@@ -457,6 +472,16 @@ export async function POST(request: NextRequest) {
                   // Always set status (required field)
                   if (variantData.status) {
                     variantPatch["store.status"] = variantData.status;
+                  }
+                  // Set option values if available
+                  if (variantData.option1 !== null && variantData.option1 !== undefined) {
+                    variantPatch["store.option1"] = variantData.option1;
+                  }
+                  if (variantData.option2 !== null && variantData.option2 !== undefined) {
+                    variantPatch["store.option2"] = variantData.option2;
+                  }
+                  if (variantData.option3 !== null && variantData.option3 !== undefined) {
+                    variantPatch["store.option3"] = variantData.option3;
                   }
                 }
                 
