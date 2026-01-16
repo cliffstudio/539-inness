@@ -64,6 +64,9 @@ async function fetchVariantData(variantGid: string) {
         inventoryItem {
           tracked
         }
+        product {
+          status
+        }
       }
     }
   `;
@@ -94,8 +97,17 @@ async function fetchVariantData(variantGid: string) {
   // available quantity: only set if inventory is tracked
   const available = isTracked ? inventoryQuantity : undefined;
 
+  // Get status from product (variants inherit product status in Shopify)
+  // Map Shopify status to Sanity status format
+  const shopifyStatus = variant.product?.status?.toLowerCase();
+  const status = shopifyStatus === 'active' ? 'active' 
+    : shopifyStatus === 'archived' ? 'archived'
+    : shopifyStatus === 'draft' ? 'draft'
+    : 'active'; // Default to active if not specified
+
   return {
     colorHex,
+    status,
     inventory: {
       available,
       isAvailable,
@@ -359,16 +371,26 @@ export async function POST(request: NextRequest) {
           variantPatch["store.shop"] = { domain: SHOPIFY_DOMAIN };
         }
 
-        // Fetch colorHex and inventory from Shopify API
+        // Fetch colorHex, inventory, and status from Shopify API
         try {
           const variantData = await fetchVariantData(variant.id);
           if (variantData) {
             variantPatch["store.colorHex"] = variantData.colorHex;
             variantPatch["store.inventory"] = variantData.inventory;
+            // Always set status (required field) - use from API if not in payload
+            if (variantData.status) {
+              variantPatch["store.status"] = variantData.status;
+            }
           }
         } catch (error) {
           console.error(`Error fetching data for variant ${variant.id}:`, error);
           // Continue even if API fetch fails - we still want to update other fields
+        }
+        
+        // Ensure status is always set (required field)
+        // Priority: payload status > API status > default to 'active'
+        if (variantPatch["store.status"] === undefined) {
+          variantPatch["store.status"] = variant.status || 'active';
         }
 
         // Always create/update variant document, even if patch is minimal
@@ -432,6 +454,15 @@ export async function POST(request: NextRequest) {
                 if (variantData) {
                   variantPatch["store.colorHex"] = variantData.colorHex;
                   variantPatch["store.inventory"] = variantData.inventory;
+                  // Always set status (required field)
+                  if (variantData.status) {
+                    variantPatch["store.status"] = variantData.status;
+                  }
+                }
+                
+                // Ensure status is always set (required field) - default to 'active' if not available
+                if (variantPatch["store.status"] === undefined) {
+                  variantPatch["store.status"] = 'active';
                 }
                 
                 patches.push({
