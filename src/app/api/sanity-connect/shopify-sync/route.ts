@@ -105,6 +105,34 @@ async function fetchVariantData(variantGid: string) {
   };
 }
 
+async function fetchAllProductVariants(productGid: string) {
+  const query = `
+    query ProductVariants($id: ID!) {
+      product(id: $id) {
+        id
+        variants(first: 250) {
+          edges {
+            node {
+              id
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  try {
+    const data = await shopifyGraphQL(query, { id: productGid });
+    if (data?.product?.variants?.edges) {
+      return data.product.variants.edges.map((edge: { node: { id: string } }) => edge.node.id);
+    }
+    return [];
+  } catch (error) {
+    console.error(`Error fetching all variants for product ${productGid}:`, error);
+    return [];
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -200,13 +228,33 @@ export async function POST(request: NextRequest) {
       }
 
       // Process variants for this product
+      // First, fetch existing variants from Sanity to ensure we don't lose any
+      // when building the variants array (Sanity Connect may only send changed variants)
+      let existingVariantIds: string[] = [];
+      try {
+        const existingProduct = await sanity.getDocument(sanityProductDocId);
+        if (existingProduct?.store?.variants && Array.isArray(existingProduct.store.variants)) {
+          existingVariantIds = existingProduct.store.variants
+            .map((ref: { _ref?: string }) => ref?._ref)
+            .filter((id: string | undefined): id is string => !!id);
+        }
+      } catch {
+        // Product doesn't exist yet, that's fine
+        console.log(`Product ${sanityProductDocId} doesn't exist yet, will create`);
+      }
+
       // Collect variant document IDs to update product's variants array
       const variantDocIds: string[] = [];
+      // Track which variants we've processed from the payload
+      const processedVariantIds = new Set<string>();
       
+      // Process variants from payload
       for (const variant of product.variants || []) {
         if (!variant?.id) continue;
 
         const variantId = extractIdFromGid(variant.id);
+        if (!variantId) continue; // Skip if we can't extract ID
+        
         const sanityVariantDocId = `shopifyProductVariant-${variantId}`;
 
         // Build variant patch from payload
@@ -296,20 +344,98 @@ export async function POST(request: NextRequest) {
           // Continue even if API fetch fails - we still want to update other fields
         }
 
+        // Always create/update variant document, even if patch is minimal
+        // This ensures new variants are created even if they have minimal data
         if (Object.keys(variantPatch).length > 0) {
           patches.push({
             id: sanityVariantDocId,
             patch: { set: variantPatch },
           });
-          // Add variant document ID to the array for product reference
-          variantDocIds.push(sanityVariantDocId);
+        } else {
+          // Even if no fields to update, ensure variant exists with at least ID and product reference
+          const productNumericId = product.id ? extractIdFromGid(product.id) : null;
+          patches.push({
+            id: sanityVariantDocId,
+            patch: { 
+              set: {
+                "store.id": parseInt(variantId, 10),
+                "store.gid": variant.id,
+                ...(productNumericId ? { "store.productId": parseInt(productNumericId, 10) } : {}),
+                ...(product.id ? { "store.productGid": product.id } : {}),
+              }
+            },
+          });
+        }
+        // Add variant document ID to the array for product reference
+        variantDocIds.push(sanityVariantDocId);
+        processedVariantIds.add(sanityVariantDocId);
+      }
+
+      // If we have fewer variants in payload than exist in Sanity, or if product is new,
+      // fetch all variants from Shopify to ensure we sync everything
+      // This handles cases where Sanity Connect only sends changed variants
+      if (product.id && (product.variants?.length || 0) < existingVariantIds.length) {
+        try {
+          const allShopifyVariantGids = await fetchAllProductVariants(product.id);
+          console.log(`Fetched ${allShopifyVariantGids.length} variants from Shopify (payload had ${product.variants?.length || 0})`);
+          
+          // Process variants from Shopify that weren't in the payload
+          for (const variantGid of allShopifyVariantGids) {
+            const variantId = extractIdFromGid(variantGid);
+            const sanityVariantDocId = `shopifyProductVariant-${variantId}`;
+            
+            // Only process if we haven't already processed this variant
+            if (!processedVariantIds.has(sanityVariantDocId)) {
+              // Fetch full variant data from Shopify API
+              try {
+                const variantData = await fetchVariantData(variantGid);
+                if (!variantId) continue;
+                
+                const variantPatch: Record<string, unknown> = {
+                  "store.id": parseInt(variantId, 10),
+                  "store.gid": variantGid,
+                };
+                
+                if (product.id) {
+                  const productNumericId = extractIdFromGid(product.id);
+                  if (productNumericId) variantPatch["store.productId"] = parseInt(productNumericId, 10);
+                  variantPatch["store.productGid"] = product.id;
+                }
+                
+                if (variantData) {
+                  variantPatch["store.colorHex"] = variantData.colorHex;
+                  variantPatch["store.inventory"] = variantData.inventory;
+                }
+                
+                patches.push({
+                  id: sanityVariantDocId,
+                  patch: { set: variantPatch },
+                });
+                
+                variantDocIds.push(sanityVariantDocId);
+                processedVariantIds.add(sanityVariantDocId);
+              } catch (error) {
+                console.error(`Error fetching data for variant ${variantGid}:`, error);
+                // Still add to array even if we can't fetch full data
+                variantDocIds.push(sanityVariantDocId);
+              }
+            }
+          }
+        } catch (error) {
+          console.error(`Error fetching all variants from Shopify:`, error);
         }
       }
 
       // Update product's variants array with references to all variants
-      // This ensures new variants are linked to the product
-      if (variantDocIds.length > 0) {
-        productPatch["store.variants"] = variantDocIds.map((variantId) => ({
+      // Merge variants from payload with existing variants to ensure we don't lose any
+      // This ensures new variants are linked to the product, and existing ones aren't removed
+      const allVariantIds = new Set([
+        ...variantDocIds, // Variants from current payload (newly added or updated)
+        ...existingVariantIds.filter(id => id.startsWith('shopifyProductVariant-')) // Existing variants not in payload
+      ]);
+      
+      if (allVariantIds.size > 0) {
+        productPatch["store.variants"] = Array.from(allVariantIds).map((variantId) => ({
           _type: 'reference',
           _ref: variantId,
           _weak: true,
