@@ -2,32 +2,49 @@
 
 .product-page {
 
-  .hero-section {
-    position: unset;
+  .product-hero-section {
     background-color: $colour-beige;
-    height: unset;
-    // min-height: 100svh;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: get-rem-desktop(100);
+    padding-top: get-rem-desktop(133);
+    padding-bottom: get-rem-desktop(24);
 
-    .hero-image {
-      aspect-ratio: 774 / 960;
-      width: 100%;
-      max-width: 100%;
-      min-width: 0;
-      overflow: hidden;
-      
-      .media-wrap {
+    @media only screen and (max-width: 768px) {
+      @include flex;
+      @include flex-direction(column);
+      row-gap: get-rem-mobile(48);
+      padding-top: get-rem-mobile(116);
+      padding-bottom: get-rem-mobile(24);
+    }
+
+    .left-column {
+      .featured-image {
         aspect-ratio: 774 / 960;
-        height: auto;
         width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        overflow: hidden;
+        
+        .media-wrap {
+          aspect-ratio: 774 / 960;
+          height: auto;
+          width: 100%;
+        }
       }
     }
 
-    .hero-content {
+    .right-column {
       color: $colour-black;
-      text-align: left;
+      @include flex;
+      @include flex-direction(column);
       @include justify-content(center);
       row-gap: get-rem-desktop(80);
       max-width: get-rem-desktop(500);
+
+      @media only screen and (max-width: 768px) {
+        row-gap: get-rem-mobile(75);
+      }
 
       .product-title {
         margin-bottom: get-rem-desktop(30);

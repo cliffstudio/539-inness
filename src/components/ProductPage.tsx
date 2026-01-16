@@ -47,6 +47,7 @@ interface Product {
       current?: string
     }
     previewImageUrl?: string
+    images?: string[]
     descriptionHtml?: string
     priceRange?: {
       minVariantPrice?: number
@@ -201,6 +202,17 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
 
   const displayImageUrl = selectedVariant?.store?.previewImageUrl || product.store?.previewImageUrl
 
+  // Get extra images (all product images except the main/preview image)
+  const extraImages = useMemo(() => {
+    if (!product.store?.images || !Array.isArray(product.store.images)) {
+      return []
+    }
+    
+    // Filter out the main/preview image to avoid duplication
+    const mainImageUrl = product.store.previewImageUrl
+    return product.store.images.filter((imageUrl) => imageUrl !== mainImageUrl)
+  }, [product.store?.images, product.store?.previewImageUrl])
+
   // Trigger lazy loading update when image URL changes
   useEffect(() => {
     if (!displayImageUrl) return
@@ -215,26 +227,45 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
     }, 0)
 
     return () => clearTimeout(timer)
-  }, [displayImageUrl])
+  }, [displayImageUrl, extraImages])
 
   return (
     <article className="product-page">
-      <div className="hero-section layout-2 h-pad">
-        {displayImageUrl && (
-          <div className="hero-image relative out-of-opacity">
-            <div className="fill-space-image-wrap media-wrap">
-              <img 
-                key={displayImageUrl}
-                data-src={displayImageUrl}
-                alt=""
-                className="lazy full-bleed-image"
-              />
-              <div className="loading-overlay" />
+      <div className="product-hero-section h-pad">
+        <div className="left-column">
+          {displayImageUrl && (
+            <div className="featured-image relative out-of-opacity">
+              <div className="fill-space-image-wrap media-wrap">
+                <img 
+                  key={displayImageUrl}
+                  data-src={displayImageUrl}
+                  alt=""
+                  className="lazy full-bleed-image"
+                />
+                <div className="loading-overlay" />
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        <div className="hero-content out-of-opacity">
+          {extraImages.length > 0 && (
+            <div className="extra-images">
+              {extraImages.map((imageUrl, index) => (
+                <div key={imageUrl || index} className="extra-image relative out-of-opacity">
+                  <div className="fill-space-image-wrap media-wrap">
+                    <img 
+                      data-src={imageUrl}
+                      alt=""
+                      className="lazy full-bleed-image"
+                    />
+                    <div className="loading-overlay" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="right-column out-of-opacity">
           <div>
             {product.store?.title && (
               <h3 className="product-title">{product.store.title}</h3>
