@@ -22,7 +22,7 @@ export default function Hero({ id, title, image, description, specs }: HeroProps
     <section id={id} className="hero-section layout-2 h-pad">
       {image && (
         <div className="hero-image relative out-of-opacity">
-          <div className="fill-space-image-wrap media-wrap">
+          <div className="media-wrap">
             <img 
               data-src={urlFor(image).url()} 
               alt="" 

@@ -153,7 +153,7 @@
 }
 
 @media only screen and (min-width: 769px) {
-  .hero-section {
+  .hero-section:not(.layout-2) {
     position: fixed;
     top: 0;
     left: 0;
@@ -167,6 +167,12 @@
 
   .flexible-content {
     margin-top: 100svh;
+  }
+
+  .hero-section.layout-2 ~ .flexible-content,
+  :has(.hero-section.layout-2) .flexible-content {
+    margin-top: 0;
+    padding-top: 0;
   }
 
   .links-section,
@@ -229,6 +235,8 @@
   padding-top: get-rem-desktop(133);
   padding-bottom: get-rem-desktop(24);
 
+  height: unset;
+
   @media only screen and (max-width: 768px) {
     height: unset;
     min-height: 100svh;
@@ -238,8 +246,22 @@
     padding-top: get-rem-mobile(116);
     padding-bottom: get-rem-mobile(24);
 
-    .hero-image {
-      aspect-ratio: 3 / 4;
+    // .hero-image {
+    //   aspect-ratio: 3 / 4;
+    // }
+  }
+
+  .hero-image {
+    aspect-ratio: 774 / 960;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow: hidden;
+
+    .media-wrap {
+      aspect-ratio: 774 / 960;
+      height: auto;
+      width: 100%;
     }
   }
 
