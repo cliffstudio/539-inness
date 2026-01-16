@@ -1,78 +1,55 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
-
 interface QuantityDropdownProps {
   id: string
   value: number
   onChange: (value: number) => void
+  min?: number
   max?: number
 }
 
-export default function QuantityDropdown({ id, value, onChange, max = 10 }: QuantityDropdownProps) {
-  const [isOpen, setIsOpen] = useState(false)
-  const dropdownRef = useRef<HTMLDivElement>(null)
-
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsOpen(false)
-      }
+export default function QuantityDropdown({ id, value, onChange, min = 1, max = 10 }: QuantityDropdownProps) {
+  const handleDecrement = () => {
+    if (value > min) {
+      onChange(value - 1)
     }
-
-    if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside)
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [isOpen])
-
-  const handleSelect = (newValue: number) => {
-    onChange(newValue)
-    setIsOpen(false)
   }
 
-  const options = Array.from({ length: max }, (_, i) => i + 1)
+  const handleIncrement = () => {
+    if (value < max) {
+      onChange(value + 1)
+    }
+  }
 
   return (
-    <div className="quantity-dropdown" ref={dropdownRef}>
-      <label htmlFor={id}>Qty:</label>
-      <div className="quantity-dropdown__wrapper">
-        <button
-          type="button"
-          className="quantity-dropdown__button"
-          onClick={() => setIsOpen(!isOpen)}
-          aria-label={`Quantity: ${value}`}
-          aria-expanded={isOpen}
-          aria-haspopup="listbox"
-        >
-          <span className="quantity-dropdown__value">{value}</span>
-          <span className="quantity-dropdown__arrow" aria-hidden="true">
-            <svg xmlns="http://www.w3.org/2000/svg" width="8" height="5" viewBox="0 0 8 5" fill="none">
-              <path d="M0.326172 0.379623L3.82617 3.37962L7.32617 0.379623"/>
-            </svg>
-          </span>
-        </button>
-        {isOpen && (
-          <div className="quantity-dropdown__list" role="listbox">
-            {options.map((option) => (
-              <button
-                key={option}
-                type="button"
-                className={`quantity-dropdown__option ${option === value ? 'quantity-dropdown__option--selected' : ''}`}
-                onClick={() => handleSelect(option)}
-                role="option"
-                aria-selected={option === value}
-              >
-                {option}
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
+    <div className="quantity-selector">
+      <button
+        type="button"
+        className="quantity-selector__button quantity-selector__button--minus"
+        onClick={handleDecrement}
+        disabled={value <= min}
+        aria-label="Decrease quantity"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="2" viewBox="0 0 10 2" fill="none">
+          <path d="M0 1.248V0H9.384V1.248H0Z"/>
+        </svg>
+      </button>
+
+      <span className="quantity-selector__value" id={id}>
+        {value}
+      </span>
+
+      <button
+        type="button"
+        className="quantity-selector__button quantity-selector__button--plus"
+        onClick={handleIncrement}
+        disabled={value >= max}
+        aria-label="Increase quantity"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="11" height="12" viewBox="0 0 11 12" fill="none">
+          <path d="M6.048 4.992H10.752V6.24H6.048V11.256H4.728V6.24H0V4.992H4.728V0H6.048V4.992Z"/>
+        </svg>
+      </button>
     </div>
   )
 }
