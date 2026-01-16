@@ -113,9 +113,10 @@ async function fetchVariantData(variantGid: string) {
   // Shopify returns selectedOptions as an array of {name, value}
   // We need to map them to option1, option2, option3 based on position
   const selectedOptions = variant.selectedOptions || [];
-  const option1 = selectedOptions[0]?.value || null;
-  const option2 = selectedOptions[1]?.value || null;
-  const option3 = selectedOptions[2]?.value || null;
+  // Extract values, allowing empty strings but filtering out null/undefined
+  const option1 = selectedOptions[0]?.value ?? null;
+  const option2 = selectedOptions[1]?.value ?? null;
+  const option3 = selectedOptions[2]?.value ?? null;
 
   return {
     colorHex,
@@ -375,9 +376,20 @@ export async function POST(request: NextRequest) {
             variantPatch["store.previewImageUrl"] = imageUrl;
           }
         }
-        if (variant.option1 !== undefined) variantPatch["store.option1"] = variant.option1;
+        // Handle option values - check both direct fields and selectedOptions array
+        if (variant.option1 !== undefined) {
+          variantPatch["store.option1"] = variant.option1;
+        } else if (variant.selectedOptions && Array.isArray(variant.selectedOptions)) {
+          // Parse selectedOptions array if option1/option2/option3 aren't directly available
+          const selectedOptions = variant.selectedOptions as Array<{ name?: string; value?: string }>;
+          if (selectedOptions[0]?.value) variantPatch["store.option1"] = selectedOptions[0].value;
+          if (selectedOptions[1]?.value) variantPatch["store.option2"] = selectedOptions[1].value;
+          if (selectedOptions[2]?.value) variantPatch["store.option3"] = selectedOptions[2].value;
+        }
+        
         if (variant.option2 !== undefined) variantPatch["store.option2"] = variant.option2;
         if (variant.option3 !== undefined) variantPatch["store.option3"] = variant.option3;
+        
         // Shop details if available
         if (variant.shop !== undefined) {
           variantPatch["store.shop"] = variant.shop;
@@ -386,7 +398,8 @@ export async function POST(request: NextRequest) {
           variantPatch["store.shop"] = { domain: SHOPIFY_DOMAIN };
         }
 
-        // Fetch colorHex, inventory, and status from Shopify API
+        // Fetch colorHex, inventory, status, and options from Shopify API
+        // Always fetch to ensure we have complete data, especially for new variants
         try {
           const variantData = await fetchVariantData(variant.id);
           if (variantData) {
@@ -396,6 +409,29 @@ export async function POST(request: NextRequest) {
             if (variantData.status) {
               variantPatch["store.status"] = variantData.status;
             }
+            // Always set option values from API (API is source of truth)
+            // This ensures new variants get their option values even if payload doesn't have them
+            // Use nullish coalescing to allow empty strings but skip null/undefined
+            if (variantData.option1 !== null && variantData.option1 !== undefined) {
+              variantPatch["store.option1"] = variantData.option1;
+            }
+            if (variantData.option2 !== null && variantData.option2 !== undefined) {
+              variantPatch["store.option2"] = variantData.option2;
+            }
+            if (variantData.option3 !== null && variantData.option3 !== undefined) {
+              variantPatch["store.option3"] = variantData.option3;
+            }
+            
+            // Log for debugging
+            if (variantData.option1 || variantData.option2 || variantData.option3) {
+              console.log(`Variant ${variant.id} options from API:`, {
+                option1: variantData.option1,
+                option2: variantData.option2,
+                option3: variantData.option3,
+              });
+            }
+          } else {
+            console.warn(`No variant data returned from API for variant ${variant.id}`);
           }
         } catch (error) {
           console.error(`Error fetching data for variant ${variant.id}:`, error);
