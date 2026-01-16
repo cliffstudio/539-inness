@@ -582,6 +582,7 @@ export const productQuery = groq`
         current
       },
       previewImageUrl,
+      images,
       descriptionHtml,
       priceRange {
         minVariantPrice,

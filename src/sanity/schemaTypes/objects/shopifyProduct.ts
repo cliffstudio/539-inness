@@ -132,6 +132,14 @@ export default defineType({
       type: 'string',
       description: 'Image displayed in both cart and checkout',
     }),
+    // Images array
+    defineField({
+      name: 'images',
+      title: 'Images',
+      type: 'array',
+      of: [{type: 'string'}],
+      description: 'All product images, with the main/preview image first',
+    }),
     // Options
     defineField({
       name: 'options',

@@ -68,6 +68,10 @@ async function fetchVariantData(variantGid: string) {
           name
           value
         }
+        image {
+          url
+          altText
+        }
         product {
           status
         }
@@ -118,12 +122,16 @@ async function fetchVariantData(variantGid: string) {
   const option2 = selectedOptions[1]?.value ?? null;
   const option3 = selectedOptions[2]?.value ?? null;
 
+  // Extract variant-specific image URL
+  const imageUrl = variant.image?.url || null;
+
   return {
     colorHex,
     status,
     option1,
     option2,
     option3,
+    imageUrl,
     inventory: {
       available,
       isAvailable,
@@ -161,6 +169,35 @@ async function fetchAllProductVariants(productGid: string) {
   }
 }
 
+async function fetchProductImages(productGid: string) {
+  const query = `
+    query ProductImages($id: ID!) {
+      product(id: $id) {
+        id
+        images(first: 250) {
+          edges {
+            node {
+              url
+              altText
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  try {
+    const data = await shopifyGraphQL(query, { id: productGid });
+    if (data?.product?.images?.edges) {
+      return data.product.images.edges.map((edge: { node: { url: string; altText?: string } }) => edge.node.url);
+    }
+    return [];
+  } catch (error) {
+    console.error(`Error fetching images for product ${productGid}:`, error);
+    return [];
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -190,20 +227,99 @@ export async function POST(request: NextRequest) {
       }
       // Handle image fields - Sanity Connect may send images in different formats
       // Priority: previewImageUrl > featuredImageUrl > featuredImage.url > image.url > images[0]
+      let previewImageUrl: string | null = null;
       if (product.previewImageUrl !== undefined) {
+        previewImageUrl = product.previewImageUrl;
         productPatch["store.previewImageUrl"] = product.previewImageUrl;
       } else if (product.featuredImageUrl !== undefined) {
+        previewImageUrl = product.featuredImageUrl;
         productPatch["store.previewImageUrl"] = product.featuredImageUrl;
       } else if (product.featuredImage?.url !== undefined) {
+        previewImageUrl = product.featuredImage.url;
         productPatch["store.previewImageUrl"] = product.featuredImage.url;
       } else if (product.image?.url !== undefined) {
+        previewImageUrl = product.image.url;
         productPatch["store.previewImageUrl"] = product.image.url;
       } else if (product.images && Array.isArray(product.images) && product.images.length > 0) {
         // Use first image from images array if previewImageUrl is not available
         const firstImage = product.images[0];
         const imageUrl = firstImage?.url || firstImage?.src || (typeof firstImage === 'string' ? firstImage : null);
         if (imageUrl) {
+          previewImageUrl = imageUrl;
           productPatch["store.previewImageUrl"] = imageUrl;
+        }
+      }
+
+      // Fetch all product images from Shopify API and build images array
+      // Main/preview image should be first, followed by other images
+      try {
+        const allProductImages = await fetchProductImages(product.id);
+        if (allProductImages.length > 0) {
+          // Build images array with preview image first
+          const imagesArray: string[] = [];
+          
+          // Add preview image first if it exists in the fetched images
+          if (previewImageUrl && allProductImages.includes(previewImageUrl)) {
+            imagesArray.push(previewImageUrl);
+            // Add remaining images (excluding the preview image)
+            imagesArray.push(...allProductImages.filter((url: string) => url !== previewImageUrl));
+          } else {
+            // If preview image not in fetched list, add it first anyway, then add all fetched images
+            if (previewImageUrl) {
+              imagesArray.push(previewImageUrl);
+            }
+            imagesArray.push(...allProductImages);
+          }
+          
+          productPatch["store.images"] = imagesArray;
+        } else if (product.images && Array.isArray(product.images)) {
+          // Fallback: use images from payload if API fetch fails
+          const imagesFromPayload = product.images
+            .map((img: unknown) => {
+              if (typeof img === 'string') return img;
+              if (typeof img === 'object' && img !== null) {
+                const imgObj = img as { url?: string; src?: string };
+                return imgObj.url || imgObj.src || null;
+              }
+              return null;
+            })
+            .filter((url: string | null): url is string => url !== null);
+          
+          if (imagesFromPayload.length > 0) {
+            // Ensure preview image is first
+            const imagesArray = previewImageUrl && imagesFromPayload.includes(previewImageUrl)
+              ? [previewImageUrl, ...imagesFromPayload.filter((url: string) => url !== previewImageUrl)]
+              : previewImageUrl
+                ? [previewImageUrl, ...imagesFromPayload]
+                : imagesFromPayload;
+            
+            productPatch["store.images"] = imagesArray;
+          }
+        }
+      } catch (error) {
+        console.error(`Error fetching product images for ${product.id}:`, error);
+        // If API fetch fails, try to use payload images
+        if (product.images && Array.isArray(product.images)) {
+          const imagesFromPayload = product.images
+            .map((img: unknown) => {
+              if (typeof img === 'string') return img;
+              if (typeof img === 'object' && img !== null) {
+                const imgObj = img as { url?: string; src?: string };
+                return imgObj.url || imgObj.src || null;
+              }
+              return null;
+            })
+            .filter((url: string | null): url is string => url !== null);
+          
+          if (imagesFromPayload.length > 0) {
+            const imagesArray = previewImageUrl && imagesFromPayload.includes(previewImageUrl)
+              ? [previewImageUrl, ...imagesFromPayload.filter((url: string) => url !== previewImageUrl)]
+              : previewImageUrl
+                ? [previewImageUrl, ...imagesFromPayload]
+                : imagesFromPayload;
+            
+            productPatch["store.images"] = imagesArray;
+          }
         }
       }
       if (product.descriptionHtml !== undefined) {
@@ -353,29 +469,9 @@ export async function POST(request: NextRequest) {
             variantPatch["store.compareAtPrice"] = compareAtPriceValue;
           }
         }
-        // Handle image fields - Sanity Connect may send images in different formats
-        // Priority: variant.previewImageUrl > variant.imageUrl > variant.image.url > variant.images[0] > product.images[0]
-        if (variant.previewImageUrl !== undefined) {
-          variantPatch["store.previewImageUrl"] = variant.previewImageUrl;
-        } else if (variant.imageUrl !== undefined) {
-          variantPatch["store.previewImageUrl"] = variant.imageUrl;
-        } else if (variant.image?.url !== undefined) {
-          variantPatch["store.previewImageUrl"] = variant.image.url;
-        } else if (variant.images && Array.isArray(variant.images) && variant.images.length > 0) {
-          // Use first image from variant images array if previewImageUrl is not available
-          const firstImage = variant.images[0];
-          const imageUrl = firstImage?.url || firstImage?.src || (typeof firstImage === 'string' ? firstImage : null);
-          if (imageUrl) {
-            variantPatch["store.previewImageUrl"] = imageUrl;
-          }
-        } else if (product.images && Array.isArray(product.images) && product.images.length > 0) {
-          // Fallback to product images if variant doesn't have its own image
-          const firstImage = product.images[0];
-          const imageUrl = firstImage?.url || firstImage?.src || (typeof firstImage === 'string' ? firstImage : null);
-          if (imageUrl) {
-            variantPatch["store.previewImageUrl"] = imageUrl;
-          }
-        }
+        // Handle image fields - prioritize API image (variant-specific) over payload
+        // Priority: API imageUrl > variant.previewImageUrl > variant.imageUrl > variant.image.url > variant.images[0] > product.images[0]
+        // (API image will be set below after fetchVariantData)
         // Handle option values - check both direct fields and selectedOptions array
         if (variant.option1 !== undefined) {
           variantPatch["store.option1"] = variant.option1;
@@ -398,7 +494,7 @@ export async function POST(request: NextRequest) {
           variantPatch["store.shop"] = { domain: SHOPIFY_DOMAIN };
         }
 
-        // Fetch colorHex, inventory, status, and options from Shopify API
+        // Fetch colorHex, inventory, status, options, and image from Shopify API
         // Always fetch to ensure we have complete data, especially for new variants
         try {
           const variantData = await fetchVariantData(variant.id);
@@ -421,14 +517,9 @@ export async function POST(request: NextRequest) {
             if (variantData.option3 !== null && variantData.option3 !== undefined) {
               variantPatch["store.option3"] = variantData.option3;
             }
-            
-            // Log for debugging
-            if (variantData.option1 || variantData.option2 || variantData.option3) {
-              console.log(`Variant ${variant.id} options from API:`, {
-                option1: variantData.option1,
-                option2: variantData.option2,
-                option3: variantData.option3,
-              });
+            // Always set variant-specific image from API (prioritize over payload)
+            if (variantData.imageUrl) {
+              variantPatch["store.previewImageUrl"] = variantData.imageUrl;
             }
           } else {
             console.warn(`No variant data returned from API for variant ${variant.id}`);
@@ -436,6 +527,32 @@ export async function POST(request: NextRequest) {
         } catch (error) {
           console.error(`Error fetching data for variant ${variant.id}:`, error);
           // Continue even if API fetch fails - we still want to update other fields
+        }
+        
+        // Fallback: Handle image fields from payload if API didn't provide one
+        // Priority: variant.previewImageUrl > variant.imageUrl > variant.image.url > variant.images[0] > product.images[0]
+        if (!variantPatch["store.previewImageUrl"]) {
+          if (variant.previewImageUrl !== undefined) {
+            variantPatch["store.previewImageUrl"] = variant.previewImageUrl;
+          } else if (variant.imageUrl !== undefined) {
+            variantPatch["store.previewImageUrl"] = variant.imageUrl;
+          } else if (variant.image?.url !== undefined) {
+            variantPatch["store.previewImageUrl"] = variant.image.url;
+          } else if (variant.images && Array.isArray(variant.images) && variant.images.length > 0) {
+            // Use first image from variant images array if previewImageUrl is not available
+            const firstImage = variant.images[0];
+            const imageUrl = firstImage?.url || firstImage?.src || (typeof firstImage === 'string' ? firstImage : null);
+            if (imageUrl) {
+              variantPatch["store.previewImageUrl"] = imageUrl;
+            }
+          } else if (product.images && Array.isArray(product.images) && product.images.length > 0) {
+            // Fallback to product images if variant doesn't have its own image
+            const firstImage = product.images[0];
+            const imageUrl = firstImage?.url || firstImage?.src || (typeof firstImage === 'string' ? firstImage : null);
+            if (imageUrl) {
+              variantPatch["store.previewImageUrl"] = imageUrl;
+            }
+          }
         }
         
         // Ensure status is always set (required field)
@@ -519,11 +636,24 @@ export async function POST(request: NextRequest) {
                   if (variantData.option3 !== null && variantData.option3 !== undefined) {
                     variantPatch["store.option3"] = variantData.option3;
                   }
+                  // Set variant-specific image
+                  if (variantData.imageUrl) {
+                    variantPatch["store.previewImageUrl"] = variantData.imageUrl;
+                  }
                 }
                 
                 // Ensure status is always set (required field) - default to 'active' if not available
                 if (variantPatch["store.status"] === undefined) {
                   variantPatch["store.status"] = 'active';
+                }
+                
+                // Fallback to product image if variant doesn't have its own image
+                if (!variantPatch["store.previewImageUrl"] && product.images && Array.isArray(product.images) && product.images.length > 0) {
+                  const firstImage = product.images[0];
+                  const imageUrl = firstImage?.url || firstImage?.src || (typeof firstImage === 'string' ? firstImage : null);
+                  if (imageUrl) {
+                    variantPatch["store.previewImageUrl"] = imageUrl;
+                  }
                 }
                 
                 patches.push({
