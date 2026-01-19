@@ -37,6 +37,7 @@
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     column-gap: get-rem-desktop(4);
+    width: 100%;
 
     @media only screen and (max-width: 1240px) {
       @include flex;
@@ -98,7 +99,11 @@
     aspect-ratio: 183 / 100;
     overflow: hidden;
     position: relative;
-    width: get-rem-desktop(180);
+    width: get-rem-desktop(300);
+
+    @media only screen and (max-width: 1728px) {
+      width: get-rem-desktop(180);
+    }
 
     @media only screen and (max-width: 1240px) {
       aspect-ratio: 1 / 1;
