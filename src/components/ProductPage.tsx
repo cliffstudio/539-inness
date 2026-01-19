@@ -208,6 +208,8 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
   const displayImageUrl = selectedVariant?.store?.previewImageUrl || product.store?.previewImageUrl
   const [selectedImageUrl, setSelectedImageUrl] = useState<string | null>(null)
   const [isImageChanging, setIsImageChanging] = useState(false)
+  const featuredImageRef = React.useRef<HTMLDivElement>(null)
+  const extraImagesRef = React.useRef<HTMLDivElement>(null)
 
   // Get all images - include all product images and variant images, ensuring no duplicates
   const allImages = useMemo(() => {
@@ -336,12 +338,45 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
     return () => clearTimeout(timer)
   }, [currentDisplayImageUrl, allImages])
 
+  // Match extra-images width to featured-image width
+  useEffect(() => {
+    const updateExtraImagesWidth = () => {
+      if (featuredImageRef.current && extraImagesRef.current) {
+        const featuredWidth = featuredImageRef.current.offsetWidth
+        extraImagesRef.current.style.width = `${featuredWidth}px`
+      }
+    }
+
+    // Initial update with a small delay to ensure layout is complete
+    const initialTimer = setTimeout(updateExtraImagesWidth, 100)
+
+    // Use ResizeObserver to watch for size changes on the featured image
+    let resizeObserver: ResizeObserver | null = null
+    if (featuredImageRef.current && typeof ResizeObserver !== 'undefined') {
+      resizeObserver = new ResizeObserver(() => {
+        updateExtraImagesWidth()
+      })
+      resizeObserver.observe(featuredImageRef.current)
+    }
+
+    // Fallback: Update on window resize
+    window.addEventListener('resize', updateExtraImagesWidth)
+
+    return () => {
+      clearTimeout(initialTimer)
+      if (resizeObserver) {
+        resizeObserver.disconnect()
+      }
+      window.removeEventListener('resize', updateExtraImagesWidth)
+    }
+  }, [currentDisplayImageUrl, allImages])
+
   return (
     <article className="product-page">
       <div className="product-hero-section h-pad">
         <div className="left-column">
           {currentDisplayImageUrl && (
-            <div className={`featured-image media-wrap relative ${isImageChanging ? 'image-changing' : ''}`}>
+            <div ref={featuredImageRef} className={`featured-image media-wrap relative ${isImageChanging ? 'image-changing' : ''}`}>
               <img 
                 key={currentDisplayImageUrl}
                 data-src={currentDisplayImageUrl}
@@ -353,7 +388,7 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
           )}
 
           {allImages.length > 0 && (
-            <div className="extra-images">
+            <div ref={extraImagesRef} className="extra-images">
               {allImages.map((imageUrl, index) => {
                 const isActive = imageUrl === currentDisplayImageUrl
                 return (
