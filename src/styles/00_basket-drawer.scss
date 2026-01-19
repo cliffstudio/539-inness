@@ -75,13 +75,13 @@
     @include justify-content(center);
     flex: 1;
     color: $colour-black;
+    margin-top: get-rem-desktop(-75);
   }
 
   .basket-drawer__items {
     @include flex;
     @include flex-direction(column);
     row-gap: get-rem-desktop(24);
-    // margin-bottom: get-rem-desktop(32);
     flex: 1;
     overflow-y: auto;
   }

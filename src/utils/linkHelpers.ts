@@ -30,6 +30,16 @@ export const getLinkInfo = (cta?: Link) => {
     if (bookingTab === 'table') {
       return { text, href: 'https://resy.com/cities/accord-ny/venues/inness' }
     }
+    // Golf bookings should open Chronogolf URL instead of booking overlay
+    if (bookingTab === 'golf') {
+      // Get today's date in YYYY-MM-DD format
+      const today = new Date()
+      const year = today.getFullYear()
+      const month = String(today.getMonth() + 1).padStart(2, '0')
+      const day = String(today.getDate()).padStart(2, '0')
+      const dateString = `${year}-${month}-${day}`
+      return { text, href: `https://www.chronogolf.com/club/inness-resort?date=${dateString}` }
+    }
     return { text, href: '#booking' }
   } else {
     // For internal links, use label if provided, otherwise fallback to page title
