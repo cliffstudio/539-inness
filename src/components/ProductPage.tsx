@@ -387,7 +387,7 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
             </div>
           )}
 
-          {allImages.length > 0 && (
+          {allImages.length > 1 && (
             <div ref={extraImagesRef} className="extra-images">
               {allImages.map((imageUrl, index) => {
                 const isActive = imageUrl === currentDisplayImageUrl
@@ -476,6 +476,10 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
               if (meaningfulOptions.length === 0) {
                 return null
               }
+
+              // Check if this is a gift card product
+              const isGiftCard = product.store?.title?.toLowerCase().includes('gift card') || 
+                                product.store?.slug?.current?.toLowerCase() === 'gift-card'
 
               return (
                 <div className="product-options">
@@ -570,6 +574,27 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
                                 )
                               })}
                             </div>
+                          ) : isGiftCard ? (
+                            // Gift card select dropdown
+                            <select
+                              className="product-option-select"
+                              value={selectedValue}
+                              onChange={(e) => handleOptionChange(optionName, e.target.value)}
+                            >
+                              {option.values.map((optionValue, index) => {
+                                if (!optionValue) return null
+                                const value = getValueString(optionValue)
+                                if (!value) return null
+                                return (
+                                  <option
+                                    key={typeof optionValue === 'object' && optionValue._key ? optionValue._key : `${value}-${index}`}
+                                    value={value}
+                                  >
+                                    {value}
+                                  </option>
+                                )
+                              })}
+                            </select>
                           ) : (
                             // Size or other option buttons
                             <div className="product-option-buttons">
