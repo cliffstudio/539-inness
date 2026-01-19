@@ -130,7 +130,7 @@ DESKTOP HEADER ------------------
 
       a {
         will-change: opacity;
-        @include transition(opacity 300ms cubic-bezier(0.25,0.1,0.25,1));
+        @include transition(opacity 500ms cubic-bezier(0.25,0.1,0.25,1));
       }
 
       @media (hover: hover) {
@@ -366,7 +366,7 @@ TABLET HEADER ------------------
 
       a {
         will-change: opacity;
-        @include transition(opacity 300ms cubic-bezier(0.25,0.1,0.25,1));
+        @include transition(opacity 500ms cubic-bezier(0.25,0.1,0.25,1));
       }
 
       @media (hover: hover) {
@@ -639,7 +639,7 @@ MOBILE HEADER ------------------
 
     a {
       will-change: opacity;
-      @include transition(opacity 300ms cubic-bezier(0.25,0.1,0.25,1));
+      @include transition(opacity 500ms cubic-bezier(0.25,0.1,0.25,1));
     }
 
     @media (hover: hover) {

@@ -206,21 +206,123 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
   })()
 
   const displayImageUrl = selectedVariant?.store?.previewImageUrl || product.store?.previewImageUrl
+  const [selectedImageUrl, setSelectedImageUrl] = useState<string | null>(null)
+  const [isImageChanging, setIsImageChanging] = useState(false)
 
-  // Get extra images (all product images except the main/preview image)
-  const extraImages = useMemo(() => {
-    if (!product.store?.images || !Array.isArray(product.store.images)) {
-      return []
+  // Get all images - include all product images and variant images, ensuring no duplicates
+  const allImages = useMemo(() => {
+    const images: string[] = []
+    const seenImages = new Set<string>()
+    
+    // Add all product images
+    if (product.store?.images && Array.isArray(product.store.images)) {
+      product.store.images.forEach((imageUrl) => {
+        if (imageUrl && !seenImages.has(imageUrl)) {
+          images.push(imageUrl)
+          seenImages.add(imageUrl)
+        }
+      })
     }
     
-    // Filter out the main/preview image to avoid duplication
-    const mainImageUrl = product.store.previewImageUrl
-    return product.store.images.filter((imageUrl) => imageUrl !== mainImageUrl)
-  }, [product.store?.images, product.store?.previewImageUrl])
+    // Add variant-specific images that might not be in the main images array
+    if (product.store?.variants && Array.isArray(product.store.variants)) {
+      product.store.variants.forEach((variant) => {
+        const variantImageUrl = variant.store?.previewImageUrl
+        if (variantImageUrl && !seenImages.has(variantImageUrl)) {
+          images.push(variantImageUrl)
+          seenImages.add(variantImageUrl)
+        }
+      })
+    }
+    
+    // If no images found, try to use the display image as fallback
+    if (images.length === 0 && displayImageUrl) {
+      images.push(displayImageUrl)
+    }
+    
+    return images
+  }, [product.store?.images, product.store?.variants])
+
+  // Update selected image when display image changes (variant change)
+  useEffect(() => {
+    if (displayImageUrl) {
+      setSelectedImageUrl(displayImageUrl)
+    }
+  }, [displayImageUrl])
+
+  // Get the currently displayed image (either selected or default)
+  const currentDisplayImageUrl = selectedImageUrl || displayImageUrl
+
+  // Handle image click - update displayed image and select matching color variant if applicable
+  const handleImageClick = (imageUrl: string) => {
+    // Only trigger fade if it's a different image
+    if (imageUrl !== currentDisplayImageUrl) {
+      setIsImageChanging(true)
+      
+      // Preload the image to reduce flash
+      const img = new Image()
+      img.src = imageUrl
+      
+      // Fade out, then switch image
+      const switchImage = () => {
+        setSelectedImageUrl(imageUrl)
+        // Fade back in
+        setTimeout(() => {
+          setIsImageChanging(false)
+        }, 100)
+      }
+      
+      // If image loads quickly or is cached, switch immediately after fade starts
+      if (img.complete) {
+        setTimeout(switchImage, 200)
+      } else {
+        // Otherwise wait for image to load
+        img.onload = () => setTimeout(switchImage, 200)
+        // Timeout fallback
+        setTimeout(switchImage, 500)
+      }
+    } else {
+      setSelectedImageUrl(imageUrl)
+    }
+    
+    // Find variant that matches this image URL
+    const matchingVariant = product.store?.variants?.find((variant) => {
+      return variant.store?.previewImageUrl === imageUrl
+    })
+    
+    if (matchingVariant?.store && product.store?.options) {
+      // Find the Color option index
+      const optionNames = product.store.options.map((opt) => opt.name?.toLowerCase()) || []
+      const colorOptionIndex = optionNames.findIndex(name => name === 'colour' || name === 'color')
+      
+      if (colorOptionIndex !== -1) {
+        // Get the color value from the matching variant
+        let colorValue: string | null = null
+        if (colorOptionIndex === 0) {
+          colorValue = matchingVariant.store.option1 || null
+        } else if (colorOptionIndex === 1) {
+          colorValue = matchingVariant.store.option2 || null
+        } else if (colorOptionIndex === 2) {
+          colorValue = matchingVariant.store.option3 || null
+        }
+        
+        // Update selected options with the color value
+        if (colorValue) {
+          const colorOptionName = product.store.options[colorOptionIndex]?.name?.toLowerCase()
+          if (colorOptionName) {
+            setSelectedOptions((prev) => ({
+              ...prev,
+              [colorOptionName]: colorValue,
+            }))
+          }
+        }
+      }
+    }
+  }
 
   // Trigger lazy loading update when image URL changes
   useEffect(() => {
-    if (!displayImageUrl) return
+    if (!currentDisplayImageUrl) return
     
     // Small delay to ensure the new image element is in the DOM
     const timer = setTimeout(() => {
@@ -232,17 +334,17 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
     }, 0)
 
     return () => clearTimeout(timer)
-  }, [displayImageUrl, extraImages])
+  }, [currentDisplayImageUrl, allImages])
 
   return (
     <article className="product-page">
       <div className="product-hero-section h-pad">
         <div className="left-column">
-          {displayImageUrl && (
-            <div className="featured-image media-wrap relative out-of-opacity">
+          {currentDisplayImageUrl && (
+            <div className={`featured-image media-wrap relative ${isImageChanging ? 'image-changing' : ''}`}>
               <img 
-                key={displayImageUrl}
-                data-src={displayImageUrl}
+                key={currentDisplayImageUrl}
+                data-src={currentDisplayImageUrl}
                 alt=""
                 className="lazy full-bleed-image"
               />
@@ -250,18 +352,26 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
             </div>
           )}
 
-          {extraImages.length > 0 && (
+          {allImages.length > 0 && (
             <div className="extra-images">
-              {extraImages.map((imageUrl, index) => (
-                <div key={imageUrl || index} className="extra-image media-wrap relative out-of-opacity">
-                  <img 
-                    data-src={imageUrl}
-                    alt=""
-                    className="lazy full-bleed-image"
-                  />
-                  <div className="loading-overlay" />
-                </div>
-              ))}
+              {allImages.map((imageUrl, index) => {
+                const isActive = imageUrl === currentDisplayImageUrl
+                return (
+                  <div 
+                    key={imageUrl || index} 
+                    className={`extra-image media-wrap relative ${isActive ? 'active' : ''}`}
+                    onClick={() => handleImageClick(imageUrl)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <img 
+                      data-src={imageUrl}
+                      alt=""
+                      className="lazy full-bleed-image"
+                    />
+                    <div className="loading-overlay" />
+                  </div>
+                )
+              })}
             </div>
           )}
         </div>

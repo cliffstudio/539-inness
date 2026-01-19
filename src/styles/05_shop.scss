@@ -23,6 +23,23 @@
         aspect-ratio: 774 / 960;
       }
 
+      .featured-image {
+        position: relative;
+        opacity: 1 !important;
+        background-color: $colour-white;
+        
+        img {
+          @include transition(opacity 400ms cubic-bezier(0.25,0.1,0.25,1));
+          opacity: 1;
+        }
+
+        &.image-changing {
+          img {
+            opacity: 0.5;
+          }
+        }
+      }
+
       .extra-images {
         margin-top: get-rem-desktop(16);
         @include flex;
@@ -30,9 +47,17 @@
         @include flex-wrap(wrap);
         column-gap: get-rem-desktop(8);
         row-gap: get-rem-desktop(8);
+        
 
         .extra-image {
           width: calc((100% - 5 * get-rem-desktop(8)) / 6);
+          opacity: 1 !important;
+          border: 1px solid transparent;
+          @include transition(border-color 500ms cubic-bezier(0.25,0.1,0.25,1));
+
+          &.active {
+            border: 1px solid $colour-black;
+          }
         }
       }
     }
@@ -83,7 +108,7 @@
   border: 1px solid transparent;
   cursor: pointer;
   will-change: border-color;
-  @include transition(border-color 300ms cubic-bezier(0.25,0.1,0.25,1));
+  @include transition(border-color 500ms cubic-bezier(0.25,0.1,0.25,1));
 
   span {
     width: 100%;
@@ -115,7 +140,7 @@
   color: $colour-black;
   cursor: pointer;
   will-change: border-color;
-  @include transition(border-color 300ms cubic-bezier(0.25,0.1,0.25,1));
+  @include transition(border-color 500ms cubic-bezier(0.25,0.1,0.25,1));
 
   &.selected {
     border-color: $colour-black;
@@ -164,7 +189,7 @@
     color: $colour-black;
     cursor: pointer;
     padding: 0;
-    @include transition(opacity 200ms cubic-bezier(0.25,0.1,0.25,1));
+    @include transition(opacity 500ms cubic-bezier(0.25,0.1,0.25,1));
 
     svg {
       width: get-rem-desktop(10);

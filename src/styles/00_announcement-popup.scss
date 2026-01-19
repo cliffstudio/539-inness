@@ -8,7 +8,7 @@
   z-index: 100;
   opacity: 0;
   pointer-events: none;
-  @include transition(opacity 300ms cubic-bezier(0.25, 0.1, 0.25, 1));
+  @include transition(opacity 500ms cubic-bezier(0.25, 0.1, 0.25, 1));
 
   @media only screen and (max-width: 768px) {
     right: get-rem-mobile(11) !important;

@@ -2,7 +2,7 @@
 
 // Header transform styles - apply to all site headers
 .site-header {
-  @include transition(transform 400ms cubic-bezier(0.25,0.1,0.25,1));
+  @include transition(transform 500ms cubic-bezier(0.25,0.1,0.25,1));
   
   // When is-translated-up class is present, translate up
   &.is-translated-up {
@@ -33,7 +33,7 @@ body.page-type-homepage {
     .hero-content,
     .hero-arrow {
       opacity: 0;
-      @include transition(opacity 400ms cubic-bezier(0.25,0.1,0.25,1)); 
+      @include transition(opacity 500ms cubic-bezier(0.25,0.1,0.25,1)); 
     }
 
     .gradient-overlay.is-visible,

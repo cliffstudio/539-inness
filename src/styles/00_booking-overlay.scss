@@ -78,7 +78,7 @@
     @include justify-content(space-between);
     column-gap: get-rem-desktop(16);
     will-change: background-color;
-    @include transition(background-color 300ms cubic-bezier(0.25,0.1,0.25,1));
+    @include transition(background-color 500ms cubic-bezier(0.25,0.1,0.25,1));
     overflow: hidden;
     padding: get-rem-desktop(12);
     padding-right: get-rem-desktop(16);
