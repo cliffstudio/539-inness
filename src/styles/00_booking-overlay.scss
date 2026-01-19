@@ -50,6 +50,7 @@
       margin-right: get-rem-desktop(-80);
       padding-left: get-rem-desktop(80);
       padding-right: get-rem-desktop(80);
+      width: calc(100% + get-rem-desktop(160));
 
       &::-webkit-scrollbar {
         display: none !important;
@@ -61,6 +62,7 @@
       margin-right: get-rem-mobile(-24);
       padding-left: get-rem-mobile(24);
       padding-right: get-rem-mobile(24);
+      width: calc(100% + get-rem-mobile(48));
     }
   }
 
