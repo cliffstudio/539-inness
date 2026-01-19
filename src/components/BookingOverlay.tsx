@@ -4,8 +4,6 @@
 import { useEffect, useRef } from 'react'
 import { useBooking } from '../contexts/BookingContext'
 import { DisableBodyScroll, EnableBodyScroll } from '@/utils/bodyScroll'
-import type { BookingTab } from '../contexts/BookingContext'
-import mediaLazyloading from '../utils/lazyLoad'
 
 import bookGolfImage from '@/app/images/book-golf-image.jpg'
 import bookRoomImage from '@/app/images/book-room-image.jpg'
@@ -14,42 +12,15 @@ import bookTableImage from '@/app/images/book-table-image.jpg'
 
 
 export default function BookingOverlay() {
-  const { isOpen, activeTab, setActiveTab, closeBooking } = useBooking()
+  const { isOpen, closeBooking } = useBooking()
   const overlayRef = useRef<HTMLDivElement>(null)
   const innerWrapRef = useRef<HTMLDivElement>(null)
   const animationFrameRef = useRef<number | null>(null)
-
-
-  // Handle spa tab - open mailto link immediately if spa is active when overlay opens
-  useEffect(() => {
-    if (isOpen && activeTab === 'spa') {
-      window.location.href = 'mailto:spa@inness.co'
-      closeBooking()
-    }
-  }, [isOpen, activeTab, closeBooking])
-
-  // Handle table tab - open Resy URL immediately if table is active when overlay opens
-  useEffect(() => {
-    if (isOpen && activeTab === 'table') {
-      window.open('https://resy.com/cities/accord-ny/venues/inness', '_blank', 'noopener,noreferrer')
-      closeBooking()
-    }
-  }, [isOpen, activeTab, closeBooking])
 
   // Handle body scroll lock when overlay is open
   useEffect(() => {
     if (isOpen) {
       DisableBodyScroll()
-      // Trigger lazy loading update when overlay opens to observe new images
-      // Small delay to ensure DOM is updated
-      const timer = setTimeout(() => {
-        mediaLazyloading().catch(console.error)
-      }, 100)
-      
-      return () => {
-        clearTimeout(timer)
-        EnableBodyScroll()
-      }
     } else {
       EnableBodyScroll()
     }
@@ -163,11 +134,60 @@ export default function BookingOverlay() {
     }
   }, [isOpen])
 
-  const tabs: { id: BookingTab; label: string; image: string }[] = [
-    { id: 'room', label: 'Book a room', image: bookRoomImage.src },
-    { id: 'table', label: 'Book a table', image: bookTableImage.src },
-    { id: 'golf', label: 'Book a tee time', image: bookGolfImage.src },
-    { id: 'spa', label: 'Book a treatment', image: bookSpaImage.src },
+  const handleRoomClick = () => {
+    // Find or create a Namastay widget button and trigger it
+    const namastayButton = document.querySelector('.namastay-widget-button') as HTMLButtonElement
+    if (namastayButton) {
+      namastayButton.click()
+    } else {
+      // Fallback: create a temporary button with the class and click it
+      const tempButton = document.createElement('button')
+      tempButton.className = 'namastay-widget-button'
+      tempButton.style.position = 'fixed'
+      tempButton.style.left = '-9999px'
+      tempButton.style.opacity = '0'
+      document.body.appendChild(tempButton)
+      tempButton.click()
+      setTimeout(() => document.body.removeChild(tempButton), 100)
+    }
+    closeBooking()
+  }
+
+  const handleTableClick = () => {
+    window.open('https://resy.com/cities/accord-ny/venues/inness', '_blank', 'noopener,noreferrer')
+    closeBooking()
+  }
+
+  const handleGolfClick = () => {
+    // Get today's date in YYYY-MM-DD format
+    const today = new Date()
+    const year = today.getFullYear()
+    const month = String(today.getMonth() + 1).padStart(2, '0')
+    const day = String(today.getDate()).padStart(2, '0')
+    const dateString = `${year}-${month}-${day}`
+    
+    window.open(`https://www.chronogolf.com/club/inness-resort?date=${dateString}`, '_blank', 'noopener,noreferrer')
+    closeBooking()
+  }
+
+  const handleSpaClick = () => {
+    window.location.href = 'mailto:spa@inness.co'
+    closeBooking()
+  }
+
+  const handleImageLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    const img = e.currentTarget
+    const loadingOverlay = img.nextElementSibling as HTMLElement
+    if (loadingOverlay && loadingOverlay.classList.contains('loading-overlay')) {
+      loadingOverlay.classList.add('hidden')
+    }
+  }
+
+  const tabs = [
+    { id: 'room', label: 'Book a room', image: bookRoomImage.src, onClick: handleRoomClick },
+    { id: 'table', label: 'Book a table', image: bookTableImage.src, onClick: handleTableClick },
+    { id: 'golf', label: 'Book a tee time', image: bookGolfImage.src, onClick: handleGolfClick },
+    { id: 'spa', label: 'Book a treatment', image: bookSpaImage.src, onClick: handleSpaClick },
   ]
 
   if (!isOpen) return null
@@ -175,78 +195,25 @@ export default function BookingOverlay() {
   return (
     <div ref={overlayRef} className="booking-overlay">
       <div ref={innerWrapRef} className="booking-overlay__inner-wrap">
-        <div className="booking-overlay__content">
-          <div className="booking-overlay__tabs">
-            {tabs.map((tab) => {
-              const handleTabClick = () => {
-                if (tab.id === 'spa') {
-                  window.location.href = 'mailto:spa@inness.co'
-                  closeBooking()
-                } else if (tab.id === 'table') {
-                  window.open('https://resy.com/cities/accord-ny/venues/inness', '_blank', 'noopener,noreferrer')
-                  closeBooking()
-                } else {
-                  setActiveTab(tab.id)
-                }
-              }
-              
-              return (
-                <button
-                  key={tab.id}
-                  className={`booking-overlay__tab ${activeTab === tab.id ? 'active' : ''}`}
-                  onClick={handleTabClick}
-                >
-                  <div className="booking-overlay__tab-image">
-                    <img 
-                      data-src={tab.image} 
-                      alt={tab.label}
-                      className="lazy full-bleed-image"
-                    />
-                    <div className="loading-overlay" />
-                  </div>
-                  <div className="booking-overlay__tab-label">{tab.label}</div>
-                </button>
-              )
-            })}
-          </div>
-
-          <div className="booking-overlay__tab-content">
-            {activeTab === 'room' && (
-              <div className="booking-overlay__form">
-                <button
-                  type="button"
-                  className="namastay-widget-button button button--orange"
-                >
-                  Book a room
-                </button>
-              </div>
-            )}
-
-            {activeTab === 'table' && (
-              <div className="booking-overlay__form">
-                {/* Table bookings open Resy URL instead of showing content */}
-              </div>
-            )}
-
-            {activeTab === 'golf' && (
-              <div className="booking-overlay__form">
-                <iframe
-                  className="chronogolf-iframe"
-                  src="https://www.chronogolf.com/club/18790/widget?medium=widget&source=club"
-                  width="100%"
-                  height="800"
-                  title="Book A Tee Time"
-                  frameBorder="0"
+        <div className="booking-overlay__tabs">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              className="booking-overlay__tab"
+              onClick={tab.onClick}
+            >
+              <div className="booking-overlay__tab-image">
+                <img 
+                  src={tab.image} 
+                  alt={tab.label}
+                  className="full-bleed-image"
+                  onLoad={handleImageLoad}
                 />
+                <div className="loading-overlay" />
               </div>
-            )}
-
-            {activeTab === 'spa' && (
-              <div className="booking-overlay__form">
-                {/* Spa bookings open mailto link instead of showing content */}
-              </div>
-            )}
-          </div>
+              <div className="booking-overlay__tab-label">{tab.label}</div>
+            </button>
+          ))}
         </div>
       </div>
     </div>
