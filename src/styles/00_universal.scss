@@ -234,21 +234,15 @@
   column-gap: get-rem-desktop(100);
   padding-top: get-rem-desktop(133);
   padding-bottom: get-rem-desktop(24);
-
   height: unset;
 
   @media only screen and (max-width: 768px) {
-    height: unset;
     min-height: 100svh;
     @include flex;
     @include flex-direction(column);
     row-gap: get-rem-mobile(48);
     padding-top: get-rem-mobile(116);
     padding-bottom: get-rem-mobile(24);
-
-    // .hero-image {
-    //   aspect-ratio: 3 / 4;
-    // }
   }
 
   .hero-image {
@@ -257,6 +251,7 @@
     max-width: 100%;
     min-width: 0;
     overflow: hidden;
+    max-height: calc(100svh - get-rem-desktop(133) - get-rem-desktop(16));
 
     .media-wrap {
       aspect-ratio: 774 / 960;
