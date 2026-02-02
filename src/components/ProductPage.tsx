@@ -3,6 +3,7 @@
 
 import React, { useState, useMemo, useEffect } from 'react'
 import { PortableTextBlock } from '@portabletext/react'
+import * as Select from '@radix-ui/react-select'
 import { getPriceRange } from '../sanity/utils/getPriceRange'
 import { useBasket } from '../contexts/BasketContext'
 import mediaLazyloading from '../utils/lazyLoad'
@@ -576,25 +577,54 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
                             </div>
                           ) : isGiftCard ? (
                             // Gift card select dropdown
-                            <select
-                              className="product-option-select"
-                              value={selectedValue}
-                              onChange={(e) => handleOptionChange(optionName, e.target.value)}
-                            >
-                              {option.values.map((optionValue, index) => {
-                                if (!optionValue) return null
-                                const value = getValueString(optionValue)
-                                if (!value) return null
-                                return (
-                                  <option
-                                    key={typeof optionValue === 'object' && optionValue._key ? optionValue._key : `${value}-${index}`}
-                                    value={value}
+                            <>
+                              <label className="product-option-label">
+                                Gift card value
+                              </label>
+
+                              <div className="product-option-select-wrapper">
+                                <Select.Root
+                                  value={selectedValue}
+                                  onValueChange={(value) => handleOptionChange(optionName, value)}
+                                >
+                                  <Select.Trigger className="product-option-select">
+                                  <Select.Value />
+                                  <Select.Icon className="product-option-select-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="8" viewBox="0 0 14 8" fill="none">
+                                      <path d="M13.3535 0.353516L6.85352 6.85352L0.353516 0.353516" stroke="#26241F" />
+                                    </svg>
+                                  </Select.Icon>
+                                </Select.Trigger>
+                                <Select.Portal>
+                                  <Select.Content 
+                                    className="product-option-select-content"
+                                    side="bottom"
+                                    sideOffset={4}
+                                    align="start"
+                                    alignOffset={0}
+                                    position="popper"
                                   >
-                                    {value}
-                                  </option>
-                                )
-                              })}
-                            </select>
+                                    <Select.Viewport className="product-option-select-viewport">
+                                      {option.values.map((optionValue, index) => {
+                                        if (!optionValue) return null
+                                        const value = getValueString(optionValue)
+                                        if (!value) return null
+                                        return (
+                                          <Select.Item
+                                            key={typeof optionValue === 'object' && optionValue._key ? optionValue._key : `${value}-${index}`}
+                                            value={value}
+                                            className="product-option-select-item"
+                                          >
+                                            <Select.ItemText>{value}</Select.ItemText>
+                                          </Select.Item>
+                                        )
+                                      })}
+                                    </Select.Viewport>
+                                  </Select.Content>
+                                </Select.Portal>
+                              </Select.Root>
+                              </div>
+                            </>
                           ) : (
                             // Size or other option buttons
                             <div className="product-option-buttons">

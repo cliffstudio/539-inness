@@ -90,10 +90,14 @@
   row-gap: get-rem-desktop(36);
 }
 
-.product-option {
-  @include flex;
-  @include flex-direction(column);
-  row-gap: get-rem-desktop(8);
+.product-option-label {
+  display: block;
+  margin-bottom: get-rem-desktop(8);
+}
+
+.product-option-select-wrapper {
+  position: relative;
+  width: 100%;
 }
 
 .product-option-swatches {
@@ -157,7 +161,8 @@
 .product-option-select {
   @include reset-input;
   width: 100%;
-  padding: get-rem-desktop(10) get-rem-desktop(12);
+  padding: get-rem-desktop(18) get-rem-desktop(24);
+  padding-right: get-rem-desktop(50);
   border: 1px solid $colour-black;
   color: $colour-black;
   background-color: transparent;
@@ -165,7 +170,15 @@
   @include font-size(16px, 16px);
   cursor: pointer;
   will-change: border-color;
-  @include transition(border-color 500ms cubic-bezier(0.25,0.1,0.25,1));
+  @include transition(border-color 250ms cubic-bezier(0.25,0.1,0.25,1));
+  @include flex;
+  @include align-items(center);
+  @include justify-content(space-between);
+  position: relative;
+
+  &[data-placeholder] {
+    color: $colour-black;
+  }
 
   &:focus {
     outline: none;
@@ -177,21 +190,55 @@
       border-color: $colour-black;
     }
   }
+}
 
-  // Custom arrow styling
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6' fill='none'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%2326241E' stroke-width='1'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right get-rem-desktop(12) center;
-  padding-right: get-rem-desktop(32);
+.product-option-select-icon {
+  position: absolute;
+  right: get-rem-desktop(24);
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  @include flex;
+  @include align-items(center);
+  @include justify-content(center);
+  @include transition(transform 250ms cubic-bezier(0.25, 0.1, 0.25, 1));
 
-  // Remove default arrow in IE
-  &::-ms-expand {
-    display: none;
+  .product-option-select[data-state="open"] & {
+    transform: translateY(-50%) rotate(180deg);
+  }
+}
+
+.product-option-select-content {
+  overflow: hidden;
+  background-color: $colour-beige;
+  border: 1px solid $colour-black;
+  z-index: 1000;
+  width: var(--radix-select-trigger-width);
+  max-width: var(--radix-select-trigger-width);
+  max-height: get-rem-desktop(300);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.product-option-select-viewport {
+  padding: get-rem-desktop(4);
+}
+
+.product-option-select-item {
+  padding: get-rem-desktop(12) get-rem-desktop(24);
+  cursor: pointer;
+  color: $colour-black;
+  font-family: inherit;
+  @include font-size(16px, 16px);
+  @include transition(background-color 500ms cubic-bezier(0.25,0.1,0.25,1));
+  outline: none;
+
+  &[data-highlighted] {
+    background-color: $colour-cream;
   }
 
-  // Remove default arrow in Firefox
-  -moz-appearance: none;
-  appearance: none;
+  &[data-state="checked"] {
+    background-color: $colour-cream;
+  }
 }
 
 .product-add-to-basket {
