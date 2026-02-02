@@ -9,13 +9,13 @@
   @include flex-direction(column);
   row-gap: get-rem-desktop(70);
 
-  @media only screen and (max-width: 768px) {
+  @media only screen and (max-width: 820px) {
     padding-top: get-rem-mobile(48);
     padding-bottom: get-rem-mobile(24);
   }
 
   .top {
-    @media only screen and (max-width: 768px) {
+    @media only screen and (max-width: 820px) {
       @include flex;
       @include flex-direction(column);
       row-gap: get-rem-mobile(48);
@@ -28,7 +28,7 @@
     fill: $colour-black;
     margin-bottom: get-rem-desktop(38);
 
-    @media only screen and (max-width: 768px) {
+    @media only screen and (max-width: 820px) {
       margin-bottom: 0;
     }
   }
@@ -37,7 +37,7 @@
     margin-top: -0.25em;
     margin-bottom: get-rem-desktop(5);
 
-    @media only screen and (max-width: 768px) {
+    @media only screen and (max-width: 820px) {
       margin-top: 0;
     }
   }
@@ -76,7 +76,7 @@
       @include align-items(flex-end);
     }
 
-    @media only screen and (max-width: 768px) {
+    @media only screen and (max-width: 820px) {
       @include flex-direction(column);
       @include align-items(flex-start);
     }
@@ -89,7 +89,7 @@
       row-gap: get-rem-desktop(15);
     }
 
-    @media only screen and (max-width: 768px) {
+    @media only screen and (max-width: 820px) {
       margin-top: get-rem-mobile(80);
       row-gap: get-rem-mobile(72);
     }
@@ -160,7 +160,7 @@
       border-bottom: 1px solid $colour-black !important;
     }
 
-    @media only screen and (max-width: 768px) {
+    @media only screen and (max-width: 820px) {
       width: 100%;
     }
 
@@ -194,7 +194,7 @@
       }
     }
 
-    @media only screen and (max-width: 768px) {
+    @media only screen and (max-width: 820px) {
       width: get-rem-mobile(110);
       min-width: get-rem-mobile(110);
     }
@@ -205,7 +205,7 @@
     position: relative;
     display: block;
 
-    @media only screen and (max-width: 768px) {
+    @media only screen and (max-width: 820px) {
       text-align: left;
     }
 
@@ -225,7 +225,7 @@
         }
       }
 
-      @media only screen and (max-width: 768px) {
+      @media only screen and (max-width: 820px) {
         position: relative;
         opacity: 1;
         z-index: 2;
@@ -246,7 +246,7 @@
       white-space: nowrap;
       @include transition(opacity 500ms cubic-bezier(0.25,0.1,0.25,1));
 
-      @media only screen and (max-width: 768px) {
+      @media only screen and (max-width: 820px) {
         position: absolute;
         top: 0;
         left: 0;
@@ -258,7 +258,7 @@
     }
 
     &.credit-expanded {
-      @media only screen and (max-width: 768px) {
+      @media only screen and (max-width: 820px) {
         .credit-toggle {
           opacity: 0;
           pointer-events: none;

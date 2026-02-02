@@ -28,6 +28,8 @@ export default function BookingSection({ noTopPad = false, noBottomPad = false }
   const [checkInDate, setCheckInDate] = useState<string>('')
   const [checkOutDate, setCheckOutDate] = useState<string>('')
   const [isGuestPopupOpen, setIsGuestPopupOpen] = useState(false)
+  const [isUnifiedPopupOpen, setIsUnifiedPopupOpen] = useState(false)
+  const [isMobileView, setIsMobileView] = useState(false)
   const [checkInDisplay, setCheckInDisplay] = useState('Arrive')
   const [checkOutDisplay, setCheckOutDisplay] = useState('Depart')
   
@@ -37,21 +39,95 @@ export default function BookingSection({ noTopPad = false, noBottomPad = false }
   const guestPickerRef = useRef<HTMLDivElement>(null)
   const startInputRef = useRef<HTMLInputElement>(null)
   const startWrapperRef = useRef<HTMLDivElement>(null)
+  const unifiedPopupRef = useRef<HTMLDivElement>(null)
+  const unifiedPopupGuestRef = useRef<HTMLDivElement>(null)
   const flatpickrInstanceRef = useRef<Instance | null>(null)
+
+  // Check if mobile and update state
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobileView(window.innerWidth <= 768)
+    }
+    
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   // Handle guest picker click
   const handleGuestPickerClick = (e: React.MouseEvent) => {
     e.stopPropagation()
-    setIsGuestPopupOpen(!isGuestPopupOpen)
+    if (isMobileView) {
+      // Mobile: toggle both guest popup and calendar
+      // Since we always open/close them together, use guest popup state as source of truth
+      if (isGuestPopupOpen) {
+        // Close both
+        setIsGuestPopupOpen(false)
+        if (flatpickrInstanceRef.current) {
+          flatpickrInstanceRef.current.close()
+        }
+        // Manually hide calendar on mobile since it uses static positioning
+        setTimeout(() => {
+          const calendar = document.querySelector('.flatpickr-calendar') as HTMLElement
+          if (calendar) {
+            calendar.style.display = 'none'
+            calendar.style.visibility = 'hidden'
+            calendar.style.opacity = '0'
+          }
+        }, 10)
+      } else {
+        // Open both
+        setIsGuestPopupOpen(true)
+        if (flatpickrInstanceRef.current) {
+          flatpickrInstanceRef.current.open()
+          setTimeout(() => {
+            const calendar = document.querySelector('.flatpickr-calendar') as HTMLElement
+            if (calendar) {
+              calendar.style.display = 'block'
+              calendar.style.visibility = 'visible'
+              calendar.style.opacity = '1'
+            }
+          }, 50)
+        }
+      }
+    } else {
+      // Desktop: toggle unified popup
+      if (isUnifiedPopupOpen) {
+        // Close if already open
+        setIsUnifiedPopupOpen(false)
+        setIsGuestPopupOpen(false)
+        if (flatpickrInstanceRef.current) {
+          flatpickrInstanceRef.current.close()
+        }
+      } else {
+        // Open if closed
+        setIsUnifiedPopupOpen(true)
+        setIsGuestPopupOpen(true)
+        if (flatpickrInstanceRef.current) {
+          flatpickrInstanceRef.current.open()
+        }
+      }
+    }
   }
 
-  // Update guest popup position based on booking form height
-  // Position the top of the popup to align with the bottom of the form
+  // Update unified popup position based on booking form height
+  const updateUnifiedPopupPosition = () => {
+    if (bookingFormRef.current && unifiedPopupRef.current && !isMobileView) {
+      const formRect = bookingFormRef.current.getBoundingClientRect()
+      const formWrapper = bookingFormRef.current.closest('.booking-section')
+      if (formWrapper) {
+        const wrapperRect = formWrapper.getBoundingClientRect()
+        const topPosition = formRect.bottom - wrapperRect.top
+        unifiedPopupRef.current.style.top = `${topPosition}px`
+      }
+    }
+  }
+
+  // Update guest popup position based on booking form height (for mobile)
   const updateGuestPopupPosition = () => {
-    if (bookingFormRef.current && guestWrapperRef.current && guestPopupRef.current) {
+    if (bookingFormRef.current && guestWrapperRef.current && guestPopupRef.current && isMobileView) {
       const formRect = bookingFormRef.current.getBoundingClientRect()
       const wrapperRect = guestWrapperRef.current.getBoundingClientRect()
-      // Calculate distance from top of wrapper to bottom of form
       const topPosition = formRect.bottom - wrapperRect.top
       guestPopupRef.current.style.top = `${topPosition}px`
     }
@@ -59,22 +135,38 @@ export default function BookingSection({ noTopPad = false, noBottomPad = false }
 
   // Set popup position when it opens or when form height changes
   useEffect(() => {
-    if (isGuestPopupOpen) {
+    if (isUnifiedPopupOpen && !isMobileView) {
+      updateUnifiedPopupPosition()
+      // Move calendar into unified popup guest section when it opens
+      setTimeout(() => {
+        const calendar = document.querySelector('.flatpickr-calendar') as HTMLElement
+        const guestSection = unifiedPopupGuestRef.current
+        if (calendar && guestSection && !guestSection.contains(calendar)) {
+          guestSection.appendChild(calendar)
+        }
+      }, 50)
+    }
+    if (isGuestPopupOpen && isMobileView) {
       updateGuestPopupPosition()
     }
-  }, [isGuestPopupOpen])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isUnifiedPopupOpen, isGuestPopupOpen, isMobileView])
 
   // Update popup position on window resize
   useEffect(() => {
     const handleResize = () => {
-      if (isGuestPopupOpen) {
+      if (isUnifiedPopupOpen && !isMobileView) {
+        updateUnifiedPopupPosition()
+      }
+      if (isGuestPopupOpen && isMobileView) {
         updateGuestPopupPosition()
       }
     }
 
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
-  }, [isGuestPopupOpen])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isUnifiedPopupOpen, isGuestPopupOpen, isMobileView])
 
   // Handle guest count changes
   const handleGuestChange = (type: 'adult' | 'child', delta: number) => {
@@ -126,13 +218,13 @@ export default function BookingSection({ noTopPad = false, noBottomPad = false }
 
     // Initialize Flatpickr
     // Check if mobile to show 1 month instead of 2
-    const isMobile = window.innerWidth <= 768
+    const checkMobile = window.innerWidth <= 768
     
     const fp = flatpickr(input, {
       mode: 'range',
       defaultDate: [today, threeDaysLater],
       minDate: today,
-      showMonths: isMobile ? 1 : 2,
+      showMonths: checkMobile ? 1 : 2,
       monthSelectorType: 'static', // Use text month display instead of dropdown on mobile
       locale: {
         weekdays: {
@@ -150,8 +242,6 @@ export default function BookingSection({ noTopPad = false, noBottomPad = false }
       onOpen: function(selectedDates, dateStr, instance) {
         setTimeout(function() {
           if (bookingFormRef.current && instance.calendarContainer && startWrapperRef.current) {
-            const wrapperRect = startWrapperRef.current.getBoundingClientRect()
-            const formRect = bookingFormRef.current.getBoundingClientRect()
             const calendarContainer = instance.calendarContainer as HTMLElement
             
             // Ensure calendar is visible
@@ -159,10 +249,10 @@ export default function BookingSection({ noTopPad = false, noBottomPad = false }
             calendarContainer.style.visibility = 'visible'
             calendarContainer.style.opacity = '1'
             
-            // Check if mobile (max-width: 768px)
-            const isMobile = window.innerWidth <= 768
+            // Check if mobile (max-width: 820px)
+            const isMobileCheck = window.innerWidth <= 768
             
-            if (isMobile) {
+            if (isMobileCheck) {
               // On mobile, use static positioning for inline display
               calendarContainer.style.position = 'static'
               calendarContainer.style.top = 'auto'
@@ -170,13 +260,17 @@ export default function BookingSection({ noTopPad = false, noBottomPad = false }
               calendarContainer.style.right = 'auto'
               calendarContainer.style.zIndex = 'auto'
             } else {
-              // On desktop, position calendar below the form
-              const topPosition = formRect.bottom - wrapperRect.top
-              calendarContainer.style.top = `${topPosition}px`
-              calendarContainer.style.left = '0'
+              // On desktop, move calendar into unified popup guest section if it exists
+              const guestSection = document.querySelector('.unified-popup__guest')
+              if (guestSection && !guestSection.contains(calendarContainer)) {
+                guestSection.appendChild(calendarContainer)
+              }
+              // Calendar will be positioned within unified popup
+              calendarContainer.style.position = 'relative'
+              calendarContainer.style.top = 'auto'
+              calendarContainer.style.left = 'auto'
               calendarContainer.style.right = 'auto'
-              calendarContainer.style.position = 'absolute'
-              calendarContainer.style.zIndex = '1001'
+              calendarContainer.style.zIndex = 'auto'
             }
           }
         }, 10)
@@ -222,63 +316,204 @@ export default function BookingSection({ noTopPad = false, noBottomPad = false }
   // Handle date input wrapper clicks to trigger date picker
   const handleStartWrapperClick = (e: React.MouseEvent) => {
     e.stopPropagation()
-    if (flatpickrInstanceRef.current) {
-      flatpickrInstanceRef.current.open()
-      // Force calendar to be visible
-      setTimeout(() => {
-        const calendar = document.querySelector('.flatpickr-calendar') as HTMLElement
-        if (calendar) {
-          calendar.style.display = 'block'
-          calendar.style.visibility = 'visible'
-          calendar.style.opacity = '1'
+    if (isMobileView) {
+      // Mobile: toggle both calendar and guest popup
+      // Since we always open/close them together, use guest popup state as source of truth
+      if (isGuestPopupOpen) {
+        // Close both
+        setIsGuestPopupOpen(false)
+        if (flatpickrInstanceRef.current) {
+          flatpickrInstanceRef.current.close()
         }
-      }, 50)
+        // Manually hide calendar on mobile since it uses static positioning
+        setTimeout(() => {
+          const calendar = document.querySelector('.flatpickr-calendar') as HTMLElement
+          if (calendar) {
+            calendar.style.display = 'none'
+            calendar.style.visibility = 'hidden'
+            calendar.style.opacity = '0'
+          }
+        }, 10)
       } else {
-      console.error('Flatpickr instance not found')
+        // Open both
+        setIsGuestPopupOpen(true)
+        if (flatpickrInstanceRef.current) {
+          flatpickrInstanceRef.current.open()
+          setTimeout(() => {
+            const calendar = document.querySelector('.flatpickr-calendar') as HTMLElement
+            if (calendar) {
+              calendar.style.display = 'block'
+              calendar.style.visibility = 'visible'
+              calendar.style.opacity = '1'
+            }
+          }, 50)
+        }
+      }
+    } else {
+      // Desktop: toggle unified popup
+      if (isUnifiedPopupOpen) {
+        // Close if already open
+        setIsUnifiedPopupOpen(false)
+        setIsGuestPopupOpen(false)
+        if (flatpickrInstanceRef.current) {
+          flatpickrInstanceRef.current.close()
+        }
+      } else {
+        // Open if closed
+        setIsUnifiedPopupOpen(true)
+        setIsGuestPopupOpen(true)
+        if (flatpickrInstanceRef.current) {
+          flatpickrInstanceRef.current.open()
+        }
+      }
     }
   }
 
   const handleEndWrapperClick = (e: React.MouseEvent) => {
     e.stopPropagation()
-    if (flatpickrInstanceRef.current) {
-      flatpickrInstanceRef.current.open()
-      // Force calendar to be visible
-      setTimeout(() => {
-        const calendar = document.querySelector('.flatpickr-calendar') as HTMLElement
-        if (calendar) {
-          calendar.style.display = 'block'
-          calendar.style.visibility = 'visible'
-          calendar.style.opacity = '1'
+    if (isMobileView) {
+      // Mobile: toggle both calendar and guest popup
+      // Since we always open/close them together, use guest popup state as source of truth
+      if (isGuestPopupOpen) {
+        // Close both
+        setIsGuestPopupOpen(false)
+        if (flatpickrInstanceRef.current) {
+          flatpickrInstanceRef.current.close()
         }
-      }, 50)
+        // Manually hide calendar on mobile since it uses static positioning
+        setTimeout(() => {
+          const calendar = document.querySelector('.flatpickr-calendar') as HTMLElement
+          if (calendar) {
+            calendar.style.display = 'none'
+            calendar.style.visibility = 'hidden'
+            calendar.style.opacity = '0'
+          }
+        }, 10)
+      } else {
+        // Open both
+        setIsGuestPopupOpen(true)
+        if (flatpickrInstanceRef.current) {
+          flatpickrInstanceRef.current.open()
+          setTimeout(() => {
+            const calendar = document.querySelector('.flatpickr-calendar') as HTMLElement
+            if (calendar) {
+              calendar.style.display = 'block'
+              calendar.style.visibility = 'visible'
+              calendar.style.opacity = '1'
+            }
+          }, 50)
+        }
+      }
+    } else {
+      // Desktop: toggle unified popup
+      if (isUnifiedPopupOpen) {
+        // Close if already open
+        setIsUnifiedPopupOpen(false)
+        setIsGuestPopupOpen(false)
+        if (flatpickrInstanceRef.current) {
+          flatpickrInstanceRef.current.close()
+        }
+      } else {
+        // Open if closed
+        setIsUnifiedPopupOpen(true)
+        setIsGuestPopupOpen(true)
+        if (flatpickrInstanceRef.current) {
+          flatpickrInstanceRef.current.open()
+        }
+      }
     }
   }
 
-  // Close guest popup when clicking outside
+  // Close popups when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        guestPopupRef.current &&
-        guestPickerRef.current &&
-        !guestPopupRef.current.contains(event.target as Node) &&
-        !guestPickerRef.current.contains(event.target as Node)
-      ) {
-        setIsGuestPopupOpen(false)
+      if (isMobileView) {
+        // Mobile: close guest popup and calendar
+        const target = event.target as Node
+        const isClickInsideGuestPopup = guestPopupRef.current?.contains(target)
+        const isClickInsideGuestPicker = guestPickerRef.current?.contains(target)
+        const isClickInsideDateInputs = 
+          startWrapperRef.current?.contains(target) ||
+          document.getElementById('end-display')?.contains(target)
+        const isClickInsideCalendar = (event.target as Element)?.closest('.flatpickr-calendar')
+        
+        if (
+          !isClickInsideGuestPopup &&
+          !isClickInsideGuestPicker &&
+          !isClickInsideDateInputs &&
+          !isClickInsideCalendar
+        ) {
+          setIsGuestPopupOpen(false)
+          if (flatpickrInstanceRef.current) {
+            flatpickrInstanceRef.current.close()
+          }
+          // Manually hide calendar on mobile since it uses static positioning
+          setTimeout(() => {
+            const calendar = document.querySelector('.flatpickr-calendar') as HTMLElement
+            if (calendar) {
+              calendar.style.display = 'none'
+              calendar.style.visibility = 'hidden'
+              calendar.style.opacity = '0'
+            }
+          }, 10)
+        }
+      } else {
+        // Desktop: close unified popup
+        const target = event.target as Node
+        const isClickInsideUnifiedPopup = unifiedPopupRef.current?.contains(target)
+        const isClickInsideGuestPicker = guestPickerRef.current?.contains(target)
+        const isClickInsideDateInputs = 
+          startWrapperRef.current?.contains(target) ||
+          document.getElementById('end-display')?.contains(target)
+        const isClickInsideCalendar = (event.target as Element)?.closest('.flatpickr-calendar')
+        
+        if (
+          !isClickInsideUnifiedPopup &&
+          !isClickInsideGuestPicker &&
+          !isClickInsideDateInputs &&
+          !isClickInsideCalendar
+        ) {
+          setIsUnifiedPopupOpen(false)
+          setIsGuestPopupOpen(false)
+          if (flatpickrInstanceRef.current) {
+            flatpickrInstanceRef.current.close()
+          }
+        }
       }
     }
 
-    if (isGuestPopupOpen) {
+    if (isGuestPopupOpen || isUnifiedPopupOpen) {
       document.addEventListener('mousedown', handleClickOutside)
     }
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
-  }, [isGuestPopupOpen])
+  }, [isGuestPopupOpen, isUnifiedPopupOpen, isMobileView])
 
   // Handle close popup button click
   const handleClosePopup = () => {
-    setIsGuestPopupOpen(false)
+    if (isMobileView) {
+      setIsGuestPopupOpen(false)
+      if (flatpickrInstanceRef.current) {
+        flatpickrInstanceRef.current.close()
+      }
+      // Manually hide calendar on mobile since it uses static positioning
+      setTimeout(() => {
+        const calendar = document.querySelector('.flatpickr-calendar') as HTMLElement
+        if (calendar) {
+          calendar.style.display = 'none'
+          calendar.style.visibility = 'hidden'
+          calendar.style.opacity = '0'
+        }
+      }, 10)
+    } else {
+      setIsUnifiedPopupOpen(false)
+      setIsGuestPopupOpen(false)
+      if (flatpickrInstanceRef.current) {
+        flatpickrInstanceRef.current.close()
+      }
+    }
   }
 
   // Build initial offer data for the button (used in JSX and updated dynamically)
@@ -371,10 +606,11 @@ export default function BookingSection({ noTopPad = false, noBottomPad = false }
             <h5>{guestDisplayText}</h5>
           </div>
 
+          {/* Mobile: standalone guest popup */}
           <div 
             id="guest-popup" 
             ref={guestPopupRef}
-            className={`popup${isGuestPopupOpen ? '' : ' hidden'}`}
+            className={`popup${isGuestPopupOpen && isMobileView ? '' : ' hidden'}`}
           >
             <div className="guest-control">
               <div>Adults</div>
@@ -484,6 +720,72 @@ export default function BookingSection({ noTopPad = false, noBottomPad = false }
 
         <div className="namastay-widget-button"></div>
       </form>
+
+      {/* Desktop: unified popup containing both guest popup and calendar */}
+      {!isMobileView && (
+        <div 
+          ref={unifiedPopupRef}
+          className={`unified-popup h-pad${isUnifiedPopupOpen ? '' : ' hidden'}`}
+        >
+          <div className="unified-popup__guest" ref={unifiedPopupGuestRef}>
+            <div className="popup">
+              <div className="guest-control">
+                <div>Adults</div>
+
+                <div className="button-group">
+                  <button 
+                    type="button" 
+                    className="minus button" 
+                    onClick={() => handleGuestChange('adult', -1)}
+                  >
+                    -
+                  </button>
+                  <input 
+                    type="number" 
+                    id="adult-count-unified" 
+                    value={adultCount} 
+                    readOnly 
+                  />
+                  <button 
+                    type="button" 
+                    className="plus button" 
+                    onClick={() => handleGuestChange('adult', 1)}
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+
+              <div className="guest-control">
+                <div>Children</div>
+
+                <div className="button-group">
+                  <button 
+                    type="button" 
+                    className="minus button" 
+                    onClick={() => handleGuestChange('child', -1)}
+                  >
+                    -
+                  </button>
+                  <input 
+                    type="number" 
+                    id="child-count-unified" 
+                    value={childCount} 
+                    readOnly 
+                  />
+                  <button 
+                    type="button" 
+                    className="plus button" 
+                    onClick={() => handleGuestChange('child', 1)}
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

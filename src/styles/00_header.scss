@@ -243,7 +243,7 @@ TABLET HEADER ------------------
     display: block;
   }
 
-  @media only screen and (max-width: 768px) {
+  @media only screen and (max-width: 820px) {
     display: none;
   }
 
@@ -456,7 +456,7 @@ MOBILE HEADER ------------------
   @extend .site-header;
   @include transition-multiple(background-color 500ms cubic-bezier(0.25,0.1,0.25,1), border-color 500ms cubic-bezier(0.25,0.1,0.25,1), color 500ms cubic-bezier(0.25,0.1,0.25,1));
 
-  @media only screen and (max-width: 768px) {
+  @media only screen and (max-width: 820px) {
     @include flex;
     @include justify-content(space-between);
     height: get-rem-mobile(63);

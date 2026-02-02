@@ -232,7 +232,7 @@ export default function Footer({ footer }: FooterProps) {
               className={`site-footer__credit${creditExpanded ? ' credit-expanded' : ''}`}
               onClick={(e) => {
                 // On touch devices, toggle expanded state on tap
-                if (typeof window !== 'undefined' && (window.matchMedia('(max-width: 768px)').matches || 'ontouchstart' in window)) {
+                if (typeof window !== 'undefined' && (window.matchMedia('(max-width: 820px)').matches || 'ontouchstart' in window)) {
                   // If not expanded, expand and prevent navigation
                   if (!creditExpanded) {
                     e.preventDefault()

@@ -11,7 +11,7 @@
   opacity: 0;
   pointer-events: none;
 
-  @media only screen and (min-width: 769px) {
+  @media only screen and (min-width: 821px) {
     opacity: 1;
     pointer-events: auto;
   }
@@ -25,7 +25,7 @@
     padding-left: get-rem-desktop(80);
     padding-right: get-rem-desktop(80);
 
-    @media only screen and (max-width: 768px) {
+    @media only screen and (max-width: 820px) {
       padding-top: calc(get-rem-mobile(63) + get-rem-mobile(40));
       padding-bottom: get-rem-mobile(40);
       padding-left: get-rem-mobile(24);
@@ -57,7 +57,7 @@
       }
     }
 
-    @media only screen and (max-width: 768px) {
+    @media only screen and (max-width: 820px) {
       margin-left: get-rem-mobile(-24);
       margin-right: get-rem-mobile(-24);
       padding-left: get-rem-mobile(24);

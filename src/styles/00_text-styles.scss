@@ -11,7 +11,7 @@ h1 {
   @include font-size(48px, 80px);
   line-height: calc(90 / 80) + em;
 
-  @media only screen and (max-width: 768px) {
+  @media only screen and (max-width: 820px) {
     line-height: calc(56 / 48) + em;
   }
 }
@@ -22,7 +22,7 @@ h2 {
   @include font-size(44px, 64px);
   line-height: calc(72 / 64) + em;
 
-  @media only screen and (max-width: 768px) {
+  @media only screen and (max-width: 820px) {
     line-height: calc(52 / 44) + em;
   }
 }
@@ -33,7 +33,7 @@ h3 {
   @include font-size(36px, 48px);
   line-height: calc(56 / 48) + em;
 
-  @media only screen and (max-width: 768px) {
+  @media only screen and (max-width: 820px) {
     line-height: calc(44 / 36) + em;
   }
 }
@@ -44,7 +44,7 @@ h4 {
   @include font-size(30px, 36px);
   line-height: calc(44 / 36) + em;
 
-  @media only screen and (max-width: 768px) {
+  @media only screen and (max-width: 820px) {
     line-height: calc(48 / 30) + em;
   }
 }
@@ -56,7 +56,7 @@ h5,
   @include font-size(24px, 28px);
   line-height: calc(36 / 28) + em;
 
-  @media only screen and (max-width: 768px) {
+  @media only screen and (max-width: 820px) {
     line-height: calc(32 / 24) + em;
   }
 }
@@ -69,7 +69,7 @@ h6 {
   text-transform: uppercase;
   letter-spacing: 0.08em;
 
-  @media only screen and (max-width: 768px) {
+  @media only screen and (max-width: 820px) {
     line-height: calc(24 / 16) + em;
   }
 }

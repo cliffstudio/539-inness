@@ -336,7 +336,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                       return;
                     }
 
-                    // Only run on desktop (width > 768px)
+                    // Only run on desktop (width > 820px)
                     if (window.innerWidth <= 768) {
                       return;
                     }
@@ -398,7 +398,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                         return;
                       }
 
-                      // Only run on desktop (width > 768px)
+                      // Only run on desktop (width > 820px)
                       if (window.innerWidth <= 768) {
                         return;
                       }

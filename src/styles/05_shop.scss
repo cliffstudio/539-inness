@@ -10,7 +10,7 @@
     padding-top: get-rem-desktop(133);
     padding-bottom: get-rem-desktop(24);
 
-    @media only screen and (max-width: 768px) {
+    @media only screen and (max-width: 820px) {
       @include flex;
       @include flex-direction(column);
       row-gap: get-rem-mobile(48);
@@ -71,7 +71,7 @@
       row-gap: get-rem-desktop(80);
       max-width: get-rem-desktop(500);
 
-      @media only screen and (max-width: 768px) {
+      @media only screen and (max-width: 820px) {
         row-gap: get-rem-mobile(75);
       }
 
@@ -216,7 +216,6 @@
   width: var(--radix-select-trigger-width);
   max-width: var(--radix-select-trigger-width);
   max-height: get-rem-desktop(300);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .product-option-select-viewport {
@@ -245,7 +244,7 @@
   width: 100%;
   margin-top: get-rem-desktop(24);
 
-  @media only screen and (max-width: 768px) {
+  @media only screen and (max-width: 820px) {
     margin-top: get-rem-mobile(20);
   }
 

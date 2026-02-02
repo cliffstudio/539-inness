@@ -6,7 +6,7 @@
 }
 
 // Mobile-only black background overlay when cookie window is visible
-@media only screen and (max-width: 768px) {
+@media only screen and (max-width: 820px) {
   body.cc-window-visible {
     position: relative;
     
@@ -48,7 +48,7 @@
   color: $colour-cream !important;
   transition: opacity 500ms cubic-bezier(0.25,0.1,0.25,1) !important;
 
-  @media only screen and (max-width: 768px) {
+  @media only screen and (max-width: 820px) {
     width: calc(100% - 2 * get-rem-mobile(11)) !important;
     left: get-rem-mobile(11) !important;
     bottom: get-rem-mobile(11) !important;

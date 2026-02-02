@@ -309,7 +309,7 @@ export default function Header({ menu }: HeaderProps) {
   }, [isMenuVisible])
 
   const handleMenuClick = () => {
-    // Only toggle menu on screens 768px and below
+    // Only toggle menu on screens 820px and below
     if (window.innerWidth <= 768) {
       setIsMenuVisible(!isMenuVisible)
     }

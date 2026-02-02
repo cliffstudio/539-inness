@@ -6,7 +6,7 @@
   padding-left: get-rem-desktop(80);
   padding-right: get-rem-desktop(80);
 
-  @media only screen and (max-width: 768px) {
+  @media only screen and (max-width: 820px) {
     padding-left: get-rem-mobile(24);
     padding-right: get-rem-mobile(24);
   }
@@ -28,7 +28,7 @@
       column-gap: get-rem-desktop(12);
     }
 
-    @media only screen and (max-width: 768px) {
+    @media only screen and (max-width: 820px) {
       row-gap: get-rem-mobile(12);
     }
   }
@@ -44,7 +44,7 @@
     will-change: opacity;
     @include transition (opacity 500ms cubic-bezier(0.25,0.1,0.25,1));
 
-    @media only screen and (max-width: 768px) {
+    @media only screen and (max-width: 820px) {
       opacity: 1;
     }
   }
@@ -112,7 +112,7 @@
   display: none;
 }
 
-@media only screen and (max-width: 768px) {
+@media only screen and (max-width: 820px) {
   .desktop,
   .dummy-col {
     display: none;
@@ -133,7 +133,7 @@
   @include flex-direction(column);
   row-gap: get-rem-desktop(160);
 
-  @media only screen and (max-width: 768px) {
+  @media only screen and (max-width: 820px) {
     padding-top: get-rem-mobile(48);
     padding-bottom: get-rem-mobile(48);
     row-gap: get-rem-mobile(48);
@@ -146,13 +146,13 @@
 
 .page-template-general {
   .flexible-content {
-    @media only screen and (max-width: 768px) {
+    @media only screen and (max-width: 820px) {
       margin-top: get-rem-mobile(-48);
     }
   }
 }
 
-@media only screen and (min-width: 769px) {
+@media only screen and (min-width: 821px) {
   .hero-section:not(.layout-2) {
     position: fixed;
     top: 0;
@@ -236,7 +236,7 @@
   padding-bottom: get-rem-desktop(24);
   height: unset;
 
-  @media only screen and (max-width: 768px) {
+  @media only screen and (max-width: 820px) {
     min-height: 100svh;
     @include flex;
     @include flex-direction(column);
@@ -265,7 +265,7 @@
     @include flex-direction(column);
     @include justify-content(space-between);
 
-    @media only screen and (max-width: 768px) {
+    @media only screen and (max-width: 820px) {
       row-gap: get-rem-mobile(75);
     }
 
@@ -297,11 +297,11 @@
       }
   
       .button {
-        @media only screen and (min-width: 769px) {
+        @media only screen and (min-width: 821px) {
           min-width: get-rem-desktop(376);
         }
 
-        @media only screen and (max-width: 768px) {
+        @media only screen and (max-width: 820px) {
           width: 100%;
         }
 
@@ -354,7 +354,7 @@
       order: 1;
     }
 
-    @media only screen and (max-width: 768px) {
+    @media only screen and (max-width: 820px) {
       @include flex;
       @include flex-direction(column);
       row-gap: get-rem-mobile(35);
@@ -363,7 +363,7 @@
 
   &.align-right,
   .align-right {
-    @media only screen and (max-width: 768px) {
+    @media only screen and (max-width: 820px) {
       @include flex;
       @include flex-direction(column);
       row-gap: get-rem-mobile(48);
@@ -425,7 +425,7 @@
     margin-bottom: get-rem-desktop(14);
     max-width: 95%;
 
-    @media only screen and (max-width: 768px) {
+    @media only screen and (max-width: 820px) {
       margin-bottom: get-rem-mobile(10);
     }
   }
@@ -439,7 +439,7 @@
     position: relative;
     aspect-ratio: 14 / 9;
 
-    @media only screen and (max-width: 768px) {
+    @media only screen and (max-width: 820px) {
       aspect-ratio: 3 / 4;
     }
     
@@ -449,7 +449,7 @@
       .splide__slide {
         aspect-ratio: 14 / 9;
 
-        @media only screen and (max-width: 768px) {
+        @media only screen and (max-width: 820px) {
           aspect-ratio: 3 / 4;
         }
 
@@ -531,7 +531,7 @@
 }
 
 .media-text-section.layout-media-with-text-h5 {
-  @media only screen and (max-width: 768px) {
+  @media only screen and (max-width: 820px) {
     @include flex;
     @include flex-direction(column);
     row-gap: get-rem-mobile(48);
@@ -543,7 +543,7 @@
     max-width: get-rem-desktop(376);
   }
 
-  @media only screen and (max-width: 768px) {
+  @media only screen and (max-width: 820px) {
     &.align-right {
       @include flex;
       @include flex-direction(column-reverse);
@@ -562,7 +562,7 @@
     max-width: get-rem-desktop(376);
   }
 
-  @media only screen and (max-width: 768px) {
+  @media only screen and (max-width: 820px) {
     &.align-right {
       @include flex;
       @include flex-direction(column-reverse);
@@ -577,7 +577,7 @@
     max-width: get-rem-desktop(376);
   }
 
-  @media only screen and (max-width: 768px) {
+  @media only screen and (max-width: 820px) {
     @include flex;
     @include flex-direction(column);
     row-gap: get-rem-mobile(48);
@@ -598,7 +598,7 @@
   @include flex-direction(column);
   row-gap: get-rem-desktop(20);
 
-  @media only screen and (max-width: 768px) {
+  @media only screen and (max-width: 820px) {
     row-gap: get-rem-mobile(48);
   }
 
@@ -607,7 +607,7 @@
   }
 
   .media-text-links-carousel {
-    @media only screen and (max-width: 768px) {
+    @media only screen and (max-width: 820px) {
       .splide {
         margin-left: get-rem-mobile(-24);
         margin-right: get-rem-mobile(-24);
@@ -621,7 +621,7 @@
   }
 
   .media-text-links-list {
-    @media only screen and (max-width: 768px) {
+    @media only screen and (max-width: 820px) {
       @include flex;
       @include flex-direction(column);
       row-gap: get-rem-mobile(48);
@@ -631,7 +631,7 @@
   .media-text-links-list--mobile {
     display: none;
 
-    @media only screen and (max-width: 768px) {
+    @media only screen and (max-width: 820px) {
       display: flex;
       @include flex-direction(column);
       row-gap: get-rem-mobile(48);
@@ -643,7 +643,7 @@
       .media-wrap {
         aspect-ratio: 14 / 9;
 
-        @media only screen and (max-width: 768px) {
+        @media only screen and (max-width: 820px) {
           aspect-ratio: 3 / 4;
         }
       }
@@ -663,7 +663,7 @@
       overflow: hidden;
       position: relative;
 
-      @media only screen and (max-width: 768px) {
+      @media only screen and (max-width: 820px) {
         aspect-ratio: 3 / 4;
       }
     }
@@ -709,7 +709,7 @@
     .carousel-pagination {
       text-align: center;
 
-      @media only screen and (min-width: 769px) {
+      @media only screen and (min-width: 821px) {
         display: none;
       }
     }
@@ -719,7 +719,7 @@
 .more-rooms-section {
   padding-bottom: get-rem-desktop(160);
 
-  @media only screen and (max-width: 768px) {
+  @media only screen and (max-width: 820px) {
     padding-bottom: get-rem-mobile(48);
   }
 
@@ -730,7 +730,7 @@
 
   // Desktop: Show grid, hide carousel
   .more-rooms-grid {
-    @media only screen and (max-width: 768px) {
+    @media only screen and (max-width: 820px) {
       display: none;
     }
   }
@@ -739,7 +739,7 @@
   .more-rooms-carousel {
     display: none;
 
-    @media only screen and (max-width: 768px) {
+    @media only screen and (max-width: 820px) {
       display: block;
 
       .splide {
@@ -793,7 +793,7 @@
   }
 
   .media-text-links-carousel {
-    @media only screen and (max-width: 768px) {
+    @media only screen and (max-width: 820px) {
       .splide {
         margin-left: get-rem-mobile(-24);
         margin-right: get-rem-mobile(-24);
@@ -807,7 +807,7 @@
   }
 
   .media-text-links-list {
-    @media only screen and (max-width: 768px) {
+    @media only screen and (max-width: 820px) {
       @include flex;
       @include flex-direction(column);
       row-gap: get-rem-mobile(48);
@@ -817,7 +817,7 @@
   .media-text-links-list--mobile {
     display: none;
 
-    @media only screen and (max-width: 768px) {
+    @media only screen and (max-width: 820px) {
       display: flex;
       @include flex-direction(column);
       row-gap: get-rem-mobile(48);
@@ -829,7 +829,7 @@
       .media-wrap {
         aspect-ratio: 14 / 9;
 
-        @media only screen and (max-width: 768px) {
+        @media only screen and (max-width: 820px) {
           aspect-ratio: 3 / 4;
         }
       }
@@ -849,7 +849,7 @@
       overflow: hidden;
       position: relative;
 
-      @media only screen and (max-width: 768px) {
+      @media only screen and (max-width: 820px) {
         aspect-ratio: 3 / 4;
       }
     }
@@ -895,7 +895,7 @@
     .carousel-pagination {
       text-align: center;
 
-      @media only screen and (min-width: 769px) {
+      @media only screen and (min-width: 821px) {
         display: none;
       }
     }
@@ -905,7 +905,7 @@
 .media-text-section.layout-media-with-text-multiple-text-blocks {
   position: relative;
 
-  @media only screen and (max-width: 768px) {
+  @media only screen and (max-width: 820px) {
     @include flex;
     @include flex-direction(column);
     row-gap: get-rem-mobile(48);
@@ -916,7 +916,7 @@
     @include flex-direction(column);
     row-gap: get-rem-desktop(360);
 
-    @media only screen and (max-width: 768px) {
+    @media only screen and (max-width: 820px) {
       row-gap: get-rem-mobile(48);
     }
   }
@@ -933,7 +933,7 @@
 .break-section {
   min-height: calc(100svh - 106px);
 
-  @media only screen and (max-width: 768px) {
+  @media only screen and (max-width: 820px) {
     min-height: calc(100svh - 63px);
   }
 
@@ -952,7 +952,7 @@
       margin: 0 auto;
       margin-top: get-rem-desktop(24);
 
-      @media only screen and (max-width: 768px) {
+      @media only screen and (max-width: 820px) {
         min-width: unset;
         width: 100%;
       }
@@ -973,7 +973,7 @@
     padding-top: get-rem-desktop(80);
     padding-bottom: get-rem-desktop(80);
 
-    @media only screen and (max-width: 768px) {
+    @media only screen and (max-width: 820px) {
       padding-top: get-rem-mobile(48);
       padding-bottom: get-rem-mobile(48);
     }
@@ -994,7 +994,7 @@
   padding-top: get-rem-desktop(80);
   padding-bottom: get-rem-desktop(80);
 
-  @media only screen and (max-width: 768px) {
+  @media only screen and (max-width: 820px) {
     padding-top: get-rem-mobile(48);
     padding-bottom: get-rem-mobile(48);
     
@@ -1050,7 +1050,7 @@
     @include flex-direction(column);
     row-gap: get-rem-desktop(36);
 
-    @media only screen and (max-width: 768px) {
+    @media only screen and (max-width: 820px) {
       padding-right: 0;
       margin-bottom: get-rem-mobile(48);
     }
@@ -1072,7 +1072,7 @@
   height: 100svh;
   width: 100%;
 
-  @media only screen and (max-width: 768px) {
+  @media only screen and (max-width: 820px) {
     height: get-rem-mobile(500);
   }
 
@@ -1108,7 +1108,7 @@
     column-gap: get-rem-desktop(24);
     margin-bottom: get-rem-desktop(72);
 
-    @media only screen and (max-width: 768px) {
+    @media only screen and (max-width: 820px) {
       overflow-y: hidden;
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
@@ -1162,7 +1162,7 @@
   }
 
   .menu-content-wrap {
-    @media only screen and (max-width: 768px) {
+    @media only screen and (max-width: 820px) {
       @include flex;
       @include flex-direction(column);
       row-gap: get-rem-mobile(54);
@@ -1332,7 +1332,7 @@
   padding-top: get-rem-desktop(80);
   padding-bottom: get-rem-desktop(80);
 
-  @media only screen and (max-width: 768px) {
+  @media only screen and (max-width: 820px) {
     display: none;
   }
 
@@ -1404,14 +1404,14 @@
   .activity-grid {
     row-gap: get-rem-desktop(72);
 
-    @media only screen and (max-width: 768px) {
+    @media only screen and (max-width: 820px) {
       display: none;
     }
   }
 
   &.no-carousel {
     .activity-grid {
-      @media only screen and (max-width: 768px) {
+      @media only screen and (max-width: 820px) {
         display: grid;
       }
     }
@@ -1420,7 +1420,7 @@
   .activity-carousel {
     display: none;
 
-    @media only screen and (max-width: 768px) {
+    @media only screen and (max-width: 820px) {
       display: block;
 
       .splide {
@@ -1488,7 +1488,7 @@ body.page-type-activities {
   .activity-section {
     padding-bottom: get-rem-desktop(160);
 
-    @media only screen and (max-width: 768px) {
+    @media only screen and (max-width: 820px) {
       padding-top: get-rem-mobile(48);
       padding-bottom: get-rem-mobile(48);
     }
@@ -1521,7 +1521,7 @@ body.page-type-activities {
   .feature-grid {
     row-gap: get-rem-desktop(72);
 
-    @media only screen and (max-width: 768px) {
+    @media only screen and (max-width: 820px) {
       @include flex;
       @include flex-direction(column);
       row-gap: get-rem-mobile(48);
@@ -1534,7 +1534,7 @@ body.page-type-activities {
       position: relative;
       margin-bottom: get-rem-desktop(20);
 
-      @media only screen and (max-width: 768px) {
+      @media only screen and (max-width: 820px) {
         aspect-ratio: 3 / 4;
       }
     }
@@ -1557,7 +1557,7 @@ body.page-type-activities {
   padding-top: get-rem-desktop(160);
   padding-bottom: get-rem-desktop(160);
 
-  @media only screen and (max-width: 768px) {
+  @media only screen and (max-width: 820px) {
     padding-top: get-rem-mobile(48);
     padding-bottom: get-rem-mobile(48);
   }
@@ -1565,7 +1565,7 @@ body.page-type-activities {
   .inner-wrap {
     row-gap: get-rem-desktop(48);
 
-    @media only screen and (max-width: 768px) {
+    @media only screen and (max-width: 820px) {
       @include flex;
       @include flex-direction(column);
     }
@@ -1575,10 +1575,12 @@ body.page-type-activities {
 // BOOKING SECTION ------------------
 
 .booking-section {
+  position: relative;
+
   &.no-top-pad {
     margin-top: get-rem-desktop(-160);
 
-    @media only screen and (max-width: 768px) {
+    @media only screen and (max-width: 820px) {
       margin-top: get-rem-mobile(-48);
     }
   }
@@ -1586,444 +1588,543 @@ body.page-type-activities {
   &.no-bottom-pad {
     margin-bottom: get-rem-desktop(-160);
 
-    @media only screen and (max-width: 768px) {
+    @media only screen and (max-width: 820px) {
       margin-bottom: get-rem-mobile(-48);
     }
   }
 
-  .booking-form {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    @include align-items(center);
-    padding-top: get-rem-desktop(24);
-    padding-bottom: get-rem-desktop(20);
+  // GUEST POPUP
+  .popup {
+    padding: get-rem-desktop(24);
+    width: 100%;
+    z-index: 1000;
+    opacity: 1;
+    transform: translate3d(0,0,0);
+    @include transition-multiple(opacity 300ms cubic-bezier(.23,1,.32,1), transform 300ms cubic-bezier(.23,1,.32,1));
+    pointer-events: auto;
+    background-color: $colour-white;
+    @include flex;
+    @include flex-direction(column);
+    row-gap: get-rem-desktop(24);
 
-    @media only screen and (max-width: 768px) {
-      @include flex;
-      @include flex-direction(column);
-      @include align-items(flex-start);
-      row-gap: get-rem-mobile(22);
-    }
-    
-    // GUEST WRAPPER
-    .guest-wrapper {
-      position: relative;
-      width: 100%;
-    }
-
-    // INPUT LABELS
-    #guest-picker,
-    .date-input {
-      @include flex;
-      @include flex-direction(column);
-      row-gap: get-rem-desktop(10);
-      padding: 0;
-      cursor: pointer;
-    }
-    
-    // GUEST POPUP
-    .popup {
-      padding: get-rem-desktop(24);
-      width: 100%;
-      z-index: 1000;
-      opacity: 1;
-      transform: translate3d(0,0,0);
-      @include transition-multiple(opacity 300ms cubic-bezier(.23,1,.32,1), transform 300ms cubic-bezier(.23,1,.32,1));
-      pointer-events: auto;
-      background-color: $colour-white;
-      @include flex;
-      @include flex-direction(column);
-      row-gap: get-rem-desktop(24);
-
-      @media only screen and (min-width: 769px) {
-        position: absolute;
-        left: 0;
-        max-width: get-rem-desktop(300);
-      }
-
-      @media only screen and (max-width: 768px) {
-        margin-top: get-rem-mobile(16);
-      }
-
-      .guest-control {
-        @include flex;
-        @include justify-content(space-between);
-        @include align-items(center);
-
-        .button-group {
-          @include flex;
-
-          .button {
-            background-color: $colour-beige;
-            min-width: unset;
-            width: get-rem-desktop(38);
-            padding: 0;
-            padding-top: get-rem-desktop(2.5);
-            padding-bottom: get-rem-desktop(4);
-          }
-        }
-    
-        input[type=number] {
-          @include reset-input;
-          width: get-rem-desktop(38);
-          text-align: center;
-          appearance: textfield;
-          -moz-appearance: textfield;
-        }
-
-        &:first-child {
-          border-top-right-radius: 0;
-          border-bottom-right-radius: 0;
-        }
-
-        &:last-child {
-          border-top-left-radius: 0;
-          border-bottom-left-radius: 0;
-        }
-
-        input[type=number]::-webkit-outer-spin-button,
-        input[type=number]::-webkit-inner-spin-button {
-          -webkit-appearance: none;
-          margin: 0;
-        }
-      }
-    }
-    
-    .hidden {
-      opacity: 0;
-      pointer-events: none;
-
-      @media screen and (min-width: 769px) {
-        transform: translate3d(0,-20px,0);
-      }
-
-      @media screen and (max-width: 768px) {
-        display: none;
-      }
-    }
-
-    .visually-hidden {
+    @media only screen and (min-width: 821px) {
       position: absolute;
-      opacity: 0;
-      pointer-events: none;
-      z-index: -1;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
+      left: 0;
+      max-width: get-rem-desktop(300);
     }
 
-    .button {
-      height: fit-content;
+    @media only screen and (max-width: 820px) {
+      margin-top: get-rem-mobile(16);
+    }
 
-      @media only screen and (max-width: 768px) {
-        width: 100%;
+    .guest-control {
+      @include flex;
+      @include justify-content(space-between);
+      @include align-items(center);
+
+      .button-group {
+        @include flex;
+
+        .button {
+          background-color: $colour-beige;
+          min-width: unset;
+          width: get-rem-desktop(38);
+          padding: 0;
+          padding-top: get-rem-desktop(2.5);
+          padding-bottom: get-rem-desktop(4);
+        }
+      }
+
+      input[type=number] {
+        @include reset-input;
+        width: get-rem-desktop(38);
+        text-align: center;
+        appearance: textfield;
+        -moz-appearance: textfield;
+      }
+
+      &:first-child {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+
+      &:last-child {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+      }
+
+      input[type=number]::-webkit-outer-spin-button,
+      input[type=number]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
       }
     }
+  }
 
-    /*
-    FLATPICKR CALENDAR --------------------
-    */
+  /*
+  FLATPICKR CALENDAR --------------------
+  */
 
-    .flatpickr-calendar {
-      border-radius: 0;
-      background-color: $colour-white;
-      box-shadow: none;
+  .flatpickr-calendar {
+    border-radius: 0;
+    background-color: $colour-white;
+    box-shadow: none;
+    left: 0 !important;
+    width: 62.5vw !important;
+    max-width: unset !important;
+    left: -37.5% !important;
+
+    @media only screen and (max-width: 820px) {
+      position: static !important;
+      width: 100% !important;
       left: 0 !important;
-      width: 62.5vw !important;
-      max-width: unset !important;
-      left: -37.5% !important;
+      margin-top: get-rem-mobile(16);
+    }
 
-      @media only screen and (max-width: 768px) {
-        position: static !important;
-        width: 100% !important;
-        left: 0 !important;
-        margin-top: get-rem-mobile(16);
-      }
 
-      &::after {
+    &::after {
+      display: none;
+    }
+
+    &:before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      @include transform(translate(-50%, -50%));
+      height: calc(100% - get-rem-desktop(48));
+      width: 1px;
+      background-color: $colour-beige;
+      border: none;
+      margin: 0;
+      bottom: unset;
+
+      @media only screen and (max-width: 820px) {
         display: none;
       }
 
-      &:before {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        @include transform(translate(-50%, -50%));
-        height: calc(100% - get-rem-desktop(48));
-        width: 1px;
-        background-color: $colour-beige;
-        border: none;
-        margin: 0;
-        bottom: unset;
-
-        @media only screen and (max-width: 768px) {
-          display: none;
-        }
-      }
+      // Hide divider when inside unified popup (we have border on guest section instead)
+      // This is handled at booking-section level
     }
+  }
 
-    .flatpickr-rContainer {
-      width: 100% !important;
-    }
+  .flatpickr-rContainer {
+    width: 100% !important;
+  }
 
-    // MONTH TITLES
-    .flatpickr-months {
-      padding: get-rem-desktop(35) get-rem-desktop(24) get-rem-desktop(100);
+  // MONTH TITLES
+  .flatpickr-months {
+    padding: get-rem-desktop(35) get-rem-desktop(24) get-rem-desktop(100);
 
-      @media only screen and (max-width: 768px) {
-        padding: get-rem-mobile(14) get-rem-mobile(12) get-rem-mobile(53);
-        position: relative;
-      }
-
-      // MONTH
-      .flatpickr-month {
-        pointer-events: none;
-        padding-right: get-rem-desktop(24) !important;
-
-        @media only screen and (max-width: 768px) {
-          padding-left: 0 !important;
-          padding-right: 0 !important;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-
-        &:last-of-type {
-          padding-right: 0 !important;
-          padding-left: get-rem-desktop(24) !important;
-
-          @media only screen and (max-width: 768px) {
-            padding-left: get-rem-mobile(18) !important;
-          }
-        }
-
-        .flatpickr-current-month {
-          padding: 0 !important;
-        }
-
-        // Hide month/year dropdowns on mobile (use text display instead)
-        .flatpickr-monthDropdown-months,
-        .flatpickr-monthDropdown-years {
-          @media only screen and (max-width: 768px) {
-            display: none !important;
-          }
-        }
-
-        // Ensure month text is visible and centered on mobile
-        .flatpickr-current-month {
-          @media only screen and (max-width: 768px) {
-            display: flex !important;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            width: 100%;
-            left: unset !important;
-          }
-        }
-
-        // Make month/year text visible and centered on mobile
-        .flatpickr-current-month .cur-month,
-        .flatpickr-current-month .cur-year {
-          @media only screen and (max-width: 768px) {
-            display: inline !important;
-            text-align: left;
-          }
-        }
-      }
-
-      // DATE PICKER ARROW
-      .flatpickr-prev-month,
-      .flatpickr-next-month {
-        width: get-rem-desktop(36);
-        height: get-rem-desktop(36);
-        border: 1px solid $colour-black;
-        border-radius: 50px;
-        margin: get-rem-desktop(35) get-rem-desktop(24);
-
-        @media only screen and (max-width: 768px) {
-          margin: get-rem-mobile(12);
-          pointer-events: auto !important; // Enable clicking on mobile
-        }
-
-        svg {
-          fill: $colour-black;
-        }
-      }
-    }
-
-    // WEEKDAYS
-    .flatpickr-weekdays {
-      padding-left: get-rem-desktop(24);
-      padding-right: get-rem-desktop(24);
-      padding-bottom: get-rem-desktop(8);
-      height: unset !important;
-
-      @media only screen and (max-width: 768px) {
-        padding-left: get-rem-mobile(12);
-        padding-right: get-rem-mobile(12);
-        padding-bottom: get-rem-mobile(8);
-      }
-
-      .flatpickr-weekdaycontainer {
-        padding-right: get-rem-desktop(24);
-        
-        &:first-of-type {
-          padding-left: 0;
-        }
-
-        &:last-of-type {
-          padding-left: get-rem-desktop(24);
-          padding-right: 0;
-
-          @media only screen and (max-width: 768px) {
-            padding-left: 0;
-          }
-        }
-      }
-
-      .flatpickr-weekday {
-        color: $colour-black;
-        font-weight: 400;
-        @include font-size(16px, 16px);
-      }
-    }
-
-    // DAYS
-    .dayContainer {
-      padding-left: get-rem-desktop(24) !important;
-      padding-right: get-rem-desktop(24) !important;
-      padding-bottom: get-rem-desktop(24) !important;
-      display: grid !important;
-      grid-template-columns: repeat(7, 1fr) !important;
-      gap: get-rem-desktop(4) !important;
-      width: 100% !important;
-      min-width: unset !important;
-      max-width: unset !important;
-
-      @media only screen and (max-width: 768px) {
-        padding-left: get-rem-mobile(12) !important;
-        padding-right: get-rem-mobile(12) !important;
-        padding-bottom: get-rem-mobile(12) !important;
-      }
-    }
-
-    .flatpickr-days {
-      width: 100% !important;
-    }
-
-    .flatpickr-day {
-      border-radius: 0;
-      color: $colour-black !important;
-      width: unset !important;
-      max-width: unset !important;
-      height: get-rem-desktop(35) !important;
-      line-height: get-rem-desktop(35) !important;
-
-      // TODAY'S DATE
-      &.today {
-        border-color: $colour-beige;
-      }
-
-      // SELECTED DATES
-      &.selected {
-        color: $colour-black;
-      }
-
-      // DISABLED DATES
-      &.flatpickr-disabled {
-        opacity: 0.3;
-
-        &:hover {
-          background: transparent;
-          border-color: transparent;
-        }
-      }
-
-      &.nextMonthDay {
-        opacity: 0.3;
-      }
-    }
-
-    // DATE ON HOVER
-    .flatpickr-day.inRange, 
-    .flatpickr-day.prevMonthDay.inRange, 
-    .flatpickr-day.nextMonthDay.inRange, 
-    .flatpickr-day.today.inRange, 
-    .flatpickr-day.prevMonthDay.today.inRange, 
-    .flatpickr-day.nextMonthDay.today.inRange, 
-    .flatpickr-day:hover, 
-    .flatpickr-day.prevMonthDay:hover, 
-    .flatpickr-day.nextMonthDay:hover, 
-    .flatpickr-day:focus, 
-    .flatpickr-day.prevMonthDay:focus, 
-    .flatpickr-day.nextMonthDay:focus, 
-    .flatpickr-day.today:hover, 
-    .flatpickr-day.today:focus,
-    .flatpickr-day.selected, 
-    .flatpickr-day.startRange, 
-    .flatpickr-day.endRange, 
-    .flatpickr-day.selected.inRange, 
-    .flatpickr-day.startRange.inRange, 
-    .flatpickr-day.endRange.inRange, 
-    .flatpickr-day.selected:focus, 
-    .flatpickr-day.startRange:focus, 
-    .flatpickr-day.endRange:focus, 
-    .flatpickr-day.selected:hover, 
-    .flatpickr-day.startRange:hover, 
-    .flatpickr-day.endRange:hover, 
-    .flatpickr-day.selected.prevMonthDay, 
-    .flatpickr-day.startRange.prevMonthDay, 
-    .flatpickr-day.endRange.prevMonthDay, 
-    .flatpickr-day.selected.nextMonthDay, 
-    .flatpickr-day.startRange.nextMonthDay, 
-    .flatpickr-day.endRange.nextMonthDay {
-      background: $colour-beige;
-      border-color: $colour-beige;
-    }
-
-    // START/END DATE
-    .flatpickr-day.selected.startRange, 
-    .flatpickr-day.startRange.startRange, 
-    .flatpickr-day.endRange.startRange,
-    .flatpickr-day.selected.endRange, 
-    .flatpickr-day.startRange.endRange, 
-    .flatpickr-day.endRange.endRange {
-      border-radius: 0 !important;
-    }
-    
-    // SELECTED RANGE
-    .flatpickr-day.inRange {
-      box-shadow: none;
-    }
-
-    // SELECTED RANGE
-    .flatpickr-day.selected.startRange + .endRange:not(:nth-child(7n+1)), .flatpickr-day.startRange.startRange + .endRange:not(:nth-child(7n+1)), .flatpickr-day.endRange.startRange + .endRange:not(:nth-child(7n+1)) {
-      box-shadow: none;
+    @media only screen and (max-width: 820px) {
+      padding: get-rem-mobile(14) get-rem-mobile(12) get-rem-mobile(53);
+      position: relative;
     }
 
     // MONTH
-    .flatpickr-current-month span.cur-month {
-      font-weight: 400;
-    }
+    .flatpickr-month {
+      pointer-events: none;
+      padding-right: get-rem-desktop(24) !important;
 
-    // LINE BETWEEN MONTHS
-    .dayContainer + .dayContainer {
-      box-shadow: none;
-    }
-
-    .flatpickr-month,
-    .flatpickr-weekdaycontainer,
-    .dayContainer {
-      padding-right: 10px;
+      @media only screen and (max-width: 820px) {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
 
       &:last-of-type {
-        padding-right: 0;
-        padding-left: 10px;
+        padding-right: 0 !important;
+        padding-left: get-rem-desktop(24) !important;
+
+        @media only screen and (max-width: 820px) {
+          padding-left: get-rem-mobile(18) !important;
+        }
+      }
+
+      .flatpickr-current-month {
+        padding: 0 !important;
+      }
+
+      // Hide month/year dropdowns on mobile (use text display instead)
+      .flatpickr-monthDropdown-months,
+      .flatpickr-monthDropdown-years {
+        @media only screen and (max-width: 820px) {
+          display: none !important;
+        }
+      }
+
+      // Ensure month text is visible and centered on mobile
+      .flatpickr-current-month {
+        @media only screen and (max-width: 820px) {
+          display: flex !important;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+          width: 100%;
+          left: unset !important;
+        }
+      }
+
+      // Make month/year text visible and centered on mobile
+      .flatpickr-current-month .cur-month,
+      .flatpickr-current-month .cur-year {
+        @media only screen and (max-width: 820px) {
+          display: inline !important;
+          text-align: left;
+        }
       }
     }
 
-    .start-wrapper {
-      position: relative;
+    // DATE PICKER ARROW
+    .flatpickr-prev-month,
+    .flatpickr-next-month {
+      width: get-rem-desktop(36);
+      height: get-rem-desktop(36);
+      border: 1px solid $colour-black;
+      border-radius: 50px;
+      margin: get-rem-desktop(35) get-rem-desktop(24);
+
+      @media only screen and (max-width: 820px) {
+        margin: get-rem-mobile(12);
+        pointer-events: auto !important; // Enable clicking on mobile
+      }
+
+      svg {
+        fill: $colour-black;
+      }
+    }
+  }
+
+  // WEEKDAYS
+  .flatpickr-weekdays {
+    padding-left: get-rem-desktop(24);
+    padding-right: get-rem-desktop(24);
+    padding-bottom: get-rem-desktop(8);
+    height: unset !important;
+
+    @media only screen and (max-width: 820px) {
+      padding-left: get-rem-mobile(12);
+      padding-right: get-rem-mobile(12);
+      padding-bottom: get-rem-mobile(8);
+    }
+
+    .flatpickr-weekdaycontainer {
+      padding-right: get-rem-desktop(24);
+      
+      &:first-of-type {
+        padding-left: 0;
+      }
+
+      &:last-of-type {
+        padding-left: get-rem-desktop(24);
+        padding-right: 0;
+
+        @media only screen and (max-width: 820px) {
+          padding-left: 0;
+        }
+      }
+    }
+
+    .flatpickr-weekday {
+      color: $colour-black;
+      font-weight: 400;
+      @include font-size(16px, 16px);
+    }
+  }
+
+  // DAYS
+  .dayContainer {
+    padding-left: get-rem-desktop(24) !important;
+    padding-right: get-rem-desktop(24) !important;
+    padding-bottom: get-rem-desktop(24) !important;
+    display: grid !important;
+    grid-template-columns: repeat(7, 1fr) !important;
+    gap: get-rem-desktop(4) !important;
+    width: 100% !important;
+    min-width: unset !important;
+    max-width: unset !important;
+
+    @media only screen and (max-width: 820px) {
+      padding-left: get-rem-mobile(12) !important;
+      padding-right: get-rem-mobile(12) !important;
+      padding-bottom: get-rem-mobile(12) !important;
+    }
+  }
+
+  .flatpickr-days {
+    width: 100% !important;
+  }
+
+  .flatpickr-day {
+    border-radius: 0;
+    color: $colour-black !important;
+    width: unset !important;
+    max-width: unset !important;
+    height: get-rem-desktop(35) !important;
+    line-height: get-rem-desktop(35) !important;
+
+    // TODAY'S DATE
+    &.today {
+      border-color: $colour-beige;
+    }
+
+    // SELECTED DATES
+    &.selected {
+      color: $colour-black;
+    }
+
+    // DISABLED DATES
+    &.flatpickr-disabled {
+      opacity: 0.3;
+
+      &:hover {
+        background: transparent;
+        border-color: transparent;
+      }
+    }
+
+    &.nextMonthDay {
+      opacity: 0.3;
+    }
+  }
+
+  // DATE ON HOVER
+  .flatpickr-day.inRange, 
+  .flatpickr-day.prevMonthDay.inRange, 
+  .flatpickr-day.nextMonthDay.inRange, 
+  .flatpickr-day.today.inRange, 
+  .flatpickr-day.prevMonthDay.today.inRange, 
+  .flatpickr-day.nextMonthDay.today.inRange, 
+  .flatpickr-day:hover, 
+  .flatpickr-day.prevMonthDay:hover, 
+  .flatpickr-day.nextMonthDay:hover, 
+  .flatpickr-day:focus, 
+  .flatpickr-day.prevMonthDay:focus, 
+  .flatpickr-day.nextMonthDay:focus, 
+  .flatpickr-day.today:hover, 
+  .flatpickr-day.today:focus,
+  .flatpickr-day.selected, 
+  .flatpickr-day.startRange, 
+  .flatpickr-day.endRange, 
+  .flatpickr-day.selected.inRange, 
+  .flatpickr-day.startRange.inRange, 
+  .flatpickr-day.endRange.inRange, 
+  .flatpickr-day.selected:focus, 
+  .flatpickr-day.startRange:focus, 
+  .flatpickr-day.endRange:focus, 
+  .flatpickr-day.selected:hover, 
+  .flatpickr-day.startRange:hover, 
+  .flatpickr-day.endRange:hover, 
+  .flatpickr-day.selected.prevMonthDay, 
+  .flatpickr-day.startRange.prevMonthDay, 
+  .flatpickr-day.endRange.prevMonthDay, 
+  .flatpickr-day.selected.nextMonthDay, 
+  .flatpickr-day.startRange.nextMonthDay, 
+  .flatpickr-day.endRange.nextMonthDay {
+    background: $colour-beige;
+    border-color: $colour-beige;
+  }
+
+  // START/END DATE
+  .flatpickr-day.selected.startRange, 
+  .flatpickr-day.startRange.startRange, 
+  .flatpickr-day.endRange.startRange,
+  .flatpickr-day.selected.endRange, 
+  .flatpickr-day.startRange.endRange, 
+  .flatpickr-day.endRange.endRange {
+    border-radius: 0 !important;
+  }
+  
+  // SELECTED RANGE
+  .flatpickr-day.inRange {
+    box-shadow: none;
+  }
+
+  // SELECTED RANGE
+  .flatpickr-day.selected.startRange + .endRange:not(:nth-child(7n+1)), .flatpickr-day.startRange.startRange + .endRange:not(:nth-child(7n+1)), .flatpickr-day.endRange.startRange + .endRange:not(:nth-child(7n+1)) {
+    box-shadow: none;
+  }
+
+  // MONTH
+  .flatpickr-current-month span.cur-month {
+    font-weight: 400;
+  }
+
+  // LINE BETWEEN MONTHS
+  .dayContainer + .dayContainer {
+    box-shadow: none;
+  }
+
+  .flatpickr-month,
+  .flatpickr-weekdaycontainer,
+  .dayContainer {
+    padding-right: 10px;
+
+    &:last-of-type {
+      padding-right: 0;
+      padding-left: 10px;
+    }
+  }
+
+  .start-wrapper {
+    position: relative;
+    width: 100%;
+  }
+}
+
+/*
+UNIFIED POPUP (Desktop only) --------------------
+*/
+.unified-popup {
+  @media only screen and (max-width: 820px) {
+    display: none !important;
+  }
+
+  @media only screen and (min-width: 821px) {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    z-index: 1001;
+    opacity: 1;
+    transform: translate3d(0,0,0);
+    @include transition-multiple(opacity 300ms cubic-bezier(.23,1,.32,1), transform 300ms cubic-bezier(.23,1,.32,1));
+    pointer-events: auto;
+    background-color: $colour-beige;
+    @include flex;
+    padding-top: get-rem-desktop(24);
+    padding-bottom: get-rem-desktop(24);
+
+    &.hidden {
+      opacity: 0;
+      pointer-events: none;
+      transform: translate3d(0,-20px,0);
+    }
+
+    .unified-popup__guest {
+      padding: get-rem-desktop(24);
+      background-color: $colour-white;
+      @include flex;
+      column-gap: get-rem-desktop(48);
+      width: 100%;
+
+      .popup {
+        position: static;
+        max-width: get-rem-desktop(276);
+        padding: 0;
+
+        @media only screen and (max-width: 1024px) {
+          max-width: get-rem-desktop(200);
+        }
+      }
+
+      .flatpickr-calendar {
+        position: relative !important;
+        left: 0 !important;
+        width: auto !important;
+        flex: 1 1 auto;
+        margin: 0;
+        max-width: none !important;
+        max-width: get-rem-desktop(1029) !important;
+  
+        &:before {
+          display: none;
+        }
+
+        .flatpickr-months {
+          padding-top: 0;
+          padding-left: 0;
+          padding-right: 0;
+
+          .flatpickr-prev-month {
+            margin-top: 0;
+            margin-left: 0;
+          }
+
+          .flatpickr-next-month {
+            margin-top: 0;
+            margin-right: 0;
+          }
+        }
+
+        .flatpickr-weekdays {
+          padding-left: 0;
+          padding-right: 0;
+        }
+
+        .dayContainer {
+          padding-bottom: 0 !important;
+
+          &:first-of-type {
+            padding-left: 0 !important;
+          }
+
+          &:last-of-type {
+            padding-right: 0 !important;
+          }
+        }
+      }
+    }
+  }
+}
+
+.booking-form {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  @include align-items(center);
+  padding-top: get-rem-desktop(24);
+  padding-bottom: get-rem-desktop(20);
+
+  @media only screen and (max-width: 820px) {
+    @include flex;
+    @include flex-direction(column);
+    @include align-items(flex-start);
+    row-gap: get-rem-mobile(22);
+  }
+  
+  // GUEST WRAPPER
+  .guest-wrapper {
+    position: relative;
+    width: 100%;
+  }
+
+  // INPUT LABELS
+  #guest-picker,
+  .date-input {
+    @include flex;
+    @include flex-direction(column);
+    row-gap: get-rem-desktop(10);
+    padding: 0;
+    cursor: pointer;
+  }
+  
+  .hidden {
+    opacity: 0;
+    pointer-events: none;
+
+    @media screen and (min-width: 821px) {
+      transform: translate3d(0,-20px,0);
+    }
+
+    @media screen and (max-width: 820px) {
+      display: none;
+    }
+  }
+
+  .visually-hidden {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+    z-index: -1;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+  }
+
+  .button {
+    height: fit-content;
+
+    @media only screen and (max-width: 820px) {
       width: 100%;
     }
   }
@@ -2037,7 +2138,7 @@ body.page-type-activities {
   column-gap: get-rem-desktop(20);
   row-gap: get-rem-desktop(100);
 
-  @media only screen and (max-width: 768px) {
+  @media only screen and (max-width: 820px) {
     grid-template-columns: repeat(1, 1fr);
     column-gap: 0;
     row-gap: get-rem-mobile(48);
