@@ -161,7 +161,7 @@
 .product-option-select {
   @include reset-input;
   width: 100%;
-  padding: get-rem-desktop(18) get-rem-desktop(24);
+  padding: get-rem-desktop(15) get-rem-desktop(24);
   padding-right: get-rem-desktop(50);
   border: 1px solid $colour-black;
   color: $colour-black;
