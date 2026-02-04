@@ -2,8 +2,9 @@
 'use client'
 
 import { urlFor } from '../sanity/utils/imageUrlBuilder'
-import { SanityImageSource } from '@sanity/image-url/lib/types/types'
+import { SanityImage } from '../types/sanity'
 import { PortableText, PortableTextBlock } from '@portabletext/react'
+import SplideCarousel from './SplideCarousel'
 
 interface Spec {
   body?: string
@@ -12,15 +13,15 @@ interface Spec {
 interface HeroProps {
   id?: string
   title?: string
-  image?: SanityImageSource
+  images?: SanityImage[]
   description?: PortableTextBlock[]
   specs?: Spec[]
 }
 
-export default function Hero({ id, title, image, description, specs }: HeroProps) {
+export default function Hero({ id, title, images, description, specs }: HeroProps) {
   return (
     <section id={id} className="hero-section layout-2 h-pad">
-      {image && (
+      {/* {image && (
         <div className="hero-image relative out-of-opacity">
           <div className="media-wrap">
             <img 
@@ -31,6 +32,29 @@ export default function Hero({ id, title, image, description, specs }: HeroProps
             <div className="loading-overlay" />
           </div>
         </div>
+      )} */}
+
+      {images && images.length > 0 && (
+        images.length === 1 ? (
+          <div className="hero-image relative out-of-opacity">
+            <div className="media-wrap">
+              <img 
+                data-src={urlFor(images[0]).url()} 
+                alt="" 
+                className="lazy full-bleed-image"
+              />
+              <div className="loading-overlay" />
+            </div>
+          </div>
+        ) : (
+          <div className="hero-image relative out-of-opacity">
+            <SplideCarousel 
+              images={images.map(image => ({ url: urlFor(image).url(), alt: "" }))}
+              onPrevious={() => {}}
+              onNext={() => {}}
+            />
+          </div>
+        )
       )}
 
       <div className="hero-content out-of-opacity">

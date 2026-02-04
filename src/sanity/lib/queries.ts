@@ -537,7 +537,7 @@ export const roomPostsQuery = groq`
     _id,
     title,
     description,
-    image ${imageFragment},
+    images[] ${imageFragment},
     specs[] {
       body
     },
@@ -551,7 +551,7 @@ export const roomPostQuery = groq`
     _id,
     title,
     description,
-    image ${imageFragment},
+    images[] ${imageFragment},
     specs[] {
       body
     },
@@ -567,7 +567,7 @@ export const otherRoomsQuery = groq`
     roomType,
     description,
     "slug": slug.current,
-    image ${imageFragment}
+    "image": images[0] ${imageFragment}
   }
 `
 

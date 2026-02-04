@@ -39,7 +39,7 @@ export default async function RoomPostPage({ params }: RoomPostPageProps) {
   }
 
   // Find the current post index and determine next post
-  const currentIndex = allPosts.findIndex((p: { slug: { current: string } }) => p.slug.current === resolvedParams.slug)
+  const currentIndex = allPosts.findIndex((p: { slug: string }) => p.slug === resolvedParams.slug)
   const nextPost = currentIndex !== -1 && currentIndex < allPosts.length - 1 
     ? allPosts[currentIndex + 1] 
     : allPosts[0] // If on last post, go to first post
@@ -48,11 +48,11 @@ export default async function RoomPostPage({ params }: RoomPostPageProps) {
     <>
       <BodyClassProvider 
         pageType="room-post" 
-        slug={post.slug?.current} 
+        slug={typeof post.slug === 'string' ? post.slug : post.slug?.current} 
       />
       <RoomPost 
         {...post} 
-        nextPostSlug={nextPost?.slug?.current}
+        nextPostSlug={typeof nextPost?.slug === 'string' ? nextPost?.slug : nextPost?.slug?.current}
         nextPostTitle={nextPost?.title}
         otherRooms={otherRooms}
       />

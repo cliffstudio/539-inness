@@ -25,7 +25,7 @@ interface OtherRoom {
 interface RoomPostProps {
   title: string
   slug: { current: string }
-  image?: SanityImageSource
+  images?: SanityImageSource[]
   description?: PortableTextBlock[]
   specs?: Array<{ body?: string }>
   contentBlocks?: ContentBlock[]
@@ -36,7 +36,7 @@ interface RoomPostProps {
 
 const RoomPost: React.FC<RoomPostProps> = ({
   title,
-  image,
+  images,
   description,
   specs,
   contentBlocks,
@@ -44,7 +44,7 @@ const RoomPost: React.FC<RoomPostProps> = ({
 }) => {
   return (
     <article className="room-post">
-      <HeroSectionRoomPost title={title} image={image} description={description} specs={specs} />
+      <HeroSectionRoomPost title={title} images={images} description={description} specs={specs} />
       {contentBlocks && <FlexibleContent contentBlocks={contentBlocks} />}
       {otherRooms && otherRooms.length > 0 && (
         <MoreRoomsSection
