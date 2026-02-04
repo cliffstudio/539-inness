@@ -40,7 +40,7 @@ export const pageType = defineType({
         list: [
           { title: 'Homepage', value: 'homepage' },
           { title: 'General Page', value: 'general' },
-          { title: 'Activities Page', value: 'activities' },
+          { title: 'Calendar Page', value: 'calendar' },
           { title: 'Links Page', value: 'links' },
           { title: 'Text Page', value: 'text' },
         ],
@@ -91,13 +91,13 @@ export const pageType = defineType({
       validation: imageSizeValidation,
     }),
 
-    // Activities specific fields
+    // Calendar specific fields
     defineField({
       name: 'activitiesHeading',
       title: 'Heading',
       type: 'string',
       fieldset: 'heroSection',
-      hidden: ({ parent }) => parent?.pageType !== 'activities',
+      hidden: ({ parent }) => parent?.pageType !== 'calendar',
     }),
     defineField({
       name: 'activitiesBody',
@@ -105,7 +105,7 @@ export const pageType = defineType({
       type: 'array',
       of: [{ type: 'block' }],
       fieldset: 'heroSection',
-      hidden: ({ parent }) => parent?.pageType !== 'activities',
+      hidden: ({ parent }) => parent?.pageType !== 'calendar',
     }),
     defineField({ 
       name: 'activitiesImage',
@@ -113,7 +113,7 @@ export const pageType = defineType({
       type: 'image',
       description: 'Maximum file size: 500KB.',
       fieldset: 'heroSection',
-      hidden: ({ parent }) => parent?.pageType !== 'activities',
+      hidden: ({ parent }) => parent?.pageType !== 'calendar',
       validation: imageSizeValidation,
     }),
 
@@ -123,7 +123,7 @@ export const pageType = defineType({
       title: 'Content Blocks',
       type: 'flexibleContent',
       description: 'Add and arrange content blocks to build your page',
-      hidden: ({ parent }) => parent?.pageType === 'activities' || parent?.pageType === 'links' || parent?.pageType === 'text',
+      hidden: ({ parent }) => parent?.pageType === 'calendar' || parent?.pageType === 'links' || parent?.pageType === 'text',
     }),
 
     // Links specific fields

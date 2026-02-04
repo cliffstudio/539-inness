@@ -2,7 +2,7 @@ import { defineType, defineField } from 'sanity'
 
 export default defineType({
   name: 'activitySection',
-  title: 'Activity Section',
+  title: 'Calendar Section',
   type: 'object',
   fields: [
     defineField({
@@ -21,9 +21,9 @@ export default defineType({
       type: 'string',
       options: {
         list: [
-          { title: 'Single Activity', value: 'single-activity' },
-          { title: '2 x Activities', value: '2-activities' },
-          { title: '4 x Activities', value: '4-activities' },
+          { title: 'Single Event', value: 'single-activity' },
+          { title: '2 x Events', value: '2-activities' },
+          { title: '4 x Events', value: '4-activities' },
         ],
       },
       initialValue: 'single-activity',
@@ -101,7 +101,7 @@ export default defineType({
     prepare({ layout }) {
       return {
         title: 'Activity Section',
-        subtitle: layout === 'single-activity' ? 'Single Activity' : layout === '2-activities' ? '2 Activities' : layout === '4-activities' ? '4 Activities' : 'No Layout',
+        subtitle: layout === 'single-activity' ? 'Single Event' : layout === '2-activities' ? '2 Events' : layout === '4-activities' ? '4 Events' : 'No Layout',
       }
     }
   }

@@ -75,7 +75,7 @@ const formatResultHeading = (count: number, term: string) => {
 
 const getResultHref = (result: SearchResult) => {
   if (result.resultType === 'activity') {
-    return result.slug ? `/activities/${result.slug}` : '/activities'
+    return result.slug ? `/calendar/${result.slug}` : '/calendar'
   }
 
   if (!result.slug) {
@@ -88,7 +88,7 @@ const getResultHref = (result: SearchResult) => {
 
 const getDetailSlug = (result: SearchResult) => {
   if (result.resultType === 'activity') {
-    return result.slug ? `activities/${result.slug}` : 'activities'
+    return result.slug ? `calendar/${result.slug}` : 'calendar'
   }
 
   if (!result.slug) {

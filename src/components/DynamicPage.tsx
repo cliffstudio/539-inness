@@ -21,10 +21,10 @@ interface PageProps {
 export default async function DynamicPage({ params }: PageProps) {
   const resolvedParams = await params
   const slug = resolvedParams.slug
-  const isActivityDetail = slug.startsWith('activities/')
+  const isActivityDetail = slug.startsWith('calendar/')
 
   if (isActivityDetail) {
-    const activitySlug = slug.replace(/^activities\//, '')
+    const activitySlug = slug.replace(/^calendar\//, '')
 
     if (!activitySlug) {
       notFound()
@@ -53,8 +53,8 @@ export default async function DynamicPage({ params }: PageProps) {
     notFound()
   }
 
-  // If this is an Activities page, fetch the full activities data and all activities
-  if (page.pageType === 'activities') {
+  // If this is a Calendar page, fetch the full calendar data and all activities
+  if (page.pageType === 'calendar') {
     const [activitiesPage, allActivities] = await Promise.all([
       client.fetch(activitiesQuery),
       client.fetch(allActivitiesQuery)

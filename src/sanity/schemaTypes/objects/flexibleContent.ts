@@ -31,7 +31,7 @@ export default defineType({
     },
     {
       type: 'activitySection',
-      title: 'Activity Section'
+      title: 'Calendar Section'
     },
     {
       type: 'featureSection',

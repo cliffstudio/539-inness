@@ -976,7 +976,7 @@ export default function MediaTextSection({
 
                           <div className="button-wrap button-wrap--multiple-buttons button-wrap--overlay-media">
                             <ButtonLink 
-                              link={{ linkType: 'internal', label: 'View', pageLink: { slug: `activities/${activity.slug}` } }}
+                              link={{ linkType: 'internal', label: 'View', pageLink: { slug: `calendar/${activity.slug}` } }}
                               fallbackColor="cream"
                             />
 
@@ -1069,7 +1069,7 @@ export default function MediaTextSection({
 
                         <div className="button-wrap button-wrap--multiple-buttons button-wrap--overlay-media">
                           <ButtonLink 
-                            link={{ linkType: 'internal', label: 'View Details', pageLink: { slug: `activities/${activity.slug}` } }}
+                            link={{ linkType: 'internal', label: 'View Details', pageLink: { slug: `calendar/${activity.slug}` } }}
                             fallbackColor="cream"
                           />
 

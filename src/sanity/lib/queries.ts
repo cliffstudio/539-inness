@@ -376,9 +376,9 @@ export const homepageQuery = groq`
   }
 `
 
-// Activities specific query
+// Calendar specific query
 export const activitiesQuery = groq`
-  *[_type == "page" && pageType == "activities"][0] {
+  *[_type == "page" && pageType == "calendar"][0] {
     _id,
     _type,
     title,

@@ -69,7 +69,7 @@ const formatResultCount = (count: number) => {
 
 const getResultHref = (result: SearchResult) => {
   if (result.resultType === 'activity') {
-    return result.slug ? `/activities/${result.slug}` : '/activities'
+    return result.slug ? `/calendar/${result.slug}` : '/calendar'
   }
 
   if (!result.slug) {

@@ -23,7 +23,7 @@ export default defineType({
           { title: 'Media with Text (h4 & bullet list)', value: 'media-with-text-h4-bullet-list' },
           { title: 'Media with Text (h4, body & links)', value: 'media-with-text-h4-body-links' },
           { title: 'Media with Text (h4, body & room links)', value: 'media-with-text-h4-body-room-links' },
-          { title: 'Media with Text (h4, body & activity links)', value: 'media-with-text-h4-body-activity-links' },
+          { title: 'Media with Text (h4, body & calendar links)', value: 'media-with-text-h4-body-activity-links' },
           { title: 'Media with Text (multiple text blocks)', value: 'media-with-text-multiple-text-blocks' },
         ],
       },
@@ -225,15 +225,15 @@ export default defineType({
     }),
     defineField({
       name: 'activityLinks',
-      title: 'Activity Links',
+      title: 'Calendar Links',
       type: 'array',
       of: [{ type: 'reference', to: [{ type: 'activity' }] }],
-      description: 'Add Activity Links in even numbers (2, 4, 6, etc.)',
+      description: 'Add Calendar Links in even numbers (2, 4, 6, etc.)',
       validation: (Rule) =>
         Rule.custom((value) => {
           if (!value || value.length === 0) return true
           if (value.length < 2 || value.length % 2 !== 0) {
-            return 'Activity Links must be added in even numbers (2, 4, 6, etc.)'
+            return 'Calendar Links must be added in even numbers (2, 4, 6, etc.)'
           }
           return true
         }),

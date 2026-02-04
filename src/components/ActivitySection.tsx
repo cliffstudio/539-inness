@@ -178,7 +178,7 @@ export default function ActivitySection({
 
           <div className="button-wrap button-wrap--multiple-buttons button-wrap--overlay-media">
             <ButtonLink 
-              link={{ linkType: 'internal', label: 'View', pageLink: { slug: `activities/${activity.slug || ''}` }, color: 'cream' }}
+              link={{ linkType: 'internal', label: 'View', pageLink: { slug: `calendar/${activity.slug || ''}` }, color: 'cream' }}
               fallbackColor="cream"
             />
 
