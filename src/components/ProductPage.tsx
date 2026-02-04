@@ -375,7 +375,7 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
   return (
     <article className="product-page">
       <div className="product-hero-section h-pad">
-        <div className="left-column">
+        <div className="left-column out-of-opacity">
           {currentDisplayImageUrl && (
             <div ref={featuredImageRef} className={`featured-image media-wrap relative ${isImageChanging ? 'image-changing' : ''}`}>
               <img 

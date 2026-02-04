@@ -97,10 +97,10 @@ export const activityType = defineType({
       date: 'date',
       startTime: 'timeRange.startTime',
       endTime: 'timeRange.endTime',
-      media: 'image',
+      images: 'images',
     },
     prepare(selection) {
-      const { title, activityType, date, startTime, media } = selection
+      const { title, activityType, date, startTime, images } = selection
 
       // Capitalize activity type
       const capitalizedActivityType = activityType 
@@ -140,7 +140,7 @@ export const activityType = defineType({
       return {
         title: combinedTitle,
         subtitle,
-        media,
+        media: images?.[0],
       }
     },
   },

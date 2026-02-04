@@ -58,7 +58,7 @@ export default defineType({
         { title: 'Book a Room', value: 'room' },
         { title: 'Book a Table', value: 'table' },
         { title: 'Book a Tee Time', value: 'golf' },
-        { title: 'Spa & treatment enquiries', value: 'spa' },
+        { title: 'Spa enquiries', value: 'spa' },
         { title: 'Book Activity', value: 'activity' },
       ],
       },
@@ -107,7 +107,7 @@ export default defineType({
           'room': 'Book a Room',
           'table': 'Book a Table',
           'golf': 'Book a Tee Time',
-          'spa': 'Spa & treatment enquiries',
+          'spa': 'Spa enquiries',
           'activity': 'Book Activity',
         }
         title = label || 'Booking Link'

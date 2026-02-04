@@ -69,7 +69,7 @@ interface mediaTextSectionProps {
     title: string
     description?: PortableTextBlock[]
     slug: string
-    image?: SanityImage
+    images?: SanityImage[]
     date?: string
     timeRange?: {
       startTime?: string
@@ -88,7 +88,7 @@ interface mediaTextSectionProps {
     roomType: 'cabin' | 'farmhouse'
     description?: PortableTextBlock[]
     slug: string
-    image?: SanityImage
+    images?: SanityImage[]
   }[]
   links?: {
     header?: string
@@ -761,10 +761,10 @@ export default function MediaTextSection({
                     {roomLinks.map((room, index) => (
                       <SplideSlide key={index}>
                         <div className="media-text-link">
-                          {room.image && (
+                          {room.images?.[0] && (
                             <div className="media-wrap relative">
                               <img 
-                                data-src={urlFor(room.image).url()} 
+                                data-src={urlFor(room.images[0]).url()} 
                                 alt="" 
                                 className="lazy full-bleed-image"
                               />
@@ -831,10 +831,10 @@ export default function MediaTextSection({
                   {roomLinks.map((room, index) => (
                     <div key={index} className={roomLinks.length === 2 ? 'col-6-12_lg two-across' : 'col-2-12_lg'}>
                       <div className="media-text-link out-of-opacity">
-                        {room.image && (
+                        {room.images?.[0] && (
                           <div className="media-wrap relative">
                             <img 
-                              data-src={urlFor(room.image).url()} 
+                              data-src={urlFor(room.images[0]).url()} 
                               alt="" 
                               className="lazy full-bleed-image"
                             />
@@ -965,10 +965,10 @@ export default function MediaTextSection({
                 {activityLinks.map((activity, index) => (
                   <SplideSlide key={index}>
                     <div className="media-text-link">
-                      {activity.image && (
+                      {activity.images?.[0] && (
                         <div className="media-wrap relative">
                           <img 
-                            data-src={urlFor(activity.image).url()} 
+                            data-src={urlFor(activity.images[0]).url()} 
                             alt="" 
                             className="lazy full-bleed-image"
                           />
@@ -1058,10 +1058,10 @@ export default function MediaTextSection({
               {activityLinks.map((activity, index) => (
                 <div key={index} className={activityLinks.length === 2 ? 'col-6-12_lg two-across' : 'col-2-12_lg'}>
                   <div className="media-text-link out-of-opacity">
-                    {activity.image && (
+                    {activity.images?.[0] && (
                       <div className="media-wrap relative">
                         <img 
-                          data-src={urlFor(activity.image).url()} 
+                          data-src={urlFor(activity.images[0]).url()} 
                           alt="" 
                           className="lazy full-bleed-image"
                         />

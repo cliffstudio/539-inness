@@ -17,7 +17,7 @@ interface Activity {
     startTime?: string
     endTime?: string
   }
-  image?: SanityImage
+  images?: SanityImage[]
   description?: PortableTextBlock[]
   bookingHref?: string
   slug?: string
@@ -167,10 +167,10 @@ export default function ActivitySection({
 
   const renderActivityContent = (activity: Activity) => (
     <>
-      {activity.image && (
+      {activity.images && activity.images[0] && (
         <div className="media-wrap relative">
           <img 
-            data-src={urlFor(activity.image).url()} 
+            data-src={urlFor(activity.images[0]).url()} 
             alt={activity.title || ''} 
             className="lazy full-bleed-image"
           />

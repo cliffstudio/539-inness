@@ -119,14 +119,14 @@ const mediaTextSectionFragment = groq`{
     roomType,
     description,
     "slug": slug.current,
-    image ${imageFragment}
+    images[] ${imageFragment}
   },
   activityLinks[]-> {
     _id,
     title,
     description,
     "slug": slug.current,
-    image ${imageFragment},
+    images[] ${imageFragment},
     bookingHref,
     date,
     timeRange
@@ -209,7 +209,7 @@ const activitySectionFragment = groq`{
     title,
     date,
     timeRange,
-    image ${imageFragment},
+    images[] ${imageFragment},
     description,
     bookingHref,
     "slug": slug.current
@@ -219,7 +219,7 @@ const activitySectionFragment = groq`{
     title,
     date,
     timeRange,
-    image ${imageFragment},
+    images[] ${imageFragment},
     description,
     bookingHref,
     "slug": slug.current
@@ -229,7 +229,7 @@ const activitySectionFragment = groq`{
     title,
     date,
     timeRange,
-    image ${imageFragment},
+    images[] ${imageFragment},
     description,
     bookingHref,
     "slug": slug.current
@@ -239,7 +239,7 @@ const activitySectionFragment = groq`{
     title,
     date,
     timeRange,
-    image ${imageFragment},
+    images[] ${imageFragment},
     description,
     bookingHref,
     "slug": slug.current
@@ -418,7 +418,7 @@ export const allActivitiesQuery = groq`
     title,
     date,
     timeRange,
-    "image": images[0] ${imageFragment},
+    images[] ${imageFragment},
     description,
     bookingHref,
     "slug": slug.current,

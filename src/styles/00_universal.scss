@@ -188,13 +188,16 @@
     margin-top: 100svh;
   }
 
-  .hero-section.layout-2 ~ .flexible-content,
-  :has(.hero-section.layout-2) .flexible-content {
+  .flexible-content:has(.hero-section.layout-2) {
     margin-top: 0;
-    padding-top: 0;
   }
 
-  .links-section,
+  .page-shop {
+    .flexible-content:has(.hero-section.layout-2) {
+      padding-top: 0;
+    }
+  }
+
   .activity-filter {
     margin-top: 100svh;
     background-color: $colour-beige;
@@ -490,7 +493,7 @@
 
   .media-text-heading {
     margin-bottom: get-rem-desktop(14);
-    max-width: 95%;
+    // max-width: 95%;
 
     @media only screen and (max-width: 820px) {
       margin-bottom: get-rem-mobile(10);

@@ -14,7 +14,7 @@ interface Activity {
     startTime?: string
     endTime?: string
   }
-  image?: SanityImage
+  images?: SanityImage[]
   description?: PortableTextBlock[]
   bookingHref?: string
   slug?: string
@@ -59,10 +59,10 @@ export default function ActivityFilter({ activities, layout = '4-activities' }: 
 
   return (
     <>
-      <div className="activity-filter h-pad out-of-opacity">
-        <div className="activity-filter-label">Filter</div>
+      <div className="activity-filter h-pad">
+        <div className="activity-filter-label out-of-opacity">Filter</div>
 
-        <div className="activity-filter-options">
+        <div className="activity-filter-options out-of-opacity">
           <button
             className={`activity-filter-option ${activeFilter === 'all' ? 'active' : ''}`}
             onClick={() => setActiveFilter('all')}

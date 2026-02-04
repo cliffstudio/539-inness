@@ -86,13 +86,13 @@ export const roomType = defineType({
   preview: {
     select: {
       title: 'title',
-      media: 'image',
+      images: 'images',
     },
     prepare(selection) {
-      const { title, media } = selection
+      const { title, images } = selection
       return {
         title,
-        media,
+        media: images?.[0],
       }
     },
   },

@@ -71,13 +71,13 @@ export default defineType({
   ],
   preview: {
     select: {
-      media: 'image',
+      images: 'images',
       heading: 'heading',
     },
-    prepare({ media, heading }) {
+    prepare({ images, heading }) {
       return {
         title: 'Hero Section',
-        media: media,
+        media: images?.[0],
         subtitle: heading || 'No Heading',
       }
     }
