@@ -386,7 +386,7 @@ export const activitiesQuery = groq`
     pageType,
     activitiesHeading,
     activitiesBody,
-    activitiesImage ${imageFragment}
+    activitiesImages[] ${imageFragment}
   }
 `
 
@@ -400,7 +400,7 @@ export const linksQuery = groq`
     pageType,
     heading,
     body,
-    image ${imageFragment},
+    images[] ${imageFragment},
     links[] {
       header,
       body,
@@ -418,7 +418,7 @@ export const allActivitiesQuery = groq`
     title,
     date,
     timeRange,
-    image ${imageFragment},
+    "image": images[0] ${imageFragment},
     description,
     bookingHref,
     "slug": slug.current,
@@ -467,7 +467,7 @@ export const activityQuery = groq`
     description,
     bookingHref,
     activityType,
-    image ${imageFragment},
+    images[] ${imageFragment},
     contentBlocks[] ${flexibleContentFragment}
   }
 `

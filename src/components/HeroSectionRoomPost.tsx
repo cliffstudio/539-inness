@@ -21,19 +21,6 @@ interface HeroProps {
 export default function Hero({ id, title, images, description, specs }: HeroProps) {
   return (
     <section id={id} className="hero-section layout-2 h-pad">
-      {/* {image && (
-        <div className="hero-image relative out-of-opacity">
-          <div className="media-wrap">
-            <img 
-              data-src={urlFor(image).url()} 
-              alt="" 
-              className="lazy full-bleed-image"
-            />
-            <div className="loading-overlay" />
-          </div>
-        </div>
-      )} */}
-
       {images && images.length > 0 && (
         images.length === 1 ? (
           <div className="hero-image relative out-of-opacity">

@@ -1,17 +1,18 @@
 /* eslint-disable @next/next/no-img-element */
 'use client'
 import { urlFor } from '../sanity/utils/imageUrlBuilder'
-import { SanityImageSource } from '@sanity/image-url/lib/types/types'
+import { SanityImage } from '../types/sanity'
 import { PortableText, PortableTextBlock } from '@portabletext/react'
+import SplideCarousel from './SplideCarousel'
 
 interface ActivitiesHeroProps {
   id?: string
   activitiesHeading?: string
   activitiesBody?: PortableTextBlock[]
-  activitiesImage?: SanityImageSource
+  activitiesImages?: SanityImage[]
 }
 
-export default function HeroSectionActivities({ id, activitiesHeading, activitiesBody, activitiesImage }: ActivitiesHeroProps) {
+export default function HeroSectionActivities({ id, activitiesHeading, activitiesBody, activitiesImages }: ActivitiesHeroProps) {
   const handleArrowClick = () => {
     window.scrollBy({
       top: window.innerHeight,
@@ -21,15 +22,23 @@ export default function HeroSectionActivities({ id, activitiesHeading, activitie
 
   return (
     <section id={id} className="hero-section layout-1 relative">
-      {activitiesImage && (
-        <div className="fill-space-image-wrap media-wrap">
-          <img 
-            data-src={urlFor(activitiesImage).url()} 
-            alt="" 
-            className="lazy full-bleed-image"
+      {activitiesImages && activitiesImages.length > 0 && (
+        activitiesImages.length === 1 ? (
+          <>
+            <img 
+              data-src={urlFor(activitiesImages[0]).url()} 
+              alt="" 
+              className="lazy full-bleed-image"
+            />
+            <div className="loading-overlay" />
+          </>
+        ) : (
+          <SplideCarousel 
+            images={activitiesImages.map(image => ({ url: urlFor(image).url(), alt: "" }))}
+            onPrevious={() => {}}
+            onNext={() => {}}
           />
-          <div className="loading-overlay" />
-        </div>
+        )
       )}
 
       <div className="hero-content h-pad">

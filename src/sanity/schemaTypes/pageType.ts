@@ -108,13 +108,16 @@ export const pageType = defineType({
       hidden: ({ parent }) => parent?.pageType !== 'calendar',
     }),
     defineField({ 
-      name: 'activitiesImage',
-      title: 'Image',
-      type: 'image',
-      description: 'Maximum file size: 500KB.',
+      name: 'activitiesImages',
+      title: 'Images',
+      type: 'array',
+      description: 'Maximum file size per image: 500KB.',
       fieldset: 'heroSection',
       hidden: ({ parent }) => parent?.pageType !== 'calendar',
-      validation: imageSizeValidation,
+      of: [{ 
+        type: 'image',
+        validation: imageSizeValidation,
+      }],
     }),
 
     // Flexible content blocks
@@ -143,13 +146,16 @@ export const pageType = defineType({
       hidden: ({ parent }) => parent?.pageType !== 'links',
     }),
     defineField({
-      name: 'image',
-      title: 'Image',
-      type: 'image',
-      description: 'Maximum file size: 500KB.',
+      name: 'images',
+      title: 'Images',
+      type: 'array',
+      description: 'Maximum file size per image: 500KB.',
       fieldset: 'heroSection',
       hidden: ({ parent }) => parent?.pageType !== 'links',
-      validation: imageSizeValidation,
+      of: [{ 
+        type: 'image',
+        validation: imageSizeValidation,
+      }],
     }),
     defineField({
       name: 'links',

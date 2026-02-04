@@ -74,7 +74,7 @@ export default async function DynamicPage({ params }: PageProps) {
         <HeroSectionActivities 
           activitiesHeading={activitiesPage.activitiesHeading}
           activitiesBody={activitiesPage.activitiesBody}
-          activitiesImage={activitiesPage.activitiesImage}
+          activitiesImages={activitiesPage.activitiesImages}
         />
 
         {allActivities && allActivities.length > 0 && (
@@ -102,7 +102,7 @@ export default async function DynamicPage({ params }: PageProps) {
         <HeroSectionLinks 
           heading={linksPage.heading}
           body={linksPage.body}
-          image={linksPage.image}
+          images={linksPage.images}
         />
 
         {linksPage.links && linksPage.links.length > 0 && (

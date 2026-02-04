@@ -74,12 +74,15 @@ export const activityType = defineType({
       title: 'Booking Href',
       type: 'url',
     }),
-    defineField({
-      name: 'image',
-      title: 'Image',
-      type: 'image',
-      description: 'Maximum file size: 500KB.',
-      validation: imageSizeValidation,
+    defineField({ 
+      name: 'images',
+      title: 'Images',
+      type: 'array',
+      description: 'Maximum file size per image: 500KB.',
+      of: [{ 
+        type: 'image',
+        validation: imageSizeValidation,
+      }],
     }),
     defineField({
       name: 'contentBlocks',

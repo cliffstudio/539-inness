@@ -41,14 +41,6 @@ export const roomType = defineType({
       },
       initialValue: 'cabin',
     }),
-    // defineField({
-    //   name: 'image',
-    //   title: 'Image',
-    //   type: 'image',
-    //   description: 'Maximum file size: 500KB.',
-    //   fieldset: 'heroSection',
-    //   validation: imageSizeValidation,
-    // }),
     defineField({ 
       name: 'images',
       title: 'Images',
