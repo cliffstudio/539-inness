@@ -70,7 +70,7 @@ const heroSectionFragment = groq`{
   layout,
   heading,
   body,
-  image ${imageFragment},
+  images[] ${imageFragment},
   specs[] {
     body
   },

@@ -1,10 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
 'use client'
 import { urlFor } from '../sanity/utils/imageUrlBuilder'
-import { SanityImageSource } from '@sanity/image-url/lib/types/types'
+import { SanityImage } from '../types/sanity'
 import { PortableText, PortableTextBlock } from '@portabletext/react'
 import { Link } from '../types/footerSettings'
 import ButtonLink from './ButtonLink'
+import SplideCarousel from './SplideCarousel'
 
 interface Spec {
   body?: string
@@ -15,12 +16,12 @@ interface HeroProps {
   layout?: 'full-bleed' | 'split'
   heading?: string
   body?: PortableTextBlock[]
-  image?: SanityImageSource
+  images?: SanityImage[]
   specs?: Spec[]
   button?: Link
 }
 
-export default function Hero({ id, layout = 'full-bleed', heading, body, image, specs, button }: HeroProps) {
+export default function Hero({ id, layout = 'full-bleed', heading, body, images, specs, button }: HeroProps) {
   const handleArrowClick = () => {
     window.scrollBy({
       top: window.innerHeight,
@@ -32,15 +33,23 @@ export default function Hero({ id, layout = 'full-bleed', heading, body, image, 
     <>
       {layout === 'full-bleed' && (
         <section id={id} className="hero-section layout-1 relative">
-          {image && (
-            <div className="fill-space-image-wrap media-wrap">
-              <img 
-                data-src={urlFor(image).url()} 
-                alt="" 
-                className="lazy full-bleed-image"
+          {images && images.length > 0 && (
+            images.length === 1 ? (
+              <div className="fill-space-image-wrap media-wrap">
+                <img 
+                  data-src={urlFor(images[0]).url()} 
+                  alt="" 
+                  className="lazy full-bleed-image"
+                />
+                <div className="loading-overlay" />
+              </div>
+            ) : (
+              <SplideCarousel 
+                images={images.map(image => ({ url: urlFor(image).url(), alt: "" }))}
+                onPrevious={() => {}}
+                onNext={() => {}}
               />
-              <div className="loading-overlay" />
-            </div>
+            )
           )}
 
           <div className="hero-content h-pad">
@@ -66,16 +75,24 @@ export default function Hero({ id, layout = 'full-bleed', heading, body, image, 
 
       {layout === 'split' && (
         <section id={id} className="hero-section layout-2 h-pad">
-          {image && (
+          {images && images.length > 0 && (
             <div className="hero-image relative out-of-opacity">
-              <div className="fill-space-image-wrap media-wrap">
-                <img 
-                  data-src={urlFor(image).url()} 
-                  alt="" 
-                  className="lazy full-bleed-image"
+              {images.length === 1 ? (
+                <div className="fill-space-image-wrap media-wrap">
+                  <img 
+                    data-src={urlFor(images[0]).url()} 
+                    alt="" 
+                    className="lazy full-bleed-image"
+                  />
+                  <div className="loading-overlay" />
+                </div>
+              ) : (
+                <SplideCarousel 
+                  images={images.map(image => ({ url: urlFor(image).url(), alt: "" }))}
+                  onPrevious={() => {}}
+                  onNext={() => {}}
                 />
-                <div className="loading-overlay" />
-              </div>
+              )}
             </div>
           )}
 
