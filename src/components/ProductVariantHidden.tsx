@@ -9,7 +9,7 @@ type Store = {
   isDeleted: boolean
 }
 
-export default function ProductVariantHiddenInput(props: StringFieldProps) {
+export default function ProductVariantHiddenInput(_props: StringFieldProps) {
   const store: Store = useFormValue(['store']) as Store
 
   if (!store) {

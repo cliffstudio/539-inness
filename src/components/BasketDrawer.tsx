@@ -14,7 +14,7 @@ export default function BasketDrawer() {
   const overlayRef = useRef<HTMLDivElement>(null)
   const innerWrapRef = useRef<HTMLDivElement>(null)
   const animationFrameRef = useRef<number | null>(null)
-  const [giftCardCode, setGiftCardCode] = useState('')
+  const [_giftCardCode, _setGiftCardCode] = useState('')
   const [shouldRender, setShouldRender] = useState(false)
 
   // Handle body scroll lock when drawer is open

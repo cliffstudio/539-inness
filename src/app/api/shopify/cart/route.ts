@@ -409,7 +409,7 @@ export async function DELETE(request: NextRequest) {
 /**
  * GET /api/shopify/cart - Get cart by ID
  */
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
     if (!SHOPIFY_STOREFRONT_ACCESS_TOKEN) {
       return NextResponse.json(

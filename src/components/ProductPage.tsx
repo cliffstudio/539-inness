@@ -244,7 +244,7 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
     }
     
     return images
-  }, [product.store?.images, product.store?.variants])
+  }, [product.store?.images, product.store?.variants, displayImageUrl])
 
   // Update selected image when display image changes (variant change)
   useEffect(() => {

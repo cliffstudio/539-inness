@@ -1,8 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 'use client'
 
+import { SanityImageSource } from '@sanity/image-url/lib/types/types'
 import { urlFor } from '../sanity/utils/imageUrlBuilder'
-import { SanityImage } from '../types/sanity'
 import { PortableText, PortableTextBlock } from '@portabletext/react'
 import SplideCarousel from './SplideCarousel'
 
@@ -13,7 +13,7 @@ interface Spec {
 interface HeroProps {
   id?: string
   title?: string
-  images?: SanityImage[]
+  images?: SanityImageSource[]
   description?: PortableTextBlock[]
   specs?: Spec[]
 }

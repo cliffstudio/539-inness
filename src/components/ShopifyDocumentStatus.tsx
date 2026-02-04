@@ -31,6 +31,7 @@ const ShopifyDocumentStatus = forwardRef<HTMLDivElement, Props>((props, ref) => 
       }}
     >
       {imageVisible && url ? (
+        // eslint-disable-next-line @next/next/no-img-element -- Shopify preview URLs are dynamic external URLs
         <img
           onError={handleImageError}
           src={`${url}&width=400`}
