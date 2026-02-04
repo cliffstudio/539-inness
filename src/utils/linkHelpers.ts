@@ -18,7 +18,7 @@ export const getLinkInfo = (cta?: Link) => {
       'room': 'Book a Room',
       'table': 'Book a Table',
       'golf': 'Book a Tee Time',
-      'spa': 'Book a Treatment',
+      'spa': 'Spa & treatment enquiries',
       'activity': 'Book Activity',
     }
     const text = cta.label || tabLabels[bookingTab] || 'Book'

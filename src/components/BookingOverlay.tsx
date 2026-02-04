@@ -187,7 +187,7 @@ export default function BookingOverlay() {
     { id: 'room', label: 'Book a room', image: bookRoomImage.src, onClick: handleRoomClick },
     { id: 'table', label: 'Book a table', image: bookTableImage.src, onClick: handleTableClick },
     { id: 'golf', label: 'Book a tee time', image: bookGolfImage.src, onClick: handleGolfClick },
-    { id: 'spa', label: 'Book a treatment', image: bookSpaImage.src, onClick: handleSpaClick },
+    { id: 'spa', label: 'Spa & treatment enquiries', image: bookSpaImage.src, onClick: handleSpaClick },
   ]
 
   if (!isOpen) return null
