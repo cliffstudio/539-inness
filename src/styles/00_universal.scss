@@ -188,7 +188,8 @@
     margin-top: 100svh;
   }
 
-  .flexible-content:has(.hero-section.layout-2) {
+  .flexible-content:has(.hero-section.layout-2),
+  .hero-section.layout-2 ~ .flexible-content {
     margin-top: 0;
   }
 
