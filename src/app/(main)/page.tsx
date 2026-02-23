@@ -28,7 +28,6 @@ export default async function Home() {
         homepageMediaType={page.homepageMediaType}
         homepageImage={page.homepageImage}
         homepageVideo={page.homepageVideo}
-        homepageVideoPlaceholder={page.homepageVideoPlaceholder}
       />
       
       <FlexibleContent contentBlocks={page.contentBlocks || []} />

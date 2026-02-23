@@ -4,7 +4,7 @@ import React from 'react'
 import FlexibleContent from './FlexibleContent'
 import HeroSectionRoomPost from './HeroSectionRoomPost'
 import MoreRoomsSection from './MoreRoomsSection'
-import { SanityImageSource } from '@sanity/image-url/lib/types/types'
+import type { SanityImageSource } from '@sanity/image-url'
 import { PortableTextBlock } from '@portabletext/react'
 import { SanityImage } from '../types/sanity'
 

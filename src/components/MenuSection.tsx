@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react'
 import { PortableText, PortableTextBlock } from '@portabletext/react'
 import { urlFor } from '../sanity/utils/imageUrlBuilder'
-import { SanityImageSource } from '@sanity/image-url/lib/types/types'
+import type { SanityImageSource } from '@sanity/image-url'
 import mediaLazyloading from '../utils/lazyLoad'
 
 interface MenuExtra {

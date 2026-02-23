@@ -1,26 +1,26 @@
-import { dataset, projectId } from '../env'
-import { SanityVideo } from '../../types/sanity'
+import { SanityVideo } from '@/types/sanity'
 
-export const videoUrlFor = (video: SanityVideo | string | null | undefined): string => {
-  // Handle URL string (new format - Bunny.net)
-  if (typeof video === 'string') {
-    return video
+const BUNNY_CDN_HOSTNAME =
+  typeof process !== 'undefined' ? process.env.NEXT_PUBLIC_SANITY_STUDIO_BUNNY_CDN_HOSTNAME : ''
+
+/**
+ * Prefer MP4 for native <video> (works in all browsers). HLS (playbackUrl) often
+ * doesn't work in a plain video src. If stored object has no URLs, build from videoId.
+ */
+export const videoUrlFor = (video: SanityVideo | null | undefined): string => {
+  if (typeof video === 'string') return video
+  if (!video || typeof video !== 'object') return ''
+
+  // Prefer mp4Url for native video element (broad compatibility); fallback to HLS
+  const stored = (video as { mp4Url?: string; playbackUrl?: string; videoId?: string })
+  if (stored.mp4Url) return stored.mp4Url
+  if (stored.playbackUrl) return stored.playbackUrl
+
+  // Build MP4 URL from videoId when plugin hasn't persisted URLs (e.g. ready before poll wrote them)
+  const videoId = stored.videoId
+  if (videoId && BUNNY_CDN_HOSTNAME) {
+    return `https://${BUNNY_CDN_HOSTNAME}/${videoId}/play_720p.mp4`
   }
-  
-  // Handle null/undefined
-  if (!video) {
-    return ''
-  }
-  
-  // Handle old file format (backward compatibility)
-  if (video?.asset?._ref) {
-    // Construct Sanity video URL
-    // Format: https://cdn.sanity.io/files/{projectId}/{dataset}/{assetId}
-    // The assetId includes the file extension with a hyphen (e.g., "e1951b8dbc8dbd5aaaae088afe0d73b34c8e5780-mp4")
-    // We need to convert the hyphen to a dot for the actual URL
-    const assetId = video.asset._ref.replace('file-', '')
-    return `https://cdn.sanity.io/files/${projectId}/${dataset}/${assetId.replace('-mp4', '.mp4')}`
-  }
-  
+
   return ''
 }

@@ -180,20 +180,11 @@ export default defineType({
       }],
       hidden: ({ parent }) => parent?.mediaType !== 'image'
     }),
-    defineField({ 
-      name: 'video', 
-      title: 'Video URL',
-      description: 'Enter the Bunny.net video URL. The video file must be MP4 format.',
-      type: 'url',
-      hidden: ({ parent }) => parent?.mediaType !== 'video',
-    }),
     defineField({
-      name: 'videoPlaceholder',
-      title: 'Video Placeholder',
-      type: 'image',
-      description: 'Maximum file size: 500KB.',
+      name: 'video',
+      title: 'Video',
+      type: 'bunnyVideo',
       hidden: ({ parent }) => parent?.mediaType !== 'video',
-      validation: imageSizeValidation,
     }),
     defineField({
       name: 'mediaAlignment',
@@ -260,15 +251,14 @@ export default defineType({
     select: {
       media: 'images',
       mediaType: 'mediaType',
-      videoPlaceholder: 'videoPlaceholder',
       heading: 'heading',
       layout: 'layout',
       body: 'body',
     },
-    prepare({ media, mediaType, videoPlaceholder, heading, layout, body }) {
+    prepare({ media, mediaType, heading, layout, body }) {
       return {
         title: 'Media & Text Section',
-        media: mediaType === 'video' ? videoPlaceholder : media?.[0],
+        media: mediaType === 'video' ? undefined : media?.[0],
         subtitle: layout === 'media-with-text-room-type' ? 'Room Type' : layout === 'media-with-text-h5' ? body?.[0]?.children?.[0]?.text || 'No Body' : layout === 'media-with-text-multiple-text-blocks' ? 'Multiple Text Blocks' : heading || 'No Heading',
       }
     }

@@ -80,7 +80,6 @@ interface mediaTextSectionProps {
   mediaType?: 'image' | 'video'
   images?: SanityImage[]
   video?: SanityVideo
-  videoPlaceholder?: SanityImage
   mediaAlignment?: 'left' | 'right'
   roomLinks?: {
     _id: string
@@ -110,7 +109,6 @@ export default function MediaTextSection({
   mediaType = 'image',
   images, 
   video,
-  videoPlaceholder,
   mediaAlignment = 'right',
   roomLinks,
   activityLinks,
@@ -331,7 +329,6 @@ export default function MediaTextSection({
                 <video
                   ref={videoRef1}
                   src={videoUrlFor(video)}
-                  poster={videoPlaceholder ? urlFor(videoPlaceholder).url() : undefined}
                   autoPlay
                   muted
                   loop
@@ -429,7 +426,6 @@ export default function MediaTextSection({
                     <video
                       ref={videoRef1}
                       src={videoUrlFor(video)}
-                      poster={videoPlaceholder ? urlFor(videoPlaceholder).url() : undefined}
                       autoPlay
                       muted
                       loop
@@ -521,7 +517,6 @@ export default function MediaTextSection({
                       <video
                         ref={videoRef1}
                         src={videoUrlFor(video)}
-                        poster={videoPlaceholder ? urlFor(videoPlaceholder).url() : undefined}
                         autoPlay
                         muted
                         loop
@@ -656,7 +651,6 @@ export default function MediaTextSection({
                 <video
                   ref={videoRef2}
                   src={videoUrlFor(video)}
-                  poster={videoPlaceholder ? urlFor(videoPlaceholder).url() : undefined}
                   autoPlay
                   muted
                   loop
@@ -724,7 +718,6 @@ export default function MediaTextSection({
                   <video
                     ref={videoRef1}
                     src={videoUrlFor(video)}
-                    poster={videoPlaceholder ? urlFor(videoPlaceholder).url() : undefined}
                     autoPlay
                     muted
                     loop
@@ -928,7 +921,6 @@ export default function MediaTextSection({
                   <video
                     ref={videoRef1}
                     src={videoUrlFor(video)}
-                    poster={videoPlaceholder ? urlFor(videoPlaceholder).url() : undefined}
                     autoPlay
                     muted
                     loop
@@ -1174,7 +1166,13 @@ export default function MediaTextSection({
                   <video
                     ref={videoRef1}
                     src={videoUrlFor(video)}
-                    poster={videoPlaceholder ? urlFor(videoPlaceholder).url() : undefined}
+                    poster={
+                      typeof video === 'object' &&
+                      video !== null &&
+                      'thumbnailUrl' in video
+                        ? video.thumbnailUrl
+                        : undefined
+                    }
                     autoPlay
                     muted
                     loop

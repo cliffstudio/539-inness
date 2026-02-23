@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  reactCompiler: false,
+  turbopack: {},
   async redirects() {
     return [
       { source: '/activities', destination: '/calendar', permanent: true },
@@ -57,10 +59,6 @@ const nextConfig: NextConfig = {
   },
   // External packages for server components
   serverExternalPackages: ['sanity'],
-  // Experimental features for React 19 compatibility
-  experimental: {
-    reactCompiler: false,
-  },
 };
 
 export default nextConfig;

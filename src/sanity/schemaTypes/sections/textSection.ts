@@ -28,14 +28,7 @@ export default defineType({
     }),
   ],
   preview: {
-    select: {
-      media: 'images',
-      mediaType: 'mediaType',
-      videoPlaceholder: 'videoPlaceholder',
-      heading: 'heading',
-      layout: 'layout',
-      body: 'body',
-    },
+    select: { heading: 'heading' },
     prepare({ heading }) {
       return {
         title: 'Text Section',

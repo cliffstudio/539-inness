@@ -15,14 +15,6 @@ const imageFragment = groq`{
   crop
 }`
 
-// Note: videoFragment kept for backward compatibility but video fields now use URL strings
-const videoFragment = groq`{
-  asset {
-    _ref,
-    _type
-  }
-}`
-
 const linkFragment = groq`{
   linkType,
   label,
@@ -104,7 +96,6 @@ const mediaTextSectionFragment = groq`{
   mediaType,
   images[] ${imageFragment},
   video,
-  videoPlaceholder ${imageFragment},
   mediaAlignment,
   roomLink-> {
     _id,
@@ -371,7 +362,6 @@ export const homepageQuery = groq`
     homepageMediaType,
     homepageImage ${imageFragment},
     homepageVideo,
-    homepageVideoPlaceholder ${imageFragment},
     contentBlocks[] ${flexibleContentFragment}
   }
 `
@@ -640,7 +630,6 @@ export const metadataQuery = groq`
 // Export fragments for reuse in other queries if needed
 export const fragments = {
   imageFragment,
-  videoFragment,
   linkFragment,
   heroSectionFragment
 }

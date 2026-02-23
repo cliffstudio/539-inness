@@ -73,22 +73,12 @@ export const pageType = defineType({
       hidden: ({ parent }) => parent?.pageType !== 'homepage' || parent?.homepageMediaType !== 'image',
       validation: imageSizeValidation,
     }),
-    defineField({ 
-      name: 'homepageVideo', 
-      title: 'Video URL',
-      description: 'Enter the Bunny.net video URL. The video file must be MP4 format.',
-      type: 'url',
-      fieldset: 'heroSection',
-      hidden: ({ parent }) => parent?.pageType !== 'homepage' || parent?.homepageMediaType !== 'video',
-    }),
     defineField({
-      name: 'homepageVideoPlaceholder',
-      title: 'Video Placeholder',
-      type: 'image',
-      description: 'Maximum file size: 500KB.',
+      name: 'homepageVideo',
+      title: 'Video',
+      type: 'bunnyVideo',
       fieldset: 'heroSection',
       hidden: ({ parent }) => parent?.pageType !== 'homepage' || parent?.homepageMediaType !== 'video',
-      validation: imageSizeValidation,
     }),
 
     // Calendar specific fields

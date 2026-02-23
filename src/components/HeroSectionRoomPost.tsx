@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 'use client'
 
-import { SanityImageSource } from '@sanity/image-url/lib/types/types'
+import type { SanityImageSource } from '@sanity/image-url'
 import { urlFor } from '../sanity/utils/imageUrlBuilder'
 import { PortableText, PortableTextBlock } from '@portabletext/react'
 import SplideCarousel from './SplideCarousel'

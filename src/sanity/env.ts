@@ -32,3 +32,25 @@ function assertValue<T>(v: T | undefined, errorMessage: string): T {
 
   return v
 }
+
+// Must use NEXT_PUBLIC_ prefix - Sanity Studio runs in the browser and Next.js
+// only exposes env vars with this prefix to client bundles
+export const SANITY_STUDIO_BUNNY_LIBRARY_ID = assertValue(
+  process.env.NEXT_PUBLIC_SANITY_STUDIO_BUNNY_LIBRARY_ID,
+  'Missing environment variable: NEXT_PUBLIC_SANITY_STUDIO_BUNNY_LIBRARY_ID'
+)
+
+export const SANITY_STUDIO_BUNNY_CDN_HOSTNAME = assertValue(
+  process.env.NEXT_PUBLIC_SANITY_STUDIO_BUNNY_CDN_HOSTNAME,
+  'Missing environment variable: NEXT_PUBLIC_SANITY_STUDIO_BUNNY_CDN_HOSTNAME'
+)
+
+export const SANITY_STUDIO_BUNNY_API_KEY = assertValue(
+  process.env.NEXT_PUBLIC_SANITY_STUDIO_BUNNY_API_KEY,
+  'Missing environment variable: NEXT_PUBLIC_SANITY_STUDIO_BUNNY_API_KEY'
+)
+
+export const SANITY_STUDIO_BUNNY_COLLECTION_NAME = assertValue(
+  process.env.NEXT_PUBLIC_SANITY_STUDIO_BUNNY_COLLECTION_NAME,
+  'Missing environment variable: NEXT_PUBLIC_SANITY_STUDIO_BUNNY_COLLECTION_NAME'
+)

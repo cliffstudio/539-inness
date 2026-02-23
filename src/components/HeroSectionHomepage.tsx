@@ -4,7 +4,7 @@
 import { useEffect, useLayoutEffect, useRef } from 'react'
 import { urlFor } from '../sanity/utils/imageUrlBuilder'
 import { videoUrlFor } from '../sanity/utils/videoUrlBuilder'
-import { SanityImageSource } from '@sanity/image-url/lib/types/types'
+import type { SanityImageSource } from '@sanity/image-url'
 import { SanityVideo } from '../types/sanity'
 
 interface HomepageHeroProps {
@@ -12,15 +12,13 @@ interface HomepageHeroProps {
   homepageMediaType?: 'image' | 'video'
   homepageImage?: SanityImageSource
   homepageVideo?: SanityVideo
-  homepageVideoPlaceholder?: SanityImageSource
 }
 
 export default function HeroSectionHomepage({ 
   homepageHeading, 
   homepageMediaType = 'image',
   homepageImage, 
-  homepageVideo, 
-  homepageVideoPlaceholder 
+  homepageVideo
 }: HomepageHeroProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const heroSectionRef = useRef<HTMLElement>(null)
@@ -169,7 +167,13 @@ export default function HeroSectionHomepage({
           <video
             ref={videoRef}
             src={videoUrlFor(homepageVideo)}
-            poster={homepageVideoPlaceholder ? urlFor(homepageVideoPlaceholder).url() : undefined}
+            poster={
+              typeof homepageVideo === 'object' &&
+              homepageVideo !== null &&
+              'thumbnailUrl' in homepageVideo
+                ? homepageVideo.thumbnailUrl
+                : undefined
+            }
             autoPlay
             muted
             loop

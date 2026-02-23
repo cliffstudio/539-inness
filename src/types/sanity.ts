@@ -18,15 +18,15 @@ export type SanityImage = {
   }
 }
 
-export type SanityVideo = 
-  | string // New format: Bunny.net URL
+/** Bunny video: URL string or object from bunnyVideo field (plugin stores videoId, playbackUrl, mp4Url, thumbnailUrl) */
+export type SanityVideo =
+  | string
   | {
-      _type: 'file'
-      asset: {
-        _ref: string
-        _type: 'reference'
-      }
-    } // Old format: Sanity file reference (for backward compatibility)
+      videoId?: string
+      playbackUrl?: string
+      mp4Url?: string
+      thumbnailUrl?: string
+    }
 
 export type PortableTextBlock = {
   _type: string
