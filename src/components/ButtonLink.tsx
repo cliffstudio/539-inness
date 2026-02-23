@@ -12,7 +12,7 @@ type ButtonLinkProps = {
 }
 
 export default function ButtonLink({ link, className = '', fallbackColor = 'cream' }: ButtonLinkProps) {
-  const { openBooking } = useBooking()
+  const { openBooking, openNamastayDrawer } = useBooking()
   const { href, text } = getLinkInfo(link)
   if (!href || !text) return null
 
@@ -36,7 +36,12 @@ export default function ButtonLink({ link, className = '', fallbackColor = 'crea
     if (bookingTab === 'golf') return
     if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
     event.preventDefault()
-    openBooking(bookingTab)
+    // Book a room opens Namastay drawer directly, not the booking overlay
+    if (bookingTab === 'room') {
+      openNamastayDrawer()
+    } else {
+      openBooking(bookingTab)
+    }
   }
 
   return (

@@ -12,7 +12,7 @@ import bookTableImage from '@/app/images/book-table-image.jpg'
 
 
 export default function BookingOverlay() {
-  const { isOpen, closeBooking } = useBooking()
+  const { isOpen, closeBooking, openNamastayDrawer } = useBooking()
   const overlayRef = useRef<HTMLDivElement>(null)
   const innerWrapRef = useRef<HTMLDivElement>(null)
   const animationFrameRef = useRef<number | null>(null)
@@ -135,21 +135,7 @@ export default function BookingOverlay() {
   }, [isOpen])
 
   const handleRoomClick = () => {
-    // Find or create a Namastay widget button and trigger it
-    const namastayButton = document.querySelector('.namastay-widget-button') as HTMLButtonElement
-    if (namastayButton) {
-      namastayButton.click()
-    } else {
-      // Fallback: create a temporary button with the class and click it
-      const tempButton = document.createElement('button')
-      tempButton.className = 'namastay-widget-button'
-      tempButton.style.position = 'fixed'
-      tempButton.style.left = '-9999px'
-      tempButton.style.opacity = '0'
-      document.body.appendChild(tempButton)
-      tempButton.click()
-      setTimeout(() => document.body.removeChild(tempButton), 100)
-    }
+    openNamastayDrawer()
     closeBooking()
   }
 

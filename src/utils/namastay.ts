@@ -250,6 +250,38 @@ export function openNamastayWithOffer(offer: NamastayOffer): void {
 }
 
 /**
+ * Open the Namastay booking widget (drawer) via the global API.
+ * Use this for buttons that are rendered after the SDK init (e.g. on client-navigated pages)
+ * so they don't rely on the SDK's one-time attachment to .namastay-widget-button.
+ */
+export function openNamastayWidget(): void {
+  if (typeof window === 'undefined') return
+  try {
+    if (window.Namastay?.open) {
+      window.Namastay.open()
+      return
+    }
+    if (window.namastay?.open) {
+      window.namastay.open()
+      return
+    }
+    if (window.Namastay?.openWidget) {
+      window.Namastay.openWidget()
+      return
+    }
+    if (window.namastay?.openWidget) {
+      window.namastay.openWidget()
+      return
+    }
+    // Fallback: click the first SDK-registered button (e.g. the hidden one in BookingSection)
+    const button = document.querySelector('.namastay-widget-button') as HTMLButtonElement
+    if (button) button.click()
+  } catch (error) {
+    console.error('Error opening Namastay widget:', error)
+  }
+}
+
+/**
  * Format date to YYYY-MM-DD format for Namastay
  */
 export function formatDateForNamastay(date: Date): string {

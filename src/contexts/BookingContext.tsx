@@ -10,6 +10,7 @@ interface BookingContextType {
   openBooking: (tab?: BookingTab) => void
   closeBooking: () => void
   setActiveTab: (tab: BookingTab) => void
+  openNamastayDrawer: () => void
 }
 
 const BookingContext = createContext<BookingContextType | undefined>(undefined)
@@ -27,6 +28,22 @@ export function BookingProvider({ children }: { children: ReactNode }) {
     setIsOpen(false)
   }
 
+  const openNamastayDrawer = () => {
+    const namastayButton = document.querySelector('.namastay-widget-button') as HTMLButtonElement
+    if (namastayButton) {
+      namastayButton.click()
+    } else {
+      const tempButton = document.createElement('button')
+      tempButton.className = 'namastay-widget-button'
+      tempButton.style.position = 'fixed'
+      tempButton.style.left = '-9999px'
+      tempButton.style.opacity = '0'
+      document.body.appendChild(tempButton)
+      tempButton.click()
+      setTimeout(() => document.body.removeChild(tempButton), 100)
+    }
+  }
+
   return (
     <BookingContext.Provider
       value={{
@@ -35,6 +52,7 @@ export function BookingProvider({ children }: { children: ReactNode }) {
         openBooking,
         closeBooking,
         setActiveTab,
+        openNamastayDrawer,
       }}
     >
       {children}

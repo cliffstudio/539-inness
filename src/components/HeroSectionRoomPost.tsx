@@ -5,6 +5,7 @@ import { SanityImageSource } from '@sanity/image-url/lib/types/types'
 import { urlFor } from '../sanity/utils/imageUrlBuilder'
 import { PortableText, PortableTextBlock } from '@portabletext/react'
 import SplideCarousel from './SplideCarousel'
+import { openNamastayWidget } from '../utils/namastay'
 
 interface Spec {
   body?: string
@@ -71,6 +72,7 @@ export default function Hero({ id, title, images, description, specs }: HeroProp
           <button
             type="button"
             className="button button--orange namastay-widget-button"
+            onClick={() => openNamastayWidget()}
           >
             Book
           </button>
