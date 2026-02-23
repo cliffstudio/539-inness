@@ -1,5 +1,5 @@
 /**
- * Validates that an image file size is 500KB or less
+ * Validates that an image file size is 1GB or less
  * @param Rule - Sanity validation rule
  * @returns Custom validation function
  */
@@ -30,13 +30,13 @@ export const imageSizeValidation = (Rule: any) =>
         return true // If asset doesn't exist or has no size, skip validation
       }
 
-      // 500KB in bytes
-      const maxSize = 500 * 1024
+      // 1GB in bytes
+      const maxSize = 1024 * 1024 * 1024
       const fileSize = asset.size
 
       if (fileSize > maxSize) {
-        const sizeInKB = Math.round(fileSize / 1024)
-        return `Image size (${sizeInKB}KB) exceeds the maximum allowed size of 500KB. Please compress or resize the image.`
+        const sizeInMB = Math.round(fileSize / (1024 * 1024))
+        return `Image size (${sizeInMB}MB) exceeds the maximum allowed size of 1GB. Please compress or resize the image.`
       }
 
       return true
