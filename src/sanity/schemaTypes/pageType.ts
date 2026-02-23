@@ -76,7 +76,7 @@ export const pageType = defineType({
     defineField({ 
       name: 'homepageVideo', 
       title: 'Video URL',
-      description: 'Enter the Bunny.net video URL.',
+      description: 'Enter the Bunny.net video URL. The video file must be MP4 format.',
       type: 'url',
       fieldset: 'heroSection',
       hidden: ({ parent }) => parent?.pageType !== 'homepage' || parent?.homepageMediaType !== 'video',

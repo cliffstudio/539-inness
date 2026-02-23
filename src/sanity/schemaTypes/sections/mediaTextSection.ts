@@ -183,7 +183,7 @@ export default defineType({
     defineField({ 
       name: 'video', 
       title: 'Video URL',
-      description: 'Enter the Bunny.net video URL.',
+      description: 'Enter the Bunny.net video URL. The video file must be MP4 format.',
       type: 'url',
       hidden: ({ parent }) => parent?.mediaType !== 'video',
     }),
