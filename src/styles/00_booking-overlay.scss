@@ -73,6 +73,10 @@
     border: 1px solid $colour-beige;
     padding: 0;
     cursor: pointer;
+
+    &--alias {
+      cursor: alias;
+    }
     @include flex;
     @include align-items(center);
     @include justify-content(space-between);

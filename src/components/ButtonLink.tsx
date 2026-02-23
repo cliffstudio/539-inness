@@ -25,6 +25,7 @@ export default function ButtonLink({ link, className = '', fallbackColor = 'crea
     'button--cream'
 
   const bookingTab = (link.bookingTab || 'room') as BookingTab
+  const isExternalBooking = link.linkType === 'booking' && ['table', 'golf', 'spa', 'events'].includes(link.bookingTab || '')
   const handleClick = (event: MouseEvent<HTMLAnchorElement>) => {
     if (link.linkType !== 'booking') return
     // Spa/events bookings should open mailto link, not booking overlay
@@ -41,7 +42,7 @@ export default function ButtonLink({ link, className = '', fallbackColor = 'crea
   return (
     <a
       href={href}
-      className={`button ${colorClass}${className ? ` ${className}` : ''}`}
+      className={`button ${colorClass}${isExternalBooking ? ' link--alias' : ''}${className ? ` ${className}` : ''}`}
       onClick={handleClick}
       {...(link.linkType === 'external' && { target: '_blank', rel: 'noopener noreferrer' })}
       {...(link.linkType === 'file' && { target: '_blank', rel: 'noopener noreferrer', download: link.file?.asset?.originalFilename })}

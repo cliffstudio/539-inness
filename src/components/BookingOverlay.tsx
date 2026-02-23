@@ -190,6 +190,8 @@ export default function BookingOverlay() {
     { id: 'spa', label: 'Spa & treatment enquiries', image: bookSpaImage.src, onClick: handleSpaClick },
   ]
 
+  const externalTabIds = ['table', 'golf', 'spa']
+
   if (!isOpen) return null
 
   return (
@@ -199,7 +201,7 @@ export default function BookingOverlay() {
           {tabs.map((tab) => (
             <button
               key={tab.id}
-              className="booking-overlay__tab"
+              className={`booking-overlay__tab${externalTabIds.includes(tab.id) ? ' booking-overlay__tab--alias' : ''}`}
               onClick={tab.onClick}
             >
               <div className="booking-overlay__tab-image">
