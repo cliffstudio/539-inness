@@ -11,7 +11,7 @@
     "schema:extract": "sanity schema extract"
   },
   "dependencies": {
-    "@cliffstudio/sanity-plugin-bunny-input": "github:cliffstudio/sanity-plugin-bunny-input",
+    "@cliffstudio/sanity-plugin-bunny-input": "git+https://github.com/cliffstudio/sanity-plugin-bunny-input.git#7ed5a5b407a7cbcd889fc2be573c784e18c1e33a",
     "@portabletext/react": "^4.0.3",
     "@radix-ui/react-select": "^2.2.6",
     "@sanity/client": "^7.15.0",
