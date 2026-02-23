@@ -60,6 +60,7 @@ export default defineType({
         { title: 'Book a Tee Time', value: 'golf' },
         { title: 'Spa enquiries', value: 'spa' },
         { title: 'Book Activity', value: 'activity' },
+        { title: 'Event enquiries', value: 'events' },
       ],
       },
       initialValue: 'room',
@@ -109,6 +110,7 @@ export default defineType({
           'golf': 'Book a Tee Time',
           'spa': 'Spa enquiries',
           'activity': 'Book Activity',
+          'events': 'Event enquiries',
         }
         title = label || 'Booking Link'
         subtitle = tabLabels[bookingTab] || bookingTab || 'No Tab Selected'

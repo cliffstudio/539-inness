@@ -27,8 +27,8 @@ export default function ButtonLink({ link, className = '', fallbackColor = 'crea
   const bookingTab = (link.bookingTab || 'room') as BookingTab
   const handleClick = (event: MouseEvent<HTMLAnchorElement>) => {
     if (link.linkType !== 'booking') return
-    // Spa bookings should open mailto link, not booking overlay
-    if (bookingTab === 'spa') return
+    // Spa/events bookings should open mailto link, not booking overlay
+    if (bookingTab === 'spa' || link.bookingTab === 'events') return
     // Table bookings should open Resy URL, not booking overlay
     if (bookingTab === 'table') return
     // Golf bookings should open Chronogolf URL, not booking overlay

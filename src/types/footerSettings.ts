@@ -15,7 +15,7 @@ export type Link = {
       originalFilename?: string
     }
   }
-  bookingTab?: 'room' | 'table' | 'golf' | 'spa' | 'activity'
+  bookingTab?: 'room' | 'table' | 'golf' | 'spa' | 'activity' | 'events'
   color?: 'cream' | 'orange' | 'outline'
 }
 

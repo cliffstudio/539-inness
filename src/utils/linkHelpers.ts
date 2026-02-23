@@ -20,11 +20,16 @@ export const getLinkInfo = (cta?: Link) => {
       'golf': 'Book a Tee Time',
       'spa': 'Spa enquiries',
       'activity': 'Book Activity',
+      'events' : 'Event enquiries',
     }
     const text = cta.label || tabLabels[bookingTab] || 'Book'
     // Spa bookings should open mailto link instead of booking overlay
     if (bookingTab === 'spa') {
       return { text, href: 'mailto:spa@inness.co' }
+    }
+    // Events bookings should open mailto link instead of booking overlay
+    if (bookingTab === 'events') {
+      return { text, href: 'mailto:events@inness.co' }
     }
     // Table bookings should open Resy URL instead of booking overlay
     if (bookingTab === 'table') {
