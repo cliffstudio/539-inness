@@ -1,3 +1,4 @@
 {
-  "installCommand": "sh scripts/vercel-install.sh"
+  "installCommand": "true",
+  "buildCommand": "sh scripts/vercel-install.sh && next build"
 }
