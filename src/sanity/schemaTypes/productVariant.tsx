@@ -2,8 +2,8 @@
 import { CopyIcon } from '@sanity/icons'
 import {defineField, defineType} from 'sanity'
 
-import ProductVariantHiddenInput from '../../components/ProductVariantHidden'
-import ShopifyDocumentStatus from '../../components/ShopifyDocumentStatus'
+import ProductVariantHiddenInput from '../components/ProductVariantHidden'
+import ShopifyDocumentStatus from '../components/ShopifyDocumentStatus'
 import { GROUPS } from '../constants'
 
 export const productVariantType = defineType({

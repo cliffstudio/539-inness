@@ -1,7 +1,7 @@
 import {WarningOutlineIcon} from '@sanity/icons'
 import {StringFieldProps, useFormValue} from 'sanity'
 import {Box, Card, Flex, Stack, Text} from '@sanity/ui'
-import {productVariantUrl} from '../utils/shopifyUrls'
+import {productVariantUrl} from '../../utils/shopifyUrls'
 
 type Store = {
   productId: number

@@ -70,18 +70,24 @@ Your app will be available at:
 nextjs-sanity-starter/
 ├── src/
 │   ├── app/                    # Next.js App Router
-│   │   ├── [...slug]/         # Dynamic page routes
+│   │   ├── (main)/            # Main layout group (pages, layout, routes)
+│   │   ├── api/               # API routes (Shopify, Sanity Connect)
 │   │   ├── studio/            # Sanity Studio route
-│   │   ├── components/        # React components
-│   │   ├── page.tsx           # Homepage
 │   │   ├── layout.tsx         # Root layout
 │   │   └── globals.css        # Global styles
-│   └── sanity/                # Sanity configuration
-│       ├── schemaTypes/       # Content schemas
-│       │   ├── objects/       # Reusable objects
-│       │   └── sections/      # Page sections
-│       ├── lib/               # Queries
-│       └── utils/             # Utilities
+│   ├── components/            # React components (UI, sections, pages)
+│   ├── contexts/              # React contexts (Basket, Booking)
+│   ├── sanity/                 # Sanity configuration & schemas
+│   │   ├── schemaTypes/       # Content schemas
+│   │   │   ├── objects/       # Reusable objects
+│   │   │   ├── sections/      # Page sections
+│   │   │   └── utils/         # Schema helpers (e.g. imageValidation)
+│   │   ├── components/       # Sanity Studio–only components (inputs, status)
+│   │   ├── lib/               # Queries & data loaders (footerSettings)
+│   │   └── utils/             # Sanity utilities (imageUrlBuilder, etc.)
+│   ├── types/                 # TypeScript types
+│   ├── utils/                 # App utilities (linkHelpers, lazyLoad, etc.)
+│   └── styles/                # SCSS
 ├── sanity.config.ts           # Sanity Studio config
 ├── sanity.client.ts           # Sanity client
 └── package.json
@@ -112,8 +118,8 @@ Pages are the main content type. Each page can have:
 
 1. Create a new section type in `src/sanity/schemaTypes/sections/`
 2. Import and add it to `src/sanity/schemaTypes/index.ts`
-3. Create a corresponding React component in `src/app/components/`
-4. Add the component to `PageRenderer.tsx`
+3. Create a corresponding React component in `src/components/`
+4. Add a render case for the section in `src/components/FlexibleContent.tsx`
 
 ## Available Scripts
 

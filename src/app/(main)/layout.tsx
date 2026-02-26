@@ -1,6 +1,6 @@
 import '@/styles/style.scss'
 import { Suspense } from 'react'
-import { getFooterSettings, getMenu, getAnnouncementPopupSection } from '../../utils/footerSettings'
+import { getFooterSettings, getMenu, getAnnouncementPopupSection } from '../../sanity/lib/footerSettings'
 import Header from '../../components/Header'
 import Footer from '../../components/Footer'
 import LazyLoadInitializer from '../../components/LazyLoadInitializer'

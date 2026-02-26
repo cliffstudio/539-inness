@@ -14,7 +14,7 @@
 The `FlexibleContent` component automatically renders all content blocks based on their type:
 
 ```tsx
-import FlexibleContent from './components/FlexibleContent'
+import FlexibleContent from '@/components/FlexibleContent'
 
 // In your page component
 <FlexibleContent contentBlocks={page.contentBlocks || []} />
@@ -65,13 +65,17 @@ export default defineType({
 }
 ```
 
-3. **Register in schema index** in `src/sanity/schemaTypes/index.ts`:
+3. **Register in schema index** in `src/sanity/schemaTypes/index.ts` (add the import at the top, then add `textBlock` in the **Sections** part of the `schemaTypes` array):
 ```typescript
 import textBlock from './sections/textBlock'
 
-export const schemaTypes = [
-  // ... existing types
-  textBlock
+// ... and in the schemaTypes array, under the Sections comment:
+  // Sections
+  heroSection,
+  textSection,
+  mediaTextSection,
+  // ... other sections
+  textBlock,
 ]
 ```
 
@@ -122,4 +126,12 @@ case 'textBlock':
 ## Current Available Content Blocks
 
 - **Hero Section** (`heroSection`) - Full-width hero with image, heading, body, and optional button
+- **Text Section** (`textSection`) - Heading and rich text body with optional button
 - **Media & Text Section** (`mediaTextSection`) - Flexible layout with image and text content
+- **Break Section** (`breakSection`) - Visual break (split or full-bleed)
+- **Carousel Section** (`carouselSection`) - Image or content carousel
+- **Menu Section** (`menuSection`) - Food, spa, or venue menu
+- **Calendar Section** (`activitySection`) - Single, 2, or 4 activities layout
+- **Feature Section** (`featureSection`) - Single, 2, or 4 features layout
+- **Booking Section** (`bookingSection`) - Booking CTA (visibility controlled in schema)
+- **Product Section** (`productSection`) - Shopify product display

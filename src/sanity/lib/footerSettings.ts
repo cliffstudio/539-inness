@@ -1,6 +1,6 @@
-import { client } from '../../sanity.client'
-import { footerQuery, menuQuery } from '../sanity/lib/queries'
-import { FooterSettings } from '../types/footerSettings'
+import { client } from '../../../sanity.client'
+import { footerQuery, menuQuery } from './queries'
+import { FooterSettings } from '../../types/footerSettings'
 
 // Type for menu from menuType schema
 type Menu = {
@@ -77,7 +77,7 @@ export async function getAnnouncementPopupSection(): Promise<AnnouncementPopupSe
     if (!footer?.announcementPopup) {
       return null
     }
-    
+
     return {
       enabled: footer.announcementPopup.enabled,
       slides: footer.announcementPopup.slides,
