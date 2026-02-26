@@ -2,6 +2,9 @@
   "name": "nextjs-sanity-starter",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=20.19.0"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -11,7 +14,7 @@
     "schema:extract": "sanity schema extract"
   },
   "dependencies": {
-    "@cliffstudio/sanity-plugin-bunny-input": "git+https://github.com/cliffstudio/sanity-plugin-bunny-input.git#7ed5a5b407a7cbcd889fc2be573c784e18c1e33a",
+    "@cliff-studio/sanity-plugin-bunny-input": "^1.0.7",
     "@portabletext/react": "^4.0.3",
     "@radix-ui/react-select": "^2.2.6",
     "@sanity/client": "^7.15.0",

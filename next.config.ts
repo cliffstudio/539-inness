@@ -1,8 +1,16 @@
 import type { NextConfig } from "next";
+import path from "path";
 
 const nextConfig: NextConfig = {
   reactCompiler: false,
-  turbopack: {},
+  turbopack: {
+    // Use pre-built dist so Bunny plugin's .jsx components resolve (package "development" entry points at raw src)
+    // Turbopack requires project-relative paths, not absolute
+    resolveAlias: {
+      "@cliff-studio/sanity-plugin-bunny-input":
+        "./node_modules/@cliff-studio/sanity-plugin-bunny-input/dist/index.js",
+    },
+  },
   async redirects() {
     return [
       { source: '/activities', destination: '/calendar', permanent: true },
@@ -31,8 +39,13 @@ const nextConfig: NextConfig = {
     }
     
     // Ensure proper module resolution for Sanity
+    // Use Bunny plugin's pre-built dist so .jsx components resolve (package "development" entry points at raw src)
     config.resolve.alias = {
       ...config.resolve.alias,
+      "@cliff-studio/sanity-plugin-bunny-input": path.resolve(
+        __dirname,
+        "node_modules/@cliff-studio/sanity-plugin-bunny-input/dist/index.js"
+      ),
     };
     
     // Fix for React 19 useMemoCache issues

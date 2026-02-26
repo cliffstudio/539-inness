@@ -1,4 +1,4 @@
-declare module '@cliffstudio/sanity-plugin-bunny-input' {
+declare module '@cliff-studio/sanity-plugin-bunny-input' {
   import type { Plugin } from 'sanity'
 
   export interface BunnyInputPluginOptions {

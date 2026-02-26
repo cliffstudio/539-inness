@@ -18,7 +18,7 @@ import {
 } from './src/sanity/env'
 import {schemaTypes} from './src/sanity/schemaTypes'
 import {structure} from './src/sanity/structure'
-import { bunnyInput } from '@cliffstudio/sanity-plugin-bunny-input'
+import { bunnyInput } from '@cliff-studio/sanity-plugin-bunny-input'
 
 export default defineConfig({
   basePath: '/studio',
