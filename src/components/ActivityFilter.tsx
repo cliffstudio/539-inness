@@ -14,6 +14,10 @@ interface Activity {
     startTime?: string
     endTime?: string
   }
+  startsAt?: string
+  endsAt?: string
+  locationName?: string
+  locationAddress?: string
   images?: SanityImage[]
   description?: PortableTextBlock[]
   bookingHref?: string

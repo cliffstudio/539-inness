@@ -12,11 +12,17 @@ import ButtonLink from './ButtonLink'
 interface Activity {
   _id: string
   title?: string
+  /** Legacy: date + timeRange */
   date?: string
   timeRange?: {
     startTime?: string
     endTime?: string
   }
+  /** Calendar: ISO datetime */
+  startsAt?: string
+  endsAt?: string
+  locationName?: string
+  locationAddress?: string
   images?: SanityImage[]
   description?: PortableTextBlock[]
   bookingHref?: string
@@ -205,18 +211,22 @@ export default function ActivitySection({
           </div>
         )}
 
-        {activity.date && activity.timeRange?.startTime && (
+        {(activity.startsAt || activity.date) && (
           <div className="activity-date-time">
-            {activity.date && (
-              <>{formatDate(activity.date)}</>
-            )}
-
-            <span> • </span>
-
-            {activity.timeRange?.startTime && (
-              <>{formatTime(activity.timeRange)}</>
+            {activity.startsAt ? formatDate(activity.startsAt) : activity.date && <>{formatDate(activity.date)}</>}
+            {(activity.startsAt || activity.timeRange?.startTime) && (
+              <>
+                <span> • </span>
+                {activity.startsAt
+                  ? (activity.endsAt ? `${formatTimeFromIso(activity.startsAt)} – ${formatTimeFromIso(activity.endsAt)}` : formatTimeFromIso(activity.startsAt))
+                  : activity.timeRange?.startTime && <>{formatTime(activity.timeRange)}</>
+                }
+              </>
             )}
           </div>
+        )}
+        {activity.locationName && (
+          <div className="activity-location">{activity.locationName}</div>
         )}
       </div>
     </>
@@ -249,12 +259,21 @@ export default function ActivitySection({
 
   const formatTime = (timeRange?: { startTime?: string; endTime?: string }) => {
     if (!timeRange || !timeRange.startTime) return ''
-    
-    if (timeRange.endTime) {
-      return `${timeRange.startTime}-${timeRange.endTime}`
-    }
-    
+    if (timeRange.endTime) return `${timeRange.startTime}-${timeRange.endTime}`
     return timeRange.startTime
+  }
+
+  const formatTimeFromIso = (iso?: string) => {
+    if (!iso) return ''
+    try {
+      return new Date(iso).toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true,
+      })
+    } catch {
+      return iso
+    }
   }
 
   if (activities.length === 0) {

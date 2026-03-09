@@ -1,7 +1,7 @@
 // src/components/DynamicPage.tsx
 import React from 'react'
 import { client } from '../../sanity.client'
-import { pageQuery, activitiesQuery, allActivitiesQuery, linksQuery, activityQuery } from '../sanity/lib/queries'
+import { pageQuery, activitiesQuery, allCalendarQuery, linksQuery, calendarQuery } from '../sanity/lib/queries'
 import { notFound } from 'next/navigation'
 import BodyClassProvider from './BodyClassProvider'
 import FlexibleContent from './FlexibleContent'
@@ -9,7 +9,7 @@ import HeroSectionActivities from './HeroSectionActivities'
 import HeroSectionLinks from './HeroSectionLinks'
 import ActivityFilter from './ActivityFilter'
 import LinksSection from './LinksSection'
-import ActivityPage from './ActivityPage'
+import ActivityPage from './CalendarPage'
 import TextPage from './TextPage'
 
 interface PageProps {
@@ -24,25 +24,25 @@ export default async function DynamicPage({ params }: PageProps) {
   const isActivityDetail = slug.startsWith('calendar/')
 
   if (isActivityDetail) {
-    const activitySlug = slug.replace(/^calendar\//, '')
+    const calendarSlug = slug.replace(/^calendar\//, '')
 
-    if (!activitySlug) {
+    if (!calendarSlug) {
       notFound()
     }
 
-    const activity = await client.fetch(activityQuery, { slug: activitySlug })
+    const calendarEvent = await client.fetch(calendarQuery, { slug: calendarSlug })
 
-    if (!activity) {
+    if (!calendarEvent) {
       notFound()
     }
 
     return (
       <>
         <BodyClassProvider 
-          pageType="activity" 
+          pageType="calendar" 
           slug={slug} 
         />
-        <ActivityPage {...activity} />
+        <ActivityPage {...calendarEvent} />
       </>
     )
   }
@@ -53,14 +53,14 @@ export default async function DynamicPage({ params }: PageProps) {
     notFound()
   }
 
-  // If this is a Calendar page, fetch the full calendar data and all activities
+  // If this is a Calendar page, fetch the full calendar data and all calendar events
   if (page.pageType === 'calendar') {
-    const [activitiesPage, allActivities] = await Promise.all([
+    const [calendarPageData, allCalendarEvents] = await Promise.all([
       client.fetch(activitiesQuery),
-      client.fetch(allActivitiesQuery)
+      client.fetch(allCalendarQuery)
     ])
 
-    if (!activitiesPage) {
+    if (!calendarPageData) {
       notFound()
     }
 
@@ -72,13 +72,13 @@ export default async function DynamicPage({ params }: PageProps) {
         />
         
         <HeroSectionActivities 
-          activitiesHeading={activitiesPage.activitiesHeading}
-          activitiesBody={activitiesPage.activitiesBody}
-          activitiesImages={activitiesPage.activitiesImages}
+          activitiesHeading={calendarPageData.activitiesHeading}
+          activitiesBody={calendarPageData.activitiesBody}
+          activitiesImages={calendarPageData.activitiesImages}
         />
 
-        {allActivities && allActivities.length > 0 && (
-          <ActivityFilter activities={allActivities} layout="4-activities" />
+        {allCalendarEvents && allCalendarEvents.length > 0 && (
+          <ActivityFilter activities={allCalendarEvents} layout="4-activities" />
         )}
       </>
     )

@@ -28,70 +28,70 @@ export default defineType({
       },
       initialValue: 'single-activity',
     }),
-    defineField({
-      name: 'activity1',
-      title: 'Activity 1',
-      type: 'reference',
-      to: [{ type: 'activity' }],
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: 'activity2',
-      title: 'Activity 2',
-      type: 'reference',
-      to: [{ type: 'activity' }],
-      hidden: ({ parent }) => {
-        const layout = (parent as { layout?: string })?.layout
-        return layout !== '2-activities' && layout !== '4-activities'
-      },
-      validation: (Rule) =>
-        Rule.custom((activity2, context) => {
-          const parent = context.parent as { layout?: string }
-          const layout = parent?.layout
-          if ((layout === '2-activities' || layout === '4-activities') && !activity2) {
-            return 'Activity 2 is required for this layout'
-          }
-          return true
-        }),
-    }),
-    defineField({
-      name: 'activity3',
-      title: 'Activity 3',
-      type: 'reference',
-      to: [{ type: 'activity' }],
-      hidden: ({ parent }) => {
-        const layout = (parent as { layout?: string })?.layout
-        return layout !== '4-activities'
-      },
-      validation: (Rule) =>
-        Rule.custom((activity3, context) => {
-          const parent = context.parent as { layout?: string }
-          const layout = parent?.layout
-          if (layout === '4-activities' && !activity3) {
-            return 'Activity 3 is required for this layout'
-          }
-          return true
-        }),
-    }),
-    defineField({
-      name: 'activity4',
-      title: 'Activity 4',
-      type: 'reference',
-      to: [{ type: 'activity' }],
-      hidden: ({ parent }) => {
-        const layout = (parent as { layout?: string })?.layout
-        return layout !== '4-activities'
-      },
-      validation: (Rule) =>
-        Rule.custom((activity4, context) => {
-          const parent = context.parent as { layout?: string }
-          const layout = parent?.layout
-          if (layout === '4-activities' && !activity4) {
-            return 'Activity 4 is required for this layout'
-          }
-          return true
-        }),
-    }),
+    // defineField({
+    //   name: 'activity1',
+    //   title: 'Event 1',
+    //   type: 'reference',
+    //   to: [{ type: 'calendar' }],
+    //   validation: (Rule) => Rule.required(),
+    // }),
+    // defineField({
+    //   name: 'activity2',
+    //   title: 'Activity 2',
+    //   type: 'reference',
+    //   to: [{ type: 'calendar' }],
+    //   hidden: ({ parent }) => {
+    //     const layout = (parent as { layout?: string })?.layout
+    //     return layout !== '2-activities' && layout !== '4-activities'
+    //   },
+    //   validation: (Rule) =>
+    //     Rule.custom((activity2, context) => {
+    //       const parent = context.parent as { layout?: string }
+    //       const layout = parent?.layout
+    //       if ((layout === '2-activities' || layout === '4-activities') && !activity2) {
+    //         return 'Activity 2 is required for this layout'
+    //       }
+    //       return true
+    //     }),
+    // }),
+    // defineField({
+    //   name: 'activity3',
+    //   title: 'Event 3',
+    //   type: 'reference',
+    //   to: [{ type: 'calendar' }],
+    //   hidden: ({ parent }) => {
+    //     const layout = (parent as { layout?: string })?.layout
+    //     return layout !== '4-activities'
+    //   },
+    //   validation: (Rule) =>
+    //     Rule.custom((activity3, context) => {
+    //       const parent = context.parent as { layout?: string }
+    //       const layout = parent?.layout
+    //       if (layout === '4-activities' && !activity3) {
+    //         return 'Activity 3 is required for this layout'
+    //       }
+    //       return true
+    //     }),
+    // }),
+    // defineField({
+    //   name: 'activity4',
+    //   title: 'Event 4',
+    //   type: 'reference',
+    //   to: [{ type: 'calendar' }],
+    //   hidden: ({ parent }) => {
+    //     const layout = (parent as { layout?: string })?.layout
+    //     return layout !== '4-activities'
+    //   },
+    //   validation: (Rule) =>
+    //     Rule.custom((activity4, context) => {
+    //       const parent = context.parent as { layout?: string }
+    //       const layout = parent?.layout
+    //       if (layout === '4-activities' && !activity4) {
+    //         return 'Activity 4 is required for this layout'
+    //       }
+    //       return true
+    //     }),
+    // }),
   ],
   preview: {
     select: {

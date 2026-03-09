@@ -198,8 +198,10 @@ const activitySectionFragment = groq`{
   activity1-> {
     _id,
     title,
-    date,
-    timeRange,
+    startsAt,
+    endsAt,
+    locationName,
+    locationAddress,
     images[] ${imageFragment},
     description,
     bookingHref,
@@ -208,8 +210,10 @@ const activitySectionFragment = groq`{
   activity2-> {
     _id,
     title,
-    date,
-    timeRange,
+    startsAt,
+    endsAt,
+    locationName,
+    locationAddress,
     images[] ${imageFragment},
     description,
     bookingHref,
@@ -218,8 +222,10 @@ const activitySectionFragment = groq`{
   activity3-> {
     _id,
     title,
-    date,
-    timeRange,
+    startsAt,
+    endsAt,
+    locationName,
+    locationAddress,
     images[] ${imageFragment},
     description,
     bookingHref,
@@ -228,8 +234,10 @@ const activitySectionFragment = groq`{
   activity4-> {
     _id,
     title,
-    date,
-    timeRange,
+    startsAt,
+    endsAt,
+    locationName,
+    locationAddress,
     images[] ${imageFragment},
     description,
     bookingHref,
@@ -401,35 +409,33 @@ export const linksQuery = groq`
   }
 `
 
-// Query to get all activities
-export const allActivitiesQuery = groq`
-  *[_type == "activity"] | order(date asc) {
+// Query to get all calendar events
+export const allCalendarQuery = groq`
+  *[_type == "calendar"] | order(startsAt asc) {
     _id,
     title,
-    date,
-    timeRange,
-    images[] ${imageFragment},
-    description,
-    bookingHref,
-    "slug": slug.current,
-    activityType
+    startsAt,
+    endsAt,
+    locationName,
+    locationAddress,
+    "slug": slug.current
   }
 `
 
 export const siteSearchQuery = groq`
   {
-    "activities": *[_type == "activity" && (
+    "activities": *[_type == "calendar" && (
       title match $wildcardTerm ||
-      activityType match $wildcardTerm ||
-      pt::text(description) match $wildcardTerm
-    )] | order(title asc) {
+      locationName match $wildcardTerm ||
+      locationAddress match $wildcardTerm
+    )] | order(startsAt asc) {
       _id,
       title,
       "slug": slug.current,
-      activityType,
-      date,
-      timeRange,
-      "descriptionPlain": coalesce(pt::text(description), ""),
+      startsAt,
+      endsAt,
+      locationName,
+      "descriptionPlain": coalesce(locationName, locationAddress, ""),
       "resultType": "activity"
     },
     "pages": *[_type == "page" && defined(slug.current) && (
@@ -447,23 +453,21 @@ export const siteSearchQuery = groq`
   }
 `
 
-export const activityQuery = groq`
-  *[_type == "activity" && slug.current == $slug][0] {
+// Single calendar event by slug (for calendar/xxx detail pages)
+export const calendarQuery = groq`
+  *[_type == "calendar" && slug.current == $slug][0] {
     _id,
     title,
     slug,
-    date,
-    timeRange,
-    description,
-    bookingHref,
-    activityType,
-    images[] ${imageFragment},
-    contentBlocks[] ${flexibleContentFragment}
+    startsAt,
+    endsAt,
+    locationName,
+    locationAddress
   }
 `
 
-export const activitySlugsQuery = groq`
-  *[_type == "activity" && defined(slug.current)] {
+export const calendarSlugsQuery = groq`
+  *[_type == "calendar" && defined(slug.current)] {
     "slug": slug.current
   }
 `

@@ -1,7 +1,7 @@
 // Global
 import { pageType } from './pageType'
 import { roomType } from './roomType'
-import { activityType } from './activityType'
+import { calendarType } from './calendarType'
 import { menuType } from './menuType'
 import { footerType } from './footerType'
 import { metaDataType } from './metaDataType'
@@ -37,7 +37,7 @@ export const schemaTypes = [
   // Global
   pageType,
   roomType,
-  activityType,
+  calendarType,
   menuType,
   footerType,
   metaDataType,

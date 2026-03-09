@@ -214,22 +214,22 @@ export default defineType({
         }),
       hidden: ({ parent }) => parent?.layout !== 'media-with-text-h4-body-room-links',
     }),
-    defineField({
-      name: 'activityLinks',
-      title: 'Calendar Links',
-      type: 'array',
-      of: [{ type: 'reference', to: [{ type: 'activity' }] }],
-      description: 'Add Calendar Links in even numbers (2, 4, 6, etc.)',
-      validation: (Rule) =>
-        Rule.custom((value) => {
-          if (!value || value.length === 0) return true
-          if (value.length < 2 || value.length % 2 !== 0) {
-            return 'Calendar Links must be added in even numbers (2, 4, 6, etc.)'
-          }
-          return true
-        }),
-      hidden: ({ parent }) => parent?.layout !== 'media-with-text-h4-body-activity-links',
-    }),
+    // defineField({
+    //   name: 'activityLinks',
+    //   title: 'Calendar Links',
+    //   type: 'array',
+    //   of: [{ type: 'reference', to: [{ type: 'activity' }] }],
+    //   description: 'Add Calendar Links in even numbers (2, 4, 6, etc.)',
+    //   validation: (Rule) =>
+    //     Rule.custom((value) => {
+    //       if (!value || value.length === 0) return true
+    //       if (value.length < 2 || value.length % 2 !== 0) {
+    //         return 'Calendar Links must be added in even numbers (2, 4, 6, etc.)'
+    //       }
+    //       return true
+    //     }),
+    //   hidden: ({ parent }) => parent?.layout !== 'media-with-text-h4-body-activity-links',
+    // }),
     defineField({
       name: 'links',
       title: 'Links',
