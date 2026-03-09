@@ -1008,13 +1008,13 @@ export type Page = {
   pageType?: "homepage" | "general" | "calendar" | "links" | "text";
   homepageHeading?: string;
   homepageMediaType?: "image" | "video";
-  homepageImage?: {
+  homepageImages?: Array<{
     asset?: SanityImageAssetReference;
     media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-  };
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
+    }>;
   homepageVideo?: string;
   homepageVideoPlaceholder?: {
     asset?: SanityImageAssetReference;

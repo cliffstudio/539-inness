@@ -72,9 +72,11 @@ export default async function DynamicPage({ params }: PageProps) {
         />
         
         <HeroSectionActivities 
-          activitiesHeading={calendarPageData.activitiesHeading}
-          activitiesBody={calendarPageData.activitiesBody}
-          activitiesImages={calendarPageData.activitiesImages}
+          calendarHeading={calendarPageData.calendarHeading}
+          calendarBody={calendarPageData.calendarBody}
+          calendarMediaType={calendarPageData.calendarMediaType}
+          calendarImages={calendarPageData.calendarImages}
+          calendarVideo={calendarPageData.calendarVideo}
         />
 
         {allCalendarEvents && allCalendarEvents.length > 0 && (
@@ -102,7 +104,9 @@ export default async function DynamicPage({ params }: PageProps) {
         <HeroSectionLinks 
           heading={linksPage.heading}
           body={linksPage.body}
+          mediaType={linksPage.mediaType}
           images={linksPage.images}
+          video={linksPage.video}
         />
 
         {linksPage.links && linksPage.links.length > 0 && (

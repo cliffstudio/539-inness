@@ -26,7 +26,7 @@ export default async function Home() {
       <HeroSectionHomepage 
         homepageHeading={page.homepageHeading}
         homepageMediaType={page.homepageMediaType}
-        homepageImage={page.homepageImage}
+        homepageImages={page.homepageImages || []}
         homepageVideo={page.homepageVideo}
       />
       

@@ -62,7 +62,9 @@ const heroSectionFragment = groq`{
   layout,
   heading,
   body,
+  mediaType,
   images[] ${imageFragment},
+  video,
   specs[] {
     body
   },
@@ -368,7 +370,7 @@ export const homepageQuery = groq`
     pageType,
     homepageHeading,
     homepageMediaType,
-    homepageImage ${imageFragment},
+    homepageImages[] ${imageFragment},
     homepageVideo,
     contentBlocks[] ${flexibleContentFragment}
   }
@@ -382,9 +384,11 @@ export const activitiesQuery = groq`
     title,
     slug,
     pageType,
-    activitiesHeading,
-    activitiesBody,
-    activitiesImages[] ${imageFragment}
+    calendarHeading,
+    calendarBody,
+    calendarMediaType,
+    calendarImages[] ${imageFragment},
+    calendarVideo
   }
 `
 
@@ -398,7 +402,9 @@ export const linksQuery = groq`
     pageType,
     heading,
     body,
+    mediaType,
     images[] ${imageFragment},
+    video,
     links[] {
       header,
       body,

@@ -65,13 +65,16 @@ export const pageType = defineType({
       hidden: ({ parent }) => parent?.pageType !== 'homepage',
     }),
     defineField({ 
-      name: 'homepageImage',
-      title: 'Image',
-      type: 'image',
-      description: 'Maximum file size: 500KB.',
+      name: 'homepageImages',
+      title: 'Images',
+      type: 'array',
+      description: 'Maximum file size per image: 500KB.',
       fieldset: 'heroSection',
+      of: [{ 
+        type: 'image',
+        validation: imageSizeValidation,
+      }],
       hidden: ({ parent }) => parent?.pageType !== 'homepage' || parent?.homepageMediaType !== 'image',
-      validation: imageSizeValidation,
     }),
     defineField({
       name: 'homepageVideo',
@@ -83,31 +86,47 @@ export const pageType = defineType({
 
     // Calendar specific fields
     defineField({
-      name: 'activitiesHeading',
+      name: 'calendarHeading',
       title: 'Heading',
       type: 'string',
       fieldset: 'heroSection',
       hidden: ({ parent }) => parent?.pageType !== 'calendar',
     }),
     defineField({
-      name: 'activitiesBody',
+      name: 'calendarBody',
       title: 'Body',
       type: 'array',
       of: [{ type: 'block' }],
       fieldset: 'heroSection',
       hidden: ({ parent }) => parent?.pageType !== 'calendar',
     }),
+    defineField({
+      name: 'calendarMediaType',
+      title: 'Media Type',
+      type: 'string',
+      initialValue: 'image',
+      options: { list: ['image','video'] },
+      fieldset: 'heroSection',
+      hidden: ({ parent }) => parent?.pageType !== 'calendar',
+    }),
     defineField({ 
-      name: 'activitiesImages',
+      name: 'calendarImages',
       title: 'Images',
       type: 'array',
       description: 'Maximum file size per image: 500KB.',
       fieldset: 'heroSection',
-      hidden: ({ parent }) => parent?.pageType !== 'calendar',
+      hidden: ({ parent }) => parent?.pageType !== 'calendar' || parent?.calendarMediaType !== 'image',
       of: [{ 
         type: 'image',
         validation: imageSizeValidation,
       }],
+    }),
+    defineField({
+      name: 'calendarVideo',
+      title: 'Video',
+      type: 'bunnyVideo',
+      fieldset: 'heroSection',
+      hidden: ({ parent }) => parent?.pageType !== 'calendar' || parent?.calendarMediaType !== 'video',
     }),
 
     // Flexible content blocks
@@ -136,16 +155,32 @@ export const pageType = defineType({
       hidden: ({ parent }) => parent?.pageType !== 'links',
     }),
     defineField({
+      name: 'mediaType',
+      title: 'Media Type',
+      type: 'string',
+      initialValue: 'image',
+      options: { list: ['image','video'] },
+      fieldset: 'heroSection',
+      hidden: ({ parent }) => parent?.pageType !== 'links',
+    }),
+    defineField({
       name: 'images',
       title: 'Images',
       type: 'array',
       description: 'Maximum file size per image: 500KB.',
       fieldset: 'heroSection',
-      hidden: ({ parent }) => parent?.pageType !== 'links',
+      hidden: ({ parent }) => parent?.pageType !== 'links' || parent?.mediaType !== 'image',
       of: [{ 
         type: 'image',
         validation: imageSizeValidation,
       }],
+    }),
+    defineField({
+      name: 'video',
+      title: 'Video',
+      type: 'bunnyVideo',
+      fieldset: 'heroSection',
+      hidden: ({ parent }) => parent?.pageType !== 'links' || parent?.mediaType !== 'video',
     }),
     defineField({
       name: 'links',

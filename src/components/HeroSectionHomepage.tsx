@@ -4,20 +4,20 @@
 import { useEffect, useLayoutEffect, useRef } from 'react'
 import { urlFor } from '../sanity/utils/imageUrlBuilder'
 import { videoUrlFor } from '../sanity/utils/videoUrlBuilder'
-import type { SanityImageSource } from '@sanity/image-url'
-import { SanityVideo } from '../types/sanity'
+import { SanityImage, SanityVideo } from '../types/sanity'
+import SplideCarousel from './SplideCarousel'
 
 interface HomepageHeroProps {
   homepageHeading?: string
   homepageMediaType?: 'image' | 'video'
-  homepageImage?: SanityImageSource
+  homepageImages?: SanityImage[]
   homepageVideo?: SanityVideo
 }
 
 export default function HeroSectionHomepage({ 
   homepageHeading, 
   homepageMediaType = 'image',
-  homepageImage, 
+  homepageImages, 
   homepageVideo
 }: HomepageHeroProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -156,7 +156,7 @@ export default function HeroSectionHomepage({
   }
 
   // Don't render if no content
-  if (!homepageHeading && !homepageImage && !homepageVideo) {
+  if (!homepageHeading && !homepageImages && !homepageVideo) {
     return null
   }
 
@@ -183,16 +183,24 @@ export default function HeroSectionHomepage({
           <div className="loading-overlay" />
         </div>
       )}
-      
-      {homepageMediaType === 'image' && homepageImage && (
-        <div className="fill-space-image-wrap media-wrap">
-          <img 
-            data-src={urlFor(homepageImage).url()} 
-            alt="" 
-            className="lazy full-bleed-image"
+
+      {homepageMediaType === 'image' && homepageImages && homepageImages.length > 0 && (
+        homepageImages.length === 1 ? (
+          <div className="fill-space-image-wrap media-wrap">
+            <img 
+              data-src={urlFor(homepageImages[0]).url()} 
+              alt="" 
+              className="lazy full-bleed-image"
+            />
+            <div className="loading-overlay" />
+          </div>
+        ) : (
+          <SplideCarousel 
+            images={homepageImages.map(image => ({ url: urlFor(image).url(), alt: "" }))}
+            onPrevious={() => {}}
+            onNext={() => {}}
           />
-          <div className="loading-overlay" />
-        </div>
+        )
       )}
 
       <div className="gradient-overlay"></div>

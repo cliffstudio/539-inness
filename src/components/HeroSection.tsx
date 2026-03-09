@@ -1,11 +1,14 @@
 /* eslint-disable @next/next/no-img-element */
 'use client'
+import { useRef, useLayoutEffect } from 'react'
 import { urlFor } from '../sanity/utils/imageUrlBuilder'
 import { SanityImage } from '../types/sanity'
 import { PortableText, PortableTextBlock } from '@portabletext/react'
 import { Link } from '../types/footerSettings'
 import ButtonLink from './ButtonLink'
 import SplideCarousel from './SplideCarousel'
+import { videoUrlFor } from '@/sanity/utils/videoUrlBuilder'
+import type { SanityVideo } from '@/types/sanity'
 
 interface Spec {
   body?: string
@@ -16,12 +19,28 @@ interface HeroProps {
   layout?: 'full-bleed' | 'split'
   heading?: string
   body?: PortableTextBlock[]
+  mediaType?: 'image' | 'video'
   images?: SanityImage[]
+  video?: SanityVideo
   specs?: Spec[]
   button?: Link
 }
 
-export default function Hero({ id, layout = 'full-bleed', heading, body, images, specs, button }: HeroProps) {
+export default function Hero({ id, layout = 'full-bleed', heading, body, mediaType = 'image', images, video, specs, button }: HeroProps) {
+  const videoRef = useRef<HTMLVideoElement>(null)
+
+  useLayoutEffect(() => {
+    if (mediaType !== 'video' || !videoRef.current) return
+    const el = videoRef.current
+    const hideOverlay = () => {
+      const overlay = el.nextElementSibling
+      if (overlay && overlay instanceof HTMLElement) overlay.classList.add('hidden')
+    }
+    el.addEventListener('canplaythrough', hideOverlay)
+    if (el.readyState >= 3) hideOverlay()
+    return () => el.removeEventListener('canplaythrough', hideOverlay)
+  }, [mediaType])
+
   const handleArrowClick = () => {
     window.scrollBy({
       top: window.innerHeight,
@@ -33,7 +52,22 @@ export default function Hero({ id, layout = 'full-bleed', heading, body, images,
     <>
       {layout === 'full-bleed' && (
         <section id={id} className="hero-section layout-1 relative">
-          {images && images.length > 0 && (
+          {mediaType === 'video' && video && (
+            <div className="fill-space-video-wrap media-wrap">
+              <video
+                ref={videoRef}
+                src={videoUrlFor(video)}
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="metadata"
+              />
+              <div className="loading-overlay" />
+            </div>
+          )}
+          
+          {mediaType === 'image' && images && images.length > 0 && (
             images.length === 1 ? (
               <div className="fill-space-image-wrap media-wrap">
                 <img 
@@ -75,7 +109,23 @@ export default function Hero({ id, layout = 'full-bleed', heading, body, images,
 
       {layout === 'split' && (
         <section id={id} className="hero-section layout-2 h-pad">
-          {images && images.length > 0 && (
+          {mediaType === 'video' && video && (
+            <div className="hero-image relative out-of-opacity">
+              <div className="fill-space-video-wrap media-wrap">
+                <video
+                  ref={videoRef}
+                  src={videoUrlFor(video)}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="metadata"
+                />
+                <div className="loading-overlay" />
+              </div>
+            </div>
+          )}
+          {mediaType === 'image' && images && images.length > 0 && (
             <div className="hero-image relative out-of-opacity">
               {images.length === 1 ? (
                 <div className="fill-space-image-wrap media-wrap">

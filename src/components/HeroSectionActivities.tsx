@@ -1,18 +1,36 @@
 /* eslint-disable @next/next/no-img-element */
 'use client'
+import { useRef, useLayoutEffect } from 'react'
 import { urlFor } from '../sanity/utils/imageUrlBuilder'
-import { SanityImage } from '../types/sanity'
+import { videoUrlFor } from '../sanity/utils/videoUrlBuilder'
+import { SanityImage, SanityVideo } from '../types/sanity'
 import { PortableText, PortableTextBlock } from '@portabletext/react'
 import SplideCarousel from './SplideCarousel'
 
 interface ActivitiesHeroProps {
   id?: string
-  activitiesHeading?: string
-  activitiesBody?: PortableTextBlock[]
-  activitiesImages?: SanityImage[]
+  calendarHeading?: string
+  calendarBody?: PortableTextBlock[]
+  calendarMediaType?: 'image' | 'video'
+  calendarImages?: SanityImage[]
+  calendarVideo?: SanityVideo
 }
 
-export default function HeroSectionActivities({ id, activitiesHeading, activitiesBody, activitiesImages }: ActivitiesHeroProps) {
+export default function HeroSectionActivities({ id, calendarHeading, calendarBody, calendarMediaType = 'image', calendarImages, calendarVideo }: ActivitiesHeroProps) {
+  const videoRef = useRef<HTMLVideoElement>(null)
+
+  useLayoutEffect(() => {
+    if (calendarMediaType !== 'video' || !videoRef.current) return
+    const el = videoRef.current
+    const hideOverlay = () => {
+      const overlay = el.nextElementSibling
+      if (overlay && overlay instanceof HTMLElement) overlay.classList.add('hidden')
+    }
+    el.addEventListener('canplaythrough', hideOverlay)
+    if (el.readyState >= 3) hideOverlay()
+    return () => el.removeEventListener('canplaythrough', hideOverlay)
+  }, [calendarMediaType])
+
   const handleArrowClick = () => {
     window.scrollBy({
       top: window.innerHeight,
@@ -22,11 +40,25 @@ export default function HeroSectionActivities({ id, activitiesHeading, activitie
 
   return (
     <section id={id} className="hero-section layout-1 relative">
-      {activitiesImages && activitiesImages.length > 0 && (
-        activitiesImages.length === 1 ? (
+      {calendarMediaType === 'video' && calendarVideo && (
+        <div className="fill-space-video-wrap media-wrap">
+          <video
+            ref={videoRef}
+            src={videoUrlFor(calendarVideo)}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+          />
+          <div className="loading-overlay" />
+        </div>
+      )}
+      {calendarMediaType === 'image' && calendarImages && calendarImages.length > 0 && (
+        calendarImages.length === 1 ? (
           <>
             <img 
-              data-src={urlFor(activitiesImages[0]).url()} 
+              data-src={urlFor(calendarImages[0]).url()} 
               alt="" 
               className="lazy full-bleed-image"
             />
@@ -34,7 +66,7 @@ export default function HeroSectionActivities({ id, activitiesHeading, activitie
           </>
         ) : (
           <SplideCarousel 
-            images={activitiesImages.map(image => ({ url: urlFor(image).url(), alt: "" }))}
+            images={calendarImages.map(image => ({ url: urlFor(image).url(), alt: "" }))}
             onPrevious={() => {}}
             onNext={() => {}}
           />
@@ -43,11 +75,11 @@ export default function HeroSectionActivities({ id, activitiesHeading, activitie
 
       <div className="hero-content h-pad">
         <div className="out-of-opacity stage-1">
-          {activitiesHeading && <h1>{activitiesHeading}</h1>}
+          {calendarHeading && <h1>{calendarHeading}</h1>}
           
-          {activitiesBody && activitiesBody.length > 0 && (
+          {calendarBody && calendarBody.length > 0 && (
             <div className="hero-body">
-              <PortableText value={activitiesBody} />
+              <PortableText value={calendarBody} />
             </div>
           )}
         </div>
