@@ -1,1 +1,10 @@
+{
+  "crons": [
+    {
+      "path": "/api/sync/peoplevine-events",
+      "schedule": "*/15 * * * *"
+    }
+  ]
+}
+
 {}

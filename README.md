@@ -45,6 +45,82 @@ NEXT_PUBLIC_SANITY_PROJECT_ID=your_project_id_here
 NEXT_PUBLIC_SANITY_DATASET=production
 ```
 
+#### Peoplevine event sync
+
+To enable automatic syncing of events from Peoplevine into Sanity:
+
+- **Required (Peoplevine auth & API):**
+  - `PEOPLEVINE_BASE_URL` – Base URL for the Peoplevine API (e.g. `https://api.peoplevine.com`)
+  - `PEOPLEVINE_USERNAME` – Peoplevine API username
+  - `PEOPLEVINE_PASSWORD` – Peoplevine API password
+  - `PEOPLEVINE_COMPANY_ID` – Peoplevine company ID
+  - `PEOPLEVINE_REGION` – Region header value to send on every request (defaults to `uk` if omitted)
+  - `PEOPLEVINE_EVENTS_PATH` – Path to the Peoplevine events **list** endpoint (e.g. `/api/events`)
+
+- **Required (Sanity server-side auth):**
+  - `SANITY_API_TOKEN` – Token with write access for the configured Sanity project/dataset
+
+- **Required (sync protection):**
+  - `PEOPLEVINE_SYNC_SECRET` – Secret string used to protect the sync API route from public access
+
+##### How authentication works
+
+1. The sync authenticates with Peoplevine by POSTing to `/api/token` on `PEOPLEVINE_BASE_URL` with:
+   - `grant_type: "password"`
+   - `username`, `password`, `company_id`
+   - `remember_me: true`
+2. The returned `access_token` is used as a Bearer token on subsequent requests, and the `Region` header is sent on **every** Peoplevine request.
+3. Access tokens expire after ~30 minutes; the sync always requests a **fresh token** at the start of each run (no refresh token storage).
+
+##### Running the sync
+
+- Via HTTP (e.g. cron, manual trigger):
+  - Send a `POST` request to `/api/sync/peoplevine-events`
+  - Include header `x-sync-secret: $PEOPLEVINE_SYNC_SECRET`
+  - The endpoint responds with a concise JSON summary:
+    - `fetched` – number of events fetched from Peoplevine
+    - `upserted` – number of Sanity documents created/updated
+    - `markedInactive` – number of events marked inactive because they are no longer returned by Peoplevine
+    - `failedMappings` – number of events that failed to map or upsert
+
+All Peoplevine calls happen **server-side only** and never in client components.
+
+##### Configuring the Peoplevine events endpoint
+
+- Set `PEOPLEVINE_EVENTS_PATH` to the Peoplevine events list endpoint path.
+- The base URL comes from `PEOPLEVINE_BASE_URL`; the final URL is:
+  - `${PEOPLEVINE_BASE_URL}${PEOPLEVINE_EVENTS_PATH}?page_number=...&page_size=...`
+- **Known TODO:** Once the final Peoplevine events endpoint and response payload are confirmed, update:
+  - The `PEOPLEVINE_EVENTS_PATH` value
+  - The mapping logic in `src/server/peoplevine/client.ts` (see `mapPeoplevineEventToNormalized` and the inline TODOs)
+
+##### Synced vs editorial fields
+
+Peoplevine is treated as the source of truth for **core event fields**, while Sanity is the source of truth for **editorial fields**.
+
+- **Synced (read-only in Studio, updated by sync):**
+  - `peoplevineId`
+  - `title`
+  - `startsAt`
+  - `endsAt`
+  - `locationName`
+  - `locationAddress`
+  - `lastSyncedAt`
+  - `isActive`
+
+- **Editor-controlled (never overwritten by sync):**
+  - `slug`
+  - `summary`
+  - `heroImage`
+  - `content` (portable text)
+  - `seo` (reference to `metaData`)
+
+The sync:
+
+- Uses deterministic IDs for event pages: `_id = "eventPage-pv-${peoplevineId}"`
+- Upserts only the synced fields and `isActive`
+- Marks missing events as `isActive = false` instead of deleting them
+
 ### 5. Run Development Server
 
 ```bash

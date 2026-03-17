@@ -71,7 +71,7 @@
 
 .media-text-link,
 .feature-item,
-.activity-item {
+.calendar-item {
   @media (hover: hover) {
     &:hover {
       .button-wrap--overlay-media {
@@ -1437,8 +1437,8 @@
   }
 }
 
-.activity-section {
-  .activity-section-heading {
+.calendar-section {
+  .calendar-section-heading {
     text-align: center;
     margin-bottom: get-rem-desktop(48);
   }
@@ -1453,7 +1453,7 @@
     margin-bottom: get-rem-desktop(10);
   }
 
-  .activity-grid {
+  .calendar-grid {
     row-gap: get-rem-desktop(72);
 
     @media only screen and (max-width: 820px) {
@@ -1462,14 +1462,14 @@
   }
 
   &.no-carousel {
-    .activity-grid {
+    .calendar-grid {
       @media only screen and (max-width: 820px) {
         display: grid;
       }
     }
   }
 
-  .activity-carousel {
+  .calendar-carousel {
     display: none;
 
     @media only screen and (max-width: 820px) {
@@ -1486,7 +1486,7 @@
       }
     }
 
-    .activity-item {
+    .calendar-item {
       @include flex;
       @include flex-direction(column);
 
@@ -1496,7 +1496,7 @@
       }
     }
 
-    .activity-carousel-controls {
+    .calendar-carousel-controls {
       margin-top: get-rem-mobile(32);
       @include flex;
       @include justify-content(space-between);
@@ -1530,14 +1530,14 @@
   margin-top: get-rem-desktop(36);
 }
 
-.activity-section.layout-4-activities {
+.calendar-section.layout-4-activities {
   .media-wrap {
     aspect-ratio: 377 / 500;
   }
 }
 
 body.page-type-calendar {
-  .activity-section {
+  .calendar-section {
     padding-bottom: get-rem-desktop(160);
 
     @media only screen and (max-width: 820px) {
@@ -1546,7 +1546,7 @@ body.page-type-calendar {
     }
   }
 
-  .activity-grid {
+  .calendar-grid {
     row-gap: get-rem-desktop(48);
   }
 }

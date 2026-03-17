@@ -237,7 +237,7 @@ export type ActivityReference = {
 };
 
 export type ActivitySection = {
-  _type: "activitySection";
+  _type: "calendarSection";
   id?: string;
   heading?: string;
   layout?: "single-activity" | "2-activities" | "4-activities";

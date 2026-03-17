@@ -8,6 +8,12 @@ import '@splidejs/splide/css'
 import { urlFor } from '../sanity/utils/imageUrlBuilder'
 import { SanityImage } from '../types/sanity'
 import ButtonLink from './ButtonLink'
+import FlexibleContent from './FlexibleContent'
+
+interface ContentBlock {
+  _type: string
+  [key: string]: unknown
+}
 
 interface Activity {
   _id: string
@@ -21,13 +27,15 @@ interface Activity {
   /** Calendar: ISO datetime */
   startsAt?: string
   endsAt?: string
-  locationName?: string
   locationAddress?: string
   images?: SanityImage[]
-  description?: PortableTextBlock[]
+  description?: string | PortableTextBlock[]
+  // Peoplevine thumbnail URL
+  thumbnail?: string
   bookingHref?: string
   slug?: string
   activityType?: string
+  contentBlocks?: ContentBlock[]
 }
 
 interface ActivitySectionProps {
@@ -58,6 +66,7 @@ export default function ActivitySection({
   const [totalPages, setTotalPages] = useState(1)
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0)
   const [isAtEndOfActivities, setIsAtEndOfActivities] = useState(false)
+  const [loadedActivities, setLoadedActivities] = useState<Record<string, boolean>>({})
 
   // If activities array is provided, use it; otherwise collect from individual props
   let activities: Activity[] = []
@@ -114,6 +123,32 @@ export default function ActivitySection({
     if (splideRef.current) {
       splideRef.current.go('>')
     }
+  }
+
+  const stripHtmlToPlainText = (html: string) => {
+    const withoutTags = html.replace(/<[^>]+>/g, ' ')
+    return withoutTags
+      .replace(/&nbsp;/gi, ' ')
+      .replace(/&amp;/gi, '&')
+      .replace(/&lt;/gi, '<')
+      .replace(/&gt;/gi, '>')
+      .replace(/&quot;/gi, '"')
+      .replace(/&#39;/gi, "'")
+      .replace(/&rsquo;|&#8217;/gi, "'")
+      .replace(/\s+/g, ' ')
+      .trim()
+  }
+
+  const truncateToSentences = (text: string, maxSentences = 2) => {
+    const sentences = text
+      .split(/(?<=[.!?])\s+/)
+      .filter((s) => s.trim().length > 0)
+
+    if (sentences.length <= maxSentences) {
+      return sentences.join(' ')
+    }
+
+    return sentences.slice(0, maxSentences).join(' ')
   }
 
   useEffect(() => {
@@ -173,20 +208,22 @@ export default function ActivitySection({
 
   const renderActivityContent = (activity: Activity) => (
     <>
-      {activity.images && activity.images[0] && (
+      {activity.thumbnail && (
         <div className="media-wrap relative">
-          <img 
-            data-src={urlFor(activity.images[0]).url()} 
-            alt={activity.title || ''} 
+          <img
+            data-src={activity.thumbnail}
+            alt=""
             className="lazy full-bleed-image"
           />
           <div className="loading-overlay" />
-
+          
           <div className="button-wrap button-wrap--multiple-buttons button-wrap--overlay-media">
-            <ButtonLink 
-              link={{ linkType: 'internal', label: 'View', pageLink: { slug: `calendar/${activity.slug || ''}` }, color: 'cream' }}
-              fallbackColor="cream"
-            />
+            {/* {Array.isArray(activity.contentBlocks) && activity.contentBlocks.length > 0 && (
+              <ButtonLink 
+                link={{ linkType: 'internal', label: 'View', pageLink: { slug: `calendar/${activity.slug || ''}` }, color: 'cream' }}
+                fallbackColor="cream"
+              />
+            )} */}
 
             {activity.bookingHref && (
               <div className="activity-booking-link">
@@ -207,7 +244,11 @@ export default function ActivitySection({
 
         {activity.description && (
           <div className="activity-description">
-            <PortableText value={activity.description} />
+            {Array.isArray(activity.description) ? (
+              <PortableText value={activity.description} />
+            ) : (
+              <div>{truncateToSentences(stripHtmlToPlainText(activity.description))}</div>
+            )}
           </div>
         )}
 
@@ -224,9 +265,6 @@ export default function ActivitySection({
               </>
             )}
           </div>
-        )}
-        {activity.locationName && (
-          <div className="activity-location">{activity.locationName}</div>
         )}
       </div>
     </>
@@ -266,11 +304,21 @@ export default function ActivitySection({
   const formatTimeFromIso = (iso?: string) => {
     if (!iso) return ''
     try {
-      return new Date(iso).toLocaleTimeString('en-US', {
-        hour: 'numeric',
-        minute: '2-digit',
-        hour12: true,
-      })
+      const date = new Date(iso)
+      let hours = date.getHours()
+      const minutes = date.getMinutes()
+      const isPm = hours >= 12
+
+      if (hours === 0) {
+        hours = 12
+      } else if (hours > 12) {
+        hours -= 12
+      }
+
+      const minutesPadded = minutes.toString().padStart(2, '0')
+      const suffix = isPm ? 'pm' : 'am'
+
+      return `${hours}.${minutesPadded}${suffix}`
     } catch {
       return iso
     }
@@ -281,18 +329,18 @@ export default function ActivitySection({
   }
 
   return (
-    <section id={id} className={`activity-section layout-${layout}${disableCarousel ? ' no-carousel' : ''} h-pad`}>
+    <section id={id} className={`calendar-section layout-${layout}${disableCarousel ? ' no-carousel' : ''} h-pad`}>
       {heading && (
-        <div className="activity-section-heading out-of-opacity">
+        <div className="calendar-section-heading out-of-opacity">
           <h4>{heading}</h4>
         </div>
       )}
 
-      <div className={`row-lg activity-grid layout-${layout}`}>
+      <div className={`row-lg calendar-grid layout-${layout}`}>
         {activities.map((activity) => (
           <div 
             key={activity._id} 
-            className={`activity-item ${getGridColumnClass()} out-of-opacity`}
+            className={`calendar-item ${getGridColumnClass()} out-of-opacity`}
           >
             {renderActivityContent(activity)}
           </div>
@@ -300,7 +348,7 @@ export default function ActivitySection({
       </div>
 
       {!disableCarousel && (
-        <div className={`activity-carousel layout-${layout}`}>
+        <div className={`calendar-carousel layout-${layout}`}>
           <Splide
             ref={splideRef}
             options={{
@@ -320,7 +368,7 @@ export default function ActivitySection({
           >
             {activities.map((activity) => (
               <SplideSlide key={`carousel-${activity._id}`}>
-                <div className="activity-item out-of-opacity">
+                <div className="calendar-item out-of-opacity">
                   {renderActivityContent(activity)}
                 </div>
               </SplideSlide>
@@ -328,7 +376,7 @@ export default function ActivitySection({
           </Splide>
 
           {activities.length > 1 && (
-            <div className="activity-carousel-controls">
+            <div className="calendar-carousel-controls">
               <button 
                 className="carousel-arrow carousel-arrow--prev"
                 onClick={handlePrevious}

@@ -30,7 +30,7 @@ export default defineType({
       title: 'Menu Section'
     },
     {
-      type: 'activitySection',
+      type: 'calendarSection',
       title: 'Calendar Section'
     },
     {

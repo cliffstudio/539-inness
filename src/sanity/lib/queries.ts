@@ -193,7 +193,7 @@ const menuSectionFragment = groq`{
   }
 }`
 
-const activitySectionFragment = groq`{
+const calendarSectionFragment = groq`{
   id,
   layout,
   heading,
@@ -207,7 +207,10 @@ const activitySectionFragment = groq`{
     images[] ${imageFragment},
     description,
     bookingHref,
-    "slug": slug.current
+    "slug": slug.current,
+    contentBlocks[] {
+      _type
+    }
   },
   activity2-> {
     _id,
@@ -219,7 +222,10 @@ const activitySectionFragment = groq`{
     images[] ${imageFragment},
     description,
     bookingHref,
-    "slug": slug.current
+    "slug": slug.current,
+    contentBlocks[] {
+      _type
+    }
   },
   activity3-> {
     _id,
@@ -231,7 +237,10 @@ const activitySectionFragment = groq`{
     images[] ${imageFragment},
     description,
     bookingHref,
-    "slug": slug.current
+    "slug": slug.current,
+    contentBlocks[] {
+      _type
+    }
   },
   activity4-> {
     _id,
@@ -243,7 +252,10 @@ const activitySectionFragment = groq`{
     images[] ${imageFragment},
     description,
     bookingHref,
-    "slug": slug.current
+    "slug": slug.current,
+    contentBlocks[] {
+      _type
+    }
   }
 }`
 
@@ -330,7 +342,7 @@ const flexibleContentFragment = groq`{
   ...select(_type == "breakSection" => ${breakSectionFragment}),
   ...select(_type == "carouselSection" => ${carouselSectionFragment}),
   ...select(_type == "menuSection" => ${menuSectionFragment}),
-  ...select(_type == "activitySection" => ${activitySectionFragment}),
+  ...select(_type == "calendarSection" => ${calendarSectionFragment}),
   ...select(_type == "featureSection" => ${featureSectionFragment}),
   ...select(_type == "bookingSection" => ${bookingSectionFragment}),
   ...select(_type == "productSection" => ${productSectionFragment})
@@ -415,22 +427,29 @@ export const linksQuery = groq`
   }
 `
 
-// Query to get all calendar events
+// Query to get all upcoming Peoplevine-backed calendar events
 export const allCalendarQuery = groq`
-  *[_type == "calendar"] | order(startsAt asc) {
+  *[_type == "calendar" && isActive == true && defined(startsAt) && startsAt >= now()] | order(startsAt asc) {
     _id,
     title,
     startsAt,
     endsAt,
     locationName,
     locationAddress,
+    description,
+    thumbnail,
+    bookingHref,
+    eventCategories,
+    contentBlocks[] {
+      _type
+    },
     "slug": slug.current
   }
 `
 
 export const siteSearchQuery = groq`
   {
-    "activities": *[_type == "calendar" && (
+    "activities": *[_type == "calendar" && isActive == true && defined(startsAt) && startsAt >= now() && (
       title match $wildcardTerm ||
       locationName match $wildcardTerm ||
       locationAddress match $wildcardTerm
@@ -468,12 +487,16 @@ export const calendarQuery = groq`
     startsAt,
     endsAt,
     locationName,
-    locationAddress
+    locationAddress,
+    description,
+    thumbnail,
+    bookingHref,
+    eventCategories
   }
 `
 
 export const calendarSlugsQuery = groq`
-  *[_type == "calendar" && defined(slug.current)] {
+  *[_type == "calendar" && isActive == true && defined(startsAt) && startsAt >= now() && defined(slug.current)] {
     "slug": slug.current
   }
 `

@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect } from 'react'
 import { PortableTextBlock } from '@portabletext/react'
-import ActivitySection from './ActivitySection'
+import ActivitySection from './CalendarSection'
 import mediaLazyloading from '../utils/lazyLoad'
 import { SanityImage } from '../types/sanity'
 
@@ -19,27 +19,31 @@ interface Activity {
   locationName?: string
   locationAddress?: string
   images?: SanityImage[]
-  description?: PortableTextBlock[]
+  // Can be plain Peoplevine text or rich Sanity PortableText
+  description?: string | PortableTextBlock[]
   bookingHref?: string
   slug?: string
-  activityType?: string
+  eventCategories?: string[]
+  contentBlocks?: { _type: string }[]
 }
 
-interface ActivityFilterProps {
+interface CalendarFilterProps {
   activities: Activity[]
   layout?: 'single-activity' | '2-activities' | '4-activities'
 }
 
-export default function ActivityFilter({ activities, layout = '4-activities' }: ActivityFilterProps) {
-  // Get unique activity types from the activities data
-  const availableActivityTypes = useMemo(() => {
-    const types = new Set<string>()
-    activities.forEach(activity => {
-      if (activity.activityType) {
-        types.add(activity.activityType)
-      }
+export default function CalendarFilter({ activities, layout = '4-activities' }: CalendarFilterProps) {
+  // Get unique event categories from the activities data
+  const availableCategories = useMemo(() => {
+    const categories = new Set<string>()
+    activities.forEach((activity) => {
+      activity.eventCategories?.forEach((cat) => {
+        if (cat) {
+          categories.add(cat)
+        }
+      })
     })
-    return Array.from(types).sort()
+    return Array.from(categories).sort()
   }, [activities])
 
   type FilterType = 'all' | string
@@ -49,7 +53,9 @@ export default function ActivityFilter({ activities, layout = '4-activities' }: 
     if (activeFilter === 'all') {
       return activities
     }
-    return activities.filter(activity => activity.activityType === activeFilter)
+    return activities.filter((activity) =>
+      activity.eventCategories?.includes(activeFilter)
+    )
   }, [activities, activeFilter])
 
   // Re-initialize lazy loading when filter changes
@@ -76,20 +82,14 @@ export default function ActivityFilter({ activities, layout = '4-activities' }: 
             </div>
             <div className="activity-filter-label">All</div>
           </button>
-          {availableActivityTypes.map((activityType) => {
-            // Map activity type values to their display titles
-            const activityTypeLabels: Record<string, string> = {
-              'wellness': 'Wellness',
-              'food-and-beverage': 'Food & Beverage',
-              'kids': 'Kids',
-              'golf': 'Golf',
-            }
-            const displayLabel = activityTypeLabels[activityType] || activityType.charAt(0).toUpperCase() + activityType.slice(1).toLowerCase()
+          {availableCategories.map((category) => {
+            const displayLabel =
+              category.charAt(0).toUpperCase() + category.slice(1)
             return (
               <button
-                key={activityType}
-                className={`activity-filter-option ${activeFilter === activityType ? 'active' : ''}`}
-                onClick={() => setActiveFilter(activityType)}
+                key={category}
+                className={`activity-filter-option ${activeFilter === category ? 'active' : ''}`}
+                onClick={() => setActiveFilter(category)}
               >
                 <div className="activity-filter-box">
                   <div className="activity-filter-box-inner"></div>

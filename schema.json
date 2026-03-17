@@ -1521,7 +1521,7 @@
     }
   },
   {
-    "name": "activitySection",
+    "name": "calendarSection",
     "type": "type",
     "value": {
       "type": "object",
@@ -1530,7 +1530,7 @@
           "type": "objectAttribute",
           "value": {
             "type": "string",
-            "value": "activitySection"
+            "value": "calendarSection"
           }
         },
         "id": {
@@ -4790,7 +4790,7 @@
             },
             "rest": {
               "type": "inline",
-              "name": "activitySection"
+              "name": "calendarSection"
             }
           },
           {

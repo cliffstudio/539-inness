@@ -5,7 +5,7 @@ import MediaTextSection from './MediaTextSection'
 import BreakSection from './BreakSection'
 import CarouselSection from './CarouselSection'
 import MenuSection from './MenuSection'
-import ActivitySection from './ActivitySection'
+import ActivitySection from './CalendarSection'
 import FeatureSection from './FeatureSection'
 import BookingSection from './BookingSection'
 import ProductSection from './ProductSection'
@@ -41,7 +41,7 @@ const FlexibleContent: React.FC<FlexibleContentProps> = ({ contentBlocks }) => {
             return <CarouselSection key={index} {...(block as ContentBlock & { layout?: 'carousel-section' })} />
           case 'menuSection':
             return <MenuSection key={index} {...(block as ContentBlock & { layout?: 'food-menu' | 'spa-menu' | 'venue-menu' })} />
-          case 'activitySection':
+          case 'calendarSection':
             return <ActivitySection key={index} {...(block as ContentBlock & { layout?: 'single-activity' | '2-activities' | '4-activities' })} />
           case 'featureSection':
             return <FeatureSection key={index} {...(block as ContentBlock & { layout?: 'single-feature' | '2-features' | '4-features' })} />

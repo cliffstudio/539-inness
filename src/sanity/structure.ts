@@ -7,6 +7,7 @@ export const structure: StructureResolver = (S) =>
     .items([
       S.documentTypeListItem('page').title('Pages'),
       S.documentTypeListItem('room').title('Rooms'),
+      // Show Peoplevine-backed calendar events
       S.documentTypeListItem('calendar').title('Calendar'),
       S.documentTypeListItem('product').title('Products'),
       S.divider(),
@@ -14,6 +15,17 @@ export const structure: StructureResolver = (S) =>
       S.documentTypeListItem('footer').title('Footer'),
       S.documentTypeListItem('metaData').title('Meta Data'),
       ...S.documentTypeListItems().filter(
-        (item) => item.getId() && !['page', 'room', 'calendar', 'product', 'menu', 'footer', 'metaData', 'productVariant'].includes(item.getId()!),
+        (item) =>
+          item.getId() &&
+          ![
+            'page',
+            'room',
+            'calendar',
+            'product',
+            'menu',
+            'footer',
+            'metaData',
+            'productVariant',
+          ].includes(item.getId()!),
       ),
     ])

@@ -7,9 +7,9 @@ import BodyClassProvider from './BodyClassProvider'
 import FlexibleContent from './FlexibleContent'
 import HeroSectionActivities from './HeroSectionActivities'
 import HeroSectionLinks from './HeroSectionLinks'
-import ActivityFilter from './ActivityFilter'
+import CalendarFilter from './CalendarFilter'
 import LinksSection from './LinksSection'
-import ActivityPage from './CalendarPage'
+import CalendarPage from './CalendarPage'
 import TextPage from './TextPage'
 
 interface PageProps {
@@ -42,7 +42,7 @@ export default async function DynamicPage({ params }: PageProps) {
           pageType="calendar" 
           slug={slug} 
         />
-        <ActivityPage {...calendarEvent} />
+        <CalendarPage {...calendarEvent} />
       </>
     )
   }
@@ -80,7 +80,7 @@ export default async function DynamicPage({ params }: PageProps) {
         />
 
         {allCalendarEvents && allCalendarEvents.length > 0 && (
-          <ActivityFilter activities={allCalendarEvents} layout="4-activities" />
+          <CalendarFilter activities={allCalendarEvents} layout="4-activities" />
         )}
       </>
     )

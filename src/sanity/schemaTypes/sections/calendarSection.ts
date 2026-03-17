@@ -1,7 +1,7 @@
 import { defineType, defineField } from 'sanity'
 
 export default defineType({
-  name: 'activitySection',
+  name: 'calendarSection',
   title: 'Calendar Section',
   type: 'object',
   fields: [
@@ -100,7 +100,7 @@ export default defineType({
     },
     prepare({ layout }) {
       return {
-        title: 'Activity Section',
+        title: 'Calendar Section',
         subtitle: layout === 'single-activity' ? 'Single Event' : layout === '2-activities' ? '2 Events' : layout === '4-activities' ? '4 Events' : 'No Layout',
       }
     }

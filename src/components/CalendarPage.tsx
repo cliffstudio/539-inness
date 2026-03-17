@@ -8,6 +8,9 @@ export interface CalendarEvent {
   endsAt?: string
   locationName?: string
   locationAddress?: string
+  description?: string
+  thumbnail?: string
+  eventCategories?: string[]
 }
 
 function formatCalendarDate(iso?: string) {
@@ -51,25 +54,31 @@ export default function CalendarPage(event: CalendarEvent) {
   const timeStr = startTime ? (endTime ? `${startTime} – ${endTime}` : startTime) : ''
 
   return (
-    <section className="calendar-detail h-pad">
-      <div className="calendar-detail-content">
-        {event.title && <h1 className="calendar-detail-title">{event.title}</h1>}
-        {(dateStr || timeStr) && (
-          <div className="calendar-detail-date-time">
-            {dateStr}
-            {dateStr && timeStr && ' • '}
-            {timeStr}
+    <>
+      <section className="hero-section layout-2 h-pad">
+        <div className="hero-image relative out-of-opacity">
+          <div className="fill-space-image-wrap media-wrap">
+            <img
+              data-src={event.thumbnail}
+              alt=""
+              className="lazy full-bleed-image"
+            />
+            <div className="loading-overlay" />
           </div>
-        )}
-        {event.locationName && (
-          <div className="calendar-detail-location">
-            <strong>Location:</strong> {event.locationName}
+        </div>
+
+        <div className="hero-content out-of-opacity">
+          <div className="row-1">
+            {event.title && <h3 className="calendar-detail-title">{event.title}</h3>}
+
+            {/* <div>Members + Hotel Guests Only</div> */}
           </div>
-        )}
-        {event.locationAddress && (
-          <div className="calendar-detail-address">{event.locationAddress}</div>
-        )}
-      </div>
-    </section>
+        </div>
+      </section>
+
+      {/* {contentBlocks && contentBlocks.length > 0 && (
+        <FlexibleContent contentBlocks={contentBlocks} />
+      )} */}
+    </>
   )
 }
