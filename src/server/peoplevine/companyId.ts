@@ -183,7 +183,7 @@ export async function getCompanies(
           (item as any).CompanyID
       ),
     }))
-    .filter((company) => Number.isFinite(company.company_id))
+    .filter((company: PeoplevineCompany) => Number.isFinite(company.company_id))
 
   if (!companies.length) {
     // eslint-disable-next-line no-console
