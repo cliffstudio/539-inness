@@ -128,7 +128,7 @@ export default function CalendarFilter({ activities, layout = '4-activities', pa
               )}
 
               <span className="calendar-pagination__status">
-                Page {pagination.currentPage} of {pagination.totalPages}
+                {pagination.currentPage} of {pagination.totalPages}
               </span>
 
               {pagination.currentPage < pagination.totalPages ? (
