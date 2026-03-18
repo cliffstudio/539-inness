@@ -5,6 +5,7 @@ import { PortableTextBlock } from '@portabletext/react'
 import ActivitySection from './CalendarSection'
 import mediaLazyloading from '../utils/lazyLoad'
 import { SanityImage } from '../types/sanity'
+import Link from 'next/link'
 
 interface Activity {
   _id: string
@@ -30,9 +31,14 @@ interface Activity {
 interface CalendarFilterProps {
   activities: Activity[]
   layout?: 'single-activity' | '2-activities' | '4-activities'
+  pagination?: {
+    baseHref: string
+    currentPage: number
+    totalPages: number
+  }
 }
 
-export default function CalendarFilter({ activities, layout = '4-activities' }: CalendarFilterProps) {
+export default function CalendarFilter({ activities, layout = '4-activities', pagination }: CalendarFilterProps) {
   // Get unique event categories from the activities data
   const availableCategories = useMemo(() => {
     const categories = new Set<string>()
@@ -69,18 +75,18 @@ export default function CalendarFilter({ activities, layout = '4-activities' }: 
 
   return (
     <>
-      <div className="activity-filter h-pad">
-        <div className="activity-filter-label out-of-opacity">Filter</div>
+      <div className="calendar-filter h-pad">
+        <div className="calendar-filter-label out-of-opacity">Filter</div>
 
-        <div className="activity-filter-options out-of-opacity">
+        <div className="calendar-filter-options out-of-opacity">
           <button
-            className={`activity-filter-option ${activeFilter === 'all' ? 'active' : ''}`}
+            className={`calendar-filter-option ${activeFilter === 'all' ? 'active' : ''}`}
             onClick={() => setActiveFilter('all')}
           >
-            <div className="activity-filter-box">
-              <div className="activity-filter-box-inner"></div>
+            <div className="calendar-filter-box">
+              <div className="calendar-filter-box-inner"></div>
             </div>
-            <div className="activity-filter-label">All</div>
+            <div className="calendar-filter-label">All</div>
           </button>
           {availableCategories.map((category) => {
             const displayLabel =
@@ -88,20 +94,59 @@ export default function CalendarFilter({ activities, layout = '4-activities' }: 
             return (
               <button
                 key={category}
-                className={`activity-filter-option ${activeFilter === category ? 'active' : ''}`}
+                className={`calendar-filter-option ${activeFilter === category ? 'active' : ''}`}
                 onClick={() => setActiveFilter(category)}
               >
-                <div className="activity-filter-box">
-                  <div className="activity-filter-box-inner"></div>
+                <div className="calendar-filter-box">
+                  <div className="calendar-filter-box-inner"></div>
                 </div>
-                <div className="activity-filter-label">{displayLabel}</div>
+                <div className="calendar-filter-label">{displayLabel}</div>
               </button>
             )
           })}
         </div>
       </div>
 
-      <ActivitySection layout={layout} activities={filteredActivities} disableCarousel={true} />
+      <ActivitySection
+        layout={layout}
+        activities={filteredActivities}
+        disableCarousel={true}
+        topSlot={
+          pagination ? (
+            <div className="calendar-pagination">
+              {pagination.currentPage > 1 ? (
+                <Link
+                  className="calendar-pagination__link"
+                  href={`${pagination.baseHref}?page=${pagination.currentPage - 1}`}
+                >
+                  Previous
+                </Link>
+              ) : (
+                <span className="calendar-pagination__link calendar-pagination__link--disabled">
+                  Previous
+                </span>
+              )}
+
+              <span className="calendar-pagination__status">
+                Page {pagination.currentPage} of {pagination.totalPages}
+              </span>
+
+              {pagination.currentPage < pagination.totalPages ? (
+                <Link
+                  className="calendar-pagination__link"
+                  href={`${pagination.baseHref}?page=${pagination.currentPage + 1}`}
+                >
+                  Next
+                </Link>
+              ) : (
+                <span className="calendar-pagination__link calendar-pagination__link--disabled">
+                  Next
+                </span>
+              )}
+            </div>
+          ) : null
+        }
+      />
     </>
   )
 }

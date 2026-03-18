@@ -10,6 +10,7 @@ interface PageProps {
   params: Promise<{
     slug: string[]
   }>
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>
 }
 
 export async function generateStaticParams() {
@@ -35,10 +36,11 @@ export async function generateStaticParams() {
   return [...pageParams, ...calendarParams]
 }
 
-export default async function Page({ params }: PageProps) {
+export default async function Page({ params, searchParams }: PageProps) {
   // Convert array to string for the slug
   const resolvedParams = await params
   const slug = resolvedParams.slug.join('/')
+  const resolvedSearchParams = (await searchParams) ?? {}
   
   // Check if this is a room post route and redirect to not found
   // since room posts should be handled by the dedicated rooms/[slug] route
@@ -52,5 +54,5 @@ export default async function Page({ params }: PageProps) {
     return notFound()
   }
   
-  return <DynamicPage params={Promise.resolve({ slug })} />
+  return <DynamicPage params={Promise.resolve({ slug })} searchParams={resolvedSearchParams} />
 }

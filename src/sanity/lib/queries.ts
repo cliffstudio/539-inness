@@ -447,6 +447,31 @@ export const allCalendarQuery = groq`
   }
 `
 
+// Paginated calendar queries (for calendar page pagination)
+export const calendarCountQuery = groq`
+  count(*[_type == "calendar" && isActive == true && defined(startsAt) && startsAt >= now()])
+`
+
+export const paginatedCalendarQuery = groq`
+  *[_type == "calendar" && isActive == true && defined(startsAt) && startsAt >= now()]
+    | order(startsAt asc)[$offset...$end] {
+      _id,
+      title,
+      startsAt,
+      endsAt,
+      locationName,
+      locationAddress,
+      description,
+      thumbnail,
+      bookingHref,
+      eventCategories,
+      contentBlocks[] {
+        _type
+      },
+      "slug": slug.current
+    }
+`
+
 export const siteSearchQuery = groq`
   {
     "activities": *[_type == "calendar" && isActive == true && defined(startsAt) && startsAt >= now() && (

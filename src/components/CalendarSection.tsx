@@ -1,7 +1,7 @@
 'use client'
 
 /* eslint-disable @next/next/no-img-element */
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { PortableText, PortableTextBlock } from '@portabletext/react'
 import { Splide, SplideSlide } from '@splidejs/react-splide'
 import '@splidejs/splide/css'
@@ -48,6 +48,7 @@ interface ActivitySectionProps {
   activity4?: Activity
   activities?: Activity[] // Array of activities (used when showing all activities)
   disableCarousel?: boolean // Disable carousel (for activities page)
+  topSlot?: ReactNode
 }
 
 export default function ActivitySection({ 
@@ -60,6 +61,7 @@ export default function ActivitySection({
   activity4,
   activities: activitiesProp,
   disableCarousel = false,
+  topSlot,
 }: ActivitySectionProps) {
   const splideRef = useRef<{ go: (direction: string) => void } | null>(null)
   const [currentPage, setCurrentPage] = useState(1)
@@ -346,6 +348,8 @@ export default function ActivitySection({
           </div>
         ))}
       </div>
+
+      {topSlot}
 
       {!disableCarousel && (
         <div className={`calendar-carousel layout-${layout}`}>

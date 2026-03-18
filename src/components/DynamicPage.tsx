@@ -1,7 +1,14 @@
 // src/components/DynamicPage.tsx
 import React from 'react'
 import { client } from '../../sanity.client'
-import { pageQuery, activitiesQuery, allCalendarQuery, linksQuery, calendarQuery } from '../sanity/lib/queries'
+import {
+  pageQuery,
+  activitiesQuery,
+  linksQuery,
+  calendarQuery,
+  calendarCountQuery,
+  paginatedCalendarQuery,
+} from '../sanity/lib/queries'
 import { notFound } from 'next/navigation'
 import BodyClassProvider from './BodyClassProvider'
 import FlexibleContent from './FlexibleContent'
@@ -16,9 +23,10 @@ interface PageProps {
   params: Promise<{
     slug: string
   }>
+  searchParams?: { [key: string]: string | string[] | undefined }
 }
 
-export default async function DynamicPage({ params }: PageProps) {
+export default async function DynamicPage({ params, searchParams }: PageProps) {
   const resolvedParams = await params
   const slug = resolvedParams.slug
   const isActivityDetail = slug.startsWith('calendar/')
@@ -55,14 +63,29 @@ export default async function DynamicPage({ params }: PageProps) {
 
   // If this is a Calendar page, fetch the full calendar data and all calendar events
   if (page.pageType === 'calendar') {
-    const [calendarPageData, allCalendarEvents] = await Promise.all([
+    const perPage = 20
+    const pageParam = Array.isArray(searchParams?.page) ? searchParams?.page[0] : searchParams?.page
+    const requestedPage = Number.parseInt(pageParam ?? '1', 10)
+    const currentPage = Number.isFinite(requestedPage) && requestedPage > 0 ? requestedPage : 1
+
+    const [calendarPageData, totalCount] = await Promise.all([
       client.fetch(activitiesQuery),
-      client.fetch(allCalendarQuery)
+      client.fetch(calendarCountQuery),
     ])
 
     if (!calendarPageData) {
       notFound()
     }
+
+    const totalPages = Math.max(Math.ceil((totalCount ?? 0) / perPage), 1)
+    const safePage = Math.min(currentPage, totalPages)
+    const offset = (safePage - 1) * perPage
+    const end = offset + perPage
+
+    const paginatedCalendarEvents = await client.fetch(paginatedCalendarQuery, { offset, end })
+
+    const calendarSlug = page.slug?.current || slug
+    const baseHref = `/${calendarSlug}`
 
     return (
       <>
@@ -79,8 +102,12 @@ export default async function DynamicPage({ params }: PageProps) {
           calendarVideo={calendarPageData.calendarVideo}
         />
 
-        {allCalendarEvents && allCalendarEvents.length > 0 && (
-          <CalendarFilter activities={allCalendarEvents} layout="4-activities" />
+        {paginatedCalendarEvents && paginatedCalendarEvents.length > 0 && (
+          <CalendarFilter
+            activities={paginatedCalendarEvents}
+            layout="4-activities"
+            pagination={{ baseHref, currentPage: safePage, totalPages }}
+          />
         )}
       </>
     )
