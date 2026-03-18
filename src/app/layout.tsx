@@ -168,18 +168,34 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               // Add class to body immediately on homepage to trigger CSS hiding of header
               if (window.location.pathname === '/' || window.location.pathname === '') {
                 (function() {
-                  function applyHomepageClasses() {
-                    document.body.classList.add('page-home-loader-active');
-                    const headers = document.querySelectorAll('.site-header');
-                    headers.forEach(function(header) {
-                      header.classList.add('is-translated-up');
-                    });
+                  // Apply as early as possible (before first paint) to avoid the header
+                  // animating away on initial load. We set the class on <html> so CSS
+                  // can take effect even before <body> and the header exist.
+                  document.documentElement.classList.add('page-home-loader-active');
+
+                  function applyHomepageClassesWhenAvailable() {
+                    if (document.body) {
+                      document.body.classList.add('page-home-loader-active');
+                    }
+
+                    var headers = document.querySelectorAll('.site-header');
+                    if (headers && headers.length) {
+                      headers.forEach(function(header) {
+                        header.classList.add('is-translated-up');
+                      });
+                      return true;
+                    }
+                    return false;
                   }
-                  
-                  if (document.readyState === 'loading') {
-                    document.addEventListener('DOMContentLoaded', applyHomepageClasses, false);
-                  } else {
-                    applyHomepageClasses();
+
+                  // Try immediately, then keep trying for a short window until header mounts.
+                  if (!applyHomepageClassesWhenAvailable()) {
+                    var attempts = 0;
+                    (function tick() {
+                      attempts++;
+                      if (applyHomepageClassesWhenAvailable() || attempts > 60) return; // ~1s @ 60fps
+                      requestAnimationFrame(tick);
+                    })();
                   }
                 })();
               }
