@@ -6,38 +6,24 @@ export const calendarType = defineType({
   title: 'Calendar',
   type: 'document',
   icon: CalendarIcon,
-  // groups: [
-  //   {
-  //     name: 'synced',
-  //     title: 'Synced event data',
-  //   },
-  //   {
-  //     name: 'content',
-  //     title: 'Page content',
-  //   },
-  // ],
   fields: [
-    // Synced / read-only fields
     defineField({
       name: 'peoplevineId',
       title: 'Peoplevine ID',
       type: 'string',
       readOnly: true,
-      // group: 'synced',
     }),
     defineField({
       name: 'title',
       title: 'Title',
       type: 'string',
       readOnly: true,
-      // group: 'synced',
     }),
     defineField({
       name: 'slug',
       title: 'Slug',
       type: 'slug',
       readOnly: true,
-      // group: 'synced',
       options: {
         source: 'title',
       },
@@ -48,49 +34,42 @@ export const calendarType = defineType({
       title: 'Starts at',
       type: 'datetime',
       readOnly: true,
-      // group: 'synced',
     }),
     defineField({
       name: 'endsAt',
       title: 'Ends at',
       type: 'datetime',
       readOnly: true,
-      // group: 'synced',
     }),
     defineField({
       name: 'locationName',
       title: 'Location name',
       type: 'string',
       readOnly: true,
-      // group: 'synced',
     }),
     defineField({
       name: 'locationAddress',
       title: 'Location address',
       type: 'string',
       readOnly: true,
-      // group: 'synced',
     }),
     defineField({
       name: 'description',
       title: 'Description',
       type: 'text',
       readOnly: true,
-      // group: 'synced',
     }),
     defineField({
       name: 'thumbnail',
       title: 'Thumbnail URL',
       type: 'url',
       readOnly: true,
-      // group: 'synced',
     }),
     defineField({
       name: 'bookingHref',
       title: 'Booking URL',
       type: 'url',
       readOnly: true,
-      // group: 'synced',
     }),
     defineField({
       name: 'eventCategories',
@@ -98,30 +77,19 @@ export const calendarType = defineType({
       type: 'array',
       of: [{ type: 'string' }],
       readOnly: true,
-      // group: 'synced',
     }),
     defineField({
       name: 'lastSyncedAt',
       title: 'Last synced at',
       type: 'datetime',
       readOnly: true,
-      // group: 'synced',
     }),
     defineField({
       name: 'isActive',
       title: 'Is active',
       type: 'boolean',
       readOnly: true,
-      // group: 'synced',
     }),
-
-    // Editor-controlled fields
-    // defineField({
-    //   name: 'contentBlocks',
-    //   title: 'Content Blocks',
-    //   type: 'flexibleContent',
-    //   group: 'content',
-    // }),
   ],
   preview: {
     select: {

@@ -503,29 +503,6 @@ export const siteSearchQuery = groq`
   }
 `
 
-// Single calendar event by slug (for calendar/xxx detail pages)
-export const calendarQuery = groq`
-  *[_type == "calendar" && slug.current == $slug][0] {
-    _id,
-    title,
-    slug,
-    startsAt,
-    endsAt,
-    locationName,
-    locationAddress,
-    description,
-    thumbnail,
-    bookingHref,
-    eventCategories
-  }
-`
-
-export const calendarSlugsQuery = groq`
-  *[_type == "calendar" && isActive == true && defined(startsAt) && startsAt >= now() && defined(slug.current)] {
-    "slug": slug.current
-  }
-`
-
 // Footer and menu queries
 export const footerQuery = groq`
   *[_type == "footer"][0] {

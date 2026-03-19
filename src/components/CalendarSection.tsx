@@ -219,23 +219,16 @@ export default function ActivitySection({
           />
           <div className="loading-overlay" />
           
-          <div className="button-wrap button-wrap--multiple-buttons button-wrap--overlay-media">
-            {/* {Array.isArray(activity.contentBlocks) && activity.contentBlocks.length > 0 && (
-              <ButtonLink 
-                link={{ linkType: 'internal', label: 'View', pageLink: { slug: `calendar/${activity.slug || ''}` }, color: 'cream' }}
-                fallbackColor="cream"
-              />
-            )} */}
-
-            {activity.bookingHref && (
+          {activity.bookingHref && (
+            <div className="button-wrap button-wrap--overlay-media">
               <div className="activity-booking-link">
                 <ButtonLink 
                   link={{ linkType: 'external', label: 'Book', href: activity.bookingHref, color: 'orange' }}
                   fallbackColor="orange"
                 />
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       )}
 

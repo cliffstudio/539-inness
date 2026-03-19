@@ -1,7 +1,7 @@
 // src/app/(main)/[...slug]/page.tsx
 import DynamicPage from '../../../components/DynamicPage'
 import { client } from '../../../../sanity.client'
-import { pageSlugsQuery, calendarSlugsQuery } from '../../../sanity/lib/queries'
+import { pageSlugsQuery } from '../../../sanity/lib/queries'
 import { notFound } from 'next/navigation'
 
 export const revalidate = 0
@@ -14,10 +14,7 @@ interface PageProps {
 }
 
 export async function generateStaticParams() {
-  const [pages, calendarSlugs] = await Promise.all([
-    client.fetch(pageSlugsQuery),
-    client.fetch(calendarSlugsQuery),
-  ])
+  const pages = await client.fetch(pageSlugsQuery)
 
   const pageParams = pages
     .filter((page: { slug: { current: string } }) => {
@@ -29,11 +26,7 @@ export async function generateStaticParams() {
       slug: page.slug.current.split('/'),
     }))
 
-  const calendarParams = (calendarSlugs as { slug: string | null }[])
-    .filter((c) => c.slug)
-    .map((c) => ({ slug: ['calendar', c.slug!] }))
-
-  return [...pageParams, ...calendarParams]
+  return pageParams
 }
 
 export default async function Page({ params, searchParams }: PageProps) {

@@ -5,7 +5,6 @@ import {
   pageQuery,
   activitiesQuery,
   linksQuery,
-  calendarQuery,
   calendarCountQuery,
   paginatedCalendarQuery,
 } from '../sanity/lib/queries'
@@ -16,7 +15,6 @@ import HeroSectionActivities from './HeroSectionActivities'
 import HeroSectionLinks from './HeroSectionLinks'
 import CalendarFilter from './CalendarFilter'
 import LinksSection from './LinksSection'
-import CalendarPage from './CalendarPage'
 import TextPage from './TextPage'
 
 interface PageProps {
@@ -29,31 +27,6 @@ interface PageProps {
 export default async function DynamicPage({ params, searchParams }: PageProps) {
   const resolvedParams = await params
   const slug = resolvedParams.slug
-  const isActivityDetail = slug.startsWith('calendar/')
-
-  if (isActivityDetail) {
-    const calendarSlug = slug.replace(/^calendar\//, '')
-
-    if (!calendarSlug) {
-      notFound()
-    }
-
-    const calendarEvent = await client.fetch(calendarQuery, { slug: calendarSlug })
-
-    if (!calendarEvent) {
-      notFound()
-    }
-
-    return (
-      <>
-        <BodyClassProvider 
-          pageType="calendar" 
-          slug={slug} 
-        />
-        <CalendarPage {...calendarEvent} />
-      </>
-    )
-  }
 
   const page = await client.fetch(pageQuery, { slug })
 
