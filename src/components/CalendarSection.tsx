@@ -10,6 +10,8 @@ import { SanityImage } from '../types/sanity'
 import ButtonLink from './ButtonLink'
 import FlexibleContent from './FlexibleContent'
 
+const EVENT_TIME_ZONE = 'America/New_York'
+
 interface ContentBlock {
   _type: string
   [key: string]: unknown
@@ -270,9 +272,20 @@ export default function ActivitySection({
     
     try {
       const date = new Date(dateString)
-      const day = date.getDate()
-      const month = date.toLocaleString('en-US', { month: 'long' })
-      const year = date.getFullYear()
+      const parts = new Intl.DateTimeFormat('en-US', {
+        timeZone: EVENT_TIME_ZONE,
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+      }).formatToParts(date)
+
+      const day = Number(parts.find((part) => part.type === 'day')?.value ?? '')
+      const month = parts.find((part) => part.type === 'month')?.value ?? ''
+      const year = parts.find((part) => part.type === 'year')?.value ?? ''
+
+      if (!day || !month || !year) {
+        return dateString
+      }
       
       // Add ordinal suffix (st, nd, rd, th)
       const getOrdinalSuffix = (n: number) => {
@@ -300,20 +313,22 @@ export default function ActivitySection({
     if (!iso) return ''
     try {
       const date = new Date(iso)
-      let hours = date.getHours()
-      const minutes = date.getMinutes()
-      const isPm = hours >= 12
+      const parts = new Intl.DateTimeFormat('en-US', {
+        timeZone: EVENT_TIME_ZONE,
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true,
+      }).formatToParts(date)
 
-      if (hours === 0) {
-        hours = 12
-      } else if (hours > 12) {
-        hours -= 12
+      const hour = parts.find((part) => part.type === 'hour')?.value
+      const minute = parts.find((part) => part.type === 'minute')?.value
+      const dayPeriod = parts.find((part) => part.type === 'dayPeriod')?.value
+
+      if (!hour || !minute || !dayPeriod) {
+        return iso
       }
 
-      const minutesPadded = minutes.toString().padStart(2, '0')
-      const suffix = isPm ? 'pm' : 'am'
-
-      return `${hours}.${minutesPadded}${suffix}`
+      return `${hour}.${minute}${dayPeriod.toLowerCase()}`
     } catch {
       return iso
     }

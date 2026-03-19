@@ -16,7 +16,7 @@ const sanity = createClient({
 type SyncResult = {
   fetched: number
   upserted: number
-  markedInactive: number
+  deleted: number
   failedMappings: number
   errors?: string[]
 }
@@ -66,12 +66,10 @@ export async function upsertEventPage(e: NormalizedPeoplevineEvent): Promise<voi
   await tx.commit({ autoGenerateArrayKeys: true })
 }
 
-export async function markMissingEventsInactive(currentIds: string[]): Promise<number> {
+export async function deleteMissingEvents(currentIds: string[]): Promise<number> {
   if (!currentIds.length) {
     return 0
   }
-
-  const nowIso = new Date().toISOString()
 
   // Fetch all existing calendar docs that are linked to Peoplevine.
   const existing =
@@ -80,30 +78,45 @@ export async function markMissingEventsInactive(currentIds: string[]): Promise<n
     >(`*[_type == "calendar" && defined(peoplevineId)]{_id, peoplevineId, isActive}`)) || []
 
   const currentIdSet = new Set(currentIds)
-  const toDeactivate = existing.filter(
+  const toDelete = existing.filter(
     (doc) =>
       doc.peoplevineId &&
       !currentIdSet.has(doc.peoplevineId) &&
       doc.isActive !== false
   )
 
-  if (!toDeactivate.length) {
+  if (!toDelete.length) {
     return 0
   }
 
   const tx = sanity.transaction()
 
-  for (const doc of toDeactivate) {
-    tx.patch(doc._id, (patch) =>
-      patch.set({
-        isActive: false,
-        lastSyncedAt: nowIso,
-      })
-    )
+  for (const doc of toDelete) {
+    tx.delete(doc._id)
   }
 
   await tx.commit()
-  return toDeactivate.length
+  return toDelete.length
+}
+
+export async function deletePastEvents(): Promise<number> {
+  const pastEvents =
+    (await sanity.fetch<{ _id: string }[]>(
+      `*[_type == "calendar" && defined(peoplevineId) && defined(endsAt) && endsAt < now()]{_id}`
+    )) || []
+
+  if (!pastEvents.length) {
+    return 0
+  }
+
+  const tx = sanity.transaction()
+
+  for (const doc of pastEvents) {
+    tx.delete(doc._id)
+  }
+
+  await tx.commit()
+  return pastEvents.length
 }
 
 export async function syncPeoplevineEvents(
@@ -112,7 +125,7 @@ export async function syncPeoplevineEvents(
   const result: SyncResult = {
     fetched: events.length,
     upserted: 0,
-    markedInactive: 0,
+    deleted: 0,
     failedMappings: 0,
     errors: [],
   }
@@ -144,8 +157,11 @@ export async function syncPeoplevineEvents(
     }
   }
 
-  // Mark events that no longer appear from Peoplevine as inactive, but never delete them.
-  result.markedInactive = await markMissingEventsInactive(activeIds)
+  // Fully delete events that no longer appear in Peoplevine.
+  const deletedMissing = await deleteMissingEvents(activeIds)
+  // Also remove events that have already happened.
+  const deletedPast = await deletePastEvents()
+  result.deleted = deletedMissing + deletedPast
 
   return result
 }

@@ -34,12 +34,14 @@ export const calendarType = defineType({
       title: 'Starts at',
       type: 'datetime',
       readOnly: true,
+      description: 'Stored in UTC by the API. Website displays this in America/New_York.',
     }),
     defineField({
       name: 'endsAt',
       title: 'Ends at',
       type: 'datetime',
       readOnly: true,
+      description: 'Stored in UTC by the API. Website displays this in America/New_York.',
     }),
     defineField({
       name: 'locationName',
@@ -82,6 +84,7 @@ export const calendarType = defineType({
       name: 'lastSyncedAt',
       title: 'Last synced at',
       type: 'datetime',
+      description: 'Stored in UTC by the API.',
       readOnly: true,
     }),
     defineField({
@@ -100,18 +103,23 @@ export const calendarType = defineType({
     prepare({ title, startsAt, isActive }) {
       const date =
         startsAt && typeof startsAt === 'string'
-          ? new Date(startsAt).toLocaleString('en-GB', {
+          ? new Intl.DateTimeFormat('en-GB', {
+              timeZone: 'America/New_York',
               day: '2-digit',
               month: 'short',
               year: 'numeric',
               hour: '2-digit',
               minute: '2-digit',
-            })
+              hour12: false,
+            }).format(new Date(startsAt))
           : undefined
 
       return {
         title: title || 'Untitled event',
-        subtitle: [date, isActive === false ? 'Inactive' : undefined]
+        subtitle: [
+          date ? `${date}` : undefined,
+          isActive === false ? 'Inactive' : undefined,
+        ]
           .filter(Boolean)
           .join(' • '),
       }
