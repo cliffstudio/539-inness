@@ -124,6 +124,27 @@ const mediaTextSectionFragment = groq`{
     date,
     timeRange
   },
+  "activities": *[
+    _type == "calendar" &&
+    isActive == true &&
+    defined(startsAt) &&
+    startsAt >= now()
+  ] | order(startsAt asc)[0...50] {
+    _id,
+    title,
+    startsAt,
+    endsAt,
+    locationName,
+    locationAddress,
+    description,
+    thumbnail,
+    bookingHref,
+    eventCategories,
+    contentBlocks[] {
+      _type
+    },
+    "slug": slug.current
+  },
   links[] {
     header,
     body,
@@ -195,67 +216,28 @@ const menuSectionFragment = groq`{
 
 const calendarSectionFragment = groq`{
   id,
-  layout,
   heading,
-  activity1-> {
+  eventCategories,
+  "activities": *[
+    _type == "calendar" &&
+    isActive == true &&
+    defined(startsAt) &&
+    startsAt >= now()
+  ] | order(startsAt asc)[0...50] {
     _id,
     title,
     startsAt,
     endsAt,
     locationName,
     locationAddress,
-    images[] ${imageFragment},
     description,
+    thumbnail,
     bookingHref,
-    "slug": slug.current,
+    eventCategories,
     contentBlocks[] {
       _type
-    }
-  },
-  activity2-> {
-    _id,
-    title,
-    startsAt,
-    endsAt,
-    locationName,
-    locationAddress,
-    images[] ${imageFragment},
-    description,
-    bookingHref,
-    "slug": slug.current,
-    contentBlocks[] {
-      _type
-    }
-  },
-  activity3-> {
-    _id,
-    title,
-    startsAt,
-    endsAt,
-    locationName,
-    locationAddress,
-    images[] ${imageFragment},
-    description,
-    bookingHref,
-    "slug": slug.current,
-    contentBlocks[] {
-      _type
-    }
-  },
-  activity4-> {
-    _id,
-    title,
-    startsAt,
-    endsAt,
-    locationName,
-    locationAddress,
-    images[] ${imageFragment},
-    description,
-    bookingHref,
-    "slug": slug.current,
-    contentBlocks[] {
-      _type
-    }
+    },
+    "slug": slug.current
   }
 }`
 

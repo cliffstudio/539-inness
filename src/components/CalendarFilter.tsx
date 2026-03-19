@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect } from 'react'
 import { PortableTextBlock } from '@portabletext/react'
-import ActivitySection from './CalendarSection'
+import ActivitySection from './CalendarPage'
 import mediaLazyloading from '../utils/lazyLoad'
 import { SanityImage } from '../types/sanity'
 import Link from 'next/link'
@@ -30,7 +30,6 @@ interface Activity {
 
 interface CalendarFilterProps {
   activities: Activity[]
-  layout?: 'single-activity' | '2-activities' | '4-activities'
   pagination?: {
     baseHref: string
     currentPage: number
@@ -38,7 +37,7 @@ interface CalendarFilterProps {
   }
 }
 
-export default function CalendarFilter({ activities, layout = '4-activities', pagination }: CalendarFilterProps) {
+export default function CalendarFilter({ activities, pagination }: CalendarFilterProps) {
   // Get unique event categories from the activities data
   const availableCategories = useMemo(() => {
     const categories = new Set<string>()
@@ -108,12 +107,11 @@ export default function CalendarFilter({ activities, layout = '4-activities', pa
       </div>
 
       <ActivitySection
-        layout={layout}
         activities={filteredActivities}
         disableCarousel={true}
         topSlot={
           pagination ? (
-            <div className="calendar-pagination">
+            <div className="calendar-pagination out-of-opacity">
               {pagination.currentPage > 1 ? (
                 <Link
                   className="calendar-pagination__link"

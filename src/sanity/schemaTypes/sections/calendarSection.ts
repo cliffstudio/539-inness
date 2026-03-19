@@ -1,4 +1,7 @@
 import { defineType, defineField } from 'sanity'
+import type { ComponentType } from 'react'
+import PeoplevineCategoryPicker from '@/sanity/components/inputs/PeoplevineCategoryPicker'
+import { CalendarIcon } from '@sanity/icons'
 
 export default defineType({
   name: 'calendarSection',
@@ -16,92 +19,31 @@ export default defineType({
       type: 'string',
     }),
     defineField({
-      name: 'layout',
-      title: 'Layout',
-      type: 'string',
-      options: {
-        list: [
-          { title: 'Single Event', value: 'single-activity' },
-          { title: '2 x Events', value: '2-activities' },
-          { title: '4 x Events', value: '4-activities' },
-        ],
+      name: 'eventCategories',
+      title: 'Event Categories',
+      type: 'array',
+      of: [{ type: 'string' }],
+      description:
+        'Choose one or more event categories to use for this section.',
+      components: {
+        input: PeoplevineCategoryPicker as ComponentType<any>,
       },
-      initialValue: 'single-activity',
     }),
-    // defineField({
-    //   name: 'activity1',
-    //   title: 'Event 1',
-    //   type: 'reference',
-    //   to: [{ type: 'calendar' }],
-    //   validation: (Rule) => Rule.required(),
-    // }),
-    // defineField({
-    //   name: 'activity2',
-    //   title: 'Activity 2',
-    //   type: 'reference',
-    //   to: [{ type: 'calendar' }],
-    //   hidden: ({ parent }) => {
-    //     const layout = (parent as { layout?: string })?.layout
-    //     return layout !== '2-activities' && layout !== '4-activities'
-    //   },
-    //   validation: (Rule) =>
-    //     Rule.custom((activity2, context) => {
-    //       const parent = context.parent as { layout?: string }
-    //       const layout = parent?.layout
-    //       if ((layout === '2-activities' || layout === '4-activities') && !activity2) {
-    //         return 'Activity 2 is required for this layout'
-    //       }
-    //       return true
-    //     }),
-    // }),
-    // defineField({
-    //   name: 'activity3',
-    //   title: 'Event 3',
-    //   type: 'reference',
-    //   to: [{ type: 'calendar' }],
-    //   hidden: ({ parent }) => {
-    //     const layout = (parent as { layout?: string })?.layout
-    //     return layout !== '4-activities'
-    //   },
-    //   validation: (Rule) =>
-    //     Rule.custom((activity3, context) => {
-    //       const parent = context.parent as { layout?: string }
-    //       const layout = parent?.layout
-    //       if (layout === '4-activities' && !activity3) {
-    //         return 'Activity 3 is required for this layout'
-    //       }
-    //       return true
-    //     }),
-    // }),
-    // defineField({
-    //   name: 'activity4',
-    //   title: 'Event 4',
-    //   type: 'reference',
-    //   to: [{ type: 'calendar' }],
-    //   hidden: ({ parent }) => {
-    //     const layout = (parent as { layout?: string })?.layout
-    //     return layout !== '4-activities'
-    //   },
-    //   validation: (Rule) =>
-    //     Rule.custom((activity4, context) => {
-    //       const parent = context.parent as { layout?: string }
-    //       const layout = parent?.layout
-    //       if (layout === '4-activities' && !activity4) {
-    //         return 'Activity 4 is required for this layout'
-    //       }
-    //       return true
-    //     }),
-    // }),
   ],
   preview: {
     select: {
       heading: 'heading',
-      layout: 'layout',
+      eventCategories: 'eventCategories',
     },
-    prepare({ layout }) {
+    prepare({ eventCategories }) {
+      const categories = Array.isArray(eventCategories)
+        ? eventCategories.filter((item): item is string => typeof item === 'string')
+        : []
+
       return {
         title: 'Calendar Section',
-        subtitle: layout === 'single-activity' ? 'Single Event' : layout === '2-activities' ? '2 Events' : layout === '4-activities' ? '4 Events' : 'No Layout',
+        subtitle: categories.length ? categories.join(', ') : 'No categories selected',
+        media: CalendarIcon,
       }
     }
   }

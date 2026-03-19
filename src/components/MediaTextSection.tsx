@@ -1,7 +1,7 @@
 "use client"
 
 /* eslint-disable @next/next/no-img-element */
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { urlFor } from '../sanity/utils/imageUrlBuilder'
 import { videoUrlFor } from '../sanity/utils/videoUrlBuilder'
 import { SanityImage, SanityVideo } from '../types/sanity'
@@ -9,6 +9,7 @@ import { PortableText, PortableTextBlock } from '@portabletext/react'
 import { Link } from '../types/footerSettings'
 import ButtonLink from './ButtonLink'
 import SplideCarousel from './SplideCarousel'
+import CalendarPage from './CalendarPage'
 import { Splide, SplideSlide } from '@splidejs/react-splide'
 import '@splidejs/splide/css'
 
@@ -77,6 +78,19 @@ interface mediaTextSectionProps {
     }
     bookingHref?: string
   }[]
+  activities?: {
+    _id: string
+    title?: string
+    startsAt?: string
+    endsAt?: string
+    locationAddress?: string
+    description?: string | PortableTextBlock[]
+    thumbnail?: string
+    bookingHref?: string
+    slug?: string
+    eventCategories?: string[]
+    contentBlocks?: { _type: string }[]
+  }[]
   mediaType?: 'image' | 'video'
   images?: SanityImage[]
   video?: SanityVideo
@@ -112,6 +126,7 @@ export default function MediaTextSection({
   mediaAlignment = 'right',
   roomLinks,
   activityLinks,
+  activities = [],
   links,
 }: mediaTextSectionProps) {
   const videoRef1 = useRef<HTMLVideoElement>(null)
@@ -121,6 +136,24 @@ export default function MediaTextSection({
   const [totalPages, setTotalPages] = useState(1)
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0)
   const [isAtEndOfRoomLinks, setIsAtEndOfRoomLinks] = useState(false)
+
+  const upcomingActivities = useMemo(() => {
+    const now = Date.now()
+
+    return activities
+      .filter((activity) => {
+        if (!activity.startsAt) return false
+        const startsAtTime = new Date(activity.startsAt).getTime()
+        return Number.isFinite(startsAtTime) && startsAtTime >= now
+      })
+      .slice()
+      .sort((a, b) => {
+        const aTime = a.startsAt ? new Date(a.startsAt).getTime() : Number.POSITIVE_INFINITY
+        const bTime = b.startsAt ? new Date(b.startsAt).getTime() : Number.POSITIVE_INFINITY
+        return aTime - bTime
+      })
+      .slice(0, 4)
+  }, [activities])
 
   const handlePrevious = () => {
     if (splideRef.current) {
@@ -933,184 +966,7 @@ export default function MediaTextSection({
             </div>
           </div>
 
-      {activityLinks && activityLinks.length > 0 && (
-        <>
-          {activityLinks.length > 4 ? (
-            <div className="media-text-links-carousel out-of-opacity">
-              <Splide
-                ref={splideRef}
-                options={{
-                  type: 'slide',
-                  perPage: 4,
-                  perMove: 1,
-                  gap: '20px',
-                  pagination: false,
-                  arrows: false,
-                  breakpoints: {
-                    768: {
-                      perPage: 1,
-                      perMove: 1,
-                    },
-                  },
-                }}
-              >
-                {activityLinks.map((activity, index) => (
-                  <SplideSlide key={index}>
-                    <div className="media-text-link">
-                      {activity.images?.[0] && (
-                        <div className="media-wrap relative">
-                          <img 
-                            data-src={urlFor(activity.images[0]).url()} 
-                            alt="" 
-                            className="lazy full-bleed-image"
-                          />
-                          <div className="loading-overlay"></div>
-
-                          <div className="button-wrap button-wrap--multiple-buttons button-wrap--overlay-media">
-                            <ButtonLink 
-                              link={{ linkType: 'internal', label: 'View', pageLink: { slug: `calendar/${activity.slug}` } }}
-                              fallbackColor="cream"
-                            />
-
-                            {activity.bookingHref && (
-                              <ButtonLink
-                                link={{
-                                  linkType: 'external',
-                                  label: 'Book',
-                                  href: activity.bookingHref,
-                                  color: 'orange',
-                                }}
-                                fallbackColor="orange"
-                              />
-                            )}
-                          </div>
-                        </div>
-                      )}
-
-                      <div className="activity-content">
-                        <h5 className="media-text-heading">{activity.title}</h5>
-
-                        {activity.description && (
-                          <div className="media-text-body">
-                            <PortableText value={activity.description ?? []} />
-                          </div>
-                        )}
-
-                        {(activity.date || activity.timeRange?.startTime) && (
-                          <div className="activity-date-time">
-                            {activity.date && (
-                              <>{formatDate(activity.date)}</>
-                            )}
-
-                            {activity.date && activity.timeRange?.startTime && (
-                              <span> • </span>
-                            )}
-
-                            {activity.timeRange?.startTime && (
-                              <>{formatTime(activity.timeRange)}</>
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </SplideSlide>
-                ))}
-              </Splide>
-
-              <div className="media-text-links-carousel-controls">
-                <button 
-                  className="carousel-arrow carousel-arrow--prev"
-                  onClick={handlePrevious}
-                  disabled={currentSlideIndex === 0}
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36">
-                    <circle cx="18" cy="18" r="17.5"/>
-                    <path d="M20.5 12L14 18.5L20.5 25"/>
-                  </svg>
-                </button>
-
-                <div className="carousel-pagination">
-                  <h6>{currentPage}/{totalPages}</h6>
-                </div>
-
-                <button 
-                  className="carousel-arrow carousel-arrow--next"
-                  onClick={handleNext}
-                  disabled={isAtEndOfRoomLinks}
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36" fill="none">
-                    <circle cx="18" cy="18" r="17.5" transform="matrix(-1 0 0 1 36 0)"/>
-                    <path d="M15.5 12L22 18.5L15.5 25"/>
-                  </svg>
-                </button>
-              </div>
-            </div>
-          ) : (
-            <div className="row-lg">
-              {activityLinks.map((activity, index) => (
-                <div key={index} className={activityLinks.length === 2 ? 'col-6-12_lg two-across' : 'col-2-12_lg'}>
-                  <div className="media-text-link out-of-opacity">
-                    {activity.images?.[0] && (
-                      <div className="media-wrap relative">
-                        <img 
-                          data-src={urlFor(activity.images[0]).url()} 
-                          alt="" 
-                          className="lazy full-bleed-image"
-                        />
-                        <div className="loading-overlay" />
-
-                        <div className="button-wrap button-wrap--multiple-buttons button-wrap--overlay-media">
-                          <ButtonLink 
-                            link={{ linkType: 'internal', label: 'View Details', pageLink: { slug: `calendar/${activity.slug}` } }}
-                            fallbackColor="cream"
-                          />
-
-                          {activity.bookingHref && (
-                            <ButtonLink
-                              link={{
-                                linkType: 'external',
-                                label: 'Book',
-                                href: activity.bookingHref,
-                                color: 'orange',
-                              }}
-                              fallbackColor="orange"
-                            />
-                          )}
-                        </div>
-                      </div>
-                    )}
-
-                    <h5 className="media-text-heading">{activity.title}</h5>
-
-                    {activity.description && (
-                      <div className="media-text-body">
-                        <PortableText value={activity.description ?? []} />
-                      </div>
-                    )}
-
-                    {(activity.date || activity.timeRange?.startTime) && (
-                      <div className="activity-date-time">
-                        {activity.date && (
-                          <>{formatDate(activity.date)}</>
-                        )}
-
-                        {activity.date && activity.timeRange?.startTime && (
-                          <span> • </span>
-                        )}
-
-                        {activity.timeRange?.startTime && (
-                          <>{formatTime(activity.timeRange)}</>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </>
-      )}
-
+          <CalendarPage activities={upcomingActivities} disableCarousel={upcomingActivities.length <= 1} />
         </section>
       )}
 

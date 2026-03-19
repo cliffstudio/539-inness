@@ -658,6 +658,10 @@
     max-width: get-rem-desktop(376);
   }
 
+  .calendar-section {
+    padding: 0;
+  }
+
   .media-text-links-carousel {
     @media only screen and (max-width: 820px) {
       .splide {
@@ -1548,6 +1552,7 @@ body.page-type-calendar {
 
   .calendar-grid {
     row-gap: get-rem-desktop(48);
+    display: grid;
   }
 }
 

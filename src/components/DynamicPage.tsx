@@ -75,6 +75,8 @@ export default async function DynamicPage({ params, searchParams }: PageProps) {
           calendarVideo={calendarPageData.calendarVideo}
         />
 
+        <FlexibleContent contentBlocks={page.contentBlocks || []} />
+
         {paginatedCalendarEvents && paginatedCalendarEvents.length > 0 && (
           <CalendarFilter
             activities={paginatedCalendarEvents}

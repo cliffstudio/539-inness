@@ -1,11 +1,12 @@
 import React from 'react'
+import { PortableTextBlock } from '@portabletext/react'
 import HeroSection from './HeroSection'
 import TextSection from './TextSection'
 import MediaTextSection from './MediaTextSection'
 import BreakSection from './BreakSection'
 import CarouselSection from './CarouselSection'
 import MenuSection from './MenuSection'
-import ActivitySection from './CalendarSection'
+import CalendarSection from './CalendarSection'
 import FeatureSection from './FeatureSection'
 import BookingSection from './BookingSection'
 import ProductSection from './ProductSection'
@@ -14,6 +15,19 @@ interface ContentBlock {
   _type: string
   layout?: 'media-with-text-h5' | 'media-with-text-h4-body' | 'media-with-text-room-type' | 'media-with-text-h4-bullet-list' | 'media-with-text-h4-body-room-links' | 'media-with-text-h4-body-activity-links' | 'media-with-text-h4-body-links' | 'media-with-text-multiple-text-blocks' | 'split' | 'full-bleed' | 'text-section' | 'carousel-section' | 'food-menu' | 'spa-menu' | 'venue-menu' | 'single-activity' | '2-activities' | '4-activities' | 'single-feature' | '2-features' | '4-features'
   [key: string]: unknown
+}
+
+interface CalendarActivity {
+  _id: string
+  title?: string
+  startsAt?: string
+  endsAt?: string
+  locationAddress?: string
+  description?: string | PortableTextBlock[]
+  thumbnail?: string
+  bookingHref?: string
+  slug?: string
+  eventCategories?: string[]
 }
 
 interface FlexibleContentProps {
@@ -42,7 +56,17 @@ const FlexibleContent: React.FC<FlexibleContentProps> = ({ contentBlocks }) => {
           case 'menuSection':
             return <MenuSection key={index} {...(block as ContentBlock & { layout?: 'food-menu' | 'spa-menu' | 'venue-menu' })} />
           case 'calendarSection':
-            return <ActivitySection key={index} {...(block as ContentBlock & { layout?: 'single-activity' | '2-activities' | '4-activities' })} />
+            return (
+              <CalendarSection
+                key={index}
+                {...(block as ContentBlock & {
+                  id?: string
+                  heading?: string
+                  eventCategories?: string[]
+                  activities?: CalendarActivity[]
+                })}
+              />
+            )
           case 'featureSection':
             return <FeatureSection key={index} {...(block as ContentBlock & { layout?: 'single-feature' | '2-features' | '4-features' })} />
           case 'bookingSection':
