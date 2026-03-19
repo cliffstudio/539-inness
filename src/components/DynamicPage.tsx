@@ -80,7 +80,6 @@ export default async function DynamicPage({ params, searchParams }: PageProps) {
         {paginatedCalendarEvents && paginatedCalendarEvents.length > 0 && (
           <CalendarFilter
             activities={paginatedCalendarEvents}
-            layout="4-activities"
             pagination={{ baseHref, currentPage: safePage, totalPages }}
           />
         )}
