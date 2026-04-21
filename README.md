@@ -113,7 +113,7 @@ Peoplevine is treated as the source of truth for **core event fields**, while Sa
   - `summary`
   - `heroImage`
   - `content` (portable text)
-  - `seo` (reference to `metaData`)
+  - `seo` (reference to `siteSettings`)
 
 The sync:
 

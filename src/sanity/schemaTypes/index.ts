@@ -3,7 +3,7 @@ import { pageType } from './pageType'
 import { roomType } from './roomType'
 import { menuType } from './menuType'
 import { footerType } from './footerType'
-import { metaDataType } from './metaDataType'
+import { siteSettingsType } from './siteSettings'
 import { productType } from './product'
 import { productVariantType } from './productVariant'
 import { calendarType } from './eventPageType'
@@ -20,6 +20,7 @@ import shopifyProductVariant from './objects/shopifyProductVariant'
 import priceRange from './objects/priceRange'
 import option from './objects/option'
 import inventory from './objects/inventory'
+import seo from './objects/seo'
 
 // Sections
 import heroSection from './sections/heroSection'
@@ -39,7 +40,7 @@ export const schemaTypes = [
   roomType,
   menuType,
   footerType,
-  metaDataType,
+  siteSettingsType,
   productType,
   productVariantType,
   calendarType,
@@ -56,6 +57,7 @@ export const schemaTypes = [
   priceRange,
   option,
   inventory,
+  seo,
 
   // Sections
   heroSection,

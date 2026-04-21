@@ -15,6 +15,12 @@ const imageFragment = groq`{
   crop
 }`
 
+const seoFragment = groq`{
+  metaTitle,
+  metaDescription,
+  socialImage ${imageFragment}
+}`
+
 const linkFragment = groq`{
   linkType,
   label,
@@ -338,6 +344,7 @@ export const pageQuery = groq`
     title,
     slug,
     pageType,
+    seo ${seoFragment},
     textBlocks[] {
       _key,
       header,
@@ -362,11 +369,19 @@ export const homepageQuery = groq`
     title,
     slug,
     pageType,
+    seo ${seoFragment},
     homepageHeading,
     homepageMediaType,
     homepageImages[] ${imageFragment},
     homepageVideo,
     contentBlocks[] ${flexibleContentFragment}
+  }
+`
+
+export const pageSeoQuery = groq`
+  *[_type == "page" && slug.current == $slug][0] {
+    title,
+    seo ${seoFragment}
   }
 `
 
@@ -633,13 +648,12 @@ export const productSlugsQuery = groq`
 `
 
 
-// Metadata query
-export const metadataQuery = groq`
-  *[_type == "metaData"][0] {
+// Site settings query
+export const siteSettingsQuery = groq`
+  *[_type == "siteSettings"][0] {
     _id,
     title,
     description,
-    keywords,
     socialimage ${imageFragment}
   }
 `

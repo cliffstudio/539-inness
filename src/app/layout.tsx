@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import "./globals.css";
 import { client } from "../../sanity.client";
-import { metadataQuery } from "../sanity/lib/queries";
+import { siteSettingsQuery } from "../sanity/lib/queries";
 import { urlFor } from "../sanity/utils/imageUrlBuilder";
 import BodyFadeIn from "../components/BodyFadeIn";
 
@@ -10,30 +10,29 @@ export const revalidate = 0
 
 // Generate metadata dynamically from Sanity CMS
 export async function generateMetadata(): Promise<Metadata> {
-  const metaData = await client.fetch(metadataQuery);
+  const siteSettings = await client.fetch(siteSettingsQuery);
   
   // Build social image URL if available
   let socialImageUrl: string | undefined;
-  if (metaData?.socialimage?.asset?._ref) {
-    socialImageUrl = urlFor(metaData.socialimage).width(1200).height(630).url();
+  if (siteSettings?.socialimage?.asset?._ref) {
+    socialImageUrl = urlFor(siteSettings.socialimage).width(1200).height(630).url();
   }
   
   return {
-    title: metaData?.title,
-    description: metaData?.description,
-    keywords: metaData?.keywords,
+    title: siteSettings?.title,
+    description: siteSettings?.description,
     authors: [{ name: "Inness" }],
     openGraph: {
-      title: metaData?.title,
-      description: metaData?.description,
+      title: siteSettings?.title,
+      description: siteSettings?.description,
       type: "website",
       locale: "en_US",
       ...(socialImageUrl && { images: [socialImageUrl] }),
     },
     twitter: {
       card: "summary_large_image",
-      title: metaData?.title,
-      description: metaData?.description,
+      title: siteSettings?.title,
+      description: siteSettings?.description,
       ...(socialImageUrl && { images: [socialImageUrl] }),
     },
   };

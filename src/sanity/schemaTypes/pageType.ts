@@ -230,6 +230,14 @@ export const pageType = defineType({
       }],
       hidden: ({ parent }) => parent?.pageType !== 'text',
     }),
+
+    // SEO specific fields
+    defineField({
+      name: 'seo',
+      title: 'SEO',
+      type: 'seo',
+      description: 'Override title, description and social image for search results and social shares. Empty = use site settings.',
+    }),
   ],
   preview: {
     select: {

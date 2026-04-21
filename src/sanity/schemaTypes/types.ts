@@ -229,22 +229,11 @@ export type FeatureSection = {
   feature4?: Feature4;
 };
 
-export type ActivityReference = {
-  _ref: string;
-  _type: "reference";
-  _weak?: boolean;
-  [internalGroqTypeReferenceTo]?: "activity";
-};
-
-export type ActivitySection = {
+export type CalendarSection = {
   _type: "calendarSection";
   id?: string;
   heading?: string;
-  layout?: "single-activity" | "2-activities" | "4-activities";
-  activity1?: ActivityReference;
-  activity2?: ActivityReference;
-  activity3?: ActivityReference;
-  activity4?: ActivityReference;
+  eventCategories?: Array<string>;
 };
 
 export type MenuSection = {
@@ -484,24 +473,12 @@ export type MediaTextSection = {
     _type: "image";
     _key: string;
   }>;
-  video?: string;
-  videoPlaceholder?: {
-    asset?: SanityImageAssetReference;
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-  };
+  video?: BunnyVideo;
   mediaAlignment?: "left" | "right";
   roomLinks?: Array<
     {
       _key: string;
     } & RoomReference
-  >;
-  activityLinks?: Array<
-    {
-      _key: string;
-    } & ActivityReference
   >;
   links?: Array<
     {
@@ -558,6 +535,7 @@ export type HeroSection = {
     _type: "block";
     _key: string;
   }>;
+  mediaType?: "image" | "video";
   images?: Array<{
     asset?: SanityImageAssetReference;
     media?: unknown;
@@ -566,6 +544,7 @@ export type HeroSection = {
     _type: "image";
     _key: string;
   }>;
+  video?: BunnyVideo;
   specs?: Array<{
     body?: string;
     _key: string;
@@ -679,7 +658,7 @@ export type FlexibleContent = Array<
     } & MenuSection)
   | ({
       _key: string;
-    } & ActivitySection)
+    } & CalendarSection)
   | ({
       _key: string;
     } & FeatureSection)
@@ -773,6 +752,33 @@ export type Link = {
   color?: "cream" | "orange" | "outline";
 };
 
+export type Calendar = {
+  _id: string;
+  _type: "calendar";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  peoplevineId?: string;
+  title?: string;
+  slug?: Slug;
+  startsAt?: string;
+  endsAt?: string;
+  locationName?: string;
+  locationAddress?: string;
+  description?: string;
+  thumbnail?: string;
+  bookingHref?: string;
+  eventCategories?: Array<string>;
+  lastSyncedAt?: string;
+  isActive?: boolean;
+};
+
+export type Slug = {
+  _type: "slug";
+  current?: string;
+  source?: string;
+};
+
 export type ProductVariant = {
   _id: string;
   _type: "productVariant";
@@ -797,26 +803,20 @@ export type Product = {
   store?: ShopifyProduct;
 };
 
-export type Slug = {
-  _type: "slug";
-  current?: string;
-  source?: string;
-};
-
-export type MetaData = {
+export type SiteSettings = {
   _id: string;
-  _type: "metaData";
+  _type: "siteSettings";
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
   title?: string;
   description?: string;
-  keywords?: string;
   socialimage?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
+    alt?: string;
     _type: "image";
   };
 };
@@ -911,50 +911,6 @@ export type Menu = {
   }>;
 };
 
-export type Activity = {
-  _id: string;
-  _type: "activity";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  title?: string;
-  slug?: Slug;
-  activityType?: "wellness" | "food-and-beverage" | "kids" | "golf";
-  description?: Array<{
-    children?: Array<{
-      marks?: Array<string>;
-      text?: string;
-      _type: "span";
-      _key: string;
-    }>;
-    style?: "normal" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "blockquote";
-    listItem?: "bullet" | "number";
-    markDefs?: Array<{
-      href?: string;
-      _type: "link";
-      _key: string;
-    }>;
-    level?: number;
-    _type: "block";
-    _key: string;
-  }>;
-  date?: string;
-  timeRange?: {
-    startTime?: string;
-    endTime?: string;
-  };
-  bookingHref?: string;
-  images?: Array<{
-    asset?: SanityImageAssetReference;
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-    _key: string;
-  }>;
-  contentBlocks?: FlexibleContent;
-};
-
 export type Room = {
   _id: string;
   _type: "room";
@@ -1011,20 +967,14 @@ export type Page = {
   homepageImages?: Array<{
     asset?: SanityImageAssetReference;
     media?: unknown;
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      _type: "image";
-    }>;
-  homepageVideo?: string;
-  homepageVideoPlaceholder?: {
-    asset?: SanityImageAssetReference;
-    media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     _type: "image";
-  };
-  activitiesHeading?: string;
-  activitiesBody?: Array<{
+    _key: string;
+  }>;
+  homepageVideo?: BunnyVideo;
+  calendarHeading?: string;
+  calendarBody?: Array<{
     children?: Array<{
       marks?: Array<string>;
       text?: string;
@@ -1042,7 +992,8 @@ export type Page = {
     _type: "block";
     _key: string;
   }>;
-  activitiesImages?: Array<{
+  calendarMediaType?: "image" | "video";
+  calendarImages?: Array<{
     asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
@@ -1050,6 +1001,7 @@ export type Page = {
     _type: "image";
     _key: string;
   }>;
+  calendarVideo?: BunnyVideo;
   contentBlocks?: FlexibleContent;
   heading?: string;
   body?: Array<{
@@ -1070,6 +1022,7 @@ export type Page = {
     _type: "block";
     _key: string;
   }>;
+  mediaType?: "image" | "video";
   images?: Array<{
     asset?: SanityImageAssetReference;
     media?: unknown;
@@ -1078,6 +1031,7 @@ export type Page = {
     _type: "image";
     _key: string;
   }>;
+  video?: BunnyVideo;
   links?: Array<
     {
       _key: string;
@@ -1106,6 +1060,24 @@ export type Page = {
     _type: "textBlock";
     _key: string;
   }>;
+};
+
+export type BunnyVideo = {
+  _type: "bunnyVideo";
+  videoId?: string;
+  libraryId?: string;
+  collectionId?: string;
+  collectionName?: string;
+  title?: string;
+  status?: "uploading" | "processing" | "ready" | "error";
+  width?: number;
+  height?: number;
+  ratio?: number;
+  thumbnailUrl?: string;
+  playbackUrl?: string;
+  mp4Url?: string;
+  duration?: number;
+  errorMessage?: string;
 };
 
 export type SanityImagePaletteSwatch = {
@@ -1223,8 +1195,7 @@ export type AllSanitySchemaTypes =
   | ProductSection
   | BookingSection
   | FeatureSection
-  | ActivityReference
-  | ActivitySection
+  | CalendarSection
   | MenuSection
   | CarouselSection
   | BreakSection
@@ -1246,17 +1217,18 @@ export type AllSanitySchemaTypes =
   | SanityFileAssetReference
   | FooterLink
   | Link
+  | Calendar
+  | Slug
   | ProductVariant
   | Product
-  | Slug
-  | MetaData
+  | SiteSettings
   | SanityImageCrop
   | SanityImageHotspot
   | Footer
   | Menu
-  | Activity
   | Room
   | Page
+  | BunnyVideo
   | SanityImagePaletteSwatch
   | SanityImagePalette
   | SanityImageDimensions
@@ -1278,10 +1250,12 @@ export type ImageFragmentResult = {
 };
 
 // Source: src/sanity/lib/queries.ts
-// Variable: videoFragment
-// Query: {  asset {    _ref,    _type  }}
-export type VideoFragmentResult = {
-  asset: never;
+// Variable: seoFragment
+// Query: {  metaTitle,  metaDescription,  socialImage {  asset {    _ref,    _type  },  hotspot,  crop}}
+export type SeoFragmentResult = {
+  metaTitle: never;
+  metaDescription: never;
+  socialImage: never;
 };
 
 // Source: src/sanity/lib/queries.ts
@@ -1312,13 +1286,15 @@ export type FooterLinkFragmentResult = {
 
 // Source: src/sanity/lib/queries.ts
 // Variable: heroSectionFragment
-// Query: {  id,  layout,  heading,  body,  images[] {  asset {    _ref,    _type  },  hotspot,  crop},  specs[] {    body  },  button {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}}
+// Query: {  id,  layout,  heading,  body,  mediaType,  images[] {  asset {    _ref,    _type  },  hotspot,  crop},  video,  specs[] {    body  },  button {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}}
 export type HeroSectionFragmentResult = {
   id: never;
   layout: never;
   heading: never;
   body: never;
+  mediaType: never;
   images: never;
+  video: never;
   specs: never;
   button: never;
 };
@@ -1335,7 +1311,7 @@ export type TextSectionFragmentResult = {
 
 // Source: src/sanity/lib/queries.ts
 // Variable: mediaTextSectionFragment
-// Query: {  id,  layout,  heading,  body,  textBlocks[] {    layout,    header,    body,    bulletList[] {      body    }  },  bulletList[] {    body  },  buttons[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }},  mediaType,  images[] {  asset {    _ref,    _type  },  hotspot,  crop},  video,  videoPlaceholder {  asset {    _ref,    _type  },  hotspot,  crop},  mediaAlignment,  roomLink-> {    _id,    title,    roomType,    description,    "slug": slug.current  },  roomLinks[]-> {    _id,    title,    roomType,    description,    "slug": slug.current,    images[] {  asset {    _ref,    _type  },  hotspot,  crop}  },  activityLinks[]-> {    _id,    title,    description,    "slug": slug.current,    images[] {  asset {    _ref,    _type  },  hotspot,  crop},    bookingHref,    date,    timeRange  },  links[] {    header,    body,    date,    image {  asset {    _ref,    _type  },  hotspot,  crop},    buttons[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}  }}
+// Query: {  id,  layout,  heading,  body,  textBlocks[] {    layout,    header,    body,    bulletList[] {      body    }  },  bulletList[] {    body  },  buttons[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }},  mediaType,  images[] {  asset {    _ref,    _type  },  hotspot,  crop},  video,  mediaAlignment,  roomLink-> {    _id,    title,    roomType,    description,    "slug": slug.current  },  roomLinks[]-> {    _id,    title,    roomType,    description,    "slug": slug.current,    images[] {  asset {    _ref,    _type  },  hotspot,  crop}  },  activityLinks[]-> {    _id,    title,    description,    "slug": slug.current,    images[] {  asset {    _ref,    _type  },  hotspot,  crop},    bookingHref,    date,    timeRange  },  "activities": *[    _type == "calendar" &&    isActive == true &&    defined(startsAt) &&    startsAt >= now()  ] | order(startsAt asc)[0...50] {    _id,    title,    startsAt,    endsAt,    locationName,    locationAddress,    description,    thumbnail,    bookingHref,    eventCategories,    contentBlocks[] {      _type    },    "slug": slug.current  },  links[] {    header,    body,    date,    image {  asset {    _ref,    _type  },  hotspot,  crop},    buttons[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}  }}
 export type MediaTextSectionFragmentResult = {
   id: never;
   layout: never;
@@ -1347,11 +1323,24 @@ export type MediaTextSectionFragmentResult = {
   mediaType: never;
   images: never;
   video: never;
-  videoPlaceholder: never;
   mediaAlignment: never;
   roomLink: never;
   roomLinks: never;
   activityLinks: never;
+  activities: Array<{
+    _id: string;
+    title: string | null;
+    startsAt: string | null;
+    endsAt: string | null;
+    locationName: string | null;
+    locationAddress: string | null;
+    description: string | null;
+    thumbnail: string | null;
+    bookingHref: string | null;
+    eventCategories: Array<string> | null;
+    contentBlocks: null;
+    slug: string | null;
+  }>;
   links: never;
 };
 
@@ -1391,16 +1380,26 @@ export type MenuSectionFragmentResult = {
 };
 
 // Source: src/sanity/lib/queries.ts
-// Variable: activitySectionFragment
-// Query: {  id,  layout,  heading,  activity1-> {    _id,    title,    date,    timeRange,    images[] {  asset {    _ref,    _type  },  hotspot,  crop},    description,    bookingHref,    "slug": slug.current  },  activity2-> {    _id,    title,    date,    timeRange,    images[] {  asset {    _ref,    _type  },  hotspot,  crop},    description,    bookingHref,    "slug": slug.current  },  activity3-> {    _id,    title,    date,    timeRange,    images[] {  asset {    _ref,    _type  },  hotspot,  crop},    description,    bookingHref,    "slug": slug.current  },  activity4-> {    _id,    title,    date,    timeRange,    images[] {  asset {    _ref,    _type  },  hotspot,  crop},    description,    bookingHref,    "slug": slug.current  }}
-export type ActivitySectionFragmentResult = {
+// Variable: calendarSectionFragment
+// Query: {  id,  heading,  eventCategories,  "activities": *[    _type == "calendar" &&    isActive == true &&    defined(startsAt) &&    startsAt >= now()  ] | order(startsAt asc)[0...50] {    _id,    title,    startsAt,    endsAt,    locationName,    locationAddress,    description,    thumbnail,    bookingHref,    eventCategories,    contentBlocks[] {      _type    },    "slug": slug.current  }}
+export type CalendarSectionFragmentResult = {
   id: never;
-  layout: never;
   heading: never;
-  activity1: never;
-  activity2: never;
-  activity3: never;
-  activity4: never;
+  eventCategories: never;
+  activities: Array<{
+    _id: string;
+    title: string | null;
+    startsAt: string | null;
+    endsAt: string | null;
+    locationName: string | null;
+    locationAddress: string | null;
+    description: string | null;
+    thumbnail: string | null;
+    bookingHref: string | null;
+    eventCategories: Array<string> | null;
+    contentBlocks: null;
+    slug: string | null;
+  }>;
 };
 
 // Source: src/sanity/lib/queries.ts
@@ -1438,20 +1437,21 @@ export type ProductSectionFragmentResult = {
 
 // Source: src/sanity/lib/queries.ts
 // Variable: flexibleContentFragment
-// Query: {  _type,  ...select(_type == "heroSection" => {  id,  layout,  heading,  body,  images[] {  asset {    _ref,    _type  },  hotspot,  crop},  specs[] {    body  },  button {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}}),  ...select(_type == "textSection" => {  id,  heading,  body,  button {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}}),  ...select(_type == "mediaTextSection" => {  id,  layout,  heading,  body,  textBlocks[] {    layout,    header,    body,    bulletList[] {      body    }  },  bulletList[] {    body  },  buttons[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }},  mediaType,  images[] {  asset {    _ref,    _type  },  hotspot,  crop},  video,  videoPlaceholder {  asset {    _ref,    _type  },  hotspot,  crop},  mediaAlignment,  roomLink-> {    _id,    title,    roomType,    description,    "slug": slug.current  },  roomLinks[]-> {    _id,    title,    roomType,    description,    "slug": slug.current,    images[] {  asset {    _ref,    _type  },  hotspot,  crop}  },  activityLinks[]-> {    _id,    title,    description,    "slug": slug.current,    images[] {  asset {    _ref,    _type  },  hotspot,  crop},    bookingHref,    date,    timeRange  },  links[] {    header,    body,    date,    image {  asset {    _ref,    _type  },  hotspot,  crop},    buttons[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}  }}),  ...select(_type == "breakSection" => {  id,  layout,  subHeading,  heading,  body,  image {  asset {    _ref,    _type  },  hotspot,  crop},  button {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }},  backgroundColor}),  ...select(_type == "carouselSection" => {  id,  images[] {  asset {    _ref,    _type  },  hotspot,  crop}}),  ...select(_type == "menuSection" => {  id,  layout,  heading,  image {  asset {    _ref,    _type  },  hotspot,  crop},  foodTabs[] {    tabName,    availability,    image {  asset {    _ref,    _type  },  hotspot,  crop},    categories[] {      name,      items[] {        name,        price,        extras[] {          name,          price        }      }    }  },  spaTabs[] {    tabName,    image {  asset {    _ref,    _type  },  hotspot,  crop},    treatments[] {      name,      description,      options[] {        duration,        price      }    }  },  venueTabs[] {    areaName,    areaDescription,    image {  asset {    _ref,    _type  },  hotspot,  crop},    specs[] {      specName,      specDescription    }  }}),  ...select(_type == "activitySection" => {  id,  layout,  heading,  activity1-> {    _id,    title,    date,    timeRange,    images[] {  asset {    _ref,    _type  },  hotspot,  crop},    description,    bookingHref,    "slug": slug.current  },  activity2-> {    _id,    title,    date,    timeRange,    images[] {  asset {    _ref,    _type  },  hotspot,  crop},    description,    bookingHref,    "slug": slug.current  },  activity3-> {    _id,    title,    date,    timeRange,    images[] {  asset {    _ref,    _type  },  hotspot,  crop},    description,    bookingHref,    "slug": slug.current  },  activity4-> {    _id,    title,    date,    timeRange,    images[] {  asset {    _ref,    _type  },  hotspot,  crop},    description,    bookingHref,    "slug": slug.current  }}),  ...select(_type == "featureSection" => {  id,  layout,  subHeading,  heading,  feature1 {    image {  asset {    _ref,    _type  },  hotspot,  crop},    heading,    body,    links[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}  },  feature2 {    image {  asset {    _ref,    _type  },  hotspot,  crop},    heading,    body,    links[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}  },  feature3 {    image {  asset {    _ref,    _type  },  hotspot,  crop},    heading,    body,    links[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}  },  feature4 {    image {  asset {    _ref,    _type  },  hotspot,  crop},    heading,    body,    links[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}  }}),  ...select(_type == "bookingSection" => {  id,  show,  noTopPad,  noBottomPad}),  ...select(_type == "productSection" => {  id,  heading,  products[]-> {    _id,    store {      title,      slug {        current      },      previewImageUrl,      priceRange {        minVariantPrice,        maxVariantPrice      },      status,      isDeleted,      options[] {        name,        values      },      variants[]-> {        store {          inventory {            available,            isAvailable          },          option1,          option2,          option3,          colorHex        }      }    }  }})}
+// Query: {  _type,  ...select(_type == "heroSection" => {  id,  layout,  heading,  body,  mediaType,  images[] {  asset {    _ref,    _type  },  hotspot,  crop},  video,  specs[] {    body  },  button {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}}),  ...select(_type == "textSection" => {  id,  heading,  body,  button {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}}),  ...select(_type == "mediaTextSection" => {  id,  layout,  heading,  body,  textBlocks[] {    layout,    header,    body,    bulletList[] {      body    }  },  bulletList[] {    body  },  buttons[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }},  mediaType,  images[] {  asset {    _ref,    _type  },  hotspot,  crop},  video,  mediaAlignment,  roomLink-> {    _id,    title,    roomType,    description,    "slug": slug.current  },  roomLinks[]-> {    _id,    title,    roomType,    description,    "slug": slug.current,    images[] {  asset {    _ref,    _type  },  hotspot,  crop}  },  activityLinks[]-> {    _id,    title,    description,    "slug": slug.current,    images[] {  asset {    _ref,    _type  },  hotspot,  crop},    bookingHref,    date,    timeRange  },  "activities": *[    _type == "calendar" &&    isActive == true &&    defined(startsAt) &&    startsAt >= now()  ] | order(startsAt asc)[0...50] {    _id,    title,    startsAt,    endsAt,    locationName,    locationAddress,    description,    thumbnail,    bookingHref,    eventCategories,    contentBlocks[] {      _type    },    "slug": slug.current  },  links[] {    header,    body,    date,    image {  asset {    _ref,    _type  },  hotspot,  crop},    buttons[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}  }}),  ...select(_type == "breakSection" => {  id,  layout,  subHeading,  heading,  body,  image {  asset {    _ref,    _type  },  hotspot,  crop},  button {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }},  backgroundColor}),  ...select(_type == "carouselSection" => {  id,  images[] {  asset {    _ref,    _type  },  hotspot,  crop}}),  ...select(_type == "menuSection" => {  id,  layout,  heading,  image {  asset {    _ref,    _type  },  hotspot,  crop},  foodTabs[] {    tabName,    availability,    image {  asset {    _ref,    _type  },  hotspot,  crop},    categories[] {      name,      items[] {        name,        price,        extras[] {          name,          price        }      }    }  },  spaTabs[] {    tabName,    image {  asset {    _ref,    _type  },  hotspot,  crop},    treatments[] {      name,      description,      options[] {        duration,        price      }    }  },  venueTabs[] {    areaName,    areaDescription,    image {  asset {    _ref,    _type  },  hotspot,  crop},    specs[] {      specName,      specDescription    }  }}),  ...select(_type == "calendarSection" => {  id,  heading,  eventCategories,  "activities": *[    _type == "calendar" &&    isActive == true &&    defined(startsAt) &&    startsAt >= now()  ] | order(startsAt asc)[0...50] {    _id,    title,    startsAt,    endsAt,    locationName,    locationAddress,    description,    thumbnail,    bookingHref,    eventCategories,    contentBlocks[] {      _type    },    "slug": slug.current  }}),  ...select(_type == "featureSection" => {  id,  layout,  subHeading,  heading,  feature1 {    image {  asset {    _ref,    _type  },  hotspot,  crop},    heading,    body,    links[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}  },  feature2 {    image {  asset {    _ref,    _type  },  hotspot,  crop},    heading,    body,    links[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}  },  feature3 {    image {  asset {    _ref,    _type  },  hotspot,  crop},    heading,    body,    links[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}  },  feature4 {    image {  asset {    _ref,    _type  },  hotspot,  crop},    heading,    body,    links[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}  }}),  ...select(_type == "bookingSection" => {  id,  show,  noTopPad,  noBottomPad}),  ...select(_type == "productSection" => {  id,  heading,  products[]-> {    _id,    store {      title,      slug {        current      },      previewImageUrl,      priceRange {        minVariantPrice,        maxVariantPrice      },      status,      isDeleted,      options[] {        name,        values      },      variants[]-> {        store {          inventory {            available,            isAvailable          },          option1,          option2,          option3,          colorHex        }      }    }  }})}
 export type FlexibleContentFragmentResult = {
   _type: never;
 };
 
 // Source: src/sanity/lib/queries.ts
 // Variable: pageQuery
-// Query: *[_type == "page" && slug.current == $slug][0] {    _id,    _type,    title,    slug,    pageType,    textBlocks[] {      _key,      header,      body    },    contentBlocks[] {  _type,  ...select(_type == "heroSection" => {  id,  layout,  heading,  body,  images[] {  asset {    _ref,    _type  },  hotspot,  crop},  specs[] {    body  },  button {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}}),  ...select(_type == "textSection" => {  id,  heading,  body,  button {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}}),  ...select(_type == "mediaTextSection" => {  id,  layout,  heading,  body,  textBlocks[] {    layout,    header,    body,    bulletList[] {      body    }  },  bulletList[] {    body  },  buttons[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }},  mediaType,  images[] {  asset {    _ref,    _type  },  hotspot,  crop},  video,  videoPlaceholder {  asset {    _ref,    _type  },  hotspot,  crop},  mediaAlignment,  roomLink-> {    _id,    title,    roomType,    description,    "slug": slug.current  },  roomLinks[]-> {    _id,    title,    roomType,    description,    "slug": slug.current,    images[] {  asset {    _ref,    _type  },  hotspot,  crop}  },  activityLinks[]-> {    _id,    title,    description,    "slug": slug.current,    images[] {  asset {    _ref,    _type  },  hotspot,  crop},    bookingHref,    date,    timeRange  },  links[] {    header,    body,    date,    image {  asset {    _ref,    _type  },  hotspot,  crop},    buttons[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}  }}),  ...select(_type == "breakSection" => {  id,  layout,  subHeading,  heading,  body,  image {  asset {    _ref,    _type  },  hotspot,  crop},  button {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }},  backgroundColor}),  ...select(_type == "carouselSection" => {  id,  images[] {  asset {    _ref,    _type  },  hotspot,  crop}}),  ...select(_type == "menuSection" => {  id,  layout,  heading,  image {  asset {    _ref,    _type  },  hotspot,  crop},  foodTabs[] {    tabName,    availability,    image {  asset {    _ref,    _type  },  hotspot,  crop},    categories[] {      name,      items[] {        name,        price,        extras[] {          name,          price        }      }    }  },  spaTabs[] {    tabName,    image {  asset {    _ref,    _type  },  hotspot,  crop},    treatments[] {      name,      description,      options[] {        duration,        price      }    }  },  venueTabs[] {    areaName,    areaDescription,    image {  asset {    _ref,    _type  },  hotspot,  crop},    specs[] {      specName,      specDescription    }  }}),  ...select(_type == "activitySection" => {  id,  layout,  heading,  activity1-> {    _id,    title,    date,    timeRange,    images[] {  asset {    _ref,    _type  },  hotspot,  crop},    description,    bookingHref,    "slug": slug.current  },  activity2-> {    _id,    title,    date,    timeRange,    images[] {  asset {    _ref,    _type  },  hotspot,  crop},    description,    bookingHref,    "slug": slug.current  },  activity3-> {    _id,    title,    date,    timeRange,    images[] {  asset {    _ref,    _type  },  hotspot,  crop},    description,    bookingHref,    "slug": slug.current  },  activity4-> {    _id,    title,    date,    timeRange,    images[] {  asset {    _ref,    _type  },  hotspot,  crop},    description,    bookingHref,    "slug": slug.current  }}),  ...select(_type == "featureSection" => {  id,  layout,  subHeading,  heading,  feature1 {    image {  asset {    _ref,    _type  },  hotspot,  crop},    heading,    body,    links[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}  },  feature2 {    image {  asset {    _ref,    _type  },  hotspot,  crop},    heading,    body,    links[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}  },  feature3 {    image {  asset {    _ref,    _type  },  hotspot,  crop},    heading,    body,    links[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}  },  feature4 {    image {  asset {    _ref,    _type  },  hotspot,  crop},    heading,    body,    links[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}  }}),  ...select(_type == "bookingSection" => {  id,  show,  noTopPad,  noBottomPad}),  ...select(_type == "productSection" => {  id,  heading,  products[]-> {    _id,    store {      title,      slug {        current      },      previewImageUrl,      priceRange {        minVariantPrice,        maxVariantPrice      },      status,      isDeleted,      options[] {        name,        values      },      variants[]-> {        store {          inventory {            available,            isAvailable          },          option1,          option2,          option3,          colorHex        }      }    }  }})}  }
+// Query: *[_type == "page" && slug.current == $slug][0] {    _id,    _type,    title,    slug,    pageType,    seo {  metaTitle,  metaDescription,  socialImage {  asset {    _ref,    _type  },  hotspot,  crop}},    textBlocks[] {      _key,      header,      body    },    contentBlocks[] {  _type,  ...select(_type == "heroSection" => {  id,  layout,  heading,  body,  mediaType,  images[] {  asset {    _ref,    _type  },  hotspot,  crop},  video,  specs[] {    body  },  button {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}}),  ...select(_type == "textSection" => {  id,  heading,  body,  button {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}}),  ...select(_type == "mediaTextSection" => {  id,  layout,  heading,  body,  textBlocks[] {    layout,    header,    body,    bulletList[] {      body    }  },  bulletList[] {    body  },  buttons[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }},  mediaType,  images[] {  asset {    _ref,    _type  },  hotspot,  crop},  video,  mediaAlignment,  roomLink-> {    _id,    title,    roomType,    description,    "slug": slug.current  },  roomLinks[]-> {    _id,    title,    roomType,    description,    "slug": slug.current,    images[] {  asset {    _ref,    _type  },  hotspot,  crop}  },  activityLinks[]-> {    _id,    title,    description,    "slug": slug.current,    images[] {  asset {    _ref,    _type  },  hotspot,  crop},    bookingHref,    date,    timeRange  },  "activities": *[    _type == "calendar" &&    isActive == true &&    defined(startsAt) &&    startsAt >= now()  ] | order(startsAt asc)[0...50] {    _id,    title,    startsAt,    endsAt,    locationName,    locationAddress,    description,    thumbnail,    bookingHref,    eventCategories,    contentBlocks[] {      _type    },    "slug": slug.current  },  links[] {    header,    body,    date,    image {  asset {    _ref,    _type  },  hotspot,  crop},    buttons[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}  }}),  ...select(_type == "breakSection" => {  id,  layout,  subHeading,  heading,  body,  image {  asset {    _ref,    _type  },  hotspot,  crop},  button {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }},  backgroundColor}),  ...select(_type == "carouselSection" => {  id,  images[] {  asset {    _ref,    _type  },  hotspot,  crop}}),  ...select(_type == "menuSection" => {  id,  layout,  heading,  image {  asset {    _ref,    _type  },  hotspot,  crop},  foodTabs[] {    tabName,    availability,    image {  asset {    _ref,    _type  },  hotspot,  crop},    categories[] {      name,      items[] {        name,        price,        extras[] {          name,          price        }      }    }  },  spaTabs[] {    tabName,    image {  asset {    _ref,    _type  },  hotspot,  crop},    treatments[] {      name,      description,      options[] {        duration,        price      }    }  },  venueTabs[] {    areaName,    areaDescription,    image {  asset {    _ref,    _type  },  hotspot,  crop},    specs[] {      specName,      specDescription    }  }}),  ...select(_type == "calendarSection" => {  id,  heading,  eventCategories,  "activities": *[    _type == "calendar" &&    isActive == true &&    defined(startsAt) &&    startsAt >= now()  ] | order(startsAt asc)[0...50] {    _id,    title,    startsAt,    endsAt,    locationName,    locationAddress,    description,    thumbnail,    bookingHref,    eventCategories,    contentBlocks[] {      _type    },    "slug": slug.current  }}),  ...select(_type == "featureSection" => {  id,  layout,  subHeading,  heading,  feature1 {    image {  asset {    _ref,    _type  },  hotspot,  crop},    heading,    body,    links[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}  },  feature2 {    image {  asset {    _ref,    _type  },  hotspot,  crop},    heading,    body,    links[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}  },  feature3 {    image {  asset {    _ref,    _type  },  hotspot,  crop},    heading,    body,    links[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}  },  feature4 {    image {  asset {    _ref,    _type  },  hotspot,  crop},    heading,    body,    links[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}  }}),  ...select(_type == "bookingSection" => {  id,  show,  noTopPad,  noBottomPad}),  ...select(_type == "productSection" => {  id,  heading,  products[]-> {    _id,    store {      title,      slug {        current      },      previewImageUrl,      priceRange {        minVariantPrice,        maxVariantPrice      },      status,      isDeleted,      options[] {        name,        values      },      variants[]-> {        store {          inventory {            available,            isAvailable          },          option1,          option2,          option3,          colorHex        }      }    }  }})}  }
 export type PageQueryResult = {
   _id: string;
   _type: "page";
   title: string | null;
   slug: Slug | null;
   pageType: "calendar" | "general" | "homepage" | "links" | "text" | null;
+  seo: null;
   textBlocks: Array<{
     _key: string;
     header: string | null;
@@ -1475,192 +1475,6 @@ export type PageQueryResult = {
     }> | null;
   }> | null;
   contentBlocks: Array<
-    | {
-        _type: "activitySection";
-        id: string | null;
-        layout: "2-activities" | "4-activities" | "single-activity" | null;
-        heading: string | null;
-        activity1: {
-          _id: string;
-          title: string | null;
-          date: string | null;
-          timeRange: {
-            startTime?: string;
-            endTime?: string;
-          } | null;
-          images: Array<{
-            asset: {
-              _ref: string;
-              _type: "reference";
-            } | null;
-            hotspot: SanityImageHotspot | null;
-            crop: SanityImageCrop | null;
-          }> | null;
-          description: Array<{
-            children?: Array<{
-              marks?: Array<string>;
-              text?: string;
-              _type: "span";
-              _key: string;
-            }>;
-            style?:
-              | "blockquote"
-              | "h1"
-              | "h2"
-              | "h3"
-              | "h4"
-              | "h5"
-              | "h6"
-              | "normal";
-            listItem?: "bullet" | "number";
-            markDefs?: Array<{
-              href?: string;
-              _type: "link";
-              _key: string;
-            }>;
-            level?: number;
-            _type: "block";
-            _key: string;
-          }> | null;
-          bookingHref: string | null;
-          slug: string | null;
-        } | null;
-        activity2: {
-          _id: string;
-          title: string | null;
-          date: string | null;
-          timeRange: {
-            startTime?: string;
-            endTime?: string;
-          } | null;
-          images: Array<{
-            asset: {
-              _ref: string;
-              _type: "reference";
-            } | null;
-            hotspot: SanityImageHotspot | null;
-            crop: SanityImageCrop | null;
-          }> | null;
-          description: Array<{
-            children?: Array<{
-              marks?: Array<string>;
-              text?: string;
-              _type: "span";
-              _key: string;
-            }>;
-            style?:
-              | "blockquote"
-              | "h1"
-              | "h2"
-              | "h3"
-              | "h4"
-              | "h5"
-              | "h6"
-              | "normal";
-            listItem?: "bullet" | "number";
-            markDefs?: Array<{
-              href?: string;
-              _type: "link";
-              _key: string;
-            }>;
-            level?: number;
-            _type: "block";
-            _key: string;
-          }> | null;
-          bookingHref: string | null;
-          slug: string | null;
-        } | null;
-        activity3: {
-          _id: string;
-          title: string | null;
-          date: string | null;
-          timeRange: {
-            startTime?: string;
-            endTime?: string;
-          } | null;
-          images: Array<{
-            asset: {
-              _ref: string;
-              _type: "reference";
-            } | null;
-            hotspot: SanityImageHotspot | null;
-            crop: SanityImageCrop | null;
-          }> | null;
-          description: Array<{
-            children?: Array<{
-              marks?: Array<string>;
-              text?: string;
-              _type: "span";
-              _key: string;
-            }>;
-            style?:
-              | "blockquote"
-              | "h1"
-              | "h2"
-              | "h3"
-              | "h4"
-              | "h5"
-              | "h6"
-              | "normal";
-            listItem?: "bullet" | "number";
-            markDefs?: Array<{
-              href?: string;
-              _type: "link";
-              _key: string;
-            }>;
-            level?: number;
-            _type: "block";
-            _key: string;
-          }> | null;
-          bookingHref: string | null;
-          slug: string | null;
-        } | null;
-        activity4: {
-          _id: string;
-          title: string | null;
-          date: string | null;
-          timeRange: {
-            startTime?: string;
-            endTime?: string;
-          } | null;
-          images: Array<{
-            asset: {
-              _ref: string;
-              _type: "reference";
-            } | null;
-            hotspot: SanityImageHotspot | null;
-            crop: SanityImageCrop | null;
-          }> | null;
-          description: Array<{
-            children?: Array<{
-              marks?: Array<string>;
-              text?: string;
-              _type: "span";
-              _key: string;
-            }>;
-            style?:
-              | "blockquote"
-              | "h1"
-              | "h2"
-              | "h3"
-              | "h4"
-              | "h5"
-              | "h6"
-              | "normal";
-            listItem?: "bullet" | "number";
-            markDefs?: Array<{
-              href?: string;
-              _type: "link";
-              _key: string;
-            }>;
-            level?: number;
-            _type: "block";
-            _key: string;
-          }> | null;
-          bookingHref: string | null;
-          slug: string | null;
-        } | null;
-      }
     | {
         _type: "bookingSection";
         id: string | null;
@@ -1743,6 +1557,26 @@ export type PageQueryResult = {
           } | null;
         } | null;
         backgroundColor: "black" | "green" | "orange" | null;
+      }
+    | {
+        _type: "calendarSection";
+        id: string | null;
+        heading: string | null;
+        eventCategories: Array<string> | null;
+        activities: Array<{
+          _id: string;
+          title: string | null;
+          startsAt: string | null;
+          endsAt: string | null;
+          locationName: string | null;
+          locationAddress: string | null;
+          description: string | null;
+          thumbnail: string | null;
+          bookingHref: string | null;
+          eventCategories: Array<string> | null;
+          contentBlocks: null;
+          slug: string | null;
+        }>;
       }
     | {
         _type: "carouselSection";
@@ -2078,6 +1912,7 @@ export type PageQueryResult = {
           _type: "block";
           _key: string;
         }> | null;
+        mediaType: "image" | "video" | null;
         images: Array<{
           asset: {
             _ref: string;
@@ -2086,6 +1921,7 @@ export type PageQueryResult = {
           hotspot: SanityImageHotspot | null;
           crop: SanityImageCrop | null;
         }> | null;
+        video: BunnyVideo | null;
         specs: Array<{
           body: string | null;
         }> | null;
@@ -2293,15 +2129,7 @@ export type PageQueryResult = {
           hotspot: SanityImageHotspot | null;
           crop: SanityImageCrop | null;
         }> | null;
-        video: string | null;
-        videoPlaceholder: {
-          asset: {
-            _ref: string;
-            _type: "reference";
-          } | null;
-          hotspot: SanityImageHotspot | null;
-          crop: SanityImageCrop | null;
-        } | null;
+        video: BunnyVideo | null;
         mediaAlignment: "left" | "right" | null;
         roomLink: {
           _id: string;
@@ -2375,51 +2203,21 @@ export type PageQueryResult = {
             crop: SanityImageCrop | null;
           }> | null;
         }> | null;
-        activityLinks: Array<{
+        activityLinks: null;
+        activities: Array<{
           _id: string;
           title: string | null;
-          description: Array<{
-            children?: Array<{
-              marks?: Array<string>;
-              text?: string;
-              _type: "span";
-              _key: string;
-            }>;
-            style?:
-              | "blockquote"
-              | "h1"
-              | "h2"
-              | "h3"
-              | "h4"
-              | "h5"
-              | "h6"
-              | "normal";
-            listItem?: "bullet" | "number";
-            markDefs?: Array<{
-              href?: string;
-              _type: "link";
-              _key: string;
-            }>;
-            level?: number;
-            _type: "block";
-            _key: string;
-          }> | null;
-          slug: string | null;
-          images: Array<{
-            asset: {
-              _ref: string;
-              _type: "reference";
-            } | null;
-            hotspot: SanityImageHotspot | null;
-            crop: SanityImageCrop | null;
-          }> | null;
+          startsAt: string | null;
+          endsAt: string | null;
+          locationName: string | null;
+          locationAddress: string | null;
+          description: string | null;
+          thumbnail: string | null;
           bookingHref: string | null;
-          date: string | null;
-          timeRange: {
-            startTime?: string;
-            endTime?: string;
-          } | null;
-        }> | null;
+          eventCategories: Array<string> | null;
+          contentBlocks: null;
+          slug: string | null;
+        }>;
         links: Array<{
           header: string | null;
           body: RichPortableText | null;
@@ -2651,219 +2449,26 @@ export type PageSlugsQueryResult = Array<{
 
 // Source: src/sanity/lib/queries.ts
 // Variable: homepageQuery
-// Query: *[_type == "page" && pageType == "homepage"][0] {    _id,    _type,    title,    slug,    pageType,    homepageHeading,    homepageMediaType,    homepageImage {  asset {    _ref,    _type  },  hotspot,  crop},    homepageVideo,    homepageVideoPlaceholder {  asset {    _ref,    _type  },  hotspot,  crop},    contentBlocks[] {  _type,  ...select(_type == "heroSection" => {  id,  layout,  heading,  body,  images[] {  asset {    _ref,    _type  },  hotspot,  crop},  specs[] {    body  },  button {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}}),  ...select(_type == "textSection" => {  id,  heading,  body,  button {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}}),  ...select(_type == "mediaTextSection" => {  id,  layout,  heading,  body,  textBlocks[] {    layout,    header,    body,    bulletList[] {      body    }  },  bulletList[] {    body  },  buttons[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }},  mediaType,  images[] {  asset {    _ref,    _type  },  hotspot,  crop},  video,  videoPlaceholder {  asset {    _ref,    _type  },  hotspot,  crop},  mediaAlignment,  roomLink-> {    _id,    title,    roomType,    description,    "slug": slug.current  },  roomLinks[]-> {    _id,    title,    roomType,    description,    "slug": slug.current,    images[] {  asset {    _ref,    _type  },  hotspot,  crop}  },  activityLinks[]-> {    _id,    title,    description,    "slug": slug.current,    images[] {  asset {    _ref,    _type  },  hotspot,  crop},    bookingHref,    date,    timeRange  },  links[] {    header,    body,    date,    image {  asset {    _ref,    _type  },  hotspot,  crop},    buttons[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}  }}),  ...select(_type == "breakSection" => {  id,  layout,  subHeading,  heading,  body,  image {  asset {    _ref,    _type  },  hotspot,  crop},  button {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }},  backgroundColor}),  ...select(_type == "carouselSection" => {  id,  images[] {  asset {    _ref,    _type  },  hotspot,  crop}}),  ...select(_type == "menuSection" => {  id,  layout,  heading,  image {  asset {    _ref,    _type  },  hotspot,  crop},  foodTabs[] {    tabName,    availability,    image {  asset {    _ref,    _type  },  hotspot,  crop},    categories[] {      name,      items[] {        name,        price,        extras[] {          name,          price        }      }    }  },  spaTabs[] {    tabName,    image {  asset {    _ref,    _type  },  hotspot,  crop},    treatments[] {      name,      description,      options[] {        duration,        price      }    }  },  venueTabs[] {    areaName,    areaDescription,    image {  asset {    _ref,    _type  },  hotspot,  crop},    specs[] {      specName,      specDescription    }  }}),  ...select(_type == "activitySection" => {  id,  layout,  heading,  activity1-> {    _id,    title,    date,    timeRange,    images[] {  asset {    _ref,    _type  },  hotspot,  crop},    description,    bookingHref,    "slug": slug.current  },  activity2-> {    _id,    title,    date,    timeRange,    images[] {  asset {    _ref,    _type  },  hotspot,  crop},    description,    bookingHref,    "slug": slug.current  },  activity3-> {    _id,    title,    date,    timeRange,    images[] {  asset {    _ref,    _type  },  hotspot,  crop},    description,    bookingHref,    "slug": slug.current  },  activity4-> {    _id,    title,    date,    timeRange,    images[] {  asset {    _ref,    _type  },  hotspot,  crop},    description,    bookingHref,    "slug": slug.current  }}),  ...select(_type == "featureSection" => {  id,  layout,  subHeading,  heading,  feature1 {    image {  asset {    _ref,    _type  },  hotspot,  crop},    heading,    body,    links[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}  },  feature2 {    image {  asset {    _ref,    _type  },  hotspot,  crop},    heading,    body,    links[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}  },  feature3 {    image {  asset {    _ref,    _type  },  hotspot,  crop},    heading,    body,    links[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}  },  feature4 {    image {  asset {    _ref,    _type  },  hotspot,  crop},    heading,    body,    links[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}  }}),  ...select(_type == "bookingSection" => {  id,  show,  noTopPad,  noBottomPad}),  ...select(_type == "productSection" => {  id,  heading,  products[]-> {    _id,    store {      title,      slug {        current      },      previewImageUrl,      priceRange {        minVariantPrice,        maxVariantPrice      },      status,      isDeleted,      options[] {        name,        values      },      variants[]-> {        store {          inventory {            available,            isAvailable          },          option1,          option2,          option3,          colorHex        }      }    }  }})}  }
+// Query: *[_type == "page" && pageType == "homepage"][0] {    _id,    _type,    title,    slug,    pageType,    seo {  metaTitle,  metaDescription,  socialImage {  asset {    _ref,    _type  },  hotspot,  crop}},    homepageHeading,    homepageMediaType,    homepageImages[] {  asset {    _ref,    _type  },  hotspot,  crop},    homepageVideo,    contentBlocks[] {  _type,  ...select(_type == "heroSection" => {  id,  layout,  heading,  body,  mediaType,  images[] {  asset {    _ref,    _type  },  hotspot,  crop},  video,  specs[] {    body  },  button {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}}),  ...select(_type == "textSection" => {  id,  heading,  body,  button {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}}),  ...select(_type == "mediaTextSection" => {  id,  layout,  heading,  body,  textBlocks[] {    layout,    header,    body,    bulletList[] {      body    }  },  bulletList[] {    body  },  buttons[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }},  mediaType,  images[] {  asset {    _ref,    _type  },  hotspot,  crop},  video,  mediaAlignment,  roomLink-> {    _id,    title,    roomType,    description,    "slug": slug.current  },  roomLinks[]-> {    _id,    title,    roomType,    description,    "slug": slug.current,    images[] {  asset {    _ref,    _type  },  hotspot,  crop}  },  activityLinks[]-> {    _id,    title,    description,    "slug": slug.current,    images[] {  asset {    _ref,    _type  },  hotspot,  crop},    bookingHref,    date,    timeRange  },  "activities": *[    _type == "calendar" &&    isActive == true &&    defined(startsAt) &&    startsAt >= now()  ] | order(startsAt asc)[0...50] {    _id,    title,    startsAt,    endsAt,    locationName,    locationAddress,    description,    thumbnail,    bookingHref,    eventCategories,    contentBlocks[] {      _type    },    "slug": slug.current  },  links[] {    header,    body,    date,    image {  asset {    _ref,    _type  },  hotspot,  crop},    buttons[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}  }}),  ...select(_type == "breakSection" => {  id,  layout,  subHeading,  heading,  body,  image {  asset {    _ref,    _type  },  hotspot,  crop},  button {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }},  backgroundColor}),  ...select(_type == "carouselSection" => {  id,  images[] {  asset {    _ref,    _type  },  hotspot,  crop}}),  ...select(_type == "menuSection" => {  id,  layout,  heading,  image {  asset {    _ref,    _type  },  hotspot,  crop},  foodTabs[] {    tabName,    availability,    image {  asset {    _ref,    _type  },  hotspot,  crop},    categories[] {      name,      items[] {        name,        price,        extras[] {          name,          price        }      }    }  },  spaTabs[] {    tabName,    image {  asset {    _ref,    _type  },  hotspot,  crop},    treatments[] {      name,      description,      options[] {        duration,        price      }    }  },  venueTabs[] {    areaName,    areaDescription,    image {  asset {    _ref,    _type  },  hotspot,  crop},    specs[] {      specName,      specDescription    }  }}),  ...select(_type == "calendarSection" => {  id,  heading,  eventCategories,  "activities": *[    _type == "calendar" &&    isActive == true &&    defined(startsAt) &&    startsAt >= now()  ] | order(startsAt asc)[0...50] {    _id,    title,    startsAt,    endsAt,    locationName,    locationAddress,    description,    thumbnail,    bookingHref,    eventCategories,    contentBlocks[] {      _type    },    "slug": slug.current  }}),  ...select(_type == "featureSection" => {  id,  layout,  subHeading,  heading,  feature1 {    image {  asset {    _ref,    _type  },  hotspot,  crop},    heading,    body,    links[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}  },  feature2 {    image {  asset {    _ref,    _type  },  hotspot,  crop},    heading,    body,    links[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}  },  feature3 {    image {  asset {    _ref,    _type  },  hotspot,  crop},    heading,    body,    links[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}  },  feature4 {    image {  asset {    _ref,    _type  },  hotspot,  crop},    heading,    body,    links[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}  }}),  ...select(_type == "bookingSection" => {  id,  show,  noTopPad,  noBottomPad}),  ...select(_type == "productSection" => {  id,  heading,  products[]-> {    _id,    store {      title,      slug {        current      },      previewImageUrl,      priceRange {        minVariantPrice,        maxVariantPrice      },      status,      isDeleted,      options[] {        name,        values      },      variants[]-> {        store {          inventory {            available,            isAvailable          },          option1,          option2,          option3,          colorHex        }      }    }  }})}  }
 export type HomepageQueryResult = {
   _id: string;
   _type: "page";
   title: string | null;
   slug: Slug | null;
   pageType: "homepage";
+  seo: null;
   homepageHeading: string | null;
   homepageMediaType: "image" | "video" | null;
-  homepageImage: {
+  homepageImages: Array<{
     asset: {
       _ref: string;
       _type: "reference";
     } | null;
     hotspot: SanityImageHotspot | null;
     crop: SanityImageCrop | null;
-  } | null;
-  homepageVideo: string | null;
-  homepageVideoPlaceholder: {
-    asset: {
-      _ref: string;
-      _type: "reference";
-    } | null;
-    hotspot: SanityImageHotspot | null;
-    crop: SanityImageCrop | null;
-  } | null;
+  }> | null;
+  homepageVideo: BunnyVideo | null;
   contentBlocks: Array<
-    | {
-        _type: "activitySection";
-        id: string | null;
-        layout: "2-activities" | "4-activities" | "single-activity" | null;
-        heading: string | null;
-        activity1: {
-          _id: string;
-          title: string | null;
-          date: string | null;
-          timeRange: {
-            startTime?: string;
-            endTime?: string;
-          } | null;
-          images: Array<{
-            asset: {
-              _ref: string;
-              _type: "reference";
-            } | null;
-            hotspot: SanityImageHotspot | null;
-            crop: SanityImageCrop | null;
-          }> | null;
-          description: Array<{
-            children?: Array<{
-              marks?: Array<string>;
-              text?: string;
-              _type: "span";
-              _key: string;
-            }>;
-            style?:
-              | "blockquote"
-              | "h1"
-              | "h2"
-              | "h3"
-              | "h4"
-              | "h5"
-              | "h6"
-              | "normal";
-            listItem?: "bullet" | "number";
-            markDefs?: Array<{
-              href?: string;
-              _type: "link";
-              _key: string;
-            }>;
-            level?: number;
-            _type: "block";
-            _key: string;
-          }> | null;
-          bookingHref: string | null;
-          slug: string | null;
-        } | null;
-        activity2: {
-          _id: string;
-          title: string | null;
-          date: string | null;
-          timeRange: {
-            startTime?: string;
-            endTime?: string;
-          } | null;
-          images: Array<{
-            asset: {
-              _ref: string;
-              _type: "reference";
-            } | null;
-            hotspot: SanityImageHotspot | null;
-            crop: SanityImageCrop | null;
-          }> | null;
-          description: Array<{
-            children?: Array<{
-              marks?: Array<string>;
-              text?: string;
-              _type: "span";
-              _key: string;
-            }>;
-            style?:
-              | "blockquote"
-              | "h1"
-              | "h2"
-              | "h3"
-              | "h4"
-              | "h5"
-              | "h6"
-              | "normal";
-            listItem?: "bullet" | "number";
-            markDefs?: Array<{
-              href?: string;
-              _type: "link";
-              _key: string;
-            }>;
-            level?: number;
-            _type: "block";
-            _key: string;
-          }> | null;
-          bookingHref: string | null;
-          slug: string | null;
-        } | null;
-        activity3: {
-          _id: string;
-          title: string | null;
-          date: string | null;
-          timeRange: {
-            startTime?: string;
-            endTime?: string;
-          } | null;
-          images: Array<{
-            asset: {
-              _ref: string;
-              _type: "reference";
-            } | null;
-            hotspot: SanityImageHotspot | null;
-            crop: SanityImageCrop | null;
-          }> | null;
-          description: Array<{
-            children?: Array<{
-              marks?: Array<string>;
-              text?: string;
-              _type: "span";
-              _key: string;
-            }>;
-            style?:
-              | "blockquote"
-              | "h1"
-              | "h2"
-              | "h3"
-              | "h4"
-              | "h5"
-              | "h6"
-              | "normal";
-            listItem?: "bullet" | "number";
-            markDefs?: Array<{
-              href?: string;
-              _type: "link";
-              _key: string;
-            }>;
-            level?: number;
-            _type: "block";
-            _key: string;
-          }> | null;
-          bookingHref: string | null;
-          slug: string | null;
-        } | null;
-        activity4: {
-          _id: string;
-          title: string | null;
-          date: string | null;
-          timeRange: {
-            startTime?: string;
-            endTime?: string;
-          } | null;
-          images: Array<{
-            asset: {
-              _ref: string;
-              _type: "reference";
-            } | null;
-            hotspot: SanityImageHotspot | null;
-            crop: SanityImageCrop | null;
-          }> | null;
-          description: Array<{
-            children?: Array<{
-              marks?: Array<string>;
-              text?: string;
-              _type: "span";
-              _key: string;
-            }>;
-            style?:
-              | "blockquote"
-              | "h1"
-              | "h2"
-              | "h3"
-              | "h4"
-              | "h5"
-              | "h6"
-              | "normal";
-            listItem?: "bullet" | "number";
-            markDefs?: Array<{
-              href?: string;
-              _type: "link";
-              _key: string;
-            }>;
-            level?: number;
-            _type: "block";
-            _key: string;
-          }> | null;
-          bookingHref: string | null;
-          slug: string | null;
-        } | null;
-      }
     | {
         _type: "bookingSection";
         id: string | null;
@@ -2946,6 +2551,26 @@ export type HomepageQueryResult = {
           } | null;
         } | null;
         backgroundColor: "black" | "green" | "orange" | null;
+      }
+    | {
+        _type: "calendarSection";
+        id: string | null;
+        heading: string | null;
+        eventCategories: Array<string> | null;
+        activities: Array<{
+          _id: string;
+          title: string | null;
+          startsAt: string | null;
+          endsAt: string | null;
+          locationName: string | null;
+          locationAddress: string | null;
+          description: string | null;
+          thumbnail: string | null;
+          bookingHref: string | null;
+          eventCategories: Array<string> | null;
+          contentBlocks: null;
+          slug: string | null;
+        }>;
       }
     | {
         _type: "carouselSection";
@@ -3281,6 +2906,7 @@ export type HomepageQueryResult = {
           _type: "block";
           _key: string;
         }> | null;
+        mediaType: "image" | "video" | null;
         images: Array<{
           asset: {
             _ref: string;
@@ -3289,6 +2915,7 @@ export type HomepageQueryResult = {
           hotspot: SanityImageHotspot | null;
           crop: SanityImageCrop | null;
         }> | null;
+        video: BunnyVideo | null;
         specs: Array<{
           body: string | null;
         }> | null;
@@ -3496,15 +3123,7 @@ export type HomepageQueryResult = {
           hotspot: SanityImageHotspot | null;
           crop: SanityImageCrop | null;
         }> | null;
-        video: string | null;
-        videoPlaceholder: {
-          asset: {
-            _ref: string;
-            _type: "reference";
-          } | null;
-          hotspot: SanityImageHotspot | null;
-          crop: SanityImageCrop | null;
-        } | null;
+        video: BunnyVideo | null;
         mediaAlignment: "left" | "right" | null;
         roomLink: {
           _id: string;
@@ -3578,51 +3197,21 @@ export type HomepageQueryResult = {
             crop: SanityImageCrop | null;
           }> | null;
         }> | null;
-        activityLinks: Array<{
+        activityLinks: null;
+        activities: Array<{
           _id: string;
           title: string | null;
-          description: Array<{
-            children?: Array<{
-              marks?: Array<string>;
-              text?: string;
-              _type: "span";
-              _key: string;
-            }>;
-            style?:
-              | "blockquote"
-              | "h1"
-              | "h2"
-              | "h3"
-              | "h4"
-              | "h5"
-              | "h6"
-              | "normal";
-            listItem?: "bullet" | "number";
-            markDefs?: Array<{
-              href?: string;
-              _type: "link";
-              _key: string;
-            }>;
-            level?: number;
-            _type: "block";
-            _key: string;
-          }> | null;
-          slug: string | null;
-          images: Array<{
-            asset: {
-              _ref: string;
-              _type: "reference";
-            } | null;
-            hotspot: SanityImageHotspot | null;
-            crop: SanityImageCrop | null;
-          }> | null;
+          startsAt: string | null;
+          endsAt: string | null;
+          locationName: string | null;
+          locationAddress: string | null;
+          description: string | null;
+          thumbnail: string | null;
           bookingHref: string | null;
-          date: string | null;
-          timeRange: {
-            startTime?: string;
-            endTime?: string;
-          } | null;
-        }> | null;
+          eventCategories: Array<string> | null;
+          contentBlocks: null;
+          slug: string | null;
+        }>;
         links: Array<{
           header: string | null;
           body: RichPortableText | null;
@@ -3846,16 +3435,24 @@ export type HomepageQueryResult = {
 } | null;
 
 // Source: src/sanity/lib/queries.ts
+// Variable: pageSeoQuery
+// Query: *[_type == "page" && slug.current == $slug][0] {    title,    seo {  metaTitle,  metaDescription,  socialImage {  asset {    _ref,    _type  },  hotspot,  crop}}  }
+export type PageSeoQueryResult = {
+  title: string | null;
+  seo: null;
+} | null;
+
+// Source: src/sanity/lib/queries.ts
 // Variable: activitiesQuery
-// Query: *[_type == "page" && pageType == "calendar"][0] {    _id,    _type,    title,    slug,    pageType,    activitiesHeading,    activitiesBody,    activitiesImages[] {  asset {    _ref,    _type  },  hotspot,  crop}  }
+// Query: *[_type == "page" && pageType == "calendar"][0] {    _id,    _type,    title,    slug,    pageType,    calendarHeading,    calendarBody,    calendarMediaType,    calendarImages[] {  asset {    _ref,    _type  },  hotspot,  crop},    calendarVideo  }
 export type ActivitiesQueryResult = {
   _id: string;
   _type: "page";
   title: string | null;
   slug: Slug | null;
   pageType: "calendar";
-  activitiesHeading: string | null;
-  activitiesBody: Array<{
+  calendarHeading: string | null;
+  calendarBody: Array<{
     children?: Array<{
       marks?: Array<string>;
       text?: string;
@@ -3873,7 +3470,8 @@ export type ActivitiesQueryResult = {
     _type: "block";
     _key: string;
   }> | null;
-  activitiesImages: Array<{
+  calendarMediaType: "image" | "video" | null;
+  calendarImages: Array<{
     asset: {
       _ref: string;
       _type: "reference";
@@ -3881,11 +3479,12 @@ export type ActivitiesQueryResult = {
     hotspot: SanityImageHotspot | null;
     crop: SanityImageCrop | null;
   }> | null;
+  calendarVideo: BunnyVideo | null;
 } | null;
 
 // Source: src/sanity/lib/queries.ts
 // Variable: linksQuery
-// Query: *[_type == "page" && pageType == "links" && slug.current == $slug][0] {    _id,    _type,    title,    slug,    pageType,    heading,    body,    images[] {  asset {    _ref,    _type  },  hotspot,  crop},    links[] {      header,      body,      date,      image {  asset {    _ref,    _type  },  hotspot,  crop},      buttons[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}    }  }
+// Query: *[_type == "page" && pageType == "links" && slug.current == $slug][0] {    _id,    _type,    title,    slug,    pageType,    heading,    body,    mediaType,    images[] {  asset {    _ref,    _type  },  hotspot,  crop},    video,    links[] {      header,      body,      date,      image {  asset {    _ref,    _type  },  hotspot,  crop},      buttons[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}    }  }
 export type LinksQueryResult = {
   _id: string;
   _type: "page";
@@ -3911,6 +3510,7 @@ export type LinksQueryResult = {
     _type: "block";
     _key: string;
   }> | null;
+  mediaType: "image" | "video" | null;
   images: Array<{
     asset: {
       _ref: string;
@@ -3919,6 +3519,7 @@ export type LinksQueryResult = {
     hotspot: SanityImageHotspot | null;
     crop: SanityImageCrop | null;
   }> | null;
+  video: BunnyVideo | null;
   links: Array<{
     header: string | null;
     body: RichPortableText | null;
@@ -3963,62 +3564,58 @@ export type LinksQueryResult = {
 } | null;
 
 // Source: src/sanity/lib/queries.ts
-// Variable: allActivitiesQuery
-// Query: *[_type == "activity"] | order(date asc) {    _id,    title,    date,    timeRange,    images[] {  asset {    _ref,    _type  },  hotspot,  crop},    description,    bookingHref,    "slug": slug.current,    activityType  }
-export type AllActivitiesQueryResult = Array<{
+// Variable: allCalendarQuery
+// Query: *[_type == "calendar" && isActive == true && defined(startsAt) && startsAt >= now()] | order(startsAt asc) {    _id,    title,    startsAt,    endsAt,    locationName,    locationAddress,    description,    thumbnail,    bookingHref,    eventCategories,    contentBlocks[] {      _type    },    "slug": slug.current  }
+export type AllCalendarQueryResult = Array<{
   _id: string;
   title: string | null;
-  date: string | null;
-  timeRange: {
-    startTime?: string;
-    endTime?: string;
-  } | null;
-  images: Array<{
-    asset: {
-      _ref: string;
-      _type: "reference";
-    } | null;
-    hotspot: SanityImageHotspot | null;
-    crop: SanityImageCrop | null;
-  }> | null;
-  description: Array<{
-    children?: Array<{
-      marks?: Array<string>;
-      text?: string;
-      _type: "span";
-      _key: string;
-    }>;
-    style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
-    listItem?: "bullet" | "number";
-    markDefs?: Array<{
-      href?: string;
-      _type: "link";
-      _key: string;
-    }>;
-    level?: number;
-    _type: "block";
-    _key: string;
-  }> | null;
+  startsAt: string | null;
+  endsAt: string | null;
+  locationName: string | null;
+  locationAddress: string | null;
+  description: string | null;
+  thumbnail: string | null;
   bookingHref: string | null;
+  eventCategories: Array<string> | null;
+  contentBlocks: null;
   slug: string | null;
-  activityType: "food-and-beverage" | "golf" | "kids" | "wellness" | null;
+}>;
+
+// Source: src/sanity/lib/queries.ts
+// Variable: calendarCountQuery
+// Query: count(*[_type == "calendar" && isActive == true && defined(startsAt) && startsAt >= now()])
+export type CalendarCountQueryResult = number;
+
+// Source: src/sanity/lib/queries.ts
+// Variable: paginatedCalendarQuery
+// Query: *[_type == "calendar" && isActive == true && defined(startsAt) && startsAt >= now()]    | order(startsAt asc)[$offset...$end] {      _id,      title,      startsAt,      endsAt,      locationName,      locationAddress,      description,      thumbnail,      bookingHref,      eventCategories,      contentBlocks[] {        _type      },      "slug": slug.current    }
+export type PaginatedCalendarQueryResult = Array<{
+  _id: string;
+  title: string | null;
+  startsAt: string | null;
+  endsAt: string | null;
+  locationName: string | null;
+  locationAddress: string | null;
+  description: string | null;
+  thumbnail: string | null;
+  bookingHref: string | null;
+  eventCategories: Array<string> | null;
+  contentBlocks: null;
+  slug: string | null;
 }>;
 
 // Source: src/sanity/lib/queries.ts
 // Variable: siteSearchQuery
-// Query: {    "activities": *[_type == "activity" && (      title match $wildcardTerm ||      activityType match $wildcardTerm ||      pt::text(description) match $wildcardTerm    )] | order(title asc) {      _id,      title,      "slug": slug.current,      activityType,      date,      timeRange,      "descriptionPlain": coalesce(pt::text(description), ""),      "resultType": "activity"    },    "pages": *[_type == "page" && defined(slug.current) && (      title match $wildcardTerm ||      slug.current match $wildcardTerm ||      pageType match $wildcardTerm    )] | order(title asc) {      _id,      title,      "slug": slug.current,      pageType,      "descriptionPlain": coalesce(pt::text(contentBlocks[_type == "heroSection"][0].body), ""),      "resultType": "page"    }  }
+// Query: {    "activities": *[_type == "calendar" && isActive == true && defined(startsAt) && startsAt >= now() && (      title match $wildcardTerm ||      locationName match $wildcardTerm ||      locationAddress match $wildcardTerm    )] | order(startsAt asc) {      _id,      title,      "slug": slug.current,      startsAt,      endsAt,      locationName,      "descriptionPlain": coalesce(locationName, locationAddress, ""),      "resultType": "activity"    },    "pages": *[_type == "page" && defined(slug.current) && (      title match $wildcardTerm ||      slug.current match $wildcardTerm ||      pageType match $wildcardTerm    )] | order(title asc) {      _id,      title,      "slug": slug.current,      pageType,      "descriptionPlain": coalesce(pt::text(contentBlocks[_type == "heroSection"][0].body), ""),      "resultType": "page"    }  }
 export type SiteSearchQueryResult = {
   activities: Array<{
     _id: string;
     title: string | null;
     slug: string | null;
-    activityType: "food-and-beverage" | "golf" | "kids" | "wellness" | null;
-    date: string | null;
-    timeRange: {
-      startTime?: string;
-      endTime?: string;
-    } | null;
-    descriptionPlain: string;
+    startsAt: string | null;
+    endsAt: string | null;
+    locationName: string | null;
+    descriptionPlain: string | "";
     resultType: "activity";
   }>;
   pages: Array<{
@@ -4030,1221 +3627,6 @@ export type SiteSearchQueryResult = {
     resultType: "page";
   }>;
 };
-
-// Source: src/sanity/lib/queries.ts
-// Variable: activityQuery
-// Query: *[_type == "activity" && slug.current == $slug][0] {    _id,    title,    slug,    date,    timeRange,    description,    bookingHref,    activityType,    images[] {  asset {    _ref,    _type  },  hotspot,  crop},    contentBlocks[] {  _type,  ...select(_type == "heroSection" => {  id,  layout,  heading,  body,  images[] {  asset {    _ref,    _type  },  hotspot,  crop},  specs[] {    body  },  button {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}}),  ...select(_type == "textSection" => {  id,  heading,  body,  button {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}}),  ...select(_type == "mediaTextSection" => {  id,  layout,  heading,  body,  textBlocks[] {    layout,    header,    body,    bulletList[] {      body    }  },  bulletList[] {    body  },  buttons[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }},  mediaType,  images[] {  asset {    _ref,    _type  },  hotspot,  crop},  video,  videoPlaceholder {  asset {    _ref,    _type  },  hotspot,  crop},  mediaAlignment,  roomLink-> {    _id,    title,    roomType,    description,    "slug": slug.current  },  roomLinks[]-> {    _id,    title,    roomType,    description,    "slug": slug.current,    images[] {  asset {    _ref,    _type  },  hotspot,  crop}  },  activityLinks[]-> {    _id,    title,    description,    "slug": slug.current,    images[] {  asset {    _ref,    _type  },  hotspot,  crop},    bookingHref,    date,    timeRange  },  links[] {    header,    body,    date,    image {  asset {    _ref,    _type  },  hotspot,  crop},    buttons[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}  }}),  ...select(_type == "breakSection" => {  id,  layout,  subHeading,  heading,  body,  image {  asset {    _ref,    _type  },  hotspot,  crop},  button {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }},  backgroundColor}),  ...select(_type == "carouselSection" => {  id,  images[] {  asset {    _ref,    _type  },  hotspot,  crop}}),  ...select(_type == "menuSection" => {  id,  layout,  heading,  image {  asset {    _ref,    _type  },  hotspot,  crop},  foodTabs[] {    tabName,    availability,    image {  asset {    _ref,    _type  },  hotspot,  crop},    categories[] {      name,      items[] {        name,        price,        extras[] {          name,          price        }      }    }  },  spaTabs[] {    tabName,    image {  asset {    _ref,    _type  },  hotspot,  crop},    treatments[] {      name,      description,      options[] {        duration,        price      }    }  },  venueTabs[] {    areaName,    areaDescription,    image {  asset {    _ref,    _type  },  hotspot,  crop},    specs[] {      specName,      specDescription    }  }}),  ...select(_type == "activitySection" => {  id,  layout,  heading,  activity1-> {    _id,    title,    date,    timeRange,    images[] {  asset {    _ref,    _type  },  hotspot,  crop},    description,    bookingHref,    "slug": slug.current  },  activity2-> {    _id,    title,    date,    timeRange,    images[] {  asset {    _ref,    _type  },  hotspot,  crop},    description,    bookingHref,    "slug": slug.current  },  activity3-> {    _id,    title,    date,    timeRange,    images[] {  asset {    _ref,    _type  },  hotspot,  crop},    description,    bookingHref,    "slug": slug.current  },  activity4-> {    _id,    title,    date,    timeRange,    images[] {  asset {    _ref,    _type  },  hotspot,  crop},    description,    bookingHref,    "slug": slug.current  }}),  ...select(_type == "featureSection" => {  id,  layout,  subHeading,  heading,  feature1 {    image {  asset {    _ref,    _type  },  hotspot,  crop},    heading,    body,    links[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}  },  feature2 {    image {  asset {    _ref,    _type  },  hotspot,  crop},    heading,    body,    links[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}  },  feature3 {    image {  asset {    _ref,    _type  },  hotspot,  crop},    heading,    body,    links[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}  },  feature4 {    image {  asset {    _ref,    _type  },  hotspot,  crop},    heading,    body,    links[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}  }}),  ...select(_type == "bookingSection" => {  id,  show,  noTopPad,  noBottomPad}),  ...select(_type == "productSection" => {  id,  heading,  products[]-> {    _id,    store {      title,      slug {        current      },      previewImageUrl,      priceRange {        minVariantPrice,        maxVariantPrice      },      status,      isDeleted,      options[] {        name,        values      },      variants[]-> {        store {          inventory {            available,            isAvailable          },          option1,          option2,          option3,          colorHex        }      }    }  }})}  }
-export type ActivityQueryResult = {
-  _id: string;
-  title: string | null;
-  slug: Slug | null;
-  date: string | null;
-  timeRange: {
-    startTime?: string;
-    endTime?: string;
-  } | null;
-  description: Array<{
-    children?: Array<{
-      marks?: Array<string>;
-      text?: string;
-      _type: "span";
-      _key: string;
-    }>;
-    style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
-    listItem?: "bullet" | "number";
-    markDefs?: Array<{
-      href?: string;
-      _type: "link";
-      _key: string;
-    }>;
-    level?: number;
-    _type: "block";
-    _key: string;
-  }> | null;
-  bookingHref: string | null;
-  activityType: "food-and-beverage" | "golf" | "kids" | "wellness" | null;
-  images: Array<{
-    asset: {
-      _ref: string;
-      _type: "reference";
-    } | null;
-    hotspot: SanityImageHotspot | null;
-    crop: SanityImageCrop | null;
-  }> | null;
-  contentBlocks: Array<
-    | {
-        _type: "activitySection";
-        id: string | null;
-        layout: "2-activities" | "4-activities" | "single-activity" | null;
-        heading: string | null;
-        activity1: {
-          _id: string;
-          title: string | null;
-          date: string | null;
-          timeRange: {
-            startTime?: string;
-            endTime?: string;
-          } | null;
-          images: Array<{
-            asset: {
-              _ref: string;
-              _type: "reference";
-            } | null;
-            hotspot: SanityImageHotspot | null;
-            crop: SanityImageCrop | null;
-          }> | null;
-          description: Array<{
-            children?: Array<{
-              marks?: Array<string>;
-              text?: string;
-              _type: "span";
-              _key: string;
-            }>;
-            style?:
-              | "blockquote"
-              | "h1"
-              | "h2"
-              | "h3"
-              | "h4"
-              | "h5"
-              | "h6"
-              | "normal";
-            listItem?: "bullet" | "number";
-            markDefs?: Array<{
-              href?: string;
-              _type: "link";
-              _key: string;
-            }>;
-            level?: number;
-            _type: "block";
-            _key: string;
-          }> | null;
-          bookingHref: string | null;
-          slug: string | null;
-        } | null;
-        activity2: {
-          _id: string;
-          title: string | null;
-          date: string | null;
-          timeRange: {
-            startTime?: string;
-            endTime?: string;
-          } | null;
-          images: Array<{
-            asset: {
-              _ref: string;
-              _type: "reference";
-            } | null;
-            hotspot: SanityImageHotspot | null;
-            crop: SanityImageCrop | null;
-          }> | null;
-          description: Array<{
-            children?: Array<{
-              marks?: Array<string>;
-              text?: string;
-              _type: "span";
-              _key: string;
-            }>;
-            style?:
-              | "blockquote"
-              | "h1"
-              | "h2"
-              | "h3"
-              | "h4"
-              | "h5"
-              | "h6"
-              | "normal";
-            listItem?: "bullet" | "number";
-            markDefs?: Array<{
-              href?: string;
-              _type: "link";
-              _key: string;
-            }>;
-            level?: number;
-            _type: "block";
-            _key: string;
-          }> | null;
-          bookingHref: string | null;
-          slug: string | null;
-        } | null;
-        activity3: {
-          _id: string;
-          title: string | null;
-          date: string | null;
-          timeRange: {
-            startTime?: string;
-            endTime?: string;
-          } | null;
-          images: Array<{
-            asset: {
-              _ref: string;
-              _type: "reference";
-            } | null;
-            hotspot: SanityImageHotspot | null;
-            crop: SanityImageCrop | null;
-          }> | null;
-          description: Array<{
-            children?: Array<{
-              marks?: Array<string>;
-              text?: string;
-              _type: "span";
-              _key: string;
-            }>;
-            style?:
-              | "blockquote"
-              | "h1"
-              | "h2"
-              | "h3"
-              | "h4"
-              | "h5"
-              | "h6"
-              | "normal";
-            listItem?: "bullet" | "number";
-            markDefs?: Array<{
-              href?: string;
-              _type: "link";
-              _key: string;
-            }>;
-            level?: number;
-            _type: "block";
-            _key: string;
-          }> | null;
-          bookingHref: string | null;
-          slug: string | null;
-        } | null;
-        activity4: {
-          _id: string;
-          title: string | null;
-          date: string | null;
-          timeRange: {
-            startTime?: string;
-            endTime?: string;
-          } | null;
-          images: Array<{
-            asset: {
-              _ref: string;
-              _type: "reference";
-            } | null;
-            hotspot: SanityImageHotspot | null;
-            crop: SanityImageCrop | null;
-          }> | null;
-          description: Array<{
-            children?: Array<{
-              marks?: Array<string>;
-              text?: string;
-              _type: "span";
-              _key: string;
-            }>;
-            style?:
-              | "blockquote"
-              | "h1"
-              | "h2"
-              | "h3"
-              | "h4"
-              | "h5"
-              | "h6"
-              | "normal";
-            listItem?: "bullet" | "number";
-            markDefs?: Array<{
-              href?: string;
-              _type: "link";
-              _key: string;
-            }>;
-            level?: number;
-            _type: "block";
-            _key: string;
-          }> | null;
-          bookingHref: string | null;
-          slug: string | null;
-        } | null;
-      }
-    | {
-        _type: "bookingSection";
-        id: string | null;
-        show: boolean | null;
-        noTopPad: boolean | null;
-        noBottomPad: boolean | null;
-      }
-    | {
-        _type: "breakSection";
-        id: string | null;
-        layout: "full-bleed" | "split" | null;
-        subHeading: string | null;
-        heading: string | null;
-        body: Array<{
-          children?: Array<{
-            marks?: Array<string>;
-            text?: string;
-            _type: "span";
-            _key: string;
-          }>;
-          style?:
-            | "blockquote"
-            | "h1"
-            | "h2"
-            | "h3"
-            | "h4"
-            | "h5"
-            | "h6"
-            | "normal";
-          listItem?: "bullet" | "number";
-          markDefs?: Array<{
-            href?: string;
-            _type: "link";
-            _key: string;
-          }>;
-          level?: number;
-          _type: "block";
-          _key: string;
-        }> | null;
-        image: {
-          asset: {
-            _ref: string;
-            _type: "reference";
-          } | null;
-          hotspot: SanityImageHotspot | null;
-          crop: SanityImageCrop | null;
-        } | null;
-        button: {
-          linkType:
-            | "booking"
-            | "external"
-            | "file"
-            | "internal"
-            | "jump"
-            | null;
-          label: string | null;
-          href: string | null;
-          jumpLink: string | null;
-          bookingTab:
-            | "activity"
-            | "events"
-            | "golf"
-            | "room"
-            | "spa"
-            | "table"
-            | null;
-          color: "cream" | "orange" | "outline" | null;
-          file: {
-            asset: {
-              _ref: string;
-              _type: "reference";
-              originalFilename: null;
-            } | null;
-          } | null;
-          pageLink: {
-            _ref: string;
-            _type: "reference";
-            slug: string | null;
-            title: string | null;
-          } | null;
-        } | null;
-        backgroundColor: "black" | "green" | "orange" | null;
-      }
-    | {
-        _type: "carouselSection";
-        id: null;
-        images: Array<{
-          asset: {
-            _ref: string;
-            _type: "reference";
-          } | null;
-          hotspot: SanityImageHotspot | null;
-          crop: SanityImageCrop | null;
-        }> | null;
-      }
-    | {
-        _type: "featureSection";
-        id: string | null;
-        layout: "2-features" | "4-features" | "single-feature" | null;
-        subHeading: string | null;
-        heading: string | null;
-        feature1: {
-          image: {
-            asset: {
-              _ref: string;
-              _type: "reference";
-            } | null;
-            hotspot: SanityImageHotspot | null;
-            crop: SanityImageCrop | null;
-          } | null;
-          heading: string | null;
-          body: Array<{
-            children?: Array<{
-              marks?: Array<string>;
-              text?: string;
-              _type: "span";
-              _key: string;
-            }>;
-            style?:
-              | "blockquote"
-              | "h1"
-              | "h2"
-              | "h3"
-              | "h4"
-              | "h5"
-              | "h6"
-              | "normal";
-            listItem?: "bullet" | "number";
-            markDefs?: Array<{
-              href?: string;
-              _type: "link";
-              _key: string;
-            }>;
-            level?: number;
-            _type: "block";
-            _key: string;
-          }> | null;
-          links: Array<{
-            linkType:
-              | "booking"
-              | "external"
-              | "file"
-              | "internal"
-              | "jump"
-              | null;
-            label: string | null;
-            href: string | null;
-            jumpLink: string | null;
-            bookingTab:
-              | "activity"
-              | "events"
-              | "golf"
-              | "room"
-              | "spa"
-              | "table"
-              | null;
-            color: "cream" | "orange" | "outline" | null;
-            file: {
-              asset: {
-                _ref: string;
-                _type: "reference";
-                originalFilename: null;
-              } | null;
-            } | null;
-            pageLink: {
-              _ref: string;
-              _type: "reference";
-              slug: string | null;
-              title: string | null;
-            } | null;
-          }> | null;
-        } | null;
-        feature2: {
-          image: {
-            asset: {
-              _ref: string;
-              _type: "reference";
-            } | null;
-            hotspot: SanityImageHotspot | null;
-            crop: SanityImageCrop | null;
-          } | null;
-          heading: string | null;
-          body: Array<{
-            children?: Array<{
-              marks?: Array<string>;
-              text?: string;
-              _type: "span";
-              _key: string;
-            }>;
-            style?:
-              | "blockquote"
-              | "h1"
-              | "h2"
-              | "h3"
-              | "h4"
-              | "h5"
-              | "h6"
-              | "normal";
-            listItem?: "bullet" | "number";
-            markDefs?: Array<{
-              href?: string;
-              _type: "link";
-              _key: string;
-            }>;
-            level?: number;
-            _type: "block";
-            _key: string;
-          }> | null;
-          links: Array<{
-            linkType:
-              | "booking"
-              | "external"
-              | "file"
-              | "internal"
-              | "jump"
-              | null;
-            label: string | null;
-            href: string | null;
-            jumpLink: string | null;
-            bookingTab:
-              | "activity"
-              | "events"
-              | "golf"
-              | "room"
-              | "spa"
-              | "table"
-              | null;
-            color: "cream" | "orange" | "outline" | null;
-            file: {
-              asset: {
-                _ref: string;
-                _type: "reference";
-                originalFilename: null;
-              } | null;
-            } | null;
-            pageLink: {
-              _ref: string;
-              _type: "reference";
-              slug: string | null;
-              title: string | null;
-            } | null;
-          }> | null;
-        } | null;
-        feature3: {
-          image: {
-            asset: {
-              _ref: string;
-              _type: "reference";
-            } | null;
-            hotspot: SanityImageHotspot | null;
-            crop: SanityImageCrop | null;
-          } | null;
-          heading: string | null;
-          body: Array<{
-            children?: Array<{
-              marks?: Array<string>;
-              text?: string;
-              _type: "span";
-              _key: string;
-            }>;
-            style?:
-              | "blockquote"
-              | "h1"
-              | "h2"
-              | "h3"
-              | "h4"
-              | "h5"
-              | "h6"
-              | "normal";
-            listItem?: "bullet" | "number";
-            markDefs?: Array<{
-              href?: string;
-              _type: "link";
-              _key: string;
-            }>;
-            level?: number;
-            _type: "block";
-            _key: string;
-          }> | null;
-          links: Array<{
-            linkType:
-              | "booking"
-              | "external"
-              | "file"
-              | "internal"
-              | "jump"
-              | null;
-            label: string | null;
-            href: string | null;
-            jumpLink: string | null;
-            bookingTab:
-              | "activity"
-              | "events"
-              | "golf"
-              | "room"
-              | "spa"
-              | "table"
-              | null;
-            color: "cream" | "orange" | "outline" | null;
-            file: {
-              asset: {
-                _ref: string;
-                _type: "reference";
-                originalFilename: null;
-              } | null;
-            } | null;
-            pageLink: {
-              _ref: string;
-              _type: "reference";
-              slug: string | null;
-              title: string | null;
-            } | null;
-          }> | null;
-        } | null;
-        feature4: {
-          image: {
-            asset: {
-              _ref: string;
-              _type: "reference";
-            } | null;
-            hotspot: SanityImageHotspot | null;
-            crop: SanityImageCrop | null;
-          } | null;
-          heading: string | null;
-          body: Array<{
-            children?: Array<{
-              marks?: Array<string>;
-              text?: string;
-              _type: "span";
-              _key: string;
-            }>;
-            style?:
-              | "blockquote"
-              | "h1"
-              | "h2"
-              | "h3"
-              | "h4"
-              | "h5"
-              | "h6"
-              | "normal";
-            listItem?: "bullet" | "number";
-            markDefs?: Array<{
-              href?: string;
-              _type: "link";
-              _key: string;
-            }>;
-            level?: number;
-            _type: "block";
-            _key: string;
-          }> | null;
-          links: Array<{
-            linkType:
-              | "booking"
-              | "external"
-              | "file"
-              | "internal"
-              | "jump"
-              | null;
-            label: string | null;
-            href: string | null;
-            jumpLink: string | null;
-            bookingTab:
-              | "activity"
-              | "events"
-              | "golf"
-              | "room"
-              | "spa"
-              | "table"
-              | null;
-            color: "cream" | "orange" | "outline" | null;
-            file: {
-              asset: {
-                _ref: string;
-                _type: "reference";
-                originalFilename: null;
-              } | null;
-            } | null;
-            pageLink: {
-              _ref: string;
-              _type: "reference";
-              slug: string | null;
-              title: string | null;
-            } | null;
-          }> | null;
-        } | null;
-      }
-    | {
-        _type: "heroSection";
-        id: string | null;
-        layout: "full-bleed" | "split" | null;
-        heading: string | null;
-        body: Array<{
-          children?: Array<{
-            marks?: Array<string>;
-            text?: string;
-            _type: "span";
-            _key: string;
-          }>;
-          style?:
-            | "blockquote"
-            | "h1"
-            | "h2"
-            | "h3"
-            | "h4"
-            | "h5"
-            | "h6"
-            | "normal";
-          listItem?: "bullet" | "number";
-          markDefs?: Array<{
-            href?: string;
-            _type: "link";
-            _key: string;
-          }>;
-          level?: number;
-          _type: "block";
-          _key: string;
-        }> | null;
-        images: Array<{
-          asset: {
-            _ref: string;
-            _type: "reference";
-          } | null;
-          hotspot: SanityImageHotspot | null;
-          crop: SanityImageCrop | null;
-        }> | null;
-        specs: Array<{
-          body: string | null;
-        }> | null;
-        button: {
-          linkType:
-            | "booking"
-            | "external"
-            | "file"
-            | "internal"
-            | "jump"
-            | null;
-          label: string | null;
-          href: string | null;
-          jumpLink: string | null;
-          bookingTab:
-            | "activity"
-            | "events"
-            | "golf"
-            | "room"
-            | "spa"
-            | "table"
-            | null;
-          color: "cream" | "orange" | "outline" | null;
-          file: {
-            asset: {
-              _ref: string;
-              _type: "reference";
-              originalFilename: null;
-            } | null;
-          } | null;
-          pageLink: {
-            _ref: string;
-            _type: "reference";
-            slug: string | null;
-            title: string | null;
-          } | null;
-        } | null;
-      }
-    | {
-        _type: "mediaTextSection";
-        id: string | null;
-        layout:
-          | "media-with-text-h4-body-activity-links"
-          | "media-with-text-h4-body-links"
-          | "media-with-text-h4-body-room-links"
-          | "media-with-text-h4-body"
-          | "media-with-text-h4-bullet-list"
-          | "media-with-text-h5"
-          | "media-with-text-multiple-text-blocks"
-          | "media-with-text-room-type"
-          | null;
-        heading: string | null;
-        body: Array<{
-          children?: Array<{
-            marks?: Array<string>;
-            text?: string;
-            _type: "span";
-            _key: string;
-          }>;
-          style?:
-            | "blockquote"
-            | "h1"
-            | "h2"
-            | "h3"
-            | "h4"
-            | "h5"
-            | "h6"
-            | "normal";
-          listItem?: "bullet" | "number";
-          markDefs?: Array<{
-            href?: string;
-            _type: "link";
-            _key: string;
-          }>;
-          level?: number;
-          _type: "block";
-          _key: string;
-        }> | null;
-        textBlocks: Array<{
-          layout: "h4-bullet-list" | "h4-text" | null;
-          header: string | null;
-          body: Array<{
-            children?: Array<{
-              marks?: Array<string>;
-              text?: string;
-              _type: "span";
-              _key: string;
-            }>;
-            style?:
-              | "blockquote"
-              | "h1"
-              | "h2"
-              | "h3"
-              | "h4"
-              | "h5"
-              | "h6"
-              | "normal";
-            listItem?: "bullet" | "number";
-            markDefs?: Array<{
-              href?: string;
-              _type: "link";
-              _key: string;
-            }>;
-            level?: number;
-            _type: "block";
-            _key: string;
-          }> | null;
-          bulletList: Array<{
-            body: Array<{
-              children?: Array<{
-                marks?: Array<string>;
-                text?: string;
-                _type: "span";
-                _key: string;
-              }>;
-              style?:
-                | "blockquote"
-                | "h1"
-                | "h2"
-                | "h3"
-                | "h4"
-                | "h5"
-                | "h6"
-                | "normal";
-              listItem?: "bullet" | "number";
-              markDefs?: Array<{
-                href?: string;
-                _type: "link";
-                _key: string;
-              }>;
-              level?: number;
-              _type: "block";
-              _key: string;
-            }> | null;
-          }> | null;
-        }> | null;
-        bulletList: Array<{
-          body: Array<{
-            children?: Array<{
-              marks?: Array<string>;
-              text?: string;
-              _type: "span";
-              _key: string;
-            }>;
-            style?:
-              | "blockquote"
-              | "h1"
-              | "h2"
-              | "h3"
-              | "h4"
-              | "h5"
-              | "h6"
-              | "normal";
-            listItem?: "bullet" | "number";
-            markDefs?: Array<{
-              href?: string;
-              _type: "link";
-              _key: string;
-            }>;
-            level?: number;
-            _type: "block";
-            _key: string;
-          }> | null;
-        }> | null;
-        buttons: Array<{
-          linkType:
-            | "booking"
-            | "external"
-            | "file"
-            | "internal"
-            | "jump"
-            | null;
-          label: string | null;
-          href: string | null;
-          jumpLink: string | null;
-          bookingTab:
-            | "activity"
-            | "events"
-            | "golf"
-            | "room"
-            | "spa"
-            | "table"
-            | null;
-          color: "cream" | "orange" | "outline" | null;
-          file: {
-            asset: {
-              _ref: string;
-              _type: "reference";
-              originalFilename: null;
-            } | null;
-          } | null;
-          pageLink: {
-            _ref: string;
-            _type: "reference";
-            slug: string | null;
-            title: string | null;
-          } | null;
-        }> | null;
-        mediaType: "image" | "video" | null;
-        images: Array<{
-          asset: {
-            _ref: string;
-            _type: "reference";
-          } | null;
-          hotspot: SanityImageHotspot | null;
-          crop: SanityImageCrop | null;
-        }> | null;
-        video: string | null;
-        videoPlaceholder: {
-          asset: {
-            _ref: string;
-            _type: "reference";
-          } | null;
-          hotspot: SanityImageHotspot | null;
-          crop: SanityImageCrop | null;
-        } | null;
-        mediaAlignment: "left" | "right" | null;
-        roomLink: {
-          _id: string;
-          title: string | null;
-          roomType: "cabin" | "farmhouse" | null;
-          description: Array<{
-            children?: Array<{
-              marks?: Array<string>;
-              text?: string;
-              _type: "span";
-              _key: string;
-            }>;
-            style?:
-              | "blockquote"
-              | "h1"
-              | "h2"
-              | "h3"
-              | "h4"
-              | "h5"
-              | "h6"
-              | "normal";
-            listItem?: "bullet" | "number";
-            markDefs?: Array<{
-              href?: string;
-              _type: "link";
-              _key: string;
-            }>;
-            level?: number;
-            _type: "block";
-            _key: string;
-          }> | null;
-          slug: string | null;
-        } | null;
-        roomLinks: Array<{
-          _id: string;
-          title: string | null;
-          roomType: "cabin" | "farmhouse" | null;
-          description: Array<{
-            children?: Array<{
-              marks?: Array<string>;
-              text?: string;
-              _type: "span";
-              _key: string;
-            }>;
-            style?:
-              | "blockquote"
-              | "h1"
-              | "h2"
-              | "h3"
-              | "h4"
-              | "h5"
-              | "h6"
-              | "normal";
-            listItem?: "bullet" | "number";
-            markDefs?: Array<{
-              href?: string;
-              _type: "link";
-              _key: string;
-            }>;
-            level?: number;
-            _type: "block";
-            _key: string;
-          }> | null;
-          slug: string | null;
-          images: Array<{
-            asset: {
-              _ref: string;
-              _type: "reference";
-            } | null;
-            hotspot: SanityImageHotspot | null;
-            crop: SanityImageCrop | null;
-          }> | null;
-        }> | null;
-        activityLinks: Array<{
-          _id: string;
-          title: string | null;
-          description: Array<{
-            children?: Array<{
-              marks?: Array<string>;
-              text?: string;
-              _type: "span";
-              _key: string;
-            }>;
-            style?:
-              | "blockquote"
-              | "h1"
-              | "h2"
-              | "h3"
-              | "h4"
-              | "h5"
-              | "h6"
-              | "normal";
-            listItem?: "bullet" | "number";
-            markDefs?: Array<{
-              href?: string;
-              _type: "link";
-              _key: string;
-            }>;
-            level?: number;
-            _type: "block";
-            _key: string;
-          }> | null;
-          slug: string | null;
-          images: Array<{
-            asset: {
-              _ref: string;
-              _type: "reference";
-            } | null;
-            hotspot: SanityImageHotspot | null;
-            crop: SanityImageCrop | null;
-          }> | null;
-          bookingHref: string | null;
-          date: string | null;
-          timeRange: {
-            startTime?: string;
-            endTime?: string;
-          } | null;
-        }> | null;
-        links: Array<{
-          header: string | null;
-          body: RichPortableText | null;
-          date: string | null;
-          image: {
-            asset: {
-              _ref: string;
-              _type: "reference";
-            } | null;
-            hotspot: SanityImageHotspot | null;
-            crop: SanityImageCrop | null;
-          } | null;
-          buttons: Array<{
-            linkType:
-              | "booking"
-              | "external"
-              | "file"
-              | "internal"
-              | "jump"
-              | null;
-            label: string | null;
-            href: string | null;
-            jumpLink: string | null;
-            bookingTab:
-              | "activity"
-              | "events"
-              | "golf"
-              | "room"
-              | "spa"
-              | "table"
-              | null;
-            color: "cream" | "orange" | "outline" | null;
-            file: {
-              asset: {
-                _ref: string;
-                _type: "reference";
-                originalFilename: null;
-              } | null;
-            } | null;
-            pageLink: {
-              _ref: string;
-              _type: "reference";
-              slug: string | null;
-              title: string | null;
-            } | null;
-          }> | null;
-        }> | null;
-      }
-    | {
-        _type: "menuSection";
-        id: string | null;
-        layout: "food-menu" | "spa-menu" | "venue-menu" | null;
-        heading: null;
-        image: null;
-        foodTabs: Array<{
-          tabName: string | null;
-          availability: string | null;
-          image: {
-            asset: {
-              _ref: string;
-              _type: "reference";
-            } | null;
-            hotspot: SanityImageHotspot | null;
-            crop: SanityImageCrop | null;
-          } | null;
-          categories: Array<{
-            name: string | null;
-            items: Array<{
-              name: string | null;
-              price: number | null;
-              extras: Array<{
-                name: string | null;
-                price: number | null;
-              }> | null;
-            }> | null;
-          }> | null;
-        }> | null;
-        spaTabs: Array<{
-          tabName: string | null;
-          image: {
-            asset: {
-              _ref: string;
-              _type: "reference";
-            } | null;
-            hotspot: SanityImageHotspot | null;
-            crop: SanityImageCrop | null;
-          } | null;
-          treatments: Array<{
-            name: string | null;
-            description: RichPortableText | null;
-            options: Array<{
-              duration: string | null;
-              price: number | null;
-            }> | null;
-          }> | null;
-        }> | null;
-        venueTabs: Array<{
-          areaName: string | null;
-          areaDescription: RichPortableText | null;
-          image: {
-            asset: {
-              _ref: string;
-              _type: "reference";
-            } | null;
-            hotspot: SanityImageHotspot | null;
-            crop: SanityImageCrop | null;
-          } | null;
-          specs: Array<{
-            specName: string | null;
-            specDescription: RichPortableText | null;
-          }> | null;
-        }> | null;
-      }
-    | {
-        _type: "productSection";
-        id: string | null;
-        heading: null;
-        products: Array<{
-          _id: string;
-          store: {
-            title: string | null;
-            slug: {
-              current: string | null;
-            } | null;
-            previewImageUrl: string | null;
-            priceRange: {
-              minVariantPrice: number | null;
-              maxVariantPrice: number | null;
-            } | null;
-            status: "active" | "archived" | "draft" | null;
-            isDeleted: boolean | null;
-            options: Array<{
-              name: string | null;
-              values: Array<{
-                value?: string;
-                _type: "optionValue";
-                _key: string;
-              }> | null;
-            }> | null;
-            variants: Array<{
-              store: {
-                inventory: {
-                  available: number | null;
-                  isAvailable: boolean | null;
-                } | null;
-                option1: string | null;
-                option2: string | null;
-                option3: string | null;
-                colorHex: string | null;
-              } | null;
-            }> | null;
-          } | null;
-        }> | null;
-      }
-    | {
-        _type: "textSection";
-        id: string | null;
-        heading: string | null;
-        body: Array<{
-          children?: Array<{
-            marks?: Array<string>;
-            text?: string;
-            _type: "span";
-            _key: string;
-          }>;
-          style?:
-            | "blockquote"
-            | "h1"
-            | "h2"
-            | "h3"
-            | "h4"
-            | "h5"
-            | "h6"
-            | "normal";
-          listItem?: "bullet" | "number";
-          markDefs?: Array<{
-            href?: string;
-            _type: "link";
-            _key: string;
-          }>;
-          level?: number;
-          _type: "block";
-          _key: string;
-        }> | null;
-        button: {
-          linkType:
-            | "booking"
-            | "external"
-            | "file"
-            | "internal"
-            | "jump"
-            | null;
-          label: string | null;
-          href: string | null;
-          jumpLink: string | null;
-          bookingTab:
-            | "activity"
-            | "events"
-            | "golf"
-            | "room"
-            | "spa"
-            | "table"
-            | null;
-          color: "cream" | "orange" | "outline" | null;
-          file: {
-            asset: {
-              _ref: string;
-              _type: "reference";
-              originalFilename: null;
-            } | null;
-          } | null;
-          pageLink: {
-            _ref: string;
-            _type: "reference";
-            slug: string | null;
-            title: string | null;
-          } | null;
-        } | null;
-      }
-  > | null;
-} | null;
-
-// Source: src/sanity/lib/queries.ts
-// Variable: activitySlugsQuery
-// Query: *[_type == "activity" && defined(slug.current)] {    "slug": slug.current  }
-export type ActivitySlugsQueryResult = Array<{
-  slug: string | null;
-}>;
 
 // Source: src/sanity/lib/queries.ts
 // Variable: footerQuery
@@ -5390,7 +3772,7 @@ export type MenuQueryResult = {
 
 // Source: src/sanity/lib/queries.ts
 // Variable: roomPostsQuery
-// Query: *[_type == "room"] | order(title asc) {    _id,    title,    description,    images[] {  asset {    _ref,    _type  },  hotspot,  crop},    specs[] {      body    },    "slug": slug.current,    contentBlocks[] {  _type,  ...select(_type == "heroSection" => {  id,  layout,  heading,  body,  images[] {  asset {    _ref,    _type  },  hotspot,  crop},  specs[] {    body  },  button {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}}),  ...select(_type == "textSection" => {  id,  heading,  body,  button {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}}),  ...select(_type == "mediaTextSection" => {  id,  layout,  heading,  body,  textBlocks[] {    layout,    header,    body,    bulletList[] {      body    }  },  bulletList[] {    body  },  buttons[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }},  mediaType,  images[] {  asset {    _ref,    _type  },  hotspot,  crop},  video,  videoPlaceholder {  asset {    _ref,    _type  },  hotspot,  crop},  mediaAlignment,  roomLink-> {    _id,    title,    roomType,    description,    "slug": slug.current  },  roomLinks[]-> {    _id,    title,    roomType,    description,    "slug": slug.current,    images[] {  asset {    _ref,    _type  },  hotspot,  crop}  },  activityLinks[]-> {    _id,    title,    description,    "slug": slug.current,    images[] {  asset {    _ref,    _type  },  hotspot,  crop},    bookingHref,    date,    timeRange  },  links[] {    header,    body,    date,    image {  asset {    _ref,    _type  },  hotspot,  crop},    buttons[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}  }}),  ...select(_type == "breakSection" => {  id,  layout,  subHeading,  heading,  body,  image {  asset {    _ref,    _type  },  hotspot,  crop},  button {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }},  backgroundColor}),  ...select(_type == "carouselSection" => {  id,  images[] {  asset {    _ref,    _type  },  hotspot,  crop}}),  ...select(_type == "menuSection" => {  id,  layout,  heading,  image {  asset {    _ref,    _type  },  hotspot,  crop},  foodTabs[] {    tabName,    availability,    image {  asset {    _ref,    _type  },  hotspot,  crop},    categories[] {      name,      items[] {        name,        price,        extras[] {          name,          price        }      }    }  },  spaTabs[] {    tabName,    image {  asset {    _ref,    _type  },  hotspot,  crop},    treatments[] {      name,      description,      options[] {        duration,        price      }    }  },  venueTabs[] {    areaName,    areaDescription,    image {  asset {    _ref,    _type  },  hotspot,  crop},    specs[] {      specName,      specDescription    }  }}),  ...select(_type == "activitySection" => {  id,  layout,  heading,  activity1-> {    _id,    title,    date,    timeRange,    images[] {  asset {    _ref,    _type  },  hotspot,  crop},    description,    bookingHref,    "slug": slug.current  },  activity2-> {    _id,    title,    date,    timeRange,    images[] {  asset {    _ref,    _type  },  hotspot,  crop},    description,    bookingHref,    "slug": slug.current  },  activity3-> {    _id,    title,    date,    timeRange,    images[] {  asset {    _ref,    _type  },  hotspot,  crop},    description,    bookingHref,    "slug": slug.current  },  activity4-> {    _id,    title,    date,    timeRange,    images[] {  asset {    _ref,    _type  },  hotspot,  crop},    description,    bookingHref,    "slug": slug.current  }}),  ...select(_type == "featureSection" => {  id,  layout,  subHeading,  heading,  feature1 {    image {  asset {    _ref,    _type  },  hotspot,  crop},    heading,    body,    links[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}  },  feature2 {    image {  asset {    _ref,    _type  },  hotspot,  crop},    heading,    body,    links[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}  },  feature3 {    image {  asset {    _ref,    _type  },  hotspot,  crop},    heading,    body,    links[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}  },  feature4 {    image {  asset {    _ref,    _type  },  hotspot,  crop},    heading,    body,    links[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}  }}),  ...select(_type == "bookingSection" => {  id,  show,  noTopPad,  noBottomPad}),  ...select(_type == "productSection" => {  id,  heading,  products[]-> {    _id,    store {      title,      slug {        current      },      previewImageUrl,      priceRange {        minVariantPrice,        maxVariantPrice      },      status,      isDeleted,      options[] {        name,        values      },      variants[]-> {        store {          inventory {            available,            isAvailable          },          option1,          option2,          option3,          colorHex        }      }    }  }})}  }
+// Query: *[_type == "room"] | order(title asc) {    _id,    title,    description,    images[] {  asset {    _ref,    _type  },  hotspot,  crop},    specs[] {      body    },    "slug": slug.current,    contentBlocks[] {  _type,  ...select(_type == "heroSection" => {  id,  layout,  heading,  body,  mediaType,  images[] {  asset {    _ref,    _type  },  hotspot,  crop},  video,  specs[] {    body  },  button {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}}),  ...select(_type == "textSection" => {  id,  heading,  body,  button {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}}),  ...select(_type == "mediaTextSection" => {  id,  layout,  heading,  body,  textBlocks[] {    layout,    header,    body,    bulletList[] {      body    }  },  bulletList[] {    body  },  buttons[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }},  mediaType,  images[] {  asset {    _ref,    _type  },  hotspot,  crop},  video,  mediaAlignment,  roomLink-> {    _id,    title,    roomType,    description,    "slug": slug.current  },  roomLinks[]-> {    _id,    title,    roomType,    description,    "slug": slug.current,    images[] {  asset {    _ref,    _type  },  hotspot,  crop}  },  activityLinks[]-> {    _id,    title,    description,    "slug": slug.current,    images[] {  asset {    _ref,    _type  },  hotspot,  crop},    bookingHref,    date,    timeRange  },  "activities": *[    _type == "calendar" &&    isActive == true &&    defined(startsAt) &&    startsAt >= now()  ] | order(startsAt asc)[0...50] {    _id,    title,    startsAt,    endsAt,    locationName,    locationAddress,    description,    thumbnail,    bookingHref,    eventCategories,    contentBlocks[] {      _type    },    "slug": slug.current  },  links[] {    header,    body,    date,    image {  asset {    _ref,    _type  },  hotspot,  crop},    buttons[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}  }}),  ...select(_type == "breakSection" => {  id,  layout,  subHeading,  heading,  body,  image {  asset {    _ref,    _type  },  hotspot,  crop},  button {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }},  backgroundColor}),  ...select(_type == "carouselSection" => {  id,  images[] {  asset {    _ref,    _type  },  hotspot,  crop}}),  ...select(_type == "menuSection" => {  id,  layout,  heading,  image {  asset {    _ref,    _type  },  hotspot,  crop},  foodTabs[] {    tabName,    availability,    image {  asset {    _ref,    _type  },  hotspot,  crop},    categories[] {      name,      items[] {        name,        price,        extras[] {          name,          price        }      }    }  },  spaTabs[] {    tabName,    image {  asset {    _ref,    _type  },  hotspot,  crop},    treatments[] {      name,      description,      options[] {        duration,        price      }    }  },  venueTabs[] {    areaName,    areaDescription,    image {  asset {    _ref,    _type  },  hotspot,  crop},    specs[] {      specName,      specDescription    }  }}),  ...select(_type == "calendarSection" => {  id,  heading,  eventCategories,  "activities": *[    _type == "calendar" &&    isActive == true &&    defined(startsAt) &&    startsAt >= now()  ] | order(startsAt asc)[0...50] {    _id,    title,    startsAt,    endsAt,    locationName,    locationAddress,    description,    thumbnail,    bookingHref,    eventCategories,    contentBlocks[] {      _type    },    "slug": slug.current  }}),  ...select(_type == "featureSection" => {  id,  layout,  subHeading,  heading,  feature1 {    image {  asset {    _ref,    _type  },  hotspot,  crop},    heading,    body,    links[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}  },  feature2 {    image {  asset {    _ref,    _type  },  hotspot,  crop},    heading,    body,    links[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}  },  feature3 {    image {  asset {    _ref,    _type  },  hotspot,  crop},    heading,    body,    links[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}  },  feature4 {    image {  asset {    _ref,    _type  },  hotspot,  crop},    heading,    body,    links[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}  }}),  ...select(_type == "bookingSection" => {  id,  show,  noTopPad,  noBottomPad}),  ...select(_type == "productSection" => {  id,  heading,  products[]-> {    _id,    store {      title,      slug {        current      },      previewImageUrl,      priceRange {        minVariantPrice,        maxVariantPrice      },      status,      isDeleted,      options[] {        name,        values      },      variants[]-> {        store {          inventory {            available,            isAvailable          },          option1,          option2,          option3,          colorHex        }      }    }  }})}  }
 export type RoomPostsQueryResult = Array<{
   _id: string;
   title: string | null;
@@ -5425,192 +3807,6 @@ export type RoomPostsQueryResult = Array<{
   }> | null;
   slug: string | null;
   contentBlocks: Array<
-    | {
-        _type: "activitySection";
-        id: string | null;
-        layout: "2-activities" | "4-activities" | "single-activity" | null;
-        heading: string | null;
-        activity1: {
-          _id: string;
-          title: string | null;
-          date: string | null;
-          timeRange: {
-            startTime?: string;
-            endTime?: string;
-          } | null;
-          images: Array<{
-            asset: {
-              _ref: string;
-              _type: "reference";
-            } | null;
-            hotspot: SanityImageHotspot | null;
-            crop: SanityImageCrop | null;
-          }> | null;
-          description: Array<{
-            children?: Array<{
-              marks?: Array<string>;
-              text?: string;
-              _type: "span";
-              _key: string;
-            }>;
-            style?:
-              | "blockquote"
-              | "h1"
-              | "h2"
-              | "h3"
-              | "h4"
-              | "h5"
-              | "h6"
-              | "normal";
-            listItem?: "bullet" | "number";
-            markDefs?: Array<{
-              href?: string;
-              _type: "link";
-              _key: string;
-            }>;
-            level?: number;
-            _type: "block";
-            _key: string;
-          }> | null;
-          bookingHref: string | null;
-          slug: string | null;
-        } | null;
-        activity2: {
-          _id: string;
-          title: string | null;
-          date: string | null;
-          timeRange: {
-            startTime?: string;
-            endTime?: string;
-          } | null;
-          images: Array<{
-            asset: {
-              _ref: string;
-              _type: "reference";
-            } | null;
-            hotspot: SanityImageHotspot | null;
-            crop: SanityImageCrop | null;
-          }> | null;
-          description: Array<{
-            children?: Array<{
-              marks?: Array<string>;
-              text?: string;
-              _type: "span";
-              _key: string;
-            }>;
-            style?:
-              | "blockquote"
-              | "h1"
-              | "h2"
-              | "h3"
-              | "h4"
-              | "h5"
-              | "h6"
-              | "normal";
-            listItem?: "bullet" | "number";
-            markDefs?: Array<{
-              href?: string;
-              _type: "link";
-              _key: string;
-            }>;
-            level?: number;
-            _type: "block";
-            _key: string;
-          }> | null;
-          bookingHref: string | null;
-          slug: string | null;
-        } | null;
-        activity3: {
-          _id: string;
-          title: string | null;
-          date: string | null;
-          timeRange: {
-            startTime?: string;
-            endTime?: string;
-          } | null;
-          images: Array<{
-            asset: {
-              _ref: string;
-              _type: "reference";
-            } | null;
-            hotspot: SanityImageHotspot | null;
-            crop: SanityImageCrop | null;
-          }> | null;
-          description: Array<{
-            children?: Array<{
-              marks?: Array<string>;
-              text?: string;
-              _type: "span";
-              _key: string;
-            }>;
-            style?:
-              | "blockquote"
-              | "h1"
-              | "h2"
-              | "h3"
-              | "h4"
-              | "h5"
-              | "h6"
-              | "normal";
-            listItem?: "bullet" | "number";
-            markDefs?: Array<{
-              href?: string;
-              _type: "link";
-              _key: string;
-            }>;
-            level?: number;
-            _type: "block";
-            _key: string;
-          }> | null;
-          bookingHref: string | null;
-          slug: string | null;
-        } | null;
-        activity4: {
-          _id: string;
-          title: string | null;
-          date: string | null;
-          timeRange: {
-            startTime?: string;
-            endTime?: string;
-          } | null;
-          images: Array<{
-            asset: {
-              _ref: string;
-              _type: "reference";
-            } | null;
-            hotspot: SanityImageHotspot | null;
-            crop: SanityImageCrop | null;
-          }> | null;
-          description: Array<{
-            children?: Array<{
-              marks?: Array<string>;
-              text?: string;
-              _type: "span";
-              _key: string;
-            }>;
-            style?:
-              | "blockquote"
-              | "h1"
-              | "h2"
-              | "h3"
-              | "h4"
-              | "h5"
-              | "h6"
-              | "normal";
-            listItem?: "bullet" | "number";
-            markDefs?: Array<{
-              href?: string;
-              _type: "link";
-              _key: string;
-            }>;
-            level?: number;
-            _type: "block";
-            _key: string;
-          }> | null;
-          bookingHref: string | null;
-          slug: string | null;
-        } | null;
-      }
     | {
         _type: "bookingSection";
         id: string | null;
@@ -5693,6 +3889,26 @@ export type RoomPostsQueryResult = Array<{
           } | null;
         } | null;
         backgroundColor: "black" | "green" | "orange" | null;
+      }
+    | {
+        _type: "calendarSection";
+        id: string | null;
+        heading: string | null;
+        eventCategories: Array<string> | null;
+        activities: Array<{
+          _id: string;
+          title: string | null;
+          startsAt: string | null;
+          endsAt: string | null;
+          locationName: string | null;
+          locationAddress: string | null;
+          description: string | null;
+          thumbnail: string | null;
+          bookingHref: string | null;
+          eventCategories: Array<string> | null;
+          contentBlocks: null;
+          slug: string | null;
+        }>;
       }
     | {
         _type: "carouselSection";
@@ -6028,6 +4244,7 @@ export type RoomPostsQueryResult = Array<{
           _type: "block";
           _key: string;
         }> | null;
+        mediaType: "image" | "video" | null;
         images: Array<{
           asset: {
             _ref: string;
@@ -6036,6 +4253,7 @@ export type RoomPostsQueryResult = Array<{
           hotspot: SanityImageHotspot | null;
           crop: SanityImageCrop | null;
         }> | null;
+        video: BunnyVideo | null;
         specs: Array<{
           body: string | null;
         }> | null;
@@ -6243,15 +4461,7 @@ export type RoomPostsQueryResult = Array<{
           hotspot: SanityImageHotspot | null;
           crop: SanityImageCrop | null;
         }> | null;
-        video: string | null;
-        videoPlaceholder: {
-          asset: {
-            _ref: string;
-            _type: "reference";
-          } | null;
-          hotspot: SanityImageHotspot | null;
-          crop: SanityImageCrop | null;
-        } | null;
+        video: BunnyVideo | null;
         mediaAlignment: "left" | "right" | null;
         roomLink: {
           _id: string;
@@ -6325,51 +4535,21 @@ export type RoomPostsQueryResult = Array<{
             crop: SanityImageCrop | null;
           }> | null;
         }> | null;
-        activityLinks: Array<{
+        activityLinks: null;
+        activities: Array<{
           _id: string;
           title: string | null;
-          description: Array<{
-            children?: Array<{
-              marks?: Array<string>;
-              text?: string;
-              _type: "span";
-              _key: string;
-            }>;
-            style?:
-              | "blockquote"
-              | "h1"
-              | "h2"
-              | "h3"
-              | "h4"
-              | "h5"
-              | "h6"
-              | "normal";
-            listItem?: "bullet" | "number";
-            markDefs?: Array<{
-              href?: string;
-              _type: "link";
-              _key: string;
-            }>;
-            level?: number;
-            _type: "block";
-            _key: string;
-          }> | null;
-          slug: string | null;
-          images: Array<{
-            asset: {
-              _ref: string;
-              _type: "reference";
-            } | null;
-            hotspot: SanityImageHotspot | null;
-            crop: SanityImageCrop | null;
-          }> | null;
+          startsAt: string | null;
+          endsAt: string | null;
+          locationName: string | null;
+          locationAddress: string | null;
+          description: string | null;
+          thumbnail: string | null;
           bookingHref: string | null;
-          date: string | null;
-          timeRange: {
-            startTime?: string;
-            endTime?: string;
-          } | null;
-        }> | null;
+          eventCategories: Array<string> | null;
+          contentBlocks: null;
+          slug: string | null;
+        }>;
         links: Array<{
           header: string | null;
           body: RichPortableText | null;
@@ -6594,7 +4774,7 @@ export type RoomPostsQueryResult = Array<{
 
 // Source: src/sanity/lib/queries.ts
 // Variable: roomPostQuery
-// Query: *[_type == "room" && slug.current == $slug][0] {    _id,    title,    description,    images[] {  asset {    _ref,    _type  },  hotspot,  crop},    specs[] {      body    },    "slug": slug.current,    contentBlocks[] {  _type,  ...select(_type == "heroSection" => {  id,  layout,  heading,  body,  images[] {  asset {    _ref,    _type  },  hotspot,  crop},  specs[] {    body  },  button {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}}),  ...select(_type == "textSection" => {  id,  heading,  body,  button {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}}),  ...select(_type == "mediaTextSection" => {  id,  layout,  heading,  body,  textBlocks[] {    layout,    header,    body,    bulletList[] {      body    }  },  bulletList[] {    body  },  buttons[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }},  mediaType,  images[] {  asset {    _ref,    _type  },  hotspot,  crop},  video,  videoPlaceholder {  asset {    _ref,    _type  },  hotspot,  crop},  mediaAlignment,  roomLink-> {    _id,    title,    roomType,    description,    "slug": slug.current  },  roomLinks[]-> {    _id,    title,    roomType,    description,    "slug": slug.current,    images[] {  asset {    _ref,    _type  },  hotspot,  crop}  },  activityLinks[]-> {    _id,    title,    description,    "slug": slug.current,    images[] {  asset {    _ref,    _type  },  hotspot,  crop},    bookingHref,    date,    timeRange  },  links[] {    header,    body,    date,    image {  asset {    _ref,    _type  },  hotspot,  crop},    buttons[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}  }}),  ...select(_type == "breakSection" => {  id,  layout,  subHeading,  heading,  body,  image {  asset {    _ref,    _type  },  hotspot,  crop},  button {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }},  backgroundColor}),  ...select(_type == "carouselSection" => {  id,  images[] {  asset {    _ref,    _type  },  hotspot,  crop}}),  ...select(_type == "menuSection" => {  id,  layout,  heading,  image {  asset {    _ref,    _type  },  hotspot,  crop},  foodTabs[] {    tabName,    availability,    image {  asset {    _ref,    _type  },  hotspot,  crop},    categories[] {      name,      items[] {        name,        price,        extras[] {          name,          price        }      }    }  },  spaTabs[] {    tabName,    image {  asset {    _ref,    _type  },  hotspot,  crop},    treatments[] {      name,      description,      options[] {        duration,        price      }    }  },  venueTabs[] {    areaName,    areaDescription,    image {  asset {    _ref,    _type  },  hotspot,  crop},    specs[] {      specName,      specDescription    }  }}),  ...select(_type == "activitySection" => {  id,  layout,  heading,  activity1-> {    _id,    title,    date,    timeRange,    images[] {  asset {    _ref,    _type  },  hotspot,  crop},    description,    bookingHref,    "slug": slug.current  },  activity2-> {    _id,    title,    date,    timeRange,    images[] {  asset {    _ref,    _type  },  hotspot,  crop},    description,    bookingHref,    "slug": slug.current  },  activity3-> {    _id,    title,    date,    timeRange,    images[] {  asset {    _ref,    _type  },  hotspot,  crop},    description,    bookingHref,    "slug": slug.current  },  activity4-> {    _id,    title,    date,    timeRange,    images[] {  asset {    _ref,    _type  },  hotspot,  crop},    description,    bookingHref,    "slug": slug.current  }}),  ...select(_type == "featureSection" => {  id,  layout,  subHeading,  heading,  feature1 {    image {  asset {    _ref,    _type  },  hotspot,  crop},    heading,    body,    links[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}  },  feature2 {    image {  asset {    _ref,    _type  },  hotspot,  crop},    heading,    body,    links[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}  },  feature3 {    image {  asset {    _ref,    _type  },  hotspot,  crop},    heading,    body,    links[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}  },  feature4 {    image {  asset {    _ref,    _type  },  hotspot,  crop},    heading,    body,    links[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}  }}),  ...select(_type == "bookingSection" => {  id,  show,  noTopPad,  noBottomPad}),  ...select(_type == "productSection" => {  id,  heading,  products[]-> {    _id,    store {      title,      slug {        current      },      previewImageUrl,      priceRange {        minVariantPrice,        maxVariantPrice      },      status,      isDeleted,      options[] {        name,        values      },      variants[]-> {        store {          inventory {            available,            isAvailable          },          option1,          option2,          option3,          colorHex        }      }    }  }})}  }
+// Query: *[_type == "room" && slug.current == $slug][0] {    _id,    title,    description,    images[] {  asset {    _ref,    _type  },  hotspot,  crop},    specs[] {      body    },    "slug": slug.current,    contentBlocks[] {  _type,  ...select(_type == "heroSection" => {  id,  layout,  heading,  body,  mediaType,  images[] {  asset {    _ref,    _type  },  hotspot,  crop},  video,  specs[] {    body  },  button {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}}),  ...select(_type == "textSection" => {  id,  heading,  body,  button {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}}),  ...select(_type == "mediaTextSection" => {  id,  layout,  heading,  body,  textBlocks[] {    layout,    header,    body,    bulletList[] {      body    }  },  bulletList[] {    body  },  buttons[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }},  mediaType,  images[] {  asset {    _ref,    _type  },  hotspot,  crop},  video,  mediaAlignment,  roomLink-> {    _id,    title,    roomType,    description,    "slug": slug.current  },  roomLinks[]-> {    _id,    title,    roomType,    description,    "slug": slug.current,    images[] {  asset {    _ref,    _type  },  hotspot,  crop}  },  activityLinks[]-> {    _id,    title,    description,    "slug": slug.current,    images[] {  asset {    _ref,    _type  },  hotspot,  crop},    bookingHref,    date,    timeRange  },  "activities": *[    _type == "calendar" &&    isActive == true &&    defined(startsAt) &&    startsAt >= now()  ] | order(startsAt asc)[0...50] {    _id,    title,    startsAt,    endsAt,    locationName,    locationAddress,    description,    thumbnail,    bookingHref,    eventCategories,    contentBlocks[] {      _type    },    "slug": slug.current  },  links[] {    header,    body,    date,    image {  asset {    _ref,    _type  },  hotspot,  crop},    buttons[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}  }}),  ...select(_type == "breakSection" => {  id,  layout,  subHeading,  heading,  body,  image {  asset {    _ref,    _type  },  hotspot,  crop},  button {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }},  backgroundColor}),  ...select(_type == "carouselSection" => {  id,  images[] {  asset {    _ref,    _type  },  hotspot,  crop}}),  ...select(_type == "menuSection" => {  id,  layout,  heading,  image {  asset {    _ref,    _type  },  hotspot,  crop},  foodTabs[] {    tabName,    availability,    image {  asset {    _ref,    _type  },  hotspot,  crop},    categories[] {      name,      items[] {        name,        price,        extras[] {          name,          price        }      }    }  },  spaTabs[] {    tabName,    image {  asset {    _ref,    _type  },  hotspot,  crop},    treatments[] {      name,      description,      options[] {        duration,        price      }    }  },  venueTabs[] {    areaName,    areaDescription,    image {  asset {    _ref,    _type  },  hotspot,  crop},    specs[] {      specName,      specDescription    }  }}),  ...select(_type == "calendarSection" => {  id,  heading,  eventCategories,  "activities": *[    _type == "calendar" &&    isActive == true &&    defined(startsAt) &&    startsAt >= now()  ] | order(startsAt asc)[0...50] {    _id,    title,    startsAt,    endsAt,    locationName,    locationAddress,    description,    thumbnail,    bookingHref,    eventCategories,    contentBlocks[] {      _type    },    "slug": slug.current  }}),  ...select(_type == "featureSection" => {  id,  layout,  subHeading,  heading,  feature1 {    image {  asset {    _ref,    _type  },  hotspot,  crop},    heading,    body,    links[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}  },  feature2 {    image {  asset {    _ref,    _type  },  hotspot,  crop},    heading,    body,    links[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}  },  feature3 {    image {  asset {    _ref,    _type  },  hotspot,  crop},    heading,    body,    links[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}  },  feature4 {    image {  asset {    _ref,    _type  },  hotspot,  crop},    heading,    body,    links[] {  linkType,  label,  href,  jumpLink,  bookingTab,  color,  file {    asset {      _ref,      _type,      originalFilename    }  },  pageLink {    _ref,    _type,    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,    "title": *[_type == "page" && _id == ^._ref][0].title  }}  }}),  ...select(_type == "bookingSection" => {  id,  show,  noTopPad,  noBottomPad}),  ...select(_type == "productSection" => {  id,  heading,  products[]-> {    _id,    store {      title,      slug {        current      },      previewImageUrl,      priceRange {        minVariantPrice,        maxVariantPrice      },      status,      isDeleted,      options[] {        name,        values      },      variants[]-> {        store {          inventory {            available,            isAvailable          },          option1,          option2,          option3,          colorHex        }      }    }  }})}  }
 export type RoomPostQueryResult = {
   _id: string;
   title: string | null;
@@ -6629,192 +4809,6 @@ export type RoomPostQueryResult = {
   }> | null;
   slug: string | null;
   contentBlocks: Array<
-    | {
-        _type: "activitySection";
-        id: string | null;
-        layout: "2-activities" | "4-activities" | "single-activity" | null;
-        heading: string | null;
-        activity1: {
-          _id: string;
-          title: string | null;
-          date: string | null;
-          timeRange: {
-            startTime?: string;
-            endTime?: string;
-          } | null;
-          images: Array<{
-            asset: {
-              _ref: string;
-              _type: "reference";
-            } | null;
-            hotspot: SanityImageHotspot | null;
-            crop: SanityImageCrop | null;
-          }> | null;
-          description: Array<{
-            children?: Array<{
-              marks?: Array<string>;
-              text?: string;
-              _type: "span";
-              _key: string;
-            }>;
-            style?:
-              | "blockquote"
-              | "h1"
-              | "h2"
-              | "h3"
-              | "h4"
-              | "h5"
-              | "h6"
-              | "normal";
-            listItem?: "bullet" | "number";
-            markDefs?: Array<{
-              href?: string;
-              _type: "link";
-              _key: string;
-            }>;
-            level?: number;
-            _type: "block";
-            _key: string;
-          }> | null;
-          bookingHref: string | null;
-          slug: string | null;
-        } | null;
-        activity2: {
-          _id: string;
-          title: string | null;
-          date: string | null;
-          timeRange: {
-            startTime?: string;
-            endTime?: string;
-          } | null;
-          images: Array<{
-            asset: {
-              _ref: string;
-              _type: "reference";
-            } | null;
-            hotspot: SanityImageHotspot | null;
-            crop: SanityImageCrop | null;
-          }> | null;
-          description: Array<{
-            children?: Array<{
-              marks?: Array<string>;
-              text?: string;
-              _type: "span";
-              _key: string;
-            }>;
-            style?:
-              | "blockquote"
-              | "h1"
-              | "h2"
-              | "h3"
-              | "h4"
-              | "h5"
-              | "h6"
-              | "normal";
-            listItem?: "bullet" | "number";
-            markDefs?: Array<{
-              href?: string;
-              _type: "link";
-              _key: string;
-            }>;
-            level?: number;
-            _type: "block";
-            _key: string;
-          }> | null;
-          bookingHref: string | null;
-          slug: string | null;
-        } | null;
-        activity3: {
-          _id: string;
-          title: string | null;
-          date: string | null;
-          timeRange: {
-            startTime?: string;
-            endTime?: string;
-          } | null;
-          images: Array<{
-            asset: {
-              _ref: string;
-              _type: "reference";
-            } | null;
-            hotspot: SanityImageHotspot | null;
-            crop: SanityImageCrop | null;
-          }> | null;
-          description: Array<{
-            children?: Array<{
-              marks?: Array<string>;
-              text?: string;
-              _type: "span";
-              _key: string;
-            }>;
-            style?:
-              | "blockquote"
-              | "h1"
-              | "h2"
-              | "h3"
-              | "h4"
-              | "h5"
-              | "h6"
-              | "normal";
-            listItem?: "bullet" | "number";
-            markDefs?: Array<{
-              href?: string;
-              _type: "link";
-              _key: string;
-            }>;
-            level?: number;
-            _type: "block";
-            _key: string;
-          }> | null;
-          bookingHref: string | null;
-          slug: string | null;
-        } | null;
-        activity4: {
-          _id: string;
-          title: string | null;
-          date: string | null;
-          timeRange: {
-            startTime?: string;
-            endTime?: string;
-          } | null;
-          images: Array<{
-            asset: {
-              _ref: string;
-              _type: "reference";
-            } | null;
-            hotspot: SanityImageHotspot | null;
-            crop: SanityImageCrop | null;
-          }> | null;
-          description: Array<{
-            children?: Array<{
-              marks?: Array<string>;
-              text?: string;
-              _type: "span";
-              _key: string;
-            }>;
-            style?:
-              | "blockquote"
-              | "h1"
-              | "h2"
-              | "h3"
-              | "h4"
-              | "h5"
-              | "h6"
-              | "normal";
-            listItem?: "bullet" | "number";
-            markDefs?: Array<{
-              href?: string;
-              _type: "link";
-              _key: string;
-            }>;
-            level?: number;
-            _type: "block";
-            _key: string;
-          }> | null;
-          bookingHref: string | null;
-          slug: string | null;
-        } | null;
-      }
     | {
         _type: "bookingSection";
         id: string | null;
@@ -6897,6 +4891,26 @@ export type RoomPostQueryResult = {
           } | null;
         } | null;
         backgroundColor: "black" | "green" | "orange" | null;
+      }
+    | {
+        _type: "calendarSection";
+        id: string | null;
+        heading: string | null;
+        eventCategories: Array<string> | null;
+        activities: Array<{
+          _id: string;
+          title: string | null;
+          startsAt: string | null;
+          endsAt: string | null;
+          locationName: string | null;
+          locationAddress: string | null;
+          description: string | null;
+          thumbnail: string | null;
+          bookingHref: string | null;
+          eventCategories: Array<string> | null;
+          contentBlocks: null;
+          slug: string | null;
+        }>;
       }
     | {
         _type: "carouselSection";
@@ -7232,6 +5246,7 @@ export type RoomPostQueryResult = {
           _type: "block";
           _key: string;
         }> | null;
+        mediaType: "image" | "video" | null;
         images: Array<{
           asset: {
             _ref: string;
@@ -7240,6 +5255,7 @@ export type RoomPostQueryResult = {
           hotspot: SanityImageHotspot | null;
           crop: SanityImageCrop | null;
         }> | null;
+        video: BunnyVideo | null;
         specs: Array<{
           body: string | null;
         }> | null;
@@ -7447,15 +5463,7 @@ export type RoomPostQueryResult = {
           hotspot: SanityImageHotspot | null;
           crop: SanityImageCrop | null;
         }> | null;
-        video: string | null;
-        videoPlaceholder: {
-          asset: {
-            _ref: string;
-            _type: "reference";
-          } | null;
-          hotspot: SanityImageHotspot | null;
-          crop: SanityImageCrop | null;
-        } | null;
+        video: BunnyVideo | null;
         mediaAlignment: "left" | "right" | null;
         roomLink: {
           _id: string;
@@ -7529,51 +5537,21 @@ export type RoomPostQueryResult = {
             crop: SanityImageCrop | null;
           }> | null;
         }> | null;
-        activityLinks: Array<{
+        activityLinks: null;
+        activities: Array<{
           _id: string;
           title: string | null;
-          description: Array<{
-            children?: Array<{
-              marks?: Array<string>;
-              text?: string;
-              _type: "span";
-              _key: string;
-            }>;
-            style?:
-              | "blockquote"
-              | "h1"
-              | "h2"
-              | "h3"
-              | "h4"
-              | "h5"
-              | "h6"
-              | "normal";
-            listItem?: "bullet" | "number";
-            markDefs?: Array<{
-              href?: string;
-              _type: "link";
-              _key: string;
-            }>;
-            level?: number;
-            _type: "block";
-            _key: string;
-          }> | null;
-          slug: string | null;
-          images: Array<{
-            asset: {
-              _ref: string;
-              _type: "reference";
-            } | null;
-            hotspot: SanityImageHotspot | null;
-            crop: SanityImageCrop | null;
-          }> | null;
+          startsAt: string | null;
+          endsAt: string | null;
+          locationName: string | null;
+          locationAddress: string | null;
+          description: string | null;
+          thumbnail: string | null;
           bookingHref: string | null;
-          date: string | null;
-          timeRange: {
-            startTime?: string;
-            endTime?: string;
-          } | null;
-        }> | null;
+          eventCategories: Array<string> | null;
+          contentBlocks: null;
+          slug: string | null;
+        }>;
         links: Array<{
           header: string | null;
           body: RichPortableText | null;
@@ -7892,13 +5870,12 @@ export type ProductSlugsQueryResult = Array<{
 }>;
 
 // Source: src/sanity/lib/queries.ts
-// Variable: metadataQuery
-// Query: *[_type == "metaData"][0] {    _id,    title,    description,    keywords,    socialimage {  asset {    _ref,    _type  },  hotspot,  crop}  }
-export type MetadataQueryResult = {
+// Variable: siteSettingsQuery
+// Query: *[_type == "siteSettings"][0] {    _id,    title,    description,    socialimage {  asset {    _ref,    _type  },  hotspot,  crop}  }
+export type SiteSettingsQueryResult = {
   _id: string;
   title: string | null;
   description: string | null;
-  keywords: string | null;
   socialimage: {
     asset: {
       _ref: string;
@@ -7914,36 +5891,37 @@ import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
     "{\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n}": ImageFragmentResult;
-    "{\n  asset {\n    _ref,\n    _type\n  }\n}": VideoFragmentResult;
+    "{\n  metaTitle,\n  metaDescription,\n  socialImage {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n}\n}": SeoFragmentResult;
     '{\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}': LinkFragmentResult;
     '{\n  linkType,\n  label,\n  href,\n  jumpLink,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}': FooterLinkFragmentResult;
-    '{\n  id,\n  layout,\n  heading,\n  body,\n  images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n  specs[] {\n    body\n  },\n  button {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n}': HeroSectionFragmentResult;
+    '{\n  id,\n  layout,\n  heading,\n  body,\n  mediaType,\n  images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n  video,\n  specs[] {\n    body\n  },\n  button {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n}': HeroSectionFragmentResult;
     '{\n  id,\n  heading,\n  body,\n  button {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n}': TextSectionFragmentResult;
-    '{\n  id,\n  layout,\n  heading,\n  body,\n  textBlocks[] {\n    layout,\n    header,\n    body,\n    bulletList[] {\n      body\n    }\n  },\n  bulletList[] {\n    body\n  },\n  buttons[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n},\n  mediaType,\n  images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n  video,\n  videoPlaceholder {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n  mediaAlignment,\n  roomLink-> {\n    _id,\n    title,\n    roomType,\n    description,\n    "slug": slug.current\n  },\n  roomLinks[]-> {\n    _id,\n    title,\n    roomType,\n    description,\n    "slug": slug.current,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n}\n  },\n  activityLinks[]-> {\n    _id,\n    title,\n    description,\n    "slug": slug.current,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    bookingHref,\n    date,\n    timeRange\n  },\n  links[] {\n    header,\n    body,\n    date,\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    buttons[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  }\n}': MediaTextSectionFragmentResult;
+    '{\n  id,\n  layout,\n  heading,\n  body,\n  textBlocks[] {\n    layout,\n    header,\n    body,\n    bulletList[] {\n      body\n    }\n  },\n  bulletList[] {\n    body\n  },\n  buttons[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n},\n  mediaType,\n  images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n  video,\n  mediaAlignment,\n  roomLink-> {\n    _id,\n    title,\n    roomType,\n    description,\n    "slug": slug.current\n  },\n  roomLinks[]-> {\n    _id,\n    title,\n    roomType,\n    description,\n    "slug": slug.current,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n}\n  },\n  activityLinks[]-> {\n    _id,\n    title,\n    description,\n    "slug": slug.current,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    bookingHref,\n    date,\n    timeRange\n  },\n  "activities": *[\n    _type == "calendar" &&\n    isActive == true &&\n    defined(startsAt) &&\n    startsAt >= now()\n  ] | order(startsAt asc)[0...50] {\n    _id,\n    title,\n    startsAt,\n    endsAt,\n    locationName,\n    locationAddress,\n    description,\n    thumbnail,\n    bookingHref,\n    eventCategories,\n    contentBlocks[] {\n      _type\n    },\n    "slug": slug.current\n  },\n  links[] {\n    header,\n    body,\n    date,\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    buttons[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  }\n}': MediaTextSectionFragmentResult;
     '{\n  id,\n  layout,\n  subHeading,\n  heading,\n  body,\n  image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n  button {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n},\n  backgroundColor\n}': BreakSectionFragmentResult;
     "{\n  id,\n  images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n}\n}": CarouselSectionFragmentResult;
     "{\n  id,\n  layout,\n  heading,\n  image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n  foodTabs[] {\n    tabName,\n    availability,\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    categories[] {\n      name,\n      items[] {\n        name,\n        price,\n        extras[] {\n          name,\n          price\n        }\n      }\n    }\n  },\n  spaTabs[] {\n    tabName,\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    treatments[] {\n      name,\n      description,\n      options[] {\n        duration,\n        price\n      }\n    }\n  },\n  venueTabs[] {\n    areaName,\n    areaDescription,\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    specs[] {\n      specName,\n      specDescription\n    }\n  }\n}": MenuSectionFragmentResult;
-    '{\n  id,\n  layout,\n  heading,\n  activity1-> {\n    _id,\n    title,\n    date,\n    timeRange,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    description,\n    bookingHref,\n    "slug": slug.current\n  },\n  activity2-> {\n    _id,\n    title,\n    date,\n    timeRange,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    description,\n    bookingHref,\n    "slug": slug.current\n  },\n  activity3-> {\n    _id,\n    title,\n    date,\n    timeRange,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    description,\n    bookingHref,\n    "slug": slug.current\n  },\n  activity4-> {\n    _id,\n    title,\n    date,\n    timeRange,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    description,\n    bookingHref,\n    "slug": slug.current\n  }\n}': ActivitySectionFragmentResult;
+    '{\n  id,\n  heading,\n  eventCategories,\n  "activities": *[\n    _type == "calendar" &&\n    isActive == true &&\n    defined(startsAt) &&\n    startsAt >= now()\n  ] | order(startsAt asc)[0...50] {\n    _id,\n    title,\n    startsAt,\n    endsAt,\n    locationName,\n    locationAddress,\n    description,\n    thumbnail,\n    bookingHref,\n    eventCategories,\n    contentBlocks[] {\n      _type\n    },\n    "slug": slug.current\n  }\n}': CalendarSectionFragmentResult;
     '{\n  id,\n  layout,\n  subHeading,\n  heading,\n  feature1 {\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    heading,\n    body,\n    links[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  },\n  feature2 {\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    heading,\n    body,\n    links[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  },\n  feature3 {\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    heading,\n    body,\n    links[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  },\n  feature4 {\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    heading,\n    body,\n    links[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  }\n}': FeatureSectionFragmentResult;
     "{\n  id,\n  show,\n  noTopPad,\n  noBottomPad\n}": BookingSectionFragmentResult;
     "{\n  id,\n  heading,\n  products[]-> {\n    _id,\n    store {\n      title,\n      slug {\n        current\n      },\n      previewImageUrl,\n      priceRange {\n        minVariantPrice,\n        maxVariantPrice\n      },\n      status,\n      isDeleted,\n      options[] {\n        name,\n        values\n      },\n      variants[]-> {\n        store {\n          inventory {\n            available,\n            isAvailable\n          },\n          option1,\n          option2,\n          option3,\n          colorHex\n        }\n      }\n    }\n  }\n}": ProductSectionFragmentResult;
-    '{\n  _type,\n  ...select(_type == "heroSection" => {\n  id,\n  layout,\n  heading,\n  body,\n  images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n  specs[] {\n    body\n  },\n  button {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n}),\n  ...select(_type == "textSection" => {\n  id,\n  heading,\n  body,\n  button {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n}),\n  ...select(_type == "mediaTextSection" => {\n  id,\n  layout,\n  heading,\n  body,\n  textBlocks[] {\n    layout,\n    header,\n    body,\n    bulletList[] {\n      body\n    }\n  },\n  bulletList[] {\n    body\n  },\n  buttons[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n},\n  mediaType,\n  images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n  video,\n  videoPlaceholder {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n  mediaAlignment,\n  roomLink-> {\n    _id,\n    title,\n    roomType,\n    description,\n    "slug": slug.current\n  },\n  roomLinks[]-> {\n    _id,\n    title,\n    roomType,\n    description,\n    "slug": slug.current,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n}\n  },\n  activityLinks[]-> {\n    _id,\n    title,\n    description,\n    "slug": slug.current,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    bookingHref,\n    date,\n    timeRange\n  },\n  links[] {\n    header,\n    body,\n    date,\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    buttons[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  }\n}),\n  ...select(_type == "breakSection" => {\n  id,\n  layout,\n  subHeading,\n  heading,\n  body,\n  image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n  button {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n},\n  backgroundColor\n}),\n  ...select(_type == "carouselSection" => {\n  id,\n  images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n}\n}),\n  ...select(_type == "menuSection" => {\n  id,\n  layout,\n  heading,\n  image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n  foodTabs[] {\n    tabName,\n    availability,\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    categories[] {\n      name,\n      items[] {\n        name,\n        price,\n        extras[] {\n          name,\n          price\n        }\n      }\n    }\n  },\n  spaTabs[] {\n    tabName,\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    treatments[] {\n      name,\n      description,\n      options[] {\n        duration,\n        price\n      }\n    }\n  },\n  venueTabs[] {\n    areaName,\n    areaDescription,\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    specs[] {\n      specName,\n      specDescription\n    }\n  }\n}),\n  ...select(_type == "activitySection" => {\n  id,\n  layout,\n  heading,\n  activity1-> {\n    _id,\n    title,\n    date,\n    timeRange,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    description,\n    bookingHref,\n    "slug": slug.current\n  },\n  activity2-> {\n    _id,\n    title,\n    date,\n    timeRange,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    description,\n    bookingHref,\n    "slug": slug.current\n  },\n  activity3-> {\n    _id,\n    title,\n    date,\n    timeRange,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    description,\n    bookingHref,\n    "slug": slug.current\n  },\n  activity4-> {\n    _id,\n    title,\n    date,\n    timeRange,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    description,\n    bookingHref,\n    "slug": slug.current\n  }\n}),\n  ...select(_type == "featureSection" => {\n  id,\n  layout,\n  subHeading,\n  heading,\n  feature1 {\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    heading,\n    body,\n    links[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  },\n  feature2 {\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    heading,\n    body,\n    links[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  },\n  feature3 {\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    heading,\n    body,\n    links[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  },\n  feature4 {\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    heading,\n    body,\n    links[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  }\n}),\n  ...select(_type == "bookingSection" => {\n  id,\n  show,\n  noTopPad,\n  noBottomPad\n}),\n  ...select(_type == "productSection" => {\n  id,\n  heading,\n  products[]-> {\n    _id,\n    store {\n      title,\n      slug {\n        current\n      },\n      previewImageUrl,\n      priceRange {\n        minVariantPrice,\n        maxVariantPrice\n      },\n      status,\n      isDeleted,\n      options[] {\n        name,\n        values\n      },\n      variants[]-> {\n        store {\n          inventory {\n            available,\n            isAvailable\n          },\n          option1,\n          option2,\n          option3,\n          colorHex\n        }\n      }\n    }\n  }\n})\n}': FlexibleContentFragmentResult;
-    '\n  *[_type == "page" && slug.current == $slug][0] {\n    _id,\n    _type,\n    title,\n    slug,\n    pageType,\n    textBlocks[] {\n      _key,\n      header,\n      body\n    },\n    contentBlocks[] {\n  _type,\n  ...select(_type == "heroSection" => {\n  id,\n  layout,\n  heading,\n  body,\n  images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n  specs[] {\n    body\n  },\n  button {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n}),\n  ...select(_type == "textSection" => {\n  id,\n  heading,\n  body,\n  button {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n}),\n  ...select(_type == "mediaTextSection" => {\n  id,\n  layout,\n  heading,\n  body,\n  textBlocks[] {\n    layout,\n    header,\n    body,\n    bulletList[] {\n      body\n    }\n  },\n  bulletList[] {\n    body\n  },\n  buttons[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n},\n  mediaType,\n  images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n  video,\n  videoPlaceholder {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n  mediaAlignment,\n  roomLink-> {\n    _id,\n    title,\n    roomType,\n    description,\n    "slug": slug.current\n  },\n  roomLinks[]-> {\n    _id,\n    title,\n    roomType,\n    description,\n    "slug": slug.current,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n}\n  },\n  activityLinks[]-> {\n    _id,\n    title,\n    description,\n    "slug": slug.current,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    bookingHref,\n    date,\n    timeRange\n  },\n  links[] {\n    header,\n    body,\n    date,\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    buttons[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  }\n}),\n  ...select(_type == "breakSection" => {\n  id,\n  layout,\n  subHeading,\n  heading,\n  body,\n  image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n  button {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n},\n  backgroundColor\n}),\n  ...select(_type == "carouselSection" => {\n  id,\n  images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n}\n}),\n  ...select(_type == "menuSection" => {\n  id,\n  layout,\n  heading,\n  image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n  foodTabs[] {\n    tabName,\n    availability,\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    categories[] {\n      name,\n      items[] {\n        name,\n        price,\n        extras[] {\n          name,\n          price\n        }\n      }\n    }\n  },\n  spaTabs[] {\n    tabName,\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    treatments[] {\n      name,\n      description,\n      options[] {\n        duration,\n        price\n      }\n    }\n  },\n  venueTabs[] {\n    areaName,\n    areaDescription,\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    specs[] {\n      specName,\n      specDescription\n    }\n  }\n}),\n  ...select(_type == "activitySection" => {\n  id,\n  layout,\n  heading,\n  activity1-> {\n    _id,\n    title,\n    date,\n    timeRange,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    description,\n    bookingHref,\n    "slug": slug.current\n  },\n  activity2-> {\n    _id,\n    title,\n    date,\n    timeRange,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    description,\n    bookingHref,\n    "slug": slug.current\n  },\n  activity3-> {\n    _id,\n    title,\n    date,\n    timeRange,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    description,\n    bookingHref,\n    "slug": slug.current\n  },\n  activity4-> {\n    _id,\n    title,\n    date,\n    timeRange,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    description,\n    bookingHref,\n    "slug": slug.current\n  }\n}),\n  ...select(_type == "featureSection" => {\n  id,\n  layout,\n  subHeading,\n  heading,\n  feature1 {\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    heading,\n    body,\n    links[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  },\n  feature2 {\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    heading,\n    body,\n    links[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  },\n  feature3 {\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    heading,\n    body,\n    links[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  },\n  feature4 {\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    heading,\n    body,\n    links[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  }\n}),\n  ...select(_type == "bookingSection" => {\n  id,\n  show,\n  noTopPad,\n  noBottomPad\n}),\n  ...select(_type == "productSection" => {\n  id,\n  heading,\n  products[]-> {\n    _id,\n    store {\n      title,\n      slug {\n        current\n      },\n      previewImageUrl,\n      priceRange {\n        minVariantPrice,\n        maxVariantPrice\n      },\n      status,\n      isDeleted,\n      options[] {\n        name,\n        values\n      },\n      variants[]-> {\n        store {\n          inventory {\n            available,\n            isAvailable\n          },\n          option1,\n          option2,\n          option3,\n          colorHex\n        }\n      }\n    }\n  }\n})\n}\n  }\n': PageQueryResult;
+    '{\n  _type,\n  ...select(_type == "heroSection" => {\n  id,\n  layout,\n  heading,\n  body,\n  mediaType,\n  images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n  video,\n  specs[] {\n    body\n  },\n  button {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n}),\n  ...select(_type == "textSection" => {\n  id,\n  heading,\n  body,\n  button {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n}),\n  ...select(_type == "mediaTextSection" => {\n  id,\n  layout,\n  heading,\n  body,\n  textBlocks[] {\n    layout,\n    header,\n    body,\n    bulletList[] {\n      body\n    }\n  },\n  bulletList[] {\n    body\n  },\n  buttons[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n},\n  mediaType,\n  images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n  video,\n  mediaAlignment,\n  roomLink-> {\n    _id,\n    title,\n    roomType,\n    description,\n    "slug": slug.current\n  },\n  roomLinks[]-> {\n    _id,\n    title,\n    roomType,\n    description,\n    "slug": slug.current,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n}\n  },\n  activityLinks[]-> {\n    _id,\n    title,\n    description,\n    "slug": slug.current,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    bookingHref,\n    date,\n    timeRange\n  },\n  "activities": *[\n    _type == "calendar" &&\n    isActive == true &&\n    defined(startsAt) &&\n    startsAt >= now()\n  ] | order(startsAt asc)[0...50] {\n    _id,\n    title,\n    startsAt,\n    endsAt,\n    locationName,\n    locationAddress,\n    description,\n    thumbnail,\n    bookingHref,\n    eventCategories,\n    contentBlocks[] {\n      _type\n    },\n    "slug": slug.current\n  },\n  links[] {\n    header,\n    body,\n    date,\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    buttons[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  }\n}),\n  ...select(_type == "breakSection" => {\n  id,\n  layout,\n  subHeading,\n  heading,\n  body,\n  image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n  button {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n},\n  backgroundColor\n}),\n  ...select(_type == "carouselSection" => {\n  id,\n  images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n}\n}),\n  ...select(_type == "menuSection" => {\n  id,\n  layout,\n  heading,\n  image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n  foodTabs[] {\n    tabName,\n    availability,\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    categories[] {\n      name,\n      items[] {\n        name,\n        price,\n        extras[] {\n          name,\n          price\n        }\n      }\n    }\n  },\n  spaTabs[] {\n    tabName,\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    treatments[] {\n      name,\n      description,\n      options[] {\n        duration,\n        price\n      }\n    }\n  },\n  venueTabs[] {\n    areaName,\n    areaDescription,\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    specs[] {\n      specName,\n      specDescription\n    }\n  }\n}),\n  ...select(_type == "calendarSection" => {\n  id,\n  heading,\n  eventCategories,\n  "activities": *[\n    _type == "calendar" &&\n    isActive == true &&\n    defined(startsAt) &&\n    startsAt >= now()\n  ] | order(startsAt asc)[0...50] {\n    _id,\n    title,\n    startsAt,\n    endsAt,\n    locationName,\n    locationAddress,\n    description,\n    thumbnail,\n    bookingHref,\n    eventCategories,\n    contentBlocks[] {\n      _type\n    },\n    "slug": slug.current\n  }\n}),\n  ...select(_type == "featureSection" => {\n  id,\n  layout,\n  subHeading,\n  heading,\n  feature1 {\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    heading,\n    body,\n    links[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  },\n  feature2 {\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    heading,\n    body,\n    links[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  },\n  feature3 {\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    heading,\n    body,\n    links[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  },\n  feature4 {\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    heading,\n    body,\n    links[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  }\n}),\n  ...select(_type == "bookingSection" => {\n  id,\n  show,\n  noTopPad,\n  noBottomPad\n}),\n  ...select(_type == "productSection" => {\n  id,\n  heading,\n  products[]-> {\n    _id,\n    store {\n      title,\n      slug {\n        current\n      },\n      previewImageUrl,\n      priceRange {\n        minVariantPrice,\n        maxVariantPrice\n      },\n      status,\n      isDeleted,\n      options[] {\n        name,\n        values\n      },\n      variants[]-> {\n        store {\n          inventory {\n            available,\n            isAvailable\n          },\n          option1,\n          option2,\n          option3,\n          colorHex\n        }\n      }\n    }\n  }\n})\n}': FlexibleContentFragmentResult;
+    '\n  *[_type == "page" && slug.current == $slug][0] {\n    _id,\n    _type,\n    title,\n    slug,\n    pageType,\n    seo {\n  metaTitle,\n  metaDescription,\n  socialImage {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n}\n},\n    textBlocks[] {\n      _key,\n      header,\n      body\n    },\n    contentBlocks[] {\n  _type,\n  ...select(_type == "heroSection" => {\n  id,\n  layout,\n  heading,\n  body,\n  mediaType,\n  images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n  video,\n  specs[] {\n    body\n  },\n  button {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n}),\n  ...select(_type == "textSection" => {\n  id,\n  heading,\n  body,\n  button {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n}),\n  ...select(_type == "mediaTextSection" => {\n  id,\n  layout,\n  heading,\n  body,\n  textBlocks[] {\n    layout,\n    header,\n    body,\n    bulletList[] {\n      body\n    }\n  },\n  bulletList[] {\n    body\n  },\n  buttons[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n},\n  mediaType,\n  images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n  video,\n  mediaAlignment,\n  roomLink-> {\n    _id,\n    title,\n    roomType,\n    description,\n    "slug": slug.current\n  },\n  roomLinks[]-> {\n    _id,\n    title,\n    roomType,\n    description,\n    "slug": slug.current,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n}\n  },\n  activityLinks[]-> {\n    _id,\n    title,\n    description,\n    "slug": slug.current,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    bookingHref,\n    date,\n    timeRange\n  },\n  "activities": *[\n    _type == "calendar" &&\n    isActive == true &&\n    defined(startsAt) &&\n    startsAt >= now()\n  ] | order(startsAt asc)[0...50] {\n    _id,\n    title,\n    startsAt,\n    endsAt,\n    locationName,\n    locationAddress,\n    description,\n    thumbnail,\n    bookingHref,\n    eventCategories,\n    contentBlocks[] {\n      _type\n    },\n    "slug": slug.current\n  },\n  links[] {\n    header,\n    body,\n    date,\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    buttons[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  }\n}),\n  ...select(_type == "breakSection" => {\n  id,\n  layout,\n  subHeading,\n  heading,\n  body,\n  image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n  button {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n},\n  backgroundColor\n}),\n  ...select(_type == "carouselSection" => {\n  id,\n  images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n}\n}),\n  ...select(_type == "menuSection" => {\n  id,\n  layout,\n  heading,\n  image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n  foodTabs[] {\n    tabName,\n    availability,\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    categories[] {\n      name,\n      items[] {\n        name,\n        price,\n        extras[] {\n          name,\n          price\n        }\n      }\n    }\n  },\n  spaTabs[] {\n    tabName,\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    treatments[] {\n      name,\n      description,\n      options[] {\n        duration,\n        price\n      }\n    }\n  },\n  venueTabs[] {\n    areaName,\n    areaDescription,\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    specs[] {\n      specName,\n      specDescription\n    }\n  }\n}),\n  ...select(_type == "calendarSection" => {\n  id,\n  heading,\n  eventCategories,\n  "activities": *[\n    _type == "calendar" &&\n    isActive == true &&\n    defined(startsAt) &&\n    startsAt >= now()\n  ] | order(startsAt asc)[0...50] {\n    _id,\n    title,\n    startsAt,\n    endsAt,\n    locationName,\n    locationAddress,\n    description,\n    thumbnail,\n    bookingHref,\n    eventCategories,\n    contentBlocks[] {\n      _type\n    },\n    "slug": slug.current\n  }\n}),\n  ...select(_type == "featureSection" => {\n  id,\n  layout,\n  subHeading,\n  heading,\n  feature1 {\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    heading,\n    body,\n    links[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  },\n  feature2 {\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    heading,\n    body,\n    links[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  },\n  feature3 {\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    heading,\n    body,\n    links[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  },\n  feature4 {\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    heading,\n    body,\n    links[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  }\n}),\n  ...select(_type == "bookingSection" => {\n  id,\n  show,\n  noTopPad,\n  noBottomPad\n}),\n  ...select(_type == "productSection" => {\n  id,\n  heading,\n  products[]-> {\n    _id,\n    store {\n      title,\n      slug {\n        current\n      },\n      previewImageUrl,\n      priceRange {\n        minVariantPrice,\n        maxVariantPrice\n      },\n      status,\n      isDeleted,\n      options[] {\n        name,\n        values\n      },\n      variants[]-> {\n        store {\n          inventory {\n            available,\n            isAvailable\n          },\n          option1,\n          option2,\n          option3,\n          colorHex\n        }\n      }\n    }\n  }\n})\n}\n  }\n': PageQueryResult;
     '\n  *[_type == "page"] {\n    slug\n  }\n': PageSlugsQueryResult;
-    '\n  *[_type == "page" && pageType == "homepage"][0] {\n    _id,\n    _type,\n    title,\n    slug,\n    pageType,\n    homepageHeading,\n    homepageMediaType,\n    homepageImage {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    homepageVideo,\n    homepageVideoPlaceholder {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    contentBlocks[] {\n  _type,\n  ...select(_type == "heroSection" => {\n  id,\n  layout,\n  heading,\n  body,\n  images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n  specs[] {\n    body\n  },\n  button {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n}),\n  ...select(_type == "textSection" => {\n  id,\n  heading,\n  body,\n  button {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n}),\n  ...select(_type == "mediaTextSection" => {\n  id,\n  layout,\n  heading,\n  body,\n  textBlocks[] {\n    layout,\n    header,\n    body,\n    bulletList[] {\n      body\n    }\n  },\n  bulletList[] {\n    body\n  },\n  buttons[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n},\n  mediaType,\n  images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n  video,\n  videoPlaceholder {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n  mediaAlignment,\n  roomLink-> {\n    _id,\n    title,\n    roomType,\n    description,\n    "slug": slug.current\n  },\n  roomLinks[]-> {\n    _id,\n    title,\n    roomType,\n    description,\n    "slug": slug.current,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n}\n  },\n  activityLinks[]-> {\n    _id,\n    title,\n    description,\n    "slug": slug.current,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    bookingHref,\n    date,\n    timeRange\n  },\n  links[] {\n    header,\n    body,\n    date,\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    buttons[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  }\n}),\n  ...select(_type == "breakSection" => {\n  id,\n  layout,\n  subHeading,\n  heading,\n  body,\n  image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n  button {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n},\n  backgroundColor\n}),\n  ...select(_type == "carouselSection" => {\n  id,\n  images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n}\n}),\n  ...select(_type == "menuSection" => {\n  id,\n  layout,\n  heading,\n  image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n  foodTabs[] {\n    tabName,\n    availability,\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    categories[] {\n      name,\n      items[] {\n        name,\n        price,\n        extras[] {\n          name,\n          price\n        }\n      }\n    }\n  },\n  spaTabs[] {\n    tabName,\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    treatments[] {\n      name,\n      description,\n      options[] {\n        duration,\n        price\n      }\n    }\n  },\n  venueTabs[] {\n    areaName,\n    areaDescription,\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    specs[] {\n      specName,\n      specDescription\n    }\n  }\n}),\n  ...select(_type == "activitySection" => {\n  id,\n  layout,\n  heading,\n  activity1-> {\n    _id,\n    title,\n    date,\n    timeRange,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    description,\n    bookingHref,\n    "slug": slug.current\n  },\n  activity2-> {\n    _id,\n    title,\n    date,\n    timeRange,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    description,\n    bookingHref,\n    "slug": slug.current\n  },\n  activity3-> {\n    _id,\n    title,\n    date,\n    timeRange,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    description,\n    bookingHref,\n    "slug": slug.current\n  },\n  activity4-> {\n    _id,\n    title,\n    date,\n    timeRange,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    description,\n    bookingHref,\n    "slug": slug.current\n  }\n}),\n  ...select(_type == "featureSection" => {\n  id,\n  layout,\n  subHeading,\n  heading,\n  feature1 {\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    heading,\n    body,\n    links[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  },\n  feature2 {\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    heading,\n    body,\n    links[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  },\n  feature3 {\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    heading,\n    body,\n    links[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  },\n  feature4 {\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    heading,\n    body,\n    links[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  }\n}),\n  ...select(_type == "bookingSection" => {\n  id,\n  show,\n  noTopPad,\n  noBottomPad\n}),\n  ...select(_type == "productSection" => {\n  id,\n  heading,\n  products[]-> {\n    _id,\n    store {\n      title,\n      slug {\n        current\n      },\n      previewImageUrl,\n      priceRange {\n        minVariantPrice,\n        maxVariantPrice\n      },\n      status,\n      isDeleted,\n      options[] {\n        name,\n        values\n      },\n      variants[]-> {\n        store {\n          inventory {\n            available,\n            isAvailable\n          },\n          option1,\n          option2,\n          option3,\n          colorHex\n        }\n      }\n    }\n  }\n})\n}\n  }\n': HomepageQueryResult;
-    '\n  *[_type == "page" && pageType == "calendar"][0] {\n    _id,\n    _type,\n    title,\n    slug,\n    pageType,\n    activitiesHeading,\n    activitiesBody,\n    activitiesImages[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n}\n  }\n': ActivitiesQueryResult;
-    '\n  *[_type == "page" && pageType == "links" && slug.current == $slug][0] {\n    _id,\n    _type,\n    title,\n    slug,\n    pageType,\n    heading,\n    body,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    links[] {\n      header,\n      body,\n      date,\n      image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n      buttons[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n    }\n  }\n': LinksQueryResult;
-    '\n  *[_type == "activity"] | order(date asc) {\n    _id,\n    title,\n    date,\n    timeRange,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    description,\n    bookingHref,\n    "slug": slug.current,\n    activityType\n  }\n': AllActivitiesQueryResult;
-    '\n  {\n    "activities": *[_type == "activity" && (\n      title match $wildcardTerm ||\n      activityType match $wildcardTerm ||\n      pt::text(description) match $wildcardTerm\n    )] | order(title asc) {\n      _id,\n      title,\n      "slug": slug.current,\n      activityType,\n      date,\n      timeRange,\n      "descriptionPlain": coalesce(pt::text(description), ""),\n      "resultType": "activity"\n    },\n    "pages": *[_type == "page" && defined(slug.current) && (\n      title match $wildcardTerm ||\n      slug.current match $wildcardTerm ||\n      pageType match $wildcardTerm\n    )] | order(title asc) {\n      _id,\n      title,\n      "slug": slug.current,\n      pageType,\n      "descriptionPlain": coalesce(pt::text(contentBlocks[_type == "heroSection"][0].body), ""),\n      "resultType": "page"\n    }\n  }\n': SiteSearchQueryResult;
-    '\n  *[_type == "activity" && slug.current == $slug][0] {\n    _id,\n    title,\n    slug,\n    date,\n    timeRange,\n    description,\n    bookingHref,\n    activityType,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    contentBlocks[] {\n  _type,\n  ...select(_type == "heroSection" => {\n  id,\n  layout,\n  heading,\n  body,\n  images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n  specs[] {\n    body\n  },\n  button {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n}),\n  ...select(_type == "textSection" => {\n  id,\n  heading,\n  body,\n  button {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n}),\n  ...select(_type == "mediaTextSection" => {\n  id,\n  layout,\n  heading,\n  body,\n  textBlocks[] {\n    layout,\n    header,\n    body,\n    bulletList[] {\n      body\n    }\n  },\n  bulletList[] {\n    body\n  },\n  buttons[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n},\n  mediaType,\n  images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n  video,\n  videoPlaceholder {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n  mediaAlignment,\n  roomLink-> {\n    _id,\n    title,\n    roomType,\n    description,\n    "slug": slug.current\n  },\n  roomLinks[]-> {\n    _id,\n    title,\n    roomType,\n    description,\n    "slug": slug.current,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n}\n  },\n  activityLinks[]-> {\n    _id,\n    title,\n    description,\n    "slug": slug.current,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    bookingHref,\n    date,\n    timeRange\n  },\n  links[] {\n    header,\n    body,\n    date,\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    buttons[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  }\n}),\n  ...select(_type == "breakSection" => {\n  id,\n  layout,\n  subHeading,\n  heading,\n  body,\n  image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n  button {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n},\n  backgroundColor\n}),\n  ...select(_type == "carouselSection" => {\n  id,\n  images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n}\n}),\n  ...select(_type == "menuSection" => {\n  id,\n  layout,\n  heading,\n  image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n  foodTabs[] {\n    tabName,\n    availability,\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    categories[] {\n      name,\n      items[] {\n        name,\n        price,\n        extras[] {\n          name,\n          price\n        }\n      }\n    }\n  },\n  spaTabs[] {\n    tabName,\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    treatments[] {\n      name,\n      description,\n      options[] {\n        duration,\n        price\n      }\n    }\n  },\n  venueTabs[] {\n    areaName,\n    areaDescription,\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    specs[] {\n      specName,\n      specDescription\n    }\n  }\n}),\n  ...select(_type == "activitySection" => {\n  id,\n  layout,\n  heading,\n  activity1-> {\n    _id,\n    title,\n    date,\n    timeRange,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    description,\n    bookingHref,\n    "slug": slug.current\n  },\n  activity2-> {\n    _id,\n    title,\n    date,\n    timeRange,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    description,\n    bookingHref,\n    "slug": slug.current\n  },\n  activity3-> {\n    _id,\n    title,\n    date,\n    timeRange,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    description,\n    bookingHref,\n    "slug": slug.current\n  },\n  activity4-> {\n    _id,\n    title,\n    date,\n    timeRange,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    description,\n    bookingHref,\n    "slug": slug.current\n  }\n}),\n  ...select(_type == "featureSection" => {\n  id,\n  layout,\n  subHeading,\n  heading,\n  feature1 {\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    heading,\n    body,\n    links[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  },\n  feature2 {\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    heading,\n    body,\n    links[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  },\n  feature3 {\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    heading,\n    body,\n    links[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  },\n  feature4 {\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    heading,\n    body,\n    links[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  }\n}),\n  ...select(_type == "bookingSection" => {\n  id,\n  show,\n  noTopPad,\n  noBottomPad\n}),\n  ...select(_type == "productSection" => {\n  id,\n  heading,\n  products[]-> {\n    _id,\n    store {\n      title,\n      slug {\n        current\n      },\n      previewImageUrl,\n      priceRange {\n        minVariantPrice,\n        maxVariantPrice\n      },\n      status,\n      isDeleted,\n      options[] {\n        name,\n        values\n      },\n      variants[]-> {\n        store {\n          inventory {\n            available,\n            isAvailable\n          },\n          option1,\n          option2,\n          option3,\n          colorHex\n        }\n      }\n    }\n  }\n})\n}\n  }\n': ActivityQueryResult;
-    '\n  *[_type == "activity" && defined(slug.current)] {\n    "slug": slug.current\n  }\n': ActivitySlugsQueryResult;
+    '\n  *[_type == "page" && pageType == "homepage"][0] {\n    _id,\n    _type,\n    title,\n    slug,\n    pageType,\n    seo {\n  metaTitle,\n  metaDescription,\n  socialImage {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n}\n},\n    homepageHeading,\n    homepageMediaType,\n    homepageImages[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    homepageVideo,\n    contentBlocks[] {\n  _type,\n  ...select(_type == "heroSection" => {\n  id,\n  layout,\n  heading,\n  body,\n  mediaType,\n  images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n  video,\n  specs[] {\n    body\n  },\n  button {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n}),\n  ...select(_type == "textSection" => {\n  id,\n  heading,\n  body,\n  button {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n}),\n  ...select(_type == "mediaTextSection" => {\n  id,\n  layout,\n  heading,\n  body,\n  textBlocks[] {\n    layout,\n    header,\n    body,\n    bulletList[] {\n      body\n    }\n  },\n  bulletList[] {\n    body\n  },\n  buttons[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n},\n  mediaType,\n  images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n  video,\n  mediaAlignment,\n  roomLink-> {\n    _id,\n    title,\n    roomType,\n    description,\n    "slug": slug.current\n  },\n  roomLinks[]-> {\n    _id,\n    title,\n    roomType,\n    description,\n    "slug": slug.current,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n}\n  },\n  activityLinks[]-> {\n    _id,\n    title,\n    description,\n    "slug": slug.current,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    bookingHref,\n    date,\n    timeRange\n  },\n  "activities": *[\n    _type == "calendar" &&\n    isActive == true &&\n    defined(startsAt) &&\n    startsAt >= now()\n  ] | order(startsAt asc)[0...50] {\n    _id,\n    title,\n    startsAt,\n    endsAt,\n    locationName,\n    locationAddress,\n    description,\n    thumbnail,\n    bookingHref,\n    eventCategories,\n    contentBlocks[] {\n      _type\n    },\n    "slug": slug.current\n  },\n  links[] {\n    header,\n    body,\n    date,\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    buttons[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  }\n}),\n  ...select(_type == "breakSection" => {\n  id,\n  layout,\n  subHeading,\n  heading,\n  body,\n  image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n  button {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n},\n  backgroundColor\n}),\n  ...select(_type == "carouselSection" => {\n  id,\n  images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n}\n}),\n  ...select(_type == "menuSection" => {\n  id,\n  layout,\n  heading,\n  image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n  foodTabs[] {\n    tabName,\n    availability,\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    categories[] {\n      name,\n      items[] {\n        name,\n        price,\n        extras[] {\n          name,\n          price\n        }\n      }\n    }\n  },\n  spaTabs[] {\n    tabName,\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    treatments[] {\n      name,\n      description,\n      options[] {\n        duration,\n        price\n      }\n    }\n  },\n  venueTabs[] {\n    areaName,\n    areaDescription,\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    specs[] {\n      specName,\n      specDescription\n    }\n  }\n}),\n  ...select(_type == "calendarSection" => {\n  id,\n  heading,\n  eventCategories,\n  "activities": *[\n    _type == "calendar" &&\n    isActive == true &&\n    defined(startsAt) &&\n    startsAt >= now()\n  ] | order(startsAt asc)[0...50] {\n    _id,\n    title,\n    startsAt,\n    endsAt,\n    locationName,\n    locationAddress,\n    description,\n    thumbnail,\n    bookingHref,\n    eventCategories,\n    contentBlocks[] {\n      _type\n    },\n    "slug": slug.current\n  }\n}),\n  ...select(_type == "featureSection" => {\n  id,\n  layout,\n  subHeading,\n  heading,\n  feature1 {\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    heading,\n    body,\n    links[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  },\n  feature2 {\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    heading,\n    body,\n    links[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  },\n  feature3 {\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    heading,\n    body,\n    links[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  },\n  feature4 {\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    heading,\n    body,\n    links[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  }\n}),\n  ...select(_type == "bookingSection" => {\n  id,\n  show,\n  noTopPad,\n  noBottomPad\n}),\n  ...select(_type == "productSection" => {\n  id,\n  heading,\n  products[]-> {\n    _id,\n    store {\n      title,\n      slug {\n        current\n      },\n      previewImageUrl,\n      priceRange {\n        minVariantPrice,\n        maxVariantPrice\n      },\n      status,\n      isDeleted,\n      options[] {\n        name,\n        values\n      },\n      variants[]-> {\n        store {\n          inventory {\n            available,\n            isAvailable\n          },\n          option1,\n          option2,\n          option3,\n          colorHex\n        }\n      }\n    }\n  }\n})\n}\n  }\n': HomepageQueryResult;
+    '\n  *[_type == "page" && slug.current == $slug][0] {\n    title,\n    seo {\n  metaTitle,\n  metaDescription,\n  socialImage {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n}\n}\n  }\n': PageSeoQueryResult;
+    '\n  *[_type == "page" && pageType == "calendar"][0] {\n    _id,\n    _type,\n    title,\n    slug,\n    pageType,\n    calendarHeading,\n    calendarBody,\n    calendarMediaType,\n    calendarImages[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    calendarVideo\n  }\n': ActivitiesQueryResult;
+    '\n  *[_type == "page" && pageType == "links" && slug.current == $slug][0] {\n    _id,\n    _type,\n    title,\n    slug,\n    pageType,\n    heading,\n    body,\n    mediaType,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    video,\n    links[] {\n      header,\n      body,\n      date,\n      image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n      buttons[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n    }\n  }\n': LinksQueryResult;
+    '\n  *[_type == "calendar" && isActive == true && defined(startsAt) && startsAt >= now()] | order(startsAt asc) {\n    _id,\n    title,\n    startsAt,\n    endsAt,\n    locationName,\n    locationAddress,\n    description,\n    thumbnail,\n    bookingHref,\n    eventCategories,\n    contentBlocks[] {\n      _type\n    },\n    "slug": slug.current\n  }\n': AllCalendarQueryResult;
+    '\n  count(*[_type == "calendar" && isActive == true && defined(startsAt) && startsAt >= now()])\n': CalendarCountQueryResult;
+    '\n  *[_type == "calendar" && isActive == true && defined(startsAt) && startsAt >= now()]\n    | order(startsAt asc)[$offset...$end] {\n      _id,\n      title,\n      startsAt,\n      endsAt,\n      locationName,\n      locationAddress,\n      description,\n      thumbnail,\n      bookingHref,\n      eventCategories,\n      contentBlocks[] {\n        _type\n      },\n      "slug": slug.current\n    }\n': PaginatedCalendarQueryResult;
+    '\n  {\n    "activities": *[_type == "calendar" && isActive == true && defined(startsAt) && startsAt >= now() && (\n      title match $wildcardTerm ||\n      locationName match $wildcardTerm ||\n      locationAddress match $wildcardTerm\n    )] | order(startsAt asc) {\n      _id,\n      title,\n      "slug": slug.current,\n      startsAt,\n      endsAt,\n      locationName,\n      "descriptionPlain": coalesce(locationName, locationAddress, ""),\n      "resultType": "activity"\n    },\n    "pages": *[_type == "page" && defined(slug.current) && (\n      title match $wildcardTerm ||\n      slug.current match $wildcardTerm ||\n      pageType match $wildcardTerm\n    )] | order(title asc) {\n      _id,\n      title,\n      "slug": slug.current,\n      pageType,\n      "descriptionPlain": coalesce(pt::text(contentBlocks[_type == "heroSection"][0].body), ""),\n      "resultType": "page"\n    }\n  }\n': SiteSearchQueryResult;
     '\n  *[_type == "footer"][0] {\n    _id,\n    navigationColumn1 {\n      heading,\n      links[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n    },\n    navigationColumn2 {\n      heading,\n      links[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n    },\n    followColumn {\n      heading,\n      links[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n    },\n    contactColumn {\n      heading,\n      contactItems[] {\n        label,\n        phoneNumber,\n        extension\n      }\n    },\n    announcementPopup {\n      enabled,\n      slides[] {\n        image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n        title,\n        text,\n        button {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n      }\n    }\n  }\n': FooterQueryResult;
     '\n  *[_type == "menu"][0] {\n    _id,\n    title,\n    items[] {\n      linkType,\n      label,\n      href,\n      pageLink-> {\n        _id,\n        title,\n        "slug": slug.current\n      }\n    }\n  }\n': MenuQueryResult;
-    '\n  *[_type == "room"] | order(title asc) {\n    _id,\n    title,\n    description,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    specs[] {\n      body\n    },\n    "slug": slug.current,\n    contentBlocks[] {\n  _type,\n  ...select(_type == "heroSection" => {\n  id,\n  layout,\n  heading,\n  body,\n  images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n  specs[] {\n    body\n  },\n  button {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n}),\n  ...select(_type == "textSection" => {\n  id,\n  heading,\n  body,\n  button {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n}),\n  ...select(_type == "mediaTextSection" => {\n  id,\n  layout,\n  heading,\n  body,\n  textBlocks[] {\n    layout,\n    header,\n    body,\n    bulletList[] {\n      body\n    }\n  },\n  bulletList[] {\n    body\n  },\n  buttons[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n},\n  mediaType,\n  images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n  video,\n  videoPlaceholder {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n  mediaAlignment,\n  roomLink-> {\n    _id,\n    title,\n    roomType,\n    description,\n    "slug": slug.current\n  },\n  roomLinks[]-> {\n    _id,\n    title,\n    roomType,\n    description,\n    "slug": slug.current,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n}\n  },\n  activityLinks[]-> {\n    _id,\n    title,\n    description,\n    "slug": slug.current,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    bookingHref,\n    date,\n    timeRange\n  },\n  links[] {\n    header,\n    body,\n    date,\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    buttons[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  }\n}),\n  ...select(_type == "breakSection" => {\n  id,\n  layout,\n  subHeading,\n  heading,\n  body,\n  image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n  button {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n},\n  backgroundColor\n}),\n  ...select(_type == "carouselSection" => {\n  id,\n  images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n}\n}),\n  ...select(_type == "menuSection" => {\n  id,\n  layout,\n  heading,\n  image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n  foodTabs[] {\n    tabName,\n    availability,\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    categories[] {\n      name,\n      items[] {\n        name,\n        price,\n        extras[] {\n          name,\n          price\n        }\n      }\n    }\n  },\n  spaTabs[] {\n    tabName,\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    treatments[] {\n      name,\n      description,\n      options[] {\n        duration,\n        price\n      }\n    }\n  },\n  venueTabs[] {\n    areaName,\n    areaDescription,\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    specs[] {\n      specName,\n      specDescription\n    }\n  }\n}),\n  ...select(_type == "activitySection" => {\n  id,\n  layout,\n  heading,\n  activity1-> {\n    _id,\n    title,\n    date,\n    timeRange,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    description,\n    bookingHref,\n    "slug": slug.current\n  },\n  activity2-> {\n    _id,\n    title,\n    date,\n    timeRange,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    description,\n    bookingHref,\n    "slug": slug.current\n  },\n  activity3-> {\n    _id,\n    title,\n    date,\n    timeRange,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    description,\n    bookingHref,\n    "slug": slug.current\n  },\n  activity4-> {\n    _id,\n    title,\n    date,\n    timeRange,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    description,\n    bookingHref,\n    "slug": slug.current\n  }\n}),\n  ...select(_type == "featureSection" => {\n  id,\n  layout,\n  subHeading,\n  heading,\n  feature1 {\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    heading,\n    body,\n    links[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  },\n  feature2 {\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    heading,\n    body,\n    links[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  },\n  feature3 {\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    heading,\n    body,\n    links[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  },\n  feature4 {\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    heading,\n    body,\n    links[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  }\n}),\n  ...select(_type == "bookingSection" => {\n  id,\n  show,\n  noTopPad,\n  noBottomPad\n}),\n  ...select(_type == "productSection" => {\n  id,\n  heading,\n  products[]-> {\n    _id,\n    store {\n      title,\n      slug {\n        current\n      },\n      previewImageUrl,\n      priceRange {\n        minVariantPrice,\n        maxVariantPrice\n      },\n      status,\n      isDeleted,\n      options[] {\n        name,\n        values\n      },\n      variants[]-> {\n        store {\n          inventory {\n            available,\n            isAvailable\n          },\n          option1,\n          option2,\n          option3,\n          colorHex\n        }\n      }\n    }\n  }\n})\n}\n  }\n': RoomPostsQueryResult;
-    '\n  *[_type == "room" && slug.current == $slug][0] {\n    _id,\n    title,\n    description,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    specs[] {\n      body\n    },\n    "slug": slug.current,\n    contentBlocks[] {\n  _type,\n  ...select(_type == "heroSection" => {\n  id,\n  layout,\n  heading,\n  body,\n  images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n  specs[] {\n    body\n  },\n  button {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n}),\n  ...select(_type == "textSection" => {\n  id,\n  heading,\n  body,\n  button {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n}),\n  ...select(_type == "mediaTextSection" => {\n  id,\n  layout,\n  heading,\n  body,\n  textBlocks[] {\n    layout,\n    header,\n    body,\n    bulletList[] {\n      body\n    }\n  },\n  bulletList[] {\n    body\n  },\n  buttons[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n},\n  mediaType,\n  images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n  video,\n  videoPlaceholder {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n  mediaAlignment,\n  roomLink-> {\n    _id,\n    title,\n    roomType,\n    description,\n    "slug": slug.current\n  },\n  roomLinks[]-> {\n    _id,\n    title,\n    roomType,\n    description,\n    "slug": slug.current,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n}\n  },\n  activityLinks[]-> {\n    _id,\n    title,\n    description,\n    "slug": slug.current,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    bookingHref,\n    date,\n    timeRange\n  },\n  links[] {\n    header,\n    body,\n    date,\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    buttons[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  }\n}),\n  ...select(_type == "breakSection" => {\n  id,\n  layout,\n  subHeading,\n  heading,\n  body,\n  image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n  button {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n},\n  backgroundColor\n}),\n  ...select(_type == "carouselSection" => {\n  id,\n  images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n}\n}),\n  ...select(_type == "menuSection" => {\n  id,\n  layout,\n  heading,\n  image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n  foodTabs[] {\n    tabName,\n    availability,\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    categories[] {\n      name,\n      items[] {\n        name,\n        price,\n        extras[] {\n          name,\n          price\n        }\n      }\n    }\n  },\n  spaTabs[] {\n    tabName,\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    treatments[] {\n      name,\n      description,\n      options[] {\n        duration,\n        price\n      }\n    }\n  },\n  venueTabs[] {\n    areaName,\n    areaDescription,\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    specs[] {\n      specName,\n      specDescription\n    }\n  }\n}),\n  ...select(_type == "activitySection" => {\n  id,\n  layout,\n  heading,\n  activity1-> {\n    _id,\n    title,\n    date,\n    timeRange,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    description,\n    bookingHref,\n    "slug": slug.current\n  },\n  activity2-> {\n    _id,\n    title,\n    date,\n    timeRange,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    description,\n    bookingHref,\n    "slug": slug.current\n  },\n  activity3-> {\n    _id,\n    title,\n    date,\n    timeRange,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    description,\n    bookingHref,\n    "slug": slug.current\n  },\n  activity4-> {\n    _id,\n    title,\n    date,\n    timeRange,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    description,\n    bookingHref,\n    "slug": slug.current\n  }\n}),\n  ...select(_type == "featureSection" => {\n  id,\n  layout,\n  subHeading,\n  heading,\n  feature1 {\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    heading,\n    body,\n    links[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  },\n  feature2 {\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    heading,\n    body,\n    links[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  },\n  feature3 {\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    heading,\n    body,\n    links[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  },\n  feature4 {\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    heading,\n    body,\n    links[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  }\n}),\n  ...select(_type == "bookingSection" => {\n  id,\n  show,\n  noTopPad,\n  noBottomPad\n}),\n  ...select(_type == "productSection" => {\n  id,\n  heading,\n  products[]-> {\n    _id,\n    store {\n      title,\n      slug {\n        current\n      },\n      previewImageUrl,\n      priceRange {\n        minVariantPrice,\n        maxVariantPrice\n      },\n      status,\n      isDeleted,\n      options[] {\n        name,\n        values\n      },\n      variants[]-> {\n        store {\n          inventory {\n            available,\n            isAvailable\n          },\n          option1,\n          option2,\n          option3,\n          colorHex\n        }\n      }\n    }\n  }\n})\n}\n  }\n': RoomPostQueryResult;
+    '\n  *[_type == "room"] | order(title asc) {\n    _id,\n    title,\n    description,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    specs[] {\n      body\n    },\n    "slug": slug.current,\n    contentBlocks[] {\n  _type,\n  ...select(_type == "heroSection" => {\n  id,\n  layout,\n  heading,\n  body,\n  mediaType,\n  images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n  video,\n  specs[] {\n    body\n  },\n  button {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n}),\n  ...select(_type == "textSection" => {\n  id,\n  heading,\n  body,\n  button {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n}),\n  ...select(_type == "mediaTextSection" => {\n  id,\n  layout,\n  heading,\n  body,\n  textBlocks[] {\n    layout,\n    header,\n    body,\n    bulletList[] {\n      body\n    }\n  },\n  bulletList[] {\n    body\n  },\n  buttons[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n},\n  mediaType,\n  images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n  video,\n  mediaAlignment,\n  roomLink-> {\n    _id,\n    title,\n    roomType,\n    description,\n    "slug": slug.current\n  },\n  roomLinks[]-> {\n    _id,\n    title,\n    roomType,\n    description,\n    "slug": slug.current,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n}\n  },\n  activityLinks[]-> {\n    _id,\n    title,\n    description,\n    "slug": slug.current,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    bookingHref,\n    date,\n    timeRange\n  },\n  "activities": *[\n    _type == "calendar" &&\n    isActive == true &&\n    defined(startsAt) &&\n    startsAt >= now()\n  ] | order(startsAt asc)[0...50] {\n    _id,\n    title,\n    startsAt,\n    endsAt,\n    locationName,\n    locationAddress,\n    description,\n    thumbnail,\n    bookingHref,\n    eventCategories,\n    contentBlocks[] {\n      _type\n    },\n    "slug": slug.current\n  },\n  links[] {\n    header,\n    body,\n    date,\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    buttons[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  }\n}),\n  ...select(_type == "breakSection" => {\n  id,\n  layout,\n  subHeading,\n  heading,\n  body,\n  image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n  button {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n},\n  backgroundColor\n}),\n  ...select(_type == "carouselSection" => {\n  id,\n  images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n}\n}),\n  ...select(_type == "menuSection" => {\n  id,\n  layout,\n  heading,\n  image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n  foodTabs[] {\n    tabName,\n    availability,\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    categories[] {\n      name,\n      items[] {\n        name,\n        price,\n        extras[] {\n          name,\n          price\n        }\n      }\n    }\n  },\n  spaTabs[] {\n    tabName,\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    treatments[] {\n      name,\n      description,\n      options[] {\n        duration,\n        price\n      }\n    }\n  },\n  venueTabs[] {\n    areaName,\n    areaDescription,\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    specs[] {\n      specName,\n      specDescription\n    }\n  }\n}),\n  ...select(_type == "calendarSection" => {\n  id,\n  heading,\n  eventCategories,\n  "activities": *[\n    _type == "calendar" &&\n    isActive == true &&\n    defined(startsAt) &&\n    startsAt >= now()\n  ] | order(startsAt asc)[0...50] {\n    _id,\n    title,\n    startsAt,\n    endsAt,\n    locationName,\n    locationAddress,\n    description,\n    thumbnail,\n    bookingHref,\n    eventCategories,\n    contentBlocks[] {\n      _type\n    },\n    "slug": slug.current\n  }\n}),\n  ...select(_type == "featureSection" => {\n  id,\n  layout,\n  subHeading,\n  heading,\n  feature1 {\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    heading,\n    body,\n    links[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  },\n  feature2 {\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    heading,\n    body,\n    links[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  },\n  feature3 {\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    heading,\n    body,\n    links[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  },\n  feature4 {\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    heading,\n    body,\n    links[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  }\n}),\n  ...select(_type == "bookingSection" => {\n  id,\n  show,\n  noTopPad,\n  noBottomPad\n}),\n  ...select(_type == "productSection" => {\n  id,\n  heading,\n  products[]-> {\n    _id,\n    store {\n      title,\n      slug {\n        current\n      },\n      previewImageUrl,\n      priceRange {\n        minVariantPrice,\n        maxVariantPrice\n      },\n      status,\n      isDeleted,\n      options[] {\n        name,\n        values\n      },\n      variants[]-> {\n        store {\n          inventory {\n            available,\n            isAvailable\n          },\n          option1,\n          option2,\n          option3,\n          colorHex\n        }\n      }\n    }\n  }\n})\n}\n  }\n': RoomPostsQueryResult;
+    '\n  *[_type == "room" && slug.current == $slug][0] {\n    _id,\n    title,\n    description,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    specs[] {\n      body\n    },\n    "slug": slug.current,\n    contentBlocks[] {\n  _type,\n  ...select(_type == "heroSection" => {\n  id,\n  layout,\n  heading,\n  body,\n  mediaType,\n  images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n  video,\n  specs[] {\n    body\n  },\n  button {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n}),\n  ...select(_type == "textSection" => {\n  id,\n  heading,\n  body,\n  button {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n}),\n  ...select(_type == "mediaTextSection" => {\n  id,\n  layout,\n  heading,\n  body,\n  textBlocks[] {\n    layout,\n    header,\n    body,\n    bulletList[] {\n      body\n    }\n  },\n  bulletList[] {\n    body\n  },\n  buttons[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n},\n  mediaType,\n  images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n  video,\n  mediaAlignment,\n  roomLink-> {\n    _id,\n    title,\n    roomType,\n    description,\n    "slug": slug.current\n  },\n  roomLinks[]-> {\n    _id,\n    title,\n    roomType,\n    description,\n    "slug": slug.current,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n}\n  },\n  activityLinks[]-> {\n    _id,\n    title,\n    description,\n    "slug": slug.current,\n    images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    bookingHref,\n    date,\n    timeRange\n  },\n  "activities": *[\n    _type == "calendar" &&\n    isActive == true &&\n    defined(startsAt) &&\n    startsAt >= now()\n  ] | order(startsAt asc)[0...50] {\n    _id,\n    title,\n    startsAt,\n    endsAt,\n    locationName,\n    locationAddress,\n    description,\n    thumbnail,\n    bookingHref,\n    eventCategories,\n    contentBlocks[] {\n      _type\n    },\n    "slug": slug.current\n  },\n  links[] {\n    header,\n    body,\n    date,\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    buttons[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  }\n}),\n  ...select(_type == "breakSection" => {\n  id,\n  layout,\n  subHeading,\n  heading,\n  body,\n  image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n  button {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n},\n  backgroundColor\n}),\n  ...select(_type == "carouselSection" => {\n  id,\n  images[] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n}\n}),\n  ...select(_type == "menuSection" => {\n  id,\n  layout,\n  heading,\n  image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n  foodTabs[] {\n    tabName,\n    availability,\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    categories[] {\n      name,\n      items[] {\n        name,\n        price,\n        extras[] {\n          name,\n          price\n        }\n      }\n    }\n  },\n  spaTabs[] {\n    tabName,\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    treatments[] {\n      name,\n      description,\n      options[] {\n        duration,\n        price\n      }\n    }\n  },\n  venueTabs[] {\n    areaName,\n    areaDescription,\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    specs[] {\n      specName,\n      specDescription\n    }\n  }\n}),\n  ...select(_type == "calendarSection" => {\n  id,\n  heading,\n  eventCategories,\n  "activities": *[\n    _type == "calendar" &&\n    isActive == true &&\n    defined(startsAt) &&\n    startsAt >= now()\n  ] | order(startsAt asc)[0...50] {\n    _id,\n    title,\n    startsAt,\n    endsAt,\n    locationName,\n    locationAddress,\n    description,\n    thumbnail,\n    bookingHref,\n    eventCategories,\n    contentBlocks[] {\n      _type\n    },\n    "slug": slug.current\n  }\n}),\n  ...select(_type == "featureSection" => {\n  id,\n  layout,\n  subHeading,\n  heading,\n  feature1 {\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    heading,\n    body,\n    links[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  },\n  feature2 {\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    heading,\n    body,\n    links[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  },\n  feature3 {\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    heading,\n    body,\n    links[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  },\n  feature4 {\n    image {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n},\n    heading,\n    body,\n    links[] {\n  linkType,\n  label,\n  href,\n  jumpLink,\n  bookingTab,\n  color,\n  file {\n    asset {\n      _ref,\n      _type,\n      originalFilename\n    }\n  },\n  pageLink {\n    _ref,\n    _type,\n    "slug": *[_type == "page" && _id == ^._ref][0].slug.current,\n    "title": *[_type == "page" && _id == ^._ref][0].title\n  }\n}\n  }\n}),\n  ...select(_type == "bookingSection" => {\n  id,\n  show,\n  noTopPad,\n  noBottomPad\n}),\n  ...select(_type == "productSection" => {\n  id,\n  heading,\n  products[]-> {\n    _id,\n    store {\n      title,\n      slug {\n        current\n      },\n      previewImageUrl,\n      priceRange {\n        minVariantPrice,\n        maxVariantPrice\n      },\n      status,\n      isDeleted,\n      options[] {\n        name,\n        values\n      },\n      variants[]-> {\n        store {\n          inventory {\n            available,\n            isAvailable\n          },\n          option1,\n          option2,\n          option3,\n          colorHex\n        }\n      }\n    }\n  }\n})\n}\n  }\n': RoomPostQueryResult;
     '\n  *[_type == "room" && slug.current != $slug] | order(title asc) {\n    _id,\n    title,\n    roomType,\n    description,\n    "slug": slug.current,\n    "image": images[0] {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n}\n  }\n': OtherRoomsQueryResult;
     '\n  *[_type == "product" && store.slug.current == $slug][0] {\n    _id,\n    body,\n    store {\n      title,\n      slug {\n        current\n      },\n      previewImageUrl,\n      images,\n      descriptionHtml,\n      priceRange {\n        minVariantPrice,\n        maxVariantPrice\n      },\n      status,\n      isDeleted,\n      id,\n      gid,\n      options[] {\n        name,\n        values\n      },\n      variants[]-> {\n        _id,\n        store {\n          id,\n          gid,\n          title,\n          price,\n          sku,\n          previewImageUrl,\n          option1,\n          option2,\n          option3,\n          colorHex,\n          inventory {\n            available,\n            isAvailable\n          }\n        }\n      }\n    }\n  }\n': ProductQueryResult;
     '\n  *[_type == "product" && defined(store.slug.current) && store.status == "active" && !store.isDeleted] {\n    "slug": store.slug.current\n  }\n': ProductSlugsQueryResult;
-    '\n  *[_type == "metaData"][0] {\n    _id,\n    title,\n    description,\n    keywords,\n    socialimage {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n}\n  }\n': MetadataQueryResult;
+    '\n  *[_type == "siteSettings"][0] {\n    _id,\n    title,\n    description,\n    socialimage {\n  asset {\n    _ref,\n    _type\n  },\n  hotspot,\n  crop\n}\n  }\n': SiteSettingsQueryResult;
   }
 }

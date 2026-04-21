@@ -1,8 +1,11 @@
 // src/app/(main)/[...slug]/page.tsx
 import DynamicPage from '../../../components/DynamicPage'
+import type { Metadata } from 'next'
 import { client } from '../../../../sanity.client'
-import { pageSlugsQuery } from '../../../sanity/lib/queries'
+import { pageSeoQuery, pageSlugsQuery, siteSettingsQuery } from '../../../sanity/lib/queries'
 import { notFound } from 'next/navigation'
+import { buildPageMetadata } from '../../../sanity/lib/metadata'
+import { urlFor } from '../../../sanity/utils/imageUrlBuilder'
 
 export const revalidate = 0
 
@@ -27,6 +30,27 @@ export async function generateStaticParams() {
     }))
 
   return pageParams
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const resolvedParams = await params
+  const slug = resolvedParams.slug.join('/')
+
+  const [page, siteSettings] = await Promise.all([
+    client.fetch(pageSeoQuery, { slug }),
+    client.fetch(siteSettingsQuery),
+  ])
+
+  if (!page) {
+    return {}
+  }
+
+  return buildPageMetadata({
+    pageTitle: page.title,
+    seo: page.seo,
+    siteSettings,
+    buildImageUrl: (image) => urlFor(image).width(1200).height(630).url(),
+  })
 }
 
 export default async function Page({ params, searchParams }: PageProps) {
