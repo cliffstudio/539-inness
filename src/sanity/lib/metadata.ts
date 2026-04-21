@@ -1,30 +1,23 @@
 import type { Metadata } from 'next'
+import type { SanityImageSource } from '@sanity/image-url'
 
 type SeoInput = {
   metaTitle?: string | null
   metaDescription?: string | null
-  socialImage?: {
-    asset?: {
-      _ref?: string | null
-    } | null
-  } | null
+  socialImage?: SanityImageSource | null
 } | null
 
 type SiteSettingsInput = {
   title?: string | null
   description?: string | null
-  socialimage?: {
-    asset?: {
-      _ref?: string | null
-    } | null
-  } | null
+  socialimage?: SanityImageSource | null
 } | null
 
 type BuildPageMetadataParams = {
   pageTitle?: string | null
   seo?: SeoInput
   siteSettings?: SiteSettingsInput
-  buildImageUrl: (image: unknown) => string
+  buildImageUrl: (image: SanityImageSource) => string
 }
 
 export function buildPageMetadata({
@@ -39,7 +32,7 @@ export function buildPageMetadata({
 
   const resolvedDescription = seo?.metaDescription?.trim() || siteSettings?.description
 
-  const socialImageSource = seo?.socialImage?.asset?._ref ? seo.socialImage : siteSettings?.socialimage
+  const socialImageSource = seo?.socialImage ?? siteSettings?.socialimage
   const socialImageUrl = socialImageSource ? buildImageUrl(socialImageSource) : undefined
 
   return {
