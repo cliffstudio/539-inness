@@ -1,6 +1,5 @@
 import { defineType, defineField } from 'sanity'
 import { DocumentTextIcon } from '@sanity/icons'
-import { imageSizeValidation } from './utils/imageValidation'
 
 export const pageType = defineType({
   name: 'page',
@@ -68,11 +67,12 @@ export const pageType = defineType({
       name: 'homepageImages',
       title: 'Images',
       type: 'array',
-      description: 'Maximum file size per image: 500KB.',
       fieldset: 'heroSection',
       of: [{ 
         type: 'image',
-        validation: imageSizeValidation,
+        options: {
+          hotspot: true,
+        },
       }],
       hidden: ({ parent }) => parent?.pageType !== 'homepage' || parent?.homepageMediaType !== 'image',
     }),
@@ -113,12 +113,13 @@ export const pageType = defineType({
       name: 'calendarImages',
       title: 'Images',
       type: 'array',
-      description: 'Maximum file size per image: 500KB.',
       fieldset: 'heroSection',
       hidden: ({ parent }) => parent?.pageType !== 'calendar' || parent?.calendarMediaType !== 'image',
       of: [{ 
         type: 'image',
-        validation: imageSizeValidation,
+        options: {
+          hotspot: true,
+        },
       }],
     }),
     defineField({
@@ -167,12 +168,13 @@ export const pageType = defineType({
       name: 'images',
       title: 'Images',
       type: 'array',
-      description: 'Maximum file size per image: 500KB.',
       fieldset: 'heroSection',
       hidden: ({ parent }) => parent?.pageType !== 'links' || parent?.mediaType !== 'image',
       of: [{ 
         type: 'image',
-        validation: imageSizeValidation,
+        options: {
+          hotspot: true,
+        },
       }],
     }),
     defineField({

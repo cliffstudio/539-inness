@@ -1,5 +1,4 @@
 import { defineType, defineField } from 'sanity'
-import { imageSizeValidation } from '../utils/imageValidation'
 
 export default defineType({
   name: 'breakSection',
@@ -49,8 +48,9 @@ export default defineType({
       name: 'image',
       title: 'Image',
       type: 'image',
-      description: 'Maximum file size: 500KB.',
-      validation: imageSizeValidation,
+      options: {
+        hotspot: true,
+      },
     }),
     defineField({
       name: 'backgroundColor',

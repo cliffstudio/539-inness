@@ -1,5 +1,4 @@
 import { defineType, defineField } from 'sanity'
-import { imageSizeValidation } from '../utils/imageValidation'
 
 export default defineType({
   name: 'mediaTextSection',
@@ -173,10 +172,11 @@ export default defineType({
       name: 'images',
       title: 'Images',
       type: 'array',
-      description: 'Maximum file size per image: 500KB.',
       of: [{ 
         type: 'image',
-        validation: imageSizeValidation,
+        options: {
+          hotspot: true,
+        },
       }],
       hidden: ({ parent }) => parent?.mediaType !== 'image'
     }),

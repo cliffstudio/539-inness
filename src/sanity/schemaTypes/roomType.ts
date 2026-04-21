@@ -1,6 +1,5 @@
 import { defineType, defineField } from 'sanity'
 import { HomeIcon } from '@sanity/icons'
-import { imageSizeValidation } from './utils/imageValidation'
 
 export const roomType = defineType({
   name: 'room',
@@ -45,10 +44,11 @@ export const roomType = defineType({
       name: 'images',
       title: 'Images',
       type: 'array',
-      description: 'Maximum file size per image: 500KB.',
       of: [{ 
         type: 'image',
-        validation: imageSizeValidation,
+        options: {
+          hotspot: true,
+        },
       }],
       fieldset: 'heroSection',
     }),

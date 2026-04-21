@@ -1,5 +1,4 @@
 import { defineType, defineField } from 'sanity'
-import { imageSizeValidation } from './utils/imageValidation'
 
 export const footerType = defineType({
   name: 'footer',
@@ -150,8 +149,9 @@ export const footerType = defineType({
                   name: 'image',
                   title: 'Image',
                   type: 'image',
-                  description: 'Maximum file size: 500KB.',
-                  validation: imageSizeValidation,
+                  options: {
+                    hotspot: true,
+                  },
                 }),
                 defineField({
                   name: 'title',

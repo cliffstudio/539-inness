@@ -1,5 +1,4 @@
 import { defineType, defineField } from 'sanity'
-import { imageSizeValidation } from '../utils/imageValidation'
 
 export default defineType({
   name: 'menuSection',
@@ -146,11 +145,9 @@ export default defineType({
               name: 'image',
               title: 'Image',
               type: 'image',
-              description: 'Maximum file size: 500KB.',
               options: {
                 hotspot: true,
               },
-              validation: imageSizeValidation,
             }),
           ],
           preview: {
@@ -255,11 +252,9 @@ export default defineType({
               name: 'image',
               title: 'Image',
               type: 'image',
-              description: 'Maximum file size: 500KB.',
               options: {
                 hotspot: true,
               },
-              validation: imageSizeValidation,
             }),
           ],
           preview: {
@@ -340,11 +335,9 @@ export default defineType({
               name: 'image',
               title: 'Image',
               type: 'image',
-              description: 'Maximum file size: 500KB.',
               options: {
                 hotspot: true,
               },
-              validation: imageSizeValidation,
             }),
           ],
           preview: {
