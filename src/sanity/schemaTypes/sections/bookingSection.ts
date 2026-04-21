@@ -1,4 +1,5 @@
 import { defineType, defineField } from 'sanity'
+import { CalendarIcon } from '@sanity/icons'
 
 export default defineType({
   name: 'bookingSection',
@@ -36,6 +37,7 @@ export default defineType({
     prepare() {
       return {
         title: 'Booking Section',
+        media: CalendarIcon,
       }
     }
   }

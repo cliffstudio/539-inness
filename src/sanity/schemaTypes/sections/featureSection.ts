@@ -255,11 +255,13 @@ export default defineType({
     select: {
       heading: 'heading',
       layout: 'layout',
+      media: 'feature1.image',
     },
-    prepare({ layout }) {
+    prepare({ layout, media }) {
       return {
         title: 'Feature Section',
-        subtitle: layout === 'single-feature' ? 'Single Feature' : layout === '2-features' ? '2 Features' : layout === '4-features' ? '4 Features' : 'No Layout',
+        media,
+        // subtitle: layout === 'single-feature' ? 'Single Feature' : layout === '2-features' ? '2 Features' : layout === '4-features' ? '4 Features' : 'No Layout',
       }
     }
   }

@@ -361,18 +361,27 @@ export default defineType({
     select: {
       layout: 'layout',
       heading: 'heading',
-      image: 'image',
+      firstFoodImage: 'foodTabs.0.image',
+      firstSpaImage: 'spaTabs.0.image',
+      firstVenueImage: 'venueTabs.0.image',
     },
-    prepare({ layout, heading, image }) {
+    prepare({ layout, heading, firstFoodImage, firstSpaImage, firstVenueImage }) {
       const layoutTitles = {
         'food-menu': 'Food Menu',
         'spa-menu': 'Spa Menu',
         'venue-menu': 'Venue Menu',
       }
+
+      const mediaByLayout = {
+        'food-menu': firstFoodImage,
+        'spa-menu': firstSpaImage,
+        'venue-menu': firstVenueImage,
+      }
+
       return {
         title: heading || layoutTitles[layout as keyof typeof layoutTitles] || 'Menu Section',
-        subtitle: layoutTitles[layout as keyof typeof layoutTitles],
-        media: image,
+        // subtitle: layoutTitles[layout as keyof typeof layoutTitles],
+        media: mediaByLayout[layout as keyof typeof mediaByLayout],
       }
     },
   },

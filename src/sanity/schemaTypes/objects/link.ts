@@ -1,4 +1,5 @@
 // /schemas/objects/link.ts
+import { ArrowTopRightIcon, DocumentIcon, HashIcon, LinkIcon } from '@sanity/icons'
 import { defineType, defineField } from 'sanity'
 
 export default defineType({
@@ -93,16 +94,20 @@ export default defineType({
     prepare({ linkType, url, label, pageTitle, jumpLink, fileName, bookingTab }) {
       let title = ''
       let subtitle = ''
+      let media
       
       if (linkType === 'external') {
         title = label || 'External Link'
         subtitle = url || 'No URL'
+        media = ArrowTopRightIcon
       } else if (linkType === 'jump') {
         title = label || 'Jump Link'
         subtitle = jumpLink || 'No Jump Link'
+        media = HashIcon
       } else if (linkType === 'file') {
         title = label || 'File Link'
         subtitle = fileName || 'No File Selected'
+        media = DocumentIcon
       } else if (linkType === 'booking') {
         const tabLabels: Record<string, string> = {
           'room': 'Book a Room',
@@ -114,14 +119,17 @@ export default defineType({
         }
         title = label || 'Booking Link'
         subtitle = tabLabels[bookingTab] || bookingTab || 'No Tab Selected'
+        media = ArrowTopRightIcon
       } else {
         title = label || 'Internal Link'
         subtitle = pageTitle || 'No Page Selected'
+        media = LinkIcon
       }
       
       return {
         title,
         subtitle,
+        media,
       }
     }
   }

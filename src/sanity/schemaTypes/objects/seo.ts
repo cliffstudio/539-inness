@@ -4,10 +4,6 @@ export default defineType({
   title: 'SEO',
   name: 'seo',
   type: 'object',
-  options: {
-    collapsible: true,
-    collapsed: true
-  },
   fields: [
     defineField({
       type: 'string',

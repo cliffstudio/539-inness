@@ -69,7 +69,7 @@ $font-lock-max: 1728px !default;
 GRID SIZING --------------------
 */
 
-$gutter_lg: get-rem-desktop(20);
+$gutter_lg: get-rem-desktop(40);
 $gutter_sm: get-rem-mobile(10);
 
 @mixin grid-generator($grid-columns, $grid-gutter-width, $grid-size) {

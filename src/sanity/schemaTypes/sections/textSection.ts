@@ -1,4 +1,5 @@
 import { defineType, defineField } from 'sanity'
+import { TextIcon } from '@sanity/icons'
 
 export default defineType({
   name: 'textSection',
@@ -32,7 +33,8 @@ export default defineType({
     prepare({ heading }) {
       return {
         title: 'Text Section',
-        subtitle: heading || 'No Heading',
+        // subtitle: heading || 'No Heading',
+        media: TextIcon,
       }
     }
   }

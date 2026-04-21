@@ -703,15 +703,21 @@ export default function MediaTextSection({
             <div className="col-6-12_lg col-1 out-of-view">
               <div className="text-wrap">
                 {heading && (
-                  <h4 className="media-text-heading">{heading}</h4>
+                  <>
+                    <h4 className="media-text-heading">{heading}</h4>
+
+                    {body && body.length > 0 && (
+                      <div className="media-text-body">
+                        <PortableText value={body ?? []} />
+                      </div>
+                    )}
+                  </>
                 )}
 
-                {body && body.length > 0 && (
-                  <>
-                    <div className="media-text-body">
-                      <PortableText value={body ?? []} />
-                    </div>
-                  </>
+                {!heading && body && body.length > 0 && (
+                  <h5 className="media-text-body">
+                    <PortableText value={body ?? []} />
+                  </h5>
                 )}
 
                 {buttons && buttons.length > 0 && (
@@ -906,15 +912,21 @@ export default function MediaTextSection({
             <div className="col-6-12_lg col-1 out-of-view">
               <div className="text-wrap">
                 {heading && (
-                  <h4 className="media-text-heading">{heading}</h4>
+                  <>
+                    <h4 className="media-text-heading">{heading}</h4>
+
+                    {body && body.length > 0 && (
+                      <div className="media-text-body">
+                        <PortableText value={body ?? []} />
+                      </div>
+                    )}
+                  </>
                 )}
 
-                {body && body.length > 0 && (
-                  <>
-                    <div className="media-text-body">
-                      <PortableText value={body ?? []} />
-                    </div>
-                  </>
+                {!heading && body && body.length > 0 && (
+                  <h5 className="media-text-body">
+                    <PortableText value={body ?? []} />
+                  </h5>
                 )}
 
                 {buttons && buttons.length > 0 && (
@@ -976,13 +988,21 @@ export default function MediaTextSection({
             <div className="col-6-12_lg col-1 out-of-view">
               <div className="text-wrap">
                 {heading && (
-                  <h4 className="media-text-heading">{heading}</h4>
+                  <>
+                    <h4 className="media-text-heading">{heading}</h4>
+
+                    {body && body.length > 0 && (
+                      <div className="media-text-body">
+                        <PortableText value={body ?? []} />
+                      </div>
+                    )}
+                  </>
                 )}
 
-                {body && body.length > 0 && (
-                  <div className="media-text-body">
+                {!heading && body && body.length > 0 && (
+                  <h5 className="media-text-body">
                     <PortableText value={body ?? []} />
-                  </div>
+                  </h5>
                 )}
 
                 {buttons && buttons.length > 0 && (

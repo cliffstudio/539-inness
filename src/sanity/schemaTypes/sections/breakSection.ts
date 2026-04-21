@@ -76,7 +76,7 @@ export default defineType({
       return {
         title: 'Break Section',
         media: media,
-        subtitle: heading || 'No Heading',
+        // subtitle: heading || 'No Heading',
       }
     }
   }

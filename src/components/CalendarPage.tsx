@@ -336,7 +336,7 @@ export default function CalendarPage({
               type: 'slide',
               perPage: 1,
               perMove: 1,
-              gap: '20px',
+              gap: '40px',
               pagination: false,
               arrows: false,
               breakpoints: {

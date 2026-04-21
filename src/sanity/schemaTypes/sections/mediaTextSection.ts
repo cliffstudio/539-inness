@@ -214,22 +214,6 @@ export default defineType({
         }),
       hidden: ({ parent }) => parent?.layout !== 'media-with-text-h4-body-room-links',
     }),
-    // defineField({
-    //   name: 'activityLinks',
-    //   title: 'Calendar Links',
-    //   type: 'array',
-    //   of: [{ type: 'reference', to: [{ type: 'activity' }] }],
-    //   description: 'Add Calendar Links in even numbers (2, 4, 6, etc.)',
-    //   validation: (Rule) =>
-    //     Rule.custom((value) => {
-    //       if (!value || value.length === 0) return true
-    //       if (value.length < 2 || value.length % 2 !== 0) {
-    //         return 'Calendar Links must be added in even numbers (2, 4, 6, etc.)'
-    //       }
-    //       return true
-    //     }),
-    //   hidden: ({ parent }) => parent?.layout !== 'media-with-text-h4-body-activity-links',
-    // }),
     defineField({
       name: 'links',
       title: 'Links',
@@ -259,7 +243,7 @@ export default defineType({
       return {
         title: 'Media & Text Section',
         media: mediaType === 'video' ? undefined : media?.[0],
-        subtitle: layout === 'media-with-text-room-type' ? 'Room Type' : layout === 'media-with-text-h5' ? body?.[0]?.children?.[0]?.text || 'No Body' : layout === 'media-with-text-multiple-text-blocks' ? 'Multiple Text Blocks' : heading || 'No Heading',
+        // subtitle: layout === 'media-with-text-room-type' ? 'Room Type' : layout === 'media-with-text-h5' ? body?.[0]?.children?.[0]?.text || 'No Body' : layout === 'media-with-text-multiple-text-blocks' ? 'Multiple Text Blocks' : heading || 'No Heading',
       }
     }
   }

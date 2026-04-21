@@ -1,3 +1,4 @@
+import React from 'react'
 import { defineType, defineField } from 'sanity'
 
 export default defineType({
@@ -26,12 +27,20 @@ export default defineType({
   preview: {
     select: {
       products: 'products',
+      firstProductImageUrl: 'products.0.store.previewImageUrl',
     },
-    prepare({ products }) {
+    prepare({ products, firstProductImageUrl }) {
       const productCount = products?.length || 0
       return {
         title: 'Product Section',
-        subtitle: `${productCount} ${productCount === 1 ? 'product' : 'products'}`,
+        // subtitle: `${productCount} ${productCount === 1 ? 'product' : 'products'}`,
+        media: firstProductImageUrl
+          ? React.createElement('img', {
+              src: firstProductImageUrl,
+              alt: 'First product',
+              style: { objectFit: 'cover' },
+            })
+          : undefined,
       }
     }
   }

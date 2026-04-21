@@ -1,5 +1,5 @@
 import { defineType, defineField } from 'sanity'
-import { DocumentTextIcon } from '@sanity/icons'
+import { DocumentTextIcon, TextIcon } from '@sanity/icons'
 
 export const pageType = defineType({
   name: 'page',
@@ -225,7 +225,8 @@ export const pageType = defineType({
           prepare({ header, body }) {
             return {
               title: header || 'Untitled Text Block',
-              subtitle: body?.[0]?.children?.[0]?.text || 'No Body',
+              // subtitle: body?.[0]?.children?.[0]?.text || 'No Body',
+              media: TextIcon,
             }
           },
         },
