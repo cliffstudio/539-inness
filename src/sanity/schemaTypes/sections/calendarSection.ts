@@ -14,6 +14,12 @@ export default defineType({
       type: 'string',
     }),
     defineField({
+      name: 'hide',
+      title: 'Hide Section',
+      type: 'boolean',
+      initialValue: false,
+    }),
+    defineField({
       name: 'heading',
       title: 'Heading',
       type: 'string',

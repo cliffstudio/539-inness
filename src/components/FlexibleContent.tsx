@@ -13,6 +13,7 @@ import ProductSection from './ProductSection'
 
 interface ContentBlock {
   _type: string
+  hide?: boolean
   layout?: 'media-with-text-h5' | 'media-with-text-h4-body' | 'media-with-text-room-type' | 'media-with-text-h4-bullet-list' | 'media-with-text-h4-body-room-links' | 'media-with-text-h4-body-activity-links' | 'media-with-text-h4-body-links' | 'media-with-text-multiple-text-blocks' | 'split' | 'full-bleed' | 'text-section' | 'carousel-section' | 'food-menu' | 'spa-menu' | 'venue-menu' | 'single-activity' | '2-activities' | '4-activities' | 'single-feature' | '2-features' | '4-features'
   [key: string]: unknown
 }
@@ -42,6 +43,10 @@ const FlexibleContent: React.FC<FlexibleContentProps> = ({ contentBlocks }) => {
   return (
     <div className="flexible-content">
       {contentBlocks.map((block, index) => {
+        if (block.hide === true) {
+          return null
+        }
+
         switch (block._type) {
           case 'heroSection':
             return <HeroSection key={index} {...(block as ContentBlock & { layout?: 'split' | 'full-bleed' })} />
@@ -70,13 +75,13 @@ const FlexibleContent: React.FC<FlexibleContentProps> = ({ contentBlocks }) => {
           case 'featureSection':
             return <FeatureSection key={index} {...(block as ContentBlock & { layout?: 'single-feature' | '2-features' | '4-features' })} />
           case 'bookingSection':
-            return (block as ContentBlock & { show?: boolean; noTopPad?: boolean; noBottomPad?: boolean }).show !== false ? (
+            return (
               <BookingSection 
                 key={index} 
                 noTopPad={(block as ContentBlock & { noTopPad?: boolean }).noTopPad}
                 noBottomPad={(block as ContentBlock & { noBottomPad?: boolean }).noBottomPad}
               />
-            ) : null
+            )
           case 'productSection':
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             return <ProductSection key={index} {...(block as any)} />

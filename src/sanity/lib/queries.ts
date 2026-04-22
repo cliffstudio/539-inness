@@ -65,6 +65,7 @@ const footerLinkFragment = groq`{
 
 const heroSectionFragment = groq`{
   id,
+  hide,
   layout,
   heading,
   body,
@@ -79,6 +80,7 @@ const heroSectionFragment = groq`{
 
 const textSectionFragment = groq`{
   id,
+  hide,
   heading,
   body,
   button ${linkFragment}
@@ -86,6 +88,7 @@ const textSectionFragment = groq`{
 
 const mediaTextSectionFragment = groq`{
   id,
+  hide,
   layout,
   heading,
   body,
@@ -162,6 +165,7 @@ const mediaTextSectionFragment = groq`{
 
 const breakSectionFragment = groq`{
   id,
+  hide,
   layout,
   subHeading,
   heading,
@@ -173,11 +177,13 @@ const breakSectionFragment = groq`{
 
 const carouselSectionFragment = groq`{
   id,
+  hide,
   images[] ${imageFragment}
 }`
 
 const menuSectionFragment = groq`{
   id,
+  hide,
   layout,
   heading,
   image ${imageFragment},
@@ -222,6 +228,7 @@ const menuSectionFragment = groq`{
 
 const calendarSectionFragment = groq`{
   id,
+  hide,
   heading,
   eventCategories,
   "activities": *[
@@ -249,6 +256,7 @@ const calendarSectionFragment = groq`{
 
 const featureSectionFragment = groq`{
   id,
+  hide,
   layout,
   subHeading,
   heading,
@@ -280,13 +288,14 @@ const featureSectionFragment = groq`{
 
 const bookingSectionFragment = groq`{
   id,
-  show,
+  hide,
   noTopPad,
   noBottomPad
 }`
 
 const productSectionFragment = groq`{
   id,
+  hide,
   heading,
   products[]-> {
     _id,

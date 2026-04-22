@@ -13,10 +13,10 @@ export default defineType({
       hidden: true,
     }),
     defineField({
-      name: 'show',
-      title: 'Show Section',
+      name: 'hide',
+      title: 'Hide Section',
       type: 'boolean',
-      initialValue: true,
+      initialValue: false,
     }),
     defineField({
       name: 'noTopPad',

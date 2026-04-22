@@ -5,6 +5,12 @@ export default defineType({
   title: 'Carousel Section',
   type: 'object',
   fields: [
+    defineField({
+      name: 'hide',
+      title: 'Hide Section',
+      type: 'boolean',
+      initialValue: false,
+    }),
     defineField({ 
       name: 'images',
       title: 'Images',
