@@ -1,4 +1,4 @@
-import { defineType, defineField } from 'sanity'
+import { defineType, defineField, ALL_FIELDS_GROUP } from 'sanity'
 import { DocumentTextIcon, TextIcon } from '@sanity/icons'
 
 export const pageType = defineType({
@@ -6,6 +6,20 @@ export const pageType = defineType({
   title: 'Page',
   type: 'document',
   icon: DocumentTextIcon,
+  groups: [
+    {
+      ...ALL_FIELDS_GROUP,
+      hidden: true,
+    },
+    {
+      name: 'content',
+      title: 'Content',
+    },
+    {
+      name: 'seo',
+      title: 'SEO',
+    }
+  ],
   fieldsets: [
     {
       name: 'heroSection',
@@ -30,6 +44,7 @@ export const pageType = defineType({
         source: 'title',
       },
       validation: (Rule) => Rule.required(),
+      group: 'content',
     }),
     defineField({
       name: 'pageType',
@@ -44,6 +59,7 @@ export const pageType = defineType({
           { title: 'Text Page', value: 'text' },
         ],
       },
+      group: 'content',
     }),
 
     // Homepage specific fields
@@ -53,6 +69,7 @@ export const pageType = defineType({
       type: 'string',
       fieldset: 'heroSection',
       hidden: ({ parent }) => parent?.pageType !== 'homepage',
+      group: 'content',
     }),
     defineField({
       name: 'homepageMediaType',
@@ -62,6 +79,7 @@ export const pageType = defineType({
       options: { list: ['image','video'] },
       fieldset: 'heroSection',
       hidden: ({ parent }) => parent?.pageType !== 'homepage',
+      group: 'content',
     }),
     defineField({ 
       name: 'homepageImages',
@@ -75,6 +93,7 @@ export const pageType = defineType({
         },
       }],
       hidden: ({ parent }) => parent?.pageType !== 'homepage' || parent?.homepageMediaType !== 'image',
+      group: 'content',
     }),
     defineField({
       name: 'homepageVideo',
@@ -82,6 +101,7 @@ export const pageType = defineType({
       type: 'bunnyVideo',
       fieldset: 'heroSection',
       hidden: ({ parent }) => parent?.pageType !== 'homepage' || parent?.homepageMediaType !== 'video',
+      group: 'content',
     }),
 
     // Calendar specific fields
@@ -91,6 +111,7 @@ export const pageType = defineType({
       type: 'string',
       fieldset: 'heroSection',
       hidden: ({ parent }) => parent?.pageType !== 'calendar',
+      group: 'content',
     }),
     defineField({
       name: 'calendarBody',
@@ -99,6 +120,7 @@ export const pageType = defineType({
       of: [{ type: 'block' }],
       fieldset: 'heroSection',
       hidden: ({ parent }) => parent?.pageType !== 'calendar',
+      group: 'content',
     }),
     defineField({
       name: 'calendarMediaType',
@@ -108,6 +130,7 @@ export const pageType = defineType({
       options: { list: ['image','video'] },
       fieldset: 'heroSection',
       hidden: ({ parent }) => parent?.pageType !== 'calendar',
+      group: 'content',
     }),
     defineField({ 
       name: 'calendarImages',
@@ -121,6 +144,7 @@ export const pageType = defineType({
           hotspot: true,
         },
       }],
+      group: 'content',
     }),
     defineField({
       name: 'calendarVideo',
@@ -128,6 +152,7 @@ export const pageType = defineType({
       type: 'bunnyVideo',
       fieldset: 'heroSection',
       hidden: ({ parent }) => parent?.pageType !== 'calendar' || parent?.calendarMediaType !== 'video',
+      group: 'content',
     }),
 
     // Flexible content blocks
@@ -137,6 +162,7 @@ export const pageType = defineType({
       type: 'flexibleContent',
       description: 'Add and arrange content blocks to build your page',
       hidden: ({ parent }) => parent?.pageType === 'calendar' || parent?.pageType === 'links' || parent?.pageType === 'text',
+      group: 'content',
     }),
 
     // Links specific fields
@@ -146,6 +172,7 @@ export const pageType = defineType({
       type: 'string',
       fieldset: 'heroSection',
       hidden: ({ parent }) => parent?.pageType !== 'links',
+      group: 'content',
     }),
     defineField({
       name: 'body',
@@ -154,6 +181,7 @@ export const pageType = defineType({
       of: [{ type: 'block' }],
       fieldset: 'heroSection',
       hidden: ({ parent }) => parent?.pageType !== 'links',
+      group: 'content',
     }),
     defineField({
       name: 'mediaType',
@@ -163,6 +191,7 @@ export const pageType = defineType({
       options: { list: ['image','video'] },
       fieldset: 'heroSection',
       hidden: ({ parent }) => parent?.pageType !== 'links',
+      group: 'content',
     }),
     defineField({
       name: 'images',
@@ -176,6 +205,7 @@ export const pageType = defineType({
           hotspot: true,
         },
       }],
+      group: 'content',
     }),
     defineField({
       name: 'video',
@@ -183,6 +213,7 @@ export const pageType = defineType({
       type: 'bunnyVideo',
       fieldset: 'heroSection',
       hidden: ({ parent }) => parent?.pageType !== 'links' || parent?.mediaType !== 'video',
+      group: 'content',
     }),
     defineField({
       name: 'links',
@@ -194,6 +225,7 @@ export const pageType = defineType({
       },
       fieldset: 'linksSection',
       hidden: ({ parent }) => parent?.pageType !== 'links',
+      group: 'content',
     }),
 
     // Text specific fields
@@ -232,6 +264,7 @@ export const pageType = defineType({
         },
       }],
       hidden: ({ parent }) => parent?.pageType !== 'text',
+      group: 'content',
     }),
 
     // SEO specific fields
@@ -240,6 +273,7 @@ export const pageType = defineType({
       title: 'SEO',
       type: 'seo',
       description: 'Override title, description and social image for search results and social shares. Empty = use site settings.',
+      group: 'seo',
     }),
   ],
   preview: {

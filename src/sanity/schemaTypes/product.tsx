@@ -38,12 +38,6 @@ export const productType = defineType({
       type: 'proxyString',
       options: {field: 'store.slug.current'},
     }),
-    // defineField({
-    //   name: 'colorTheme',
-    //   type: 'reference',
-    //   to: [{type: 'colorTheme'}],
-    //   group: 'editorial',
-    // }),
     defineField({
       name: 'body',
       type: 'richPortableText',
@@ -55,12 +49,15 @@ export const productType = defineType({
       description: 'Product data from Shopify (read-only)',
       group: 'shopifySync',
     }),
-    // defineField({
-    //   name: 'seo',
-    //   title: 'SEO',
-    //   type: 'seo',
-    //   group: 'seo',
-    // }),
+    defineField({
+      name: 'seo',
+      title: 'SEO',
+      type: 'seo',
+      readOnly: true,
+      description:
+        'Auto-generated from Shopify: title -> meta title, description HTML -> meta description, preview image URL -> social image URL.',
+      group: 'seo',
+    }),
   ],
   orderings: [
     {

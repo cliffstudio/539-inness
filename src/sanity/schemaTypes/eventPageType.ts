@@ -1,4 +1,4 @@
-import { defineType, defineField } from 'sanity'
+import { defineType, defineField, ALL_FIELDS_GROUP } from 'sanity'
 import { CalendarIcon } from '@sanity/icons'
 
 export const calendarType = defineType({
@@ -6,18 +6,34 @@ export const calendarType = defineType({
   title: 'Calendar',
   type: 'document',
   icon: CalendarIcon,
+  groups: [
+    {
+      ...ALL_FIELDS_GROUP,
+      hidden: true,
+    },
+    {
+      name: 'content',
+      title: 'Content',
+    },
+    {
+      name: 'seo',
+      title: 'SEO',
+    }
+  ],
   fields: [
     defineField({
       name: 'peoplevineId',
       title: 'Peoplevine ID',
       type: 'string',
       readOnly: true,
+      group: 'content',
     }),
     defineField({
       name: 'title',
       title: 'Title',
       type: 'string',
       readOnly: true,
+      group: 'content',
     }),
     defineField({
       name: 'slug',
@@ -28,6 +44,7 @@ export const calendarType = defineType({
         source: 'title',
       },
       validation: (Rule) => Rule.required(),
+      group: 'content',
     }),
     defineField({
       name: 'startsAt',
@@ -35,6 +52,7 @@ export const calendarType = defineType({
       type: 'datetime',
       readOnly: true,
       description: 'Stored in UTC by the API. Website displays this in America/New_York.',
+      group: 'content',
     }),
     defineField({
       name: 'endsAt',
@@ -42,36 +60,42 @@ export const calendarType = defineType({
       type: 'datetime',
       readOnly: true,
       description: 'Stored in UTC by the API. Website displays this in America/New_York.',
+      group: 'content',
     }),
     defineField({
       name: 'locationName',
       title: 'Location name',
       type: 'string',
       readOnly: true,
+      group: 'content',
     }),
     defineField({
       name: 'locationAddress',
       title: 'Location address',
       type: 'string',
       readOnly: true,
+      group: 'content',
     }),
     defineField({
       name: 'description',
       title: 'Description',
       type: 'text',
       readOnly: true,
+      group: 'content',
     }),
     defineField({
       name: 'thumbnail',
       title: 'Thumbnail URL',
       type: 'url',
       readOnly: true,
+      group: 'content',
     }),
     defineField({
       name: 'bookingHref',
       title: 'Booking URL',
       type: 'url',
       readOnly: true,
+      group: 'content',
     }),
     defineField({
       name: 'eventCategories',
@@ -79,6 +103,7 @@ export const calendarType = defineType({
       type: 'array',
       of: [{ type: 'string' }],
       readOnly: true,
+      group: 'content',
     }),
     defineField({
       name: 'lastSyncedAt',
@@ -86,12 +111,23 @@ export const calendarType = defineType({
       type: 'datetime',
       description: 'Stored in UTC by the API.',
       readOnly: true,
+      group: 'content',
     }),
     defineField({
       name: 'isActive',
       title: 'Is active',
       type: 'boolean',
       readOnly: true,
+      group: 'content',
+    }),
+    defineField({
+      name: 'seo',
+      title: 'SEO',
+      type: 'seo',
+      readOnly: true,
+      description:
+        'Auto-generated from this event: title -> meta title, description -> meta description, thumbnail -> social image URL.',
+      group: 'seo',
     }),
   ],
   preview: {

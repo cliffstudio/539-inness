@@ -57,6 +57,12 @@ export async function upsertEventPage(e: NormalizedPeoplevineEvent): Promise<voi
       thumbnail: e.thumbnail ?? '',
       bookingHref: e.externalLink ?? null,
       eventCategories: e.eventCategories ?? [],
+      seo: {
+        _type: 'seo',
+        metaTitle: e.title,
+        metaDescription: e.description ?? '',
+        socialImageUrl: e.thumbnail ?? '',
+      },
       lastSyncedAt: nowIso,
       isActive: true,
     }).setIfMissing({

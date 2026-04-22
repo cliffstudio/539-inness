@@ -1,4 +1,4 @@
-import { defineField } from 'sanity'
+import { ALL_FIELDS_GROUP, defineField } from 'sanity'
 import { CogIcon } from '@sanity/icons'
 
 export const siteSettingsType = {
@@ -6,35 +6,41 @@ export const siteSettingsType = {
   title: 'Site Settings',
   type: 'document',
   icon: CogIcon,
+  groups: [
+    {
+      ...ALL_FIELDS_GROUP,
+      hidden: true,
+    },
+    {
+      name: 'seo',
+      title: 'SEO',
+    },
+  ],
   fields: [
     defineField({
       name: 'title',
       title: 'Title',
       type: 'string',
-      description: 'Default site title used for browser tab, search results, and social shares. Can be overridden by page-specific SEO titles.',
+      description: 'Title used for search engines and browsers.',
+      group: 'seo',
     }),
     defineField({
       name: 'description',
       title: 'Description',
       type: 'text',
       rows: 3,
-      description: 'Default site description used for search results and social shares. Can be overridden by page-specific SEO descriptions.',
+      description: 'Description used for search engines.',
+      group: 'seo',
     }),
     defineField({
       name: 'socialimage',
       title: 'Social Image',
       type: 'image',
-      description: 'Default site image for social link previews. 1200×630px. Can be overridden by page-specific social images.',
+      description: 'Image used for social media previews. Recommended size: 1200×630px.',
+      group: 'seo',
       options: {
         hotspot: true,
       },
-      fields: [
-        {
-          name: 'alt',
-          type: 'string',
-          title: 'Alt Text',
-        },
-      ],
       validation: (Rule) => Rule.custom(async (file, context): Promise<true | string> => {
         if (!file?.asset?._ref) return true
         

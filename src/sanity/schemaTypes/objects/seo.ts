@@ -9,7 +9,7 @@ export default defineType({
       type: 'string',
       title: 'Title',
       name: 'metaTitle',
-      description: 'Full title for this page (replaces "Document title | Site name"). Leave empty to use site settings title.',
+      description: 'Title used for search engines and browsers.',
       validation: Rule => Rule.max(50).warning('Longer titles may be truncated by search engines')
     }),
     defineField({
@@ -17,24 +17,18 @@ export default defineType({
       title: 'Description',
       name: 'metaDescription',
       rows: 3,
-      description: 'Summary for search results and social shares. Leave empty for site settings description.',
+      description: 'Description used for search engines.',
       validation: Rule => Rule.max(150).warning('Longer descriptions may be truncated by search engines')
     }),
     defineField({
       name: 'socialImage',
       title: 'Social Image',
       type: 'image',
-      description: 'Image for social previews. Overrides site default. 1200×630px.',
+      description: 'Image used for social media previews. Recommended size: 1200×630px.',
+      hidden: ({ document }) => document?._type === 'calendar' || document?._type === 'product',
       options: {
         hotspot: true,
       },
-      fields: [
-        {
-          name: 'alt',
-          type: 'string',
-          title: 'Alt Text',
-        },
-      ],
       validation: (Rule) => Rule.custom(async (file, context): Promise<true | string> => {
         if (!file?.asset?._ref) return true
         
@@ -47,6 +41,13 @@ export default defineType({
         
         return true
       }),
+    }),
+    defineField({
+      type: 'url',
+      title: 'Social Image URL',
+      name: 'socialImageUrl',
+      description: 'Image used for social media previews.',
+      hidden: ({ document }) => document?._type !== 'calendar' && document?._type !== 'product',
     }),
   ]
 })

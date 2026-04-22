@@ -21,6 +21,13 @@ function extractIdFromGid(gid: string | undefined) {
   return gid?.match(/[^\/]+$/i)?.[0];
 }
 
+function stripHtmlToPlainText(html: string): string {
+  return html
+    .replace(/<[^>]*>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 async function shopifyGraphQL(query: string, variables?: Record<string, unknown>) {
   if (!SHOPIFY_DOMAIN || !SHOPIFY_ADMIN_TOKEN) {
     throw new Error("Shopify credentials not configured");
@@ -325,6 +332,22 @@ export async function POST(request: NextRequest) {
       if (product.descriptionHtml !== undefined) {
         productPatch["store.descriptionHtml"] = product.descriptionHtml;
       }
+
+      const resolvedTitle =
+        typeof product.title === "string" ? product.title : "";
+      const resolvedDescriptionHtml =
+        typeof product.descriptionHtml === "string"
+          ? product.descriptionHtml
+          : "";
+      const resolvedPreviewImageUrl =
+        typeof previewImageUrl === "string" ? previewImageUrl : "";
+
+      productPatch["seo"] = {
+        _type: "seo",
+        metaTitle: resolvedTitle,
+        metaDescription: stripHtmlToPlainText(resolvedDescriptionHtml),
+        socialImageUrl: resolvedPreviewImageUrl,
+      };
       if (product.status !== undefined) productPatch["store.status"] = product.status;
       if (product.isDeleted !== undefined) productPatch["store.isDeleted"] = product.isDeleted;
       if (product.createdAt !== undefined) productPatch["store.createdAt"] = product.createdAt;

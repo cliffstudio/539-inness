@@ -5,6 +5,7 @@ type SeoInput = {
   metaTitle?: string | null
   metaDescription?: string | null
   socialImage?: SanityImageSource | null
+  socialImageUrl?: string | null
 } | null
 
 type SiteSettingsInput = {
@@ -33,7 +34,8 @@ export function buildPageMetadata({
   const resolvedDescription = seo?.metaDescription?.trim() || siteSettings?.description
 
   const socialImageSource = seo?.socialImage ?? siteSettings?.socialimage
-  const socialImageUrl = socialImageSource ? buildImageUrl(socialImageSource) : undefined
+  const socialImageUrlFromAsset = socialImageSource ? buildImageUrl(socialImageSource) : undefined
+  const socialImageUrl = seo?.socialImageUrl?.trim() || socialImageUrlFromAsset
 
   return {
     title: resolvedTitle || undefined,

@@ -597,6 +597,7 @@ export const otherRoomsQuery = groq`
 export const productQuery = groq`
   *[_type == "product" && store.slug.current == $slug][0] {
     _id,
+    seo ${seoFragment},
     body,
     store {
       title,
@@ -637,6 +638,19 @@ export const productQuery = groq`
           }
         }
       }
+    }
+  }
+`
+
+export const productSeoQuery = groq`
+  *[_type == "product" && store.slug.current == $slug][0] {
+    seo ${seoFragment},
+    store {
+      title,
+      descriptionHtml,
+      previewImageUrl,
+      status,
+      isDeleted
     }
   }
 `

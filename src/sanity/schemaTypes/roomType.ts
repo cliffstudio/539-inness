@@ -1,4 +1,4 @@
-import { defineType, defineField } from 'sanity'
+import { defineType, defineField, ALL_FIELDS_GROUP } from 'sanity'
 import { HomeIcon } from '@sanity/icons'
 
 export const roomType = defineType({
@@ -6,10 +6,18 @@ export const roomType = defineType({
   title: 'Room',
   type: 'document',
   icon: HomeIcon,
-  fieldsets: [
+  groups: [
     {
-      name: 'heroSection',
-      title: 'Hero Section',
+      ...ALL_FIELDS_GROUP,
+      hidden: true,
+    },
+    {
+      name: 'content',
+      title: 'Content',
+    },
+    {
+      name: 'seo',
+      title: 'SEO',
     }
   ],
   fields: [
@@ -18,6 +26,7 @@ export const roomType = defineType({
       title: 'Title',
       type: 'string',
       validation: (Rule) => Rule.required(),
+      group: 'content',
     }),
     defineField({
       name: 'slug',
@@ -27,6 +36,7 @@ export const roomType = defineType({
         source: 'title',
       },
       validation: (Rule) => Rule.required(),
+      group: 'content',
     }),
     defineField({
       name: 'roomType',
@@ -39,6 +49,7 @@ export const roomType = defineType({
         ],
       },
       initialValue: 'cabin',
+      group: 'content',
     }),
     defineField({ 
       name: 'images',
@@ -50,14 +61,14 @@ export const roomType = defineType({
           hotspot: true,
         },
       }],
-      fieldset: 'heroSection',
+      group: 'content',
     }),
     defineField({
       name: 'description',
       title: 'Description',
       type: 'array',
       of: [{ type: 'block' }],
-      fieldset: 'heroSection',
+      group: 'content',
     }),
     defineField({
       name: 'specs',
@@ -75,12 +86,19 @@ export const roomType = defineType({
           ],
         },
       ],
-      fieldset: 'heroSection',
+      group: 'content',
     }),
     defineField({
       name: 'contentBlocks',
       title: 'Content Blocks',
       type: 'flexibleContent',
+      group: 'content',
+    }),
+    defineField({
+      name: 'seo',
+      title: 'SEO',
+      type: 'seo',
+      group: 'seo',
     }),
   ],
   preview: {
