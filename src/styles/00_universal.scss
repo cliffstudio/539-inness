@@ -1250,6 +1250,15 @@
       position: relative;
     }
   }
+
+  .menu-note {
+    margin-top: get-rem-desktop(72);
+    color: $colour-orange;
+
+    @media only screen and (max-width: 820px) {
+      margin-top: get-rem-mobile(48);
+    }
+  }
 }
 
 .menu-section.layout-food-menu {

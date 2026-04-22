@@ -186,6 +186,7 @@ const menuSectionFragment = groq`{
   hide,
   layout,
   heading,
+  note,
   image ${imageFragment},
   foodTabs[] {
     tabName,
@@ -196,6 +197,7 @@ const menuSectionFragment = groq`{
       items[] {
         name,
         price,
+        extrasLabel,
         extras[] {
           name,
           price

@@ -31,6 +31,13 @@ export default defineType({
       validation: Rule => Rule.required(),
     }),
     defineField({
+      name: 'note',
+      title: 'Note',
+      type: 'string',
+      description: 'e.g., "All prices listed are exclusive of gratuity, which may be added at your discretion."',
+      hidden: ({ parent }) => parent?.layout !== 'spa-menu',
+    }),
+    defineField({
       name: 'foodTabs',
       title: 'Food Menu Tabs',
       type: 'array',
@@ -88,8 +95,13 @@ export default defineType({
                             defineField({
                               name: 'price',
                               title: 'Price',
-                              type: 'number',
-                              validation: Rule => Rule.required().min(0),
+                              type: 'string',
+                            }),
+                            defineField({
+                              name: 'extrasLabel',
+                              title: 'Extras Label',
+                              type: 'string',
+                              description: 'Optional label shown before extras (e.g., "Add-ons")',
                             }),
                             defineField({
                               name: 'extras',
@@ -124,7 +136,7 @@ export default defineType({
                             prepare({ title, price }) {
                               return {
                                 title: title,
-                                subtitle: `$${price}`,
+                                subtitle: `${price}`,
                               }
                             },
                           },
@@ -247,7 +259,7 @@ export default defineType({
                     prepare({ title, price }) {
                       return {
                         title: title,
-                        subtitle: price ? `$${price}` : 'No pricing',
+                        subtitle: price ? `${price}` : 'No pricing',
                       }
                     },
                   },

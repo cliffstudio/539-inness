@@ -15,6 +15,7 @@ interface MenuExtra {
 interface MenuItem {
   name?: string
   price?: number
+  extrasLabel?: string
   extras?: MenuExtra[]
 }
 
@@ -63,6 +64,7 @@ interface MenuSectionProps {
   id?: string
   layout?: 'food-menu' | 'spa-menu' | 'venue-menu'
   heading?: string
+  note?: string
   foodTabs?: FoodTab[]
   spaTabs?: SpaTab[]
   venueTabs?: VenueTab[]
@@ -71,6 +73,7 @@ interface MenuSectionProps {
 export default function MenuSection({
   id,
   layout = 'food-menu',
+  note,
   foodTabs,
   spaTabs,
   venueTabs,
@@ -137,11 +140,13 @@ export default function MenuSection({
 
                                   {item.extras && item.extras.length > 0 && (
                                     <div className="menu-item-extras">
-                                      <span className="menu-extras-label">Extras </span>
+                                      {item.extrasLabel && (
+                                        <span className="menu-extras-label">{item.extrasLabel} </span>
+                                      )}
                                       {item.extras.map((extra, extraIndex) => (
                                         <span key={extraIndex} className="menu-extra">
                                           {extra.name}
-                                          {extra.price !== undefined && ` +${extra.price}`}
+                                          {extra.price !== undefined && extra.price !== null && ` +${extra.price}`}
                                         </span>
                                       ))}
                                     </div>
@@ -228,6 +233,10 @@ export default function MenuSection({
                     </div>
                   ))}
                 </div>
+              )}
+
+              {note && (
+                <div className="menu-note">{note}</div>
               )}
             </div>
 
