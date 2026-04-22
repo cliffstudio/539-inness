@@ -277,11 +277,98 @@ export default function MediaTextSection({
   }, [mediaType, video])
   return (
     <>
-      {(layout === 'media-with-text-h5' || layout === 'media-with-text-h4-body' || layout === 'media-with-text-h4-bullet-list') && (
+      {/* Media with Text (h5) */}
+      {(layout === 'media-with-text-h5') && (
         <section id={id} className={`media-text-section layout-${layout} align-${mediaAlignment} row-lg h-pad`}>
           <div className="col-6-12_lg col-1 out-of-view">
             <div className="text-wrap">
-              {heading && layout !== 'media-with-text-h5' && (
+              {body && body.length > 0 && (
+                <h5 className="media-text-body">
+                  <PortableText value={body ?? []} />
+                </h5>
+              )}
+
+              {bulletList && bulletList.length > 0 && (
+                <div className="media-text-bullet-list">
+                  {bulletList.map((item, index) => {
+                    const bulletBody: PortableTextBlock[] = item?.body ?? []
+                    if (bulletBody.length === 0) {
+                      return null
+                    }
+
+                    return (
+                      <div key={index} className="media-text-bullet-list-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="16" viewBox="0 0 13 16">
+                          <path d="M11.8181 0.5H0.5V15.5H11.8181V0.5Z"/>
+                          <path d="M0.5 0.5L11.8181 15.5"/>
+                        </svg>
+
+                        <div className="media-text-bullet-list-text">
+                          <PortableText value={bulletBody} />
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              )}
+
+              {buttons && buttons.length > 0 && (
+                <div className={`button-wrap${buttons.length > 1 ? ' button-wrap--multiple-buttons' : ''}`}>
+                  {buttons.map((button, index) => (
+                    <ButtonLink key={index} link={button} fallbackColor="cream" />
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="col-6-12_lg col-2 out-of-opacity">
+            {mediaType === 'image' && images && images.length > 0 && (
+              <div className="media-wrap test">
+                {images.length === 1 ? (
+                  <>
+                    <img 
+                      data-src={urlFor(images[0]).url()} 
+                      alt="" 
+                      className="lazy full-bleed-image"
+                    />
+                    <div className="loading-overlay" />
+                  </>
+                ) : (
+                  <SplideCarousel 
+                    images={images.map(image => ({ url: urlFor(image).url(), alt: "" }))}
+                    onPrevious={() => {}}
+                    onNext={() => {}}
+                  />
+                )}
+              </div>
+            )}
+            
+            {mediaType === 'video' && video && (
+              <div className="media-wrap">
+                <video
+                  ref={videoRef1}
+                  src={videoUrlFor(video)}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="metadata"
+                />
+                <div className="loading-overlay" />
+              </div>
+            )}
+          </div>
+        </section>
+      )}
+
+      {/* Media with Text (h4 & body) */}
+      {/* Media with Text (h4 & bullet list) */}
+      {(layout === 'media-with-text-h4-body' || layout === 'media-with-text-h4-bullet-list') && (
+        <section id={id} className={`media-text-section layout-${layout} align-${mediaAlignment} row-lg h-pad`}>
+          <div className="col-6-12_lg col-1 out-of-view">
+            <div className="text-wrap">
+              {heading && (
                 <h4 className="media-text-heading">{heading}</h4>
               )}
               
@@ -291,12 +378,6 @@ export default function MediaTextSection({
                     <div className="media-text-body">
                       <PortableText value={body ?? []} />
                     </div>
-                  )}
-
-                  {layout === 'media-with-text-h5' && (
-                    <h5 className="media-text-body">
-                      <PortableText value={body ?? []} />
-                    </h5>
                   )}
                 </>
               )}
@@ -375,6 +456,472 @@ export default function MediaTextSection({
         </section>
       )}
 
+      {/* Media with Text (room type) */}
+      {layout === 'media-with-text-room-type' && roomLink && (
+        <section id={id} className={`media-text-section room-type layout-${mediaAlignment} align-${mediaAlignment} row-lg h-pad`}>
+          <div className="col-6-12_lg col-1 out-of-view">
+            <div className="text-wrap">
+              {roomLink.roomType && (
+                <div className="media-text-room-type">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="16" viewBox="0 0 24 16">
+                    <path d="M11.8181 0.5H0.5V15.5H11.8181V0.5Z"/>
+                    <path d="M0.5 0.5L11.8181 15.5"/>
+                    <path d="M23.1365 0.5H11.8184V15.5H23.1365V0.5Z"/>
+                    <path d="M11.8184 0.5L23.1365 15.5"/>
+                  </svg>
+
+                  <div>{roomLink.roomType}</div>
+                </div>
+              )}
+
+              <h5 className="media-text-heading">{roomLink.title}</h5>
+              
+              {roomLink.description && (
+                <div className="media-text-body">
+                  <PortableText value={roomLink.description ?? []} />
+                </div>
+              )}
+
+              <div className="button-wrap button-wrap--multiple-buttons">
+                <ButtonLink 
+                  link={{ linkType: 'internal', label: 'View', pageLink: { slug: `rooms/${roomLink.slug}` } }} 
+                  fallbackColor="cream"
+                />
+
+                <button
+                  type="button"
+                  className="button button--orange namastay-widget-button"
+                >
+                  Book
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className="col-6-12_lg col-2 out-of-opacity">
+            {mediaType === 'image' && images && images.length > 0 && (
+              <div className="media-wrap">
+                {images.length === 1 ? (
+                  <>
+                    <img 
+                      data-src={urlFor(images[0]).url()} 
+                      alt="" 
+                      className="lazy full-bleed-image"
+                    />
+                    <div className="loading-overlay" />
+                  </>
+                ) : (
+                  <SplideCarousel 
+                    images={images.map(image => ({ url: urlFor(image).url(), alt: "" }))}
+                    onPrevious={() => {}}
+                    onNext={() => {}}
+                  />
+                )}
+              </div>
+            )}
+            
+            {mediaType === 'video' && video && (
+              <div className="media-wrap">
+                <video
+                  ref={videoRef2}
+                  src={videoUrlFor(video)}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="metadata"
+                />
+                <div className="loading-overlay" />
+              </div>
+            )}
+          </div>
+        </section>
+      )}
+
+      {/* Media with Text (h4, body & links) */}
+      {(layout === 'media-with-text-h4-body-links') && links && links.length > 0 && (
+        <section id={id} className={`media-text-section layout-${layout} h-pad`}>
+          <div className={`align-${mediaAlignment} row-lg`}>
+            <div className="col-6-12_lg col-1 out-of-view">
+              <div className="text-wrap">
+                {heading && (
+                  <>
+                    <h4 className="media-text-heading">{heading}</h4>
+
+                    {body && body.length > 0 && (
+                      <div className="media-text-body">
+                        <PortableText value={body ?? []} />
+                      </div>
+                    )}
+                  </>
+                )}
+
+                {!heading && body && body.length > 0 && (
+                  <h5 className="media-text-body">
+                    <PortableText value={body ?? []} />
+                  </h5>
+                )}
+
+                {buttons && buttons.length > 0 && (
+                  <div className={`button-wrap${buttons.length > 1 ? ' button-wrap--multiple-buttons' : ''}`}>
+                    {buttons.map((button, index) => (
+                      <ButtonLink key={index} link={button} fallbackColor="cream" />
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="col-6-12_lg col-2 out-of-opacity">
+              {mediaType === 'image' && images && images.length > 0 && (
+                <div className="media-wrap">
+                  {images.length === 1 ? (
+                    <>
+                      <img 
+                        data-src={urlFor(images[0]).url()} 
+                        alt="" 
+                        className="lazy full-bleed-image"
+                      />
+                      <div className="loading-overlay" />
+                    </>
+                  ) : (
+                    <SplideCarousel 
+                      images={images.map(image => ({ url: urlFor(image).url(), alt: "" }))}
+                      onPrevious={() => {}}
+                      onNext={() => {}}
+                    />
+                  )}
+                </div>
+              )}
+              
+              {mediaType === 'video' && video && (
+                <div className="media-wrap">
+                  <video
+                    ref={videoRef1}
+                    src={videoUrlFor(video)}
+                    poster={
+                      typeof video === 'object' &&
+                      video !== null &&
+                      'thumbnailUrl' in video
+                        ? video.thumbnailUrl
+                        : undefined
+                    }
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    preload="metadata"
+                  />
+                  <div className="loading-overlay" />
+                </div>
+              )}
+            </div>
+          </div>
+
+          {links && links.length > 0 && (
+            <div className="media-text-links-list row-lg">
+              {links.map((link, index) => (
+                <div key={index} className={links.length === 2 ? 'col-6-12_lg two-across' : 'col-2-12_lg'}>
+                  <div className="media-text-link out-of-opacity">
+                    {link.image && (
+                      <div className="media-wrap relative">
+                        <img 
+                          data-src={urlFor(link.image).url()} 
+                          alt="" 
+                          className="lazy full-bleed-image"
+                        />
+                        <div className="loading-overlay" />
+
+                        {link.buttons && link.buttons.length > 0 && (
+                          <div className={`button-wrap${link.buttons.length > 1 ? ' button-wrap--multiple-buttons' : ''} button-wrap--overlay-media`}>
+                            {link.buttons.map((button, buttonIndex) => (
+                              <ButtonLink key={buttonIndex} link={button} fallbackColor="cream" />
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {link.header && (
+                      <h5 className="media-text-heading">{link.header}</h5>
+                    )}
+
+                    {link.body && (
+                      <div className="media-text-body">
+                        <PortableText value={link.body ?? []} />
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
+      )}
+
+      {/* Media with Text (h4, body & room links) */}
+      {(layout === 'media-with-text-h4-body-room-links') && (
+        <section id={id} className={`media-text-section layout-${layout} h-pad`}>
+          <div className={`align-${mediaAlignment} row-lg`}>
+            <div className="col-6-12_lg col-1 out-of-view">
+              <div className="text-wrap">
+                {body && body.length > 0 && (
+                  <h5 className="media-text-body">
+                    <PortableText value={body ?? []} />
+                  </h5>
+                )}
+
+                {buttons && buttons.length > 0 && (
+                  <div className={`button-wrap${buttons.length > 1 ? ' button-wrap--multiple-buttons' : ''}`}>
+                    {buttons.map((button, index) => (
+                      <ButtonLink key={index} link={button} fallbackColor="cream" />
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="col-6-12_lg col-2 out-of-opacity">
+              {mediaType === 'image' && images && images.length > 0 && (
+                <div className="media-wrap">
+                  {images.length === 1 ? (
+                    <>
+                      <img 
+                        data-src={urlFor(images[0]).url()} 
+                        alt="" 
+                        className="lazy full-bleed-image"
+                      />
+                      <div className="loading-overlay" />
+                    </>
+                  ) : (
+                    <SplideCarousel 
+                      images={images.map(image => ({ url: urlFor(image).url(), alt: "" }))}
+                      onPrevious={() => {}}
+                      onNext={() => {}}
+                    />
+                  )}
+                </div>
+              )}
+              
+              {mediaType === 'video' && video && (
+                <div className="media-wrap">
+                  <video
+                    ref={videoRef1}
+                    src={videoUrlFor(video)}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    preload="metadata"
+                  />
+                  <div className="loading-overlay" />
+                </div>
+              )}
+            </div>
+          </div>
+
+          {roomLinks && roomLinks.length > 0 && (
+            <>
+              {roomLinks.length > 4 ? (
+                <div className="media-text-links-carousel out-of-opacity">
+                  <Splide
+                    ref={splideRef}
+                    options={{
+                      type: 'slide',
+                      perPage: 4,
+                      perMove: 1,
+                      gap: '20px',
+                      pagination: false,
+                      arrows: false,
+                      breakpoints: {
+                        768: {
+                          perPage: 1,
+                          perMove: 1,
+                        },
+                      },
+                    }}
+                  >
+                    {roomLinks.map((room, index) => (
+                      <SplideSlide key={index}>
+                        <div className="media-text-link">
+                          {room.images?.[0] && (
+                            <div className="media-wrap relative">
+                              <img 
+                                data-src={urlFor(room.images[0]).url()} 
+                                alt="" 
+                                className="lazy full-bleed-image"
+                              />
+                              <div className="loading-overlay" />
+
+                              <div className="button-wrap button-wrap--multiple-buttons button-wrap--overlay-media">
+                                <ButtonLink 
+                                  link={{ linkType: 'internal', label: 'View', pageLink: { slug: `rooms/${room.slug}` } }}
+                                  fallbackColor="cream"
+                                />
+
+                                <button
+                                  type="button"
+                                  className="button button--orange namastay-widget-button"
+                                >
+                                  Book
+                                </button>
+                              </div>
+                            </div>
+                          )}
+
+                          <h5 className="media-text-heading">{room.title}</h5>
+
+                          {room.description && (
+                            <div className="media-text-body">
+                              <PortableText value={room.description ?? []} />
+                            </div>
+                          )}
+                        </div>
+                      </SplideSlide>
+                    ))}
+                  </Splide>
+
+                  <div className="media-text-links-carousel-controls">
+                    <button 
+                      className="carousel-arrow carousel-arrow--prev"
+                      onClick={handlePrevious}
+                      disabled={currentSlideIndex === 0}
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36">
+                        <circle cx="18" cy="18" r="17.5"/>
+                        <path d="M20.5 12L14 18.5L20.5 25"/>
+                      </svg>
+                    </button>
+
+                    <div className="carousel-pagination">
+                      <h6>{currentPage}/{totalPages}</h6>
+                    </div>
+
+                    <button 
+                      className="carousel-arrow carousel-arrow--next"
+                      onClick={handleNext}
+                      disabled={isAtEndOfRoomLinks}
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36" fill="none">
+                        <circle cx="18" cy="18" r="17.5" transform="matrix(-1 0 0 1 36 0)"/>
+                        <path d="M15.5 12L22 18.5L15.5 25"/>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="row-lg">
+                  {roomLinks.map((room, index) => (
+                    <div key={index} className={roomLinks.length === 2 ? 'col-6-12_lg two-across' : 'col-2-12_lg'}>
+                      <div className="media-text-link out-of-opacity">
+                        {room.images?.[0] && (
+                          <div className="media-wrap relative">
+                            <img 
+                              data-src={urlFor(room.images[0]).url()} 
+                              alt="" 
+                              className="lazy full-bleed-image"
+                            />
+                            <div className="loading-overlay" />
+
+                            <div className="button-wrap button-wrap--multiple-buttons button-wrap--overlay-media">
+                              <ButtonLink 
+                                link={{ linkType: 'internal', label: 'View', pageLink: { slug: `rooms/${room.slug}` } }}
+                                fallbackColor="cream"
+                              />
+
+                              <button
+                                type="button"
+                                className="button button--orange namastay-widget-button"
+                              >
+                                Book
+                              </button>
+                            </div>
+                          </div>
+                        )}
+
+                        <h5 className="media-text-heading">{room.title}</h5>
+
+                        {room.description && (
+                          <div className="media-text-body">
+                            <PortableText value={room.description ?? []} />
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </>
+          )}
+        </section>
+      )}
+
+      {/* Media with Text (h4, body & calendar links) */}
+      {(layout === 'media-with-text-h4-body-activity-links') && (
+        <section id={id} className={`media-text-section layout-${layout} h-pad`}>
+          <div className={`align-${mediaAlignment} row-lg`}>
+            <div className="col-6-12_lg col-1 out-of-view">
+              <div className="text-wrap">
+                {body && body.length > 0 && (
+                  <h5 className="media-text-body">
+                    <PortableText value={body ?? []} />
+                  </h5>
+                )}
+
+                {buttons && buttons.length > 0 && (
+                  <div className={`button-wrap${buttons.length > 1 ? ' button-wrap--multiple-buttons' : ''}`}>
+                    {buttons.map((button, index) => (
+                      <ButtonLink key={index} link={button} fallbackColor="cream" />
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="col-6-12_lg col-2 out-of-opacity">
+              {mediaType === 'image' && images && images.length > 0 && (
+                <div className="media-wrap">
+                  {images.length === 1 ? (
+                    <>
+                      <img 
+                        data-src={urlFor(images[0]).url()} 
+                        alt="" 
+                        className="lazy full-bleed-image"
+                      />
+                      <div className="loading-overlay" />
+                    </>
+                  ) : (
+                    <SplideCarousel 
+                      images={images.map(image => ({ url: urlFor(image).url(), alt: "" }))}
+                      onPrevious={() => {}}
+                      onNext={() => {}}
+                    />
+                  )}
+                </div>
+              )}
+              
+              {mediaType === 'video' && video && (
+                <div className="media-wrap">
+                  <video
+                    ref={videoRef1}
+                    src={videoUrlFor(video)}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    preload="metadata"
+                  />
+                  <div className="loading-overlay" />
+                </div>
+              )}
+            </div>
+          </div>
+
+          <CalendarPage activities={upcomingActivities} disableCarousel={upcomingActivities.length <= 1} />
+        </section>
+      )}
+
+      {/* Media with Text (multiple text blocks) */}
       {layout === 'media-with-text-multiple-text-blocks' && (
         <>
           <div className="desktop">
@@ -614,492 +1161,6 @@ export default function MediaTextSection({
             </section>
           </div>
         </>
-      )}
-
-      {layout === 'media-with-text-room-type' && roomLink && (
-        <section id={id} className={`media-text-section room-type layout-${mediaAlignment} align-${mediaAlignment} row-lg h-pad`}>
-          <div className="col-6-12_lg col-1 out-of-view">
-            <div className="text-wrap">
-              {roomLink.roomType && (
-                <div className="media-text-room-type">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="16" viewBox="0 0 24 16">
-                    <path d="M11.8181 0.5H0.5V15.5H11.8181V0.5Z"/>
-                    <path d="M0.5 0.5L11.8181 15.5"/>
-                    <path d="M23.1365 0.5H11.8184V15.5H23.1365V0.5Z"/>
-                    <path d="M11.8184 0.5L23.1365 15.5"/>
-                  </svg>
-
-                  <div>{roomLink.roomType}</div>
-                </div>
-              )}
-
-              <h5 className="media-text-heading">{roomLink.title}</h5>
-              
-              {roomLink.description && (
-                <div className="media-text-body">
-                  <PortableText value={roomLink.description ?? []} />
-                </div>
-              )}
-
-              <div className="button-wrap button-wrap--multiple-buttons">
-                <ButtonLink 
-                  link={{ linkType: 'internal', label: 'View', pageLink: { slug: `rooms/${roomLink.slug}` } }} 
-                  fallbackColor="cream"
-                />
-
-                <button
-                  type="button"
-                  className="button button--orange namastay-widget-button"
-                >
-                  Book
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div className="col-6-12_lg col-2 out-of-opacity">
-            {mediaType === 'image' && images && images.length > 0 && (
-              <div className="media-wrap">
-                {images.length === 1 ? (
-                  <>
-                    <img 
-                      data-src={urlFor(images[0]).url()} 
-                      alt="" 
-                      className="lazy full-bleed-image"
-                    />
-                    <div className="loading-overlay" />
-                  </>
-                ) : (
-                  <SplideCarousel 
-                    images={images.map(image => ({ url: urlFor(image).url(), alt: "" }))}
-                    onPrevious={() => {}}
-                    onNext={() => {}}
-                  />
-                )}
-              </div>
-            )}
-            
-            {mediaType === 'video' && video && (
-              <div className="media-wrap">
-                <video
-                  ref={videoRef2}
-                  src={videoUrlFor(video)}
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  preload="metadata"
-                />
-                <div className="loading-overlay" />
-              </div>
-            )}
-          </div>
-        </section>
-      )}
-
-      {(layout === 'media-with-text-h4-body-room-links') && (
-        <section id={id} className={`media-text-section layout-${layout} h-pad`}>
-          <div className={`align-${mediaAlignment} row-lg`}>
-            <div className="col-6-12_lg col-1 out-of-view">
-              <div className="text-wrap">
-                {heading && (
-                  <>
-                    <h4 className="media-text-heading">{heading}</h4>
-
-                    {body && body.length > 0 && (
-                      <div className="media-text-body">
-                        <PortableText value={body ?? []} />
-                      </div>
-                    )}
-                  </>
-                )}
-
-                {!heading && body && body.length > 0 && (
-                  <h5 className="media-text-body">
-                    <PortableText value={body ?? []} />
-                  </h5>
-                )}
-
-                {buttons && buttons.length > 0 && (
-                  <div className={`button-wrap${buttons.length > 1 ? ' button-wrap--multiple-buttons' : ''}`}>
-                    {buttons.map((button, index) => (
-                      <ButtonLink key={index} link={button} fallbackColor="cream" />
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <div className="col-6-12_lg col-2 out-of-opacity">
-              {mediaType === 'image' && images && images.length > 0 && (
-                <div className="media-wrap">
-                  {images.length === 1 ? (
-                    <>
-                      <img 
-                        data-src={urlFor(images[0]).url()} 
-                        alt="" 
-                        className="lazy full-bleed-image"
-                      />
-                      <div className="loading-overlay" />
-                    </>
-                  ) : (
-                    <SplideCarousel 
-                      images={images.map(image => ({ url: urlFor(image).url(), alt: "" }))}
-                      onPrevious={() => {}}
-                      onNext={() => {}}
-                    />
-                  )}
-                </div>
-              )}
-              
-              {mediaType === 'video' && video && (
-                <div className="media-wrap">
-                  <video
-                    ref={videoRef1}
-                    src={videoUrlFor(video)}
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                    preload="metadata"
-                  />
-                  <div className="loading-overlay" />
-                </div>
-              )}
-            </div>
-          </div>
-
-          {roomLinks && roomLinks.length > 0 && (
-            <>
-              {roomLinks.length > 4 ? (
-                <div className="media-text-links-carousel out-of-opacity">
-                  <Splide
-                    ref={splideRef}
-                    options={{
-                      type: 'slide',
-                      perPage: 4,
-                      perMove: 1,
-                      gap: '20px',
-                      pagination: false,
-                      arrows: false,
-                      breakpoints: {
-                        768: {
-                          perPage: 1,
-                          perMove: 1,
-                        },
-                      },
-                    }}
-                  >
-                    {roomLinks.map((room, index) => (
-                      <SplideSlide key={index}>
-                        <div className="media-text-link">
-                          {room.images?.[0] && (
-                            <div className="media-wrap relative">
-                              <img 
-                                data-src={urlFor(room.images[0]).url()} 
-                                alt="" 
-                                className="lazy full-bleed-image"
-                              />
-                              <div className="loading-overlay" />
-
-                              <div className="button-wrap button-wrap--multiple-buttons button-wrap--overlay-media">
-                                <ButtonLink 
-                                  link={{ linkType: 'internal', label: 'View', pageLink: { slug: `rooms/${room.slug}` } }}
-                                  fallbackColor="cream"
-                                />
-
-                                <button
-                                  type="button"
-                                  className="button button--orange namastay-widget-button"
-                                >
-                                  Book
-                                </button>
-                              </div>
-                            </div>
-                          )}
-
-                          <h5 className="media-text-heading">{room.title}</h5>
-
-                          {room.description && (
-                            <div className="media-text-body">
-                              <PortableText value={room.description ?? []} />
-                            </div>
-                          )}
-                        </div>
-                      </SplideSlide>
-                    ))}
-                  </Splide>
-
-                  <div className="media-text-links-carousel-controls">
-                    <button 
-                      className="carousel-arrow carousel-arrow--prev"
-                      onClick={handlePrevious}
-                      disabled={currentSlideIndex === 0}
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36">
-                        <circle cx="18" cy="18" r="17.5"/>
-                        <path d="M20.5 12L14 18.5L20.5 25"/>
-                      </svg>
-                    </button>
-
-                    <div className="carousel-pagination">
-                      <h6>{currentPage}/{totalPages}</h6>
-                    </div>
-
-                    <button 
-                      className="carousel-arrow carousel-arrow--next"
-                      onClick={handleNext}
-                      disabled={isAtEndOfRoomLinks}
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36" fill="none">
-                        <circle cx="18" cy="18" r="17.5" transform="matrix(-1 0 0 1 36 0)"/>
-                        <path d="M15.5 12L22 18.5L15.5 25"/>
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <div className="row-lg">
-                  {roomLinks.map((room, index) => (
-                    <div key={index} className={roomLinks.length === 2 ? 'col-6-12_lg two-across' : 'col-2-12_lg'}>
-                      <div className="media-text-link out-of-opacity">
-                        {room.images?.[0] && (
-                          <div className="media-wrap relative">
-                            <img 
-                              data-src={urlFor(room.images[0]).url()} 
-                              alt="" 
-                              className="lazy full-bleed-image"
-                            />
-                            <div className="loading-overlay" />
-
-                            <div className="button-wrap button-wrap--multiple-buttons button-wrap--overlay-media">
-                              <ButtonLink 
-                                link={{ linkType: 'internal', label: 'View', pageLink: { slug: `rooms/${room.slug}` } }}
-                                fallbackColor="cream"
-                              />
-
-                              <button
-                                type="button"
-                                className="button button--orange namastay-widget-button"
-                              >
-                                Book
-                              </button>
-                            </div>
-                          </div>
-                        )}
-
-                        <h5 className="media-text-heading">{room.title}</h5>
-
-                        {room.description && (
-                          <div className="media-text-body">
-                            <PortableText value={room.description ?? []} />
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </>
-          )}
-
-        </section>
-      )}
-
-      {(layout === 'media-with-text-h4-body-activity-links') && (
-        <section id={id} className={`media-text-section layout-${layout} h-pad`}>
-          <div className={`align-${mediaAlignment} row-lg`}>
-            <div className="col-6-12_lg col-1 out-of-view">
-              <div className="text-wrap">
-                {heading && (
-                  <>
-                    <h4 className="media-text-heading">{heading}</h4>
-
-                    {body && body.length > 0 && (
-                      <div className="media-text-body">
-                        <PortableText value={body ?? []} />
-                      </div>
-                    )}
-                  </>
-                )}
-
-                {!heading && body && body.length > 0 && (
-                  <h5 className="media-text-body">
-                    <PortableText value={body ?? []} />
-                  </h5>
-                )}
-
-                {buttons && buttons.length > 0 && (
-                  <div className={`button-wrap${buttons.length > 1 ? ' button-wrap--multiple-buttons' : ''}`}>
-                    {buttons.map((button, index) => (
-                      <ButtonLink key={index} link={button} fallbackColor="cream" />
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <div className="col-6-12_lg col-2 out-of-opacity">
-              {mediaType === 'image' && images && images.length > 0 && (
-                <div className="media-wrap">
-                  {images.length === 1 ? (
-                    <>
-                      <img 
-                        data-src={urlFor(images[0]).url()} 
-                        alt="" 
-                        className="lazy full-bleed-image"
-                      />
-                      <div className="loading-overlay" />
-                    </>
-                  ) : (
-                    <SplideCarousel 
-                      images={images.map(image => ({ url: urlFor(image).url(), alt: "" }))}
-                      onPrevious={() => {}}
-                      onNext={() => {}}
-                    />
-                  )}
-                </div>
-              )}
-              
-              {mediaType === 'video' && video && (
-                <div className="media-wrap">
-                  <video
-                    ref={videoRef1}
-                    src={videoUrlFor(video)}
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                    preload="metadata"
-                  />
-                  <div className="loading-overlay" />
-                </div>
-              )}
-            </div>
-          </div>
-
-          <CalendarPage activities={upcomingActivities} disableCarousel={upcomingActivities.length <= 1} />
-        </section>
-      )}
-
-      {(layout === 'media-with-text-h4-body-links') && links && links.length > 0 && (
-        <section id={id} className={`media-text-section layout-${layout} h-pad`}>
-          <div className={`align-${mediaAlignment} row-lg`}>
-            <div className="col-6-12_lg col-1 out-of-view">
-              <div className="text-wrap">
-                {heading && (
-                  <>
-                    <h4 className="media-text-heading">{heading}</h4>
-
-                    {body && body.length > 0 && (
-                      <div className="media-text-body">
-                        <PortableText value={body ?? []} />
-                      </div>
-                    )}
-                  </>
-                )}
-
-                {!heading && body && body.length > 0 && (
-                  <h5 className="media-text-body">
-                    <PortableText value={body ?? []} />
-                  </h5>
-                )}
-
-                {buttons && buttons.length > 0 && (
-                  <div className={`button-wrap${buttons.length > 1 ? ' button-wrap--multiple-buttons' : ''}`}>
-                    {buttons.map((button, index) => (
-                      <ButtonLink key={index} link={button} fallbackColor="cream" />
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <div className="col-6-12_lg col-2 out-of-opacity">
-              {mediaType === 'image' && images && images.length > 0 && (
-                <div className="media-wrap">
-                  {images.length === 1 ? (
-                    <>
-                      <img 
-                        data-src={urlFor(images[0]).url()} 
-                        alt="" 
-                        className="lazy full-bleed-image"
-                      />
-                      <div className="loading-overlay" />
-                    </>
-                  ) : (
-                    <SplideCarousel 
-                      images={images.map(image => ({ url: urlFor(image).url(), alt: "" }))}
-                      onPrevious={() => {}}
-                      onNext={() => {}}
-                    />
-                  )}
-                </div>
-              )}
-              
-              {mediaType === 'video' && video && (
-                <div className="media-wrap">
-                  <video
-                    ref={videoRef1}
-                    src={videoUrlFor(video)}
-                    poster={
-                      typeof video === 'object' &&
-                      video !== null &&
-                      'thumbnailUrl' in video
-                        ? video.thumbnailUrl
-                        : undefined
-                    }
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                    preload="metadata"
-                  />
-                  <div className="loading-overlay" />
-                </div>
-              )}
-            </div>
-          </div>
-
-          {links && links.length > 0 && (
-            <div className="media-text-links-list row-lg">
-              {links.map((link, index) => (
-                <div key={index} className={links.length === 2 ? 'col-6-12_lg two-across' : 'col-2-12_lg'}>
-                  <div className="media-text-link out-of-opacity">
-                    {link.image && (
-                      <div className="media-wrap relative">
-                        <img 
-                          data-src={urlFor(link.image).url()} 
-                          alt="" 
-                          className="lazy full-bleed-image"
-                        />
-                        <div className="loading-overlay" />
-
-                        {link.buttons && link.buttons.length > 0 && (
-                          <div className={`button-wrap${link.buttons.length > 1 ? ' button-wrap--multiple-buttons' : ''} button-wrap--overlay-media`}>
-                            {link.buttons.map((button, buttonIndex) => (
-                              <ButtonLink key={buttonIndex} link={button} fallbackColor="cream" />
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    )}
-
-                    {link.header && (
-                      <h5 className="media-text-heading">{link.header}</h5>
-                    )}
-
-                    {link.body && (
-                      <div className="media-text-body">
-                        <PortableText value={link.body ?? []} />
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </section>
       )}
     </>
   )
