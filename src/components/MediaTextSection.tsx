@@ -621,7 +621,7 @@ export default function MediaTextSection({
           {links && links.length > 0 && (
             <div className="media-text-links-list row-lg">
               {links.map((link, index) => (
-                <div key={index} className={links.length === 2 ? 'col-6-12_lg two-across' : 'col-2-12_lg'}>
+                <div key={index} className={links.length === 2 ? 'col-6-12_lg two-across' : 'col-3-12_lg'}>
                   <div className="media-text-link out-of-opacity">
                     {link.image && (
                       <div className="media-wrap relative">
