@@ -2,10 +2,9 @@ import { client } from '../../../sanity.client'
 import { footerQuery, menuQuery } from './queries'
 import { FooterSettings } from '../../types/footerSettings'
 
-// Type for menu from menuType schema
+// Type for menu from siteSettings header fields
 type Menu = {
   _id: string
-  title: string
   items: {
     pageLink: {
       _id: string

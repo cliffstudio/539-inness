@@ -513,7 +513,7 @@ export const siteSearchQuery = groq`
 
 // Footer and menu queries
 export const footerQuery = groq`
-  *[_type == "footer"][0] {
+  *[_type == "siteSettings"][0] {
     _id,
     navigationColumn1 {
       heading,
@@ -548,9 +548,8 @@ export const footerQuery = groq`
 `
 
 export const menuQuery = groq`
-  *[_type == "menu"][0] {
+  *[_type == "siteSettings"][0] {
     _id,
-    title,
     items[] {
       linkType,
       label,

@@ -1,8 +1,6 @@
 // Global
 import { pageType } from './pageType'
 import { roomType } from './roomType'
-import { menuType } from './menuType'
-import { footerType } from './footerType'
 import { siteSettingsType } from './siteSettings'
 import { productType } from './product'
 import { productVariantType } from './productVariant'
@@ -38,8 +36,6 @@ export const schemaTypes = [
   // Global
   pageType,
   roomType,
-  menuType,
-  footerType,
   siteSettingsType,
   productType,
   productVariantType,

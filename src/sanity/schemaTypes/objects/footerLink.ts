@@ -1,4 +1,5 @@
 import { defineType, defineField } from 'sanity'
+import { ArrowTopRightIcon, LinkIcon } from '@sanity/icons'
 
 export default defineType({
   name: 'footerLink',
@@ -60,10 +61,12 @@ export default defineType({
     prepare({ linkType, url, label, pageTitle, jumpLink, fileName }) {
       let title = ''
       let subtitle = ''
+      let media = LinkIcon
       
       if (linkType === 'external') {
         title = label || 'External Link'
         subtitle = url || 'No URL'
+        media = ArrowTopRightIcon
       } else if (linkType === 'jump') {
         title = label || 'Jump Link'
         subtitle = jumpLink || 'No Jump Link'
@@ -71,13 +74,15 @@ export default defineType({
         title = label || 'File Link'
         subtitle = fileName || 'No File Selected'
       } else {
-        title = label || 'Internal Link'
-        subtitle = pageTitle || 'No Page Selected'
+        title = label || pageTitle || 'Untitled'
+        subtitle = ''
+        media = LinkIcon
       }
       
       return {
         title,
-        subtitle,
+        ...(subtitle ? { subtitle } : {}),
+        media,
       }
     }
   }

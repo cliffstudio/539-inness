@@ -12,8 +12,6 @@ export const structure: StructureResolver = (S) =>
       S.documentTypeListItem('calendar').title('Calendar'),
       S.documentTypeListItem('product').title('Products'),
       S.divider(),
-      S.documentTypeListItem('menu').title('Menus'),
-      S.documentTypeListItem('footer').title('Footer'),
       S.listItem()
         .title('Site Settings')
         .icon(CogIcon)
@@ -30,8 +28,6 @@ export const structure: StructureResolver = (S) =>
             'room',
             'calendar',
             'product',
-            'menu',
-            'footer',
             'siteSettings',
             'productVariant',
           ].includes(item.getId()!),

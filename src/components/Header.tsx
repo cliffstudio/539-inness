@@ -7,7 +7,7 @@ import { DisableBodyScroll, EnableBodyScroll } from '@/utils/bodyScroll'
 import { useBooking } from '@/contexts/BookingContext'
 import { useBasket } from '@/contexts/BasketContext'
 
-// Type for menu items from menuType schema
+// Type for header menu items from siteSettings
 type MenuItem = {
   linkType?: 'internal' | 'external'
   label?: string
@@ -19,10 +19,9 @@ type MenuItem = {
   }
 }
 
-// Type for menu from menuType schema
+// Type for header menu from siteSettings
 type Menu = {
   _id: string
-  title: string
   items: MenuItem[]
 }
 
