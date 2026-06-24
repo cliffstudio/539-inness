@@ -35,6 +35,7 @@ export const pageType = defineType({
       name: 'title',
       title: 'Title',
       type: 'string',
+      group: 'content',
     }),
     defineField({
       name: 'slug',
