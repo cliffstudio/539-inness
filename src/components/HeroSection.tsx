@@ -1,66 +1,89 @@
 /* eslint-disable @next/next/no-img-element */
-'use client'
-import { useRef, useLayoutEffect } from 'react'
-import AnimateIn from './AnimateIn'
-import { useGsapParallaxScroll } from '@/hooks/useGsapParallaxScroll'
-import { urlFor } from '../sanity/utils/imageUrlBuilder'
-import { SanityImage } from '../types/sanity'
-import { PortableText, PortableTextBlock } from '@portabletext/react'
-import { Link } from '../types/footerSettings'
-import ButtonLink from './ButtonLink'
-import SplideCarousel from './SplideCarousel'
-import { videoUrlFor } from '@/sanity/utils/videoUrlBuilder'
-import type { SanityVideo } from '@/types/sanity'
+"use client";
+import { useRef, useLayoutEffect } from "react";
+import AnimateIn from "./AnimateIn";
+import { useGsapParallaxScroll } from "@/hooks/useGsapParallaxScroll";
+import { urlFor } from "../sanity/utils/imageUrlBuilder";
+import { SanityImage } from "../types/sanity";
+import { PortableText, PortableTextBlock } from "@portabletext/react";
+import { Link } from "../types/footerSettings";
+import ButtonLink from "./ButtonLink";
+import SplideCarousel from "./SplideCarousel";
+import { videoUrlFor } from "@/sanity/utils/videoUrlBuilder";
+import type { SanityVideo } from "@/types/sanity";
+import { getLinkInfo } from "../utils/linkHelpers";
 
 interface Spec {
-  body?: string
+  body?: string;
 }
 
 interface HeroProps {
-  id?: string
-  layout?: 'full-bleed' | 'split'
-  heading?: string
-  body?: PortableTextBlock[]
-  mediaType?: 'image' | 'video'
-  images?: SanityImage[]
-  video?: SanityVideo
-  specs?: Spec[]
-  button?: Link
+  id?: string;
+  layout?: "full-bleed" | "split";
+  heading?: string;
+  body?: PortableTextBlock[];
+  mediaType?: "image" | "video";
+  images?: SanityImage[];
+  video?: SanityVideo;
+  specs?: Spec[];
+  button?: Link;
 }
 
-export default function Hero({ id, layout = 'full-bleed', heading, body, mediaType = 'image', images, video, specs, button }: HeroProps) {
-  const videoRef = useRef<HTMLVideoElement>(null)
-  const sectionRef = useRef<HTMLElement>(null)
-  const imageWrapRef = useRef<HTMLDivElement>(null)
+export default function Hero({
+  id,
+  layout = "full-bleed",
+  heading,
+  body,
+  mediaType = "image",
+  images,
+  video,
+  specs,
+  button,
+}: HeroProps) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const imageWrapRef = useRef<HTMLDivElement>(null);
 
   useGsapParallaxScroll(imageWrapRef, sectionRef, {
-    enabled: layout === 'full-bleed' && mediaType === 'image' && (images?.length ?? 0) === 1,
-  })
+    enabled:
+      layout === "full-bleed" &&
+      mediaType === "image" &&
+      (images?.length ?? 0) === 1,
+  });
 
   useLayoutEffect(() => {
-    if (mediaType !== 'video' || !videoRef.current) return
-    const el = videoRef.current
+    if (mediaType !== "video" || !videoRef.current) return;
+    const el = videoRef.current;
     const hideOverlay = () => {
-      const overlay = el.nextElementSibling
-      if (overlay && overlay instanceof HTMLElement) overlay.classList.add('hidden')
-    }
-    el.addEventListener('canplaythrough', hideOverlay)
-    if (el.readyState >= 3) hideOverlay()
-    return () => el.removeEventListener('canplaythrough', hideOverlay)
-  }, [mediaType])
+      const overlay = el.nextElementSibling;
+      if (overlay && overlay instanceof HTMLElement)
+        overlay.classList.add("hidden");
+    };
+    el.addEventListener("canplaythrough", hideOverlay);
+    if (el.readyState >= 3) hideOverlay();
+    return () => el.removeEventListener("canplaythrough", hideOverlay);
+  }, [mediaType]);
 
   const handleArrowClick = () => {
     window.scrollBy({
       top: window.innerHeight,
-      behavior: 'smooth'
-    })
-  }
+      behavior: "smooth",
+    });
+  };
+
+  const hasSpecs = Boolean(specs && specs.length > 0);
+  const { href: buttonHref, text: buttonText } = getLinkInfo(button);
+  const hasButton = Boolean(buttonHref && buttonText);
 
   return (
     <>
-      {layout === 'full-bleed' && (
-        <section ref={sectionRef} id={id} className="hero-section layout-1 relative">
-          {mediaType === 'video' && video && (
+      {layout === "full-bleed" && (
+        <section
+          ref={sectionRef}
+          id={id}
+          className="hero-section layout-1 relative"
+        >
+          {mediaType === "video" && video && (
             <div className="fill-space-video-wrap media-wrap">
               <video
                 ref={videoRef}
@@ -74,30 +97,37 @@ export default function Hero({ id, layout = 'full-bleed', heading, body, mediaTy
               <div className="loading-overlay" />
             </div>
           )}
-          
-          {mediaType === 'image' && images && images.length > 0 && (
-            images.length === 1 ? (
-              <div ref={imageWrapRef} className="fill-space-image-wrap media-wrap">
-                <img 
-                  data-src={urlFor(images[0]).url()} 
-                  alt="" 
+
+          {mediaType === "image" &&
+            images &&
+            images.length > 0 &&
+            (images.length === 1 ? (
+              <div
+                ref={imageWrapRef}
+                className="fill-space-image-wrap media-wrap"
+              >
+                <img
+                  data-src={urlFor(images[0]).url()}
+                  alt=""
                   className="lazy full-bleed-image"
                 />
                 <div className="loading-overlay" />
               </div>
             ) : (
-              <SplideCarousel 
-                images={images.map(image => ({ url: urlFor(image).url(), alt: "" }))}
+              <SplideCarousel
+                images={images.map((image) => ({
+                  url: urlFor(image).url(),
+                  alt: "",
+                }))}
                 onPrevious={() => {}}
                 onNext={() => {}}
               />
-            )
-          )}
+            ))}
 
           <div className="hero-content h-pad">
             <AnimateIn stage={1}>
               {heading && <h1>{heading}</h1>}
-              
+
               {body && body.length > 0 && (
                 <div className="hero-body">
                   <PortableText value={body} />
@@ -105,24 +135,34 @@ export default function Hero({ id, layout = 'full-bleed', heading, body, mediaTy
               )}
             </AnimateIn>
           </div>
-          
+
           <AnimateIn
             className="hero-arrow"
             stage={2}
             onClick={handleArrowClick}
-            style={{ cursor: 'pointer' }}
+            style={{ cursor: "pointer" }}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36">
-              <circle cx="18" cy="18" r="17.5" transform="matrix(0 -1 -1 0 36 36)"/>
-              <path d="M24 15.5L17.5 22L11 15.5"/>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="36"
+              height="36"
+              viewBox="0 0 36 36"
+            >
+              <circle
+                cx="18"
+                cy="18"
+                r="17.5"
+                transform="matrix(0 -1 -1 0 36 36)"
+              />
+              <path d="M24 15.5L17.5 22L11 15.5" />
             </svg>
           </AnimateIn>
         </section>
       )}
 
-      {layout === 'split' && (
+      {layout === "split" && (
         <section id={id} className="hero-section layout-2 h-pad">
-          {mediaType === 'video' && video && (
+          {mediaType === "video" && video && (
             <AnimateIn className="hero-image relative">
               <div className="fill-space-video-wrap media-wrap">
                 <video
@@ -138,20 +178,23 @@ export default function Hero({ id, layout = 'full-bleed', heading, body, mediaTy
               </div>
             </AnimateIn>
           )}
-          {mediaType === 'image' && images && images.length > 0 && (
+          {mediaType === "image" && images && images.length > 0 && (
             <AnimateIn className="hero-image relative">
               {images.length === 1 ? (
                 <div className="fill-space-image-wrap media-wrap">
-                  <img 
-                    data-src={urlFor(images[0]).url()} 
-                    alt="" 
+                  <img
+                    data-src={urlFor(images[0]).url()}
+                    alt=""
                     className="lazy full-bleed-image"
                   />
                   <div className="loading-overlay" />
                 </div>
               ) : (
-                <SplideCarousel 
-                  images={images.map(image => ({ url: urlFor(image).url(), alt: "" }))}
+                <SplideCarousel
+                  images={images.map((image) => ({
+                    url: urlFor(image).url(),
+                    alt: "",
+                  }))}
                   onPrevious={() => {}}
                   onNext={() => {}}
                 />
@@ -163,7 +206,7 @@ export default function Hero({ id, layout = 'full-bleed', heading, body, mediaTy
             {(heading || body) && (
               <div className="row-1">
                 {heading && <h3>{heading}</h3>}
-                
+
                 {body && body.length > 0 && (
                   <div className="hero-body">
                     <PortableText value={body} />
@@ -172,19 +215,19 @@ export default function Hero({ id, layout = 'full-bleed', heading, body, mediaTy
               </div>
             )}
 
-            {(specs || button) && (
+            {(hasSpecs || hasButton) && (
               <div className="row-2">
-                {specs && specs.length > 0 && (
+                {hasSpecs && (
                   <div className="hero-specs">
-                    {specs.map((spec, index) => (
+                    {specs?.map((spec, index) => (
                       <div key={index} className="spec-item">
                         {spec.body}
                       </div>
                     ))}
                   </div>
                 )}
-                
-                {button && (
+
+                {hasButton && button && (
                   <ButtonLink link={button} fallbackColor="outline" />
                 )}
               </div>
@@ -193,6 +236,5 @@ export default function Hero({ id, layout = 'full-bleed', heading, body, mediaTy
         </section>
       )}
     </>
-  )
+  );
 }
-
