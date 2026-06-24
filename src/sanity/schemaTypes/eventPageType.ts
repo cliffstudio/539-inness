@@ -15,10 +15,6 @@ export const calendarType = defineType({
       name: 'content',
       title: 'Content',
     },
-    {
-      name: 'seo',
-      title: 'SEO',
-    }
   ],
   fields: [
     defineField({
@@ -119,15 +115,6 @@ export const calendarType = defineType({
       type: 'boolean',
       readOnly: true,
       group: 'content',
-    }),
-    defineField({
-      name: 'seo',
-      title: 'SEO',
-      type: 'seo',
-      readOnly: true,
-      description:
-        'Auto-generated from this event: title -> meta title, description -> meta description, thumbnail -> social image URL.',
-      group: 'seo',
     }),
   ],
   preview: {

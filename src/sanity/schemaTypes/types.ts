@@ -796,7 +796,6 @@ export type Calendar = {
   eventCategories?: Array<string>;
   lastSyncedAt?: string;
   isActive?: boolean;
-  seo?: Seo;
 };
 
 export type Slug = {

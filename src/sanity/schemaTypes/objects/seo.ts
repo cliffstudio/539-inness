@@ -25,7 +25,7 @@ export default defineType({
       title: 'Social Image',
       type: 'image',
       description: 'Image used for social media previews. Recommended size: 1200×630px.',
-      hidden: ({ document }) => document?._type === 'calendar' || document?._type === 'product',
+      hidden: ({ document }) => document?._type === 'product',
       options: {
         hotspot: true,
       },
@@ -47,7 +47,7 @@ export default defineType({
       title: 'Social Image URL',
       name: 'socialImageUrl',
       description: 'Image used for social media previews.',
-      hidden: ({ document }) => document?._type !== 'calendar' && document?._type !== 'product',
+      hidden: ({ document }) => document?._type !== 'product',
     }),
   ]
 })
