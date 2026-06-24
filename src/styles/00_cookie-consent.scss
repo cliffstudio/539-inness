@@ -1,4 +1,4 @@
-@use '00_mixins' as *;
+@use "00_mixins" as *;
 
 // // Cookie Consent Overrides
 .cc-revoke {
@@ -9,9 +9,9 @@
 @media only screen and (max-width: 820px) {
   body.cc-window-visible {
     position: relative;
-    
+
     &::before {
-      content: '';
+      content: "";
       position: fixed;
       top: 0;
       left: 0;
@@ -21,7 +21,7 @@
       z-index: 9998; // Just below the cookie window (which is typically 9999)
       pointer-events: none;
       opacity: 1;
-      @include transition(opacity 500ms cubic-bezier(0.25,0.1,0.25,1));
+      @include transition(opacity 500ms cubic-bezier(0.25, 0.1, 0.25, 1));
     }
   }
 
@@ -35,7 +35,7 @@
   width: get-rem-desktop(200) !important;
   left: get-rem-desktop(24) !important;
   bottom: get-rem-desktop(24) !important;
-  font-family: 'ABC Arizona Flare' !important;
+  font-family: "ABC Arizona Flare" !important;
   font-weight: 100 !important;
   box-sizing: border-box !important;
   font-size: 16px !important;
@@ -46,7 +46,7 @@
   row-gap: get-rem-desktop(20) !important;
   padding: get-rem-desktop(10) get-rem-desktop(16) get-rem-desktop(18) !important;
   color: $colour-cream !important;
-  transition: opacity 500ms cubic-bezier(0.25,0.1,0.25,1) !important;
+  transition: opacity 500ms cubic-bezier(0.25, 0.1, 0.25, 1) !important;
 
   @media only screen and (max-width: 820px) {
     width: calc(100% - 2 * get-rem-mobile(11)) !important;
@@ -71,12 +71,19 @@
   }
 
   .cc-btn {
+    @include reset-input;
     width: 100% !important;
-    padding: get-rem-desktop(3) 0 0 !important;
+    height: get-rem-desktop(26) !important;
     margin: 0 !important;
     will-change: background-color, border-color, color;
-    @include transition-multiple(background-color 500ms cubic-bezier(0.25,0.1,0.25,1), border-color 500ms cubic-bezier(0.25,0.1,0.25,1), color 500ms cubic-bezier(0.25,0.1,0.25,1));
-    height: get-rem-desktop(26) !important;
+    @include transition-multiple(
+      background-color 500ms cubic-bezier(0.25, 0.1, 0.25, 1),
+      border-color 500ms cubic-bezier(0.25, 0.1, 0.25, 1),
+      color 500ms cubic-bezier(0.25, 0.1, 0.25, 1)
+    );
+    @include flex;
+    @include align-items(center);
+    @include justify-content(center);
 
     @media (hover: hover) {
       &:hover {

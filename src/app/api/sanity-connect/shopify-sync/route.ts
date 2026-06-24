@@ -223,7 +223,7 @@ export async function POST(request: NextRequest) {
 
       let existingProduct: {store?: Record<string, unknown>} | null = null;
       try {
-        existingProduct = await sanity.getDocument(sanityProductDocId);
+        existingProduct = (await sanity.getDocument(sanityProductDocId)) ?? null;
       } catch {
         console.log(`Product ${sanityProductDocId} doesn't exist yet, will create`);
       }
