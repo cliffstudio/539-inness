@@ -73,7 +73,9 @@
   .cc-btn {
     @include reset-input;
     width: 100% !important;
+    flex: 0 0 26px !important;
     height: 26px !important;
+    min-height: 26px !important;
     margin: 0 !important;
     will-change: background-color, border-color, color;
     @include transition-multiple(

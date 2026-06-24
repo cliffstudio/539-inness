@@ -1,4 +1,4 @@
-@use '00_mixins' as *;
+@use "00_mixins" as *;
 
 /*
 SITE HEADER BASE ------------------
@@ -11,11 +11,14 @@ SITE HEADER BASE ------------------
   z-index: 100;
   color: $colour-cream;
   will-change: background-color, color;
-  @include transition-multiple(background-color 500ms cubic-bezier(0.25,0.1,0.25,1), color 500ms cubic-bezier(0.25,0.1,0.25,1));
+  @include transition-multiple(
+    background-color 500ms cubic-bezier(0.25, 0.1, 0.25, 1),
+    color 500ms cubic-bezier(0.25, 0.1, 0.25, 1)
+  );
 
   .link-icon {
     position: relative;
-    
+
     a {
       position: absolute;
       top: 0;
@@ -49,13 +52,13 @@ DESKTOP HEADER ------------------
       width: fit-content;
       margin: 0 auto;
       will-change: opacity;
-      @include transition(opacity 500ms cubic-bezier(0.25,0.1,0.25,1));
+      @include transition(opacity 500ms cubic-bezier(0.25, 0.1, 0.25, 1));
 
       svg {
         height: get-rem-desktop(31);
         fill: $colour-cream;
         will-change: fill;
-        @include transition(fill 500ms cubic-bezier(0.25,0.1,0.25,1));
+        @include transition(fill 500ms cubic-bezier(0.25, 0.1, 0.25, 1));
       }
 
       a {
@@ -88,7 +91,7 @@ DESKTOP HEADER ------------------
     border-bottom: 1px solid $colour-cream;
     height: get-rem-desktop(42);
     will-change: border-color;
-    @include transition(border-color 500ms cubic-bezier(0.25,0.1,0.25,1));
+    @include transition(border-color 500ms cubic-bezier(0.25, 0.1, 0.25, 1));
 
     .left {
       @include flex;
@@ -98,13 +101,13 @@ DESKTOP HEADER ------------------
       border-right: 1px solid $colour-cream;
       height: 100%;
       will-change: border-color;
-      @include transition(border-color 500ms cubic-bezier(0.25,0.1,0.25,1));
+      @include transition(border-color 500ms cubic-bezier(0.25, 0.1, 0.25, 1));
 
       svg {
         stroke: $colour-cream;
         fill: none;
         will-change: stroke;
-        @include transition(stroke 500ms cubic-bezier(0.25,0.1,0.25,1));
+        @include transition(stroke 500ms cubic-bezier(0.25, 0.1, 0.25, 1));
       }
 
       .search-icon {
@@ -130,7 +133,7 @@ DESKTOP HEADER ------------------
 
       a {
         will-change: opacity;
-        @include transition(opacity 500ms cubic-bezier(0.25,0.1,0.25,1));
+        @include transition(opacity 500ms cubic-bezier(0.25, 0.1, 0.25, 1));
       }
 
       @media (hover: hover) {
@@ -156,7 +159,10 @@ DESKTOP HEADER ------------------
       @include justify-content(center);
       cursor: pointer;
       will-change: background-color, border-color;
-      @include transition-multiple(background-color 500ms cubic-bezier(0.25,0.1,0.25,1),border-color 500ms cubic-bezier(0.25,0.1,0.25,1));
+      @include transition-multiple(
+        background-color 500ms cubic-bezier(0.25, 0.1, 0.25, 1),
+        border-color 500ms cubic-bezier(0.25, 0.1, 0.25, 1)
+      );
 
       @media (hover: hover) {
         &:hover {
@@ -260,13 +266,13 @@ TABLET HEADER ------------------
       border-right: 1px solid $colour-cream;
       height: 100%;
       will-change: border-color;
-      @include transition(border-color 500ms cubic-bezier(0.25,0.1,0.25,1));
+      @include transition(border-color 500ms cubic-bezier(0.25, 0.1, 0.25, 1));
 
       svg {
         stroke: $colour-cream;
         fill: none;
         will-change: stroke;
-        @include transition(stroke 500ms cubic-bezier(0.25,0.1,0.25,1));
+        @include transition(stroke 500ms cubic-bezier(0.25, 0.1, 0.25, 1));
       }
 
       .search-icon {
@@ -297,7 +303,10 @@ TABLET HEADER ------------------
       @include justify-content(center);
       cursor: pointer;
       will-change: background-color, border-color;
-      @include transition-multiple(background-color 500ms cubic-bezier(0.25,0.1,0.25,1),border-color 500ms cubic-bezier(0.25,0.1,0.25,1));
+      @include transition-multiple(
+        background-color 500ms cubic-bezier(0.25, 0.1, 0.25, 1),
+        border-color 500ms cubic-bezier(0.25, 0.1, 0.25, 1)
+      );
 
       @media (hover: hover) {
         &:hover {
@@ -318,13 +327,13 @@ TABLET HEADER ------------------
       width: fit-content;
       margin: 0 auto;
       will-change: opacity;
-      @include transition(opacity 500ms cubic-bezier(0.25,0.1,0.25,1));
+      @include transition(opacity 500ms cubic-bezier(0.25, 0.1, 0.25, 1));
 
       svg {
         height: get-rem-desktop(31);
         fill: $colour-cream;
         will-change: fill;
-        @include transition(fill 500ms cubic-bezier(0.25,0.1,0.25,1));
+        @include transition(fill 500ms cubic-bezier(0.25, 0.1, 0.25, 1));
       }
 
       a {
@@ -357,7 +366,7 @@ TABLET HEADER ------------------
     border-bottom: 1px solid $colour-cream;
     height: get-rem-desktop(42);
     will-change: border-color;
-    @include transition(border-color 500ms cubic-bezier(0.25,0.1,0.25,1));
+    @include transition(border-color 500ms cubic-bezier(0.25, 0.1, 0.25, 1));
 
     .nav {
       @include flex;
@@ -366,7 +375,7 @@ TABLET HEADER ------------------
 
       a {
         will-change: opacity;
-        @include transition(opacity 500ms cubic-bezier(0.25,0.1,0.25,1));
+        @include transition(opacity 500ms cubic-bezier(0.25, 0.1, 0.25, 1));
       }
 
       @media (hover: hover) {
@@ -454,7 +463,11 @@ MOBILE HEADER ------------------
   display: none;
   border-bottom: 1px solid $colour-cream;
   @extend .site-header;
-  @include transition-multiple(background-color 500ms cubic-bezier(0.25,0.1,0.25,1), border-color 500ms cubic-bezier(0.25,0.1,0.25,1), color 500ms cubic-bezier(0.25,0.1,0.25,1));
+  @include transition-multiple(
+    background-color 500ms cubic-bezier(0.25, 0.1, 0.25, 1),
+    border-color 500ms cubic-bezier(0.25, 0.1, 0.25, 1),
+    color 500ms cubic-bezier(0.25, 0.1, 0.25, 1)
+  );
 
   @media only screen and (max-width: 820px) {
     @include flex;
@@ -473,13 +486,13 @@ MOBILE HEADER ------------------
       width: fit-content;
       margin: 0 auto;
       will-change: opacity;
-      @include transition(opacity 500ms cubic-bezier(0.25,0.1,0.25,1));
+      @include transition(opacity 500ms cubic-bezier(0.25, 0.1, 0.25, 1));
 
       svg {
         height: get-rem-mobile(31);
         fill: $colour-cream;
         will-change: fill;
-        @include transition(fill 500ms cubic-bezier(0.25,0.1,0.25,1));
+        @include transition(fill 500ms cubic-bezier(0.25, 0.1, 0.25, 1));
       }
 
       a {
@@ -513,7 +526,10 @@ MOBILE HEADER ------------------
     @include justify-content(center);
     cursor: pointer;
     will-change: background-color, border-color;
-    @include transition-multiple(background-color 500ms cubic-bezier(0.25,0.1,0.25,1), border-color 500ms cubic-bezier(0.25,0.1,0.25,1));
+    @include transition-multiple(
+      background-color 500ms cubic-bezier(0.25, 0.1, 0.25, 1),
+      border-color 500ms cubic-bezier(0.25, 0.1, 0.25, 1)
+    );
   }
 
   .left {
@@ -623,11 +639,19 @@ MOBILE HEADER ------------------
     height: 100%;
     @include flex;
     @include flex-direction(column);
-    @include justify-content(center);
     @include align-items(center);
-    row-gap: get-rem-mobile(155);
     opacity: 0;
     pointer-events: none;
+    padding-top: calc(get-rem-mobile(80) + get-rem-mobile(63));
+    padding-bottom: get-rem-mobile(80);
+    overflow-y: auto;
+
+    &::before,
+    &::after {
+      content: "";
+      flex: 1 1 0;
+      min-height: 0;
+    }
   }
 
   .nav {
@@ -636,10 +660,11 @@ MOBILE HEADER ------------------
     @include justify-content(center);
     @include align-items(center);
     row-gap: get-rem-mobile(12);
+    flex-shrink: 0;
 
     a {
       will-change: opacity;
-      @include transition(opacity 500ms cubic-bezier(0.25,0.1,0.25,1));
+      @include transition(opacity 500ms cubic-bezier(0.25, 0.1, 0.25, 1));
     }
 
     @media (hover: hover) {
@@ -658,6 +683,8 @@ MOBILE HEADER ------------------
     @include justify-content(center);
     @include align-items(center);
     column-gap: get-rem-mobile(26);
+    flex-shrink: 0;
+    margin-top: get-rem-mobile(80);
 
     svg {
       stroke: $colour-cream;
