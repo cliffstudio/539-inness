@@ -195,7 +195,11 @@ export default function MoreRoomsSection({
 
   return (
     <section className="more-rooms-section h-pad">
-      {heading && <h4 className="section-heading">{heading}</h4>}
+      {heading && (
+        <AnimateIn as="h4" className="section-heading out-of-view">
+          {heading}
+        </AnimateIn>
+      )}
 
       {/* Desktop: Grid layout */}
       <div className="row-lg more-rooms-grid">
