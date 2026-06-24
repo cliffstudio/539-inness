@@ -7,7 +7,6 @@ import HeroSectionHomepage from '../../components/HeroSectionHomepage'
 import FlexibleContent from '../../components/FlexibleContent'
 import { buildPageMetadata } from '../../sanity/lib/metadata'
 import { urlFor } from '../../sanity/utils/imageUrlBuilder'
-// import HomepageLoader from '../../components/HomepageLoader'
 
 export const revalidate = 0
 
@@ -38,7 +37,6 @@ export default async function Home() {
 
   return (
     <>
-      {/* <HomepageLoader /> */}
       <BodyClassProvider 
         pageType={page.pageType} 
         slug={page.slug?.current} 

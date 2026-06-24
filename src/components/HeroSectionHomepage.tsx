@@ -61,10 +61,8 @@ export default function HeroSectionHomepage({
     }
     body.style.overflow = 'hidden'
     html.style.overflow = 'hidden'
-    body.classList.add('page-home-loader-active')
-    html.classList.add('page-home-loader-active')
     
-    // Ensure header classes are applied (may already be from script, but ensure they're there)
+    // Ensure header classes are applied before paint
     siteHeaders.forEach(header => {
       header.classList.add('is-translated-up')
     })
@@ -123,8 +121,6 @@ export default function HeroSectionHomepage({
         header.classList.remove('is-translated-up')
       })
       gradientOverlay.classList.add('is-visible')
-      body.classList.remove('page-home-loader-active')
-      html.classList.remove('page-home-loader-active')
     }, headerGradientStart)
 
     // Re-enable scroll after animations complete
@@ -142,8 +138,6 @@ export default function HeroSectionHomepage({
         body.style.overflow = overflowRef.current.body
         html.style.overflow = overflowRef.current.html
       }
-      body.classList.remove('page-home-loader-active')
-      html.classList.remove('page-home-loader-active')
       const headers = document.querySelectorAll<HTMLElement>('.site-header')
       headers.forEach(header => {
         header.classList.remove('is-translated-up')

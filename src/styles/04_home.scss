@@ -10,28 +10,6 @@
   }
 }
 
-// Prevent a visible "jump" on initial homepage load by applying the translated
-// state via CSS as soon as a loader class exists on <html>/<body>. We also
-// disable the transform transition while the loader is active so any late class
-// application doesn't animate off-screen in view.
-html.page-home-loader-active,
-body.page-home-loader-active {
-  .site-header {
-    transform: translateY(-100%);
-    transition: none !important;
-    opacity: 1;
-  }
-}
-
-// Also apply for page-type-homepage (added later by BodyClassProvider)
-body.page-type-homepage {
-  &.page-home-loader-active {
-    .site-header {
-      opacity: 1;
-    }
-  }
-}
-
 .page-home {
   .hero-section {
     .gradient-overlay,

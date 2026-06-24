@@ -8,18 +8,21 @@ import BodyFadeIn from "../components/BodyFadeIn";
 import PageAnimations from "../components/PageAnimations";
 import NamastayInit from "../components/NamastayInit";
 
-export const revalidate = 0
+export const revalidate = 0;
 
 // Generate metadata dynamically from Sanity CMS
 export async function generateMetadata(): Promise<Metadata> {
   const siteSettings = await client.fetch(siteSettingsQuery);
-  
+
   // Build social image URL if available
   let socialImageUrl: string | undefined;
   if (siteSettings?.socialimage?.asset?._ref) {
-    socialImageUrl = urlFor(siteSettings.socialimage).width(1200).height(630).url();
+    socialImageUrl = urlFor(siteSettings.socialimage)
+      .width(1200)
+      .height(630)
+      .url();
   }
-  
+
   return {
     title: siteSettings?.title,
     description: siteSettings?.description,
@@ -67,7 +70,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             src="https://www.googletagmanager.com/ns.html?id=GTM-5ZRV23R"
             height="0"
             width="0"
-            style={{ display: 'none', visibility: 'hidden' }}
+            style={{ display: "none", visibility: "hidden" }}
           />
         </noscript>
         {/* End Google Tag Manager (noscript) */}
@@ -200,7 +203,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                   }
                 })();
               }
-            `
+            `,
           }}
         />
         <NamastayInit />
