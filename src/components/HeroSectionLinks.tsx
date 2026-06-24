@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 'use client'
 import { useRef, useLayoutEffect } from 'react'
+import AnimateIn from './AnimateIn'
 import { urlFor } from '../sanity/utils/imageUrlBuilder'
 import { videoUrlFor } from '../sanity/utils/videoUrlBuilder'
 import { SanityImage, SanityVideo } from '../types/sanity'
@@ -34,7 +35,7 @@ export default function HeroSectionLinks({ id, heading, body, mediaType = 'image
   return (
     <section id={id} className="hero-section layout-2 h-pad">
       {mediaType === 'video' && video && (
-        <div className="hero-image relative out-of-opacity">
+        <AnimateIn className="hero-image relative">
           <div className="fill-space-video-wrap media-wrap">
             <video
               ref={videoRef}
@@ -47,12 +48,12 @@ export default function HeroSectionLinks({ id, heading, body, mediaType = 'image
             />
             <div className="loading-overlay" />
           </div>
-        </div>
+        </AnimateIn>
       )}
       
       {mediaType === 'image' && images && images.length > 0 && (
         images.length === 1 ? (
-          <div className="hero-image relative out-of-opacity">
+          <AnimateIn className="hero-image relative">
             <div className="fill-space-image-wrap media-wrap">
               <img 
                 data-src={urlFor(images[0]).url()} 
@@ -61,19 +62,19 @@ export default function HeroSectionLinks({ id, heading, body, mediaType = 'image
               />
               <div className="loading-overlay" />
             </div>
-          </div>
+          </AnimateIn>
         ) : (
-          <div className="hero-image relative out-of-opacity">
+          <AnimateIn className="hero-image relative">
             <SplideCarousel 
               images={images.map(image => ({ url: urlFor(image).url(), alt: "" }))}
               onPrevious={() => {}}
               onNext={() => {}}
             />
-          </div>
+          </AnimateIn>
         )
       )}
 
-      <div className="hero-content out-of-opacity">
+      <AnimateIn className="hero-content">
         {(heading || body) && (
           <div className="row-1">
             {heading && <h3>{heading}</h3>}
@@ -85,8 +86,7 @@ export default function HeroSectionLinks({ id, heading, body, mediaType = 'image
             )}
           </div>
         )}
-      </div>
+      </AnimateIn>
     </section>
   )
 }
-

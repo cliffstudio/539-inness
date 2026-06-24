@@ -1,8 +1,9 @@
 'use client'
 
 /* eslint-disable @next/next/no-img-element */
-import { useEffect, useRef } from 'react'
+import { useLayoutEffect, useMemo, useRef } from 'react'
 import { urlFor } from '@/sanity/utils/imageUrlBuilder'
+import mediaLazyloading from '../utils/lazyLoad'
 import Splide from '@splidejs/splide'
 import { AutoScroll } from '@splidejs/splide-extension-auto-scroll'
 import '@splidejs/splide/css'
@@ -21,52 +22,55 @@ interface CarouselSectionProps {
 export default function CarouselSection({ images }: CarouselSectionProps) {
   const splideRef = useRef<HTMLDivElement>(null)
   const splideInstance = useRef<Splide | null>(null)
+  const validImages = useMemo(
+    () => images?.filter((image) => image?.asset?._ref) ?? [],
+    [images]
+  )
 
-  useEffect(() => {
-    if (splideRef.current && images && images.length > 0) {
-      // Destroy existing instance if it exists
+  useLayoutEffect(() => {
+    const splideElement = splideRef.current
+    if (!splideElement || validImages.length === 0) return
+
+    if (splideInstance.current) {
+      splideInstance.current.destroy()
+    }
+
+    splideInstance.current = new Splide(splideElement, {
+      type: 'loop',
+      gap: '1.25em',
+      arrows: false,
+      pagination: false,
+      autoplay: false,
+      drag: true,
+      preloadPages: 4,
+      autoScroll: {
+        speed: 1,
+        pauseOnHover: false,
+      },
+    })
+
+    splideInstance.current.mount({ AutoScroll })
+    mediaLazyloading().then((instance) => instance?.update())
+
+    return () => {
       if (splideInstance.current) {
         splideInstance.current.destroy()
-      }
-
-      // Create new Splide instance
-      splideInstance.current = new Splide(splideRef.current, {
-        type: 'loop',
-        gap: '1.25em',
-        arrows: false,
-        pagination: false,
-        autoplay: false,
-        drag: true,
-        preloadPages: 4,
-        autoScroll: {
-          speed: 1,
-          pauseOnHover: false,
-        },
-      })
-
-      // Mount with AutoScroll extension
-      splideInstance.current.mount({ AutoScroll })
-
-      // Cleanup on unmount
-      return () => {
-        if (splideInstance.current) {
-          splideInstance.current.destroy()
-        }
+        splideInstance.current = null
       }
     }
-  }, [images])
+  }, [validImages])
 
-  if (!images || images.length === 0) {
+  if (validImages.length === 0) {
     return null
   }
 
   return (
     <section className="carousel-section">
-      <div ref={splideRef} className="splide carousel-section__splide out-of-opacity">
+      <div ref={splideRef} className="splide carousel-section__splide">
         <div className="splide__track">
           <ul className="splide__list">
-            {images.map((image, index) => {
-              const imageUrl = urlFor(image.asset)
+            {validImages.map((image, index) => {
+              const imageUrl = urlFor(image)
                 .width(1200)
                 .height(800)
                 .fit('crop')

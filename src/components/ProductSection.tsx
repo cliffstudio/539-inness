@@ -1,5 +1,7 @@
 'use client'
 
+import AnimateIn from './AnimateIn'
+
 /* eslint-disable @next/next/no-img-element */
 import { useEffect, useRef } from 'react'
 import { getPriceRange } from '../sanity/utils/getPriceRange'
@@ -230,7 +232,7 @@ export default function ProductSection({
           : null
 
         return (
-          <a key={product._id} href={productUrl} className="product-item out-of-opacity">
+          <AnimateIn as="a" className="product-item" key={product._id} href={productUrl}>
             {product.store?.previewImageUrl && (
               <div className="media-wrap">
                 <img 
@@ -276,7 +278,7 @@ export default function ProductSection({
                 <div className="product-price">{priceText}</div>
               )}
             </div>
-          </a>
+          </AnimateIn>
         )
       })}
     </section>

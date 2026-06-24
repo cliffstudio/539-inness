@@ -1,6 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 'use client'
 
+import AnimateIn from './AnimateIn'
+
 import React, { useState, useMemo, useEffect } from 'react'
 import { PortableTextBlock } from '@portabletext/react'
 import * as Select from '@radix-ui/react-select'
@@ -375,7 +377,7 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
   return (
     <article className="product-page">
       <div className="product-hero-section h-pad">
-        <div className="left-column out-of-opacity">
+        <AnimateIn className="left-column">
           {currentDisplayImageUrl && (
             <div ref={featuredImageRef} className={`featured-image media-wrap relative ${isImageChanging ? 'image-changing' : ''}`}>
               <img 
@@ -410,9 +412,9 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
               })}
             </div>
           )}
-        </div>
+        </AnimateIn>
 
-        <div className="right-column out-of-opacity">
+        <AnimateIn className="right-column">
           <div>
             {product.store?.title && (
               <h3 className="product-title">{product.store.title}</h3>
@@ -680,7 +682,7 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
               {!isVariantAvailable ? 'Out of Stock' : 'Add to basket'}
             </button>
           </div>
-        </div>
+        </AnimateIn>
       </div>
     </article>
   )

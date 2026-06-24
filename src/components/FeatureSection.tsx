@@ -6,6 +6,7 @@ import type { SanityImageSource } from '@sanity/image-url'
 import { PortableText, PortableTextBlock } from '@portabletext/react'
 import { Link } from '../types/footerSettings'
 import ButtonLink from './ButtonLink'
+import AnimateIn from './AnimateIn'
 
 interface Feature {
   image?: SanityImageSource
@@ -67,7 +68,7 @@ export default function FeatureSection({
 
   return (
     <section id={id} className={`feature-section layout-${layout} h-pad`}>
-      <div className="out-of-opacity">
+      <AnimateIn>
         {(subHeading || heading) && (
           <div className="feature-section-header">
             {subHeading && (
@@ -123,7 +124,7 @@ export default function FeatureSection({
             </div>
           ))}
         </div>
-      </div>
+      </AnimateIn>
     </section>
   )
 }

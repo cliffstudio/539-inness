@@ -776,9 +776,17 @@
 .media-text-section.layout-media-with-text-h4-body-links,
 .media-text-section.layout-media-with-text-h5,
 .media-text-section.layout-media-with-text-h4-body-activity-links {
+  .text-wrap:has(.media-text-body--h5),
   .text-wrap:has(h5) {
     max-width: get-rem-desktop(500);
   }
+}
+
+.media-text-body--h5 {
+  font-family: 'ABC Arizona Flare';
+  font-weight: 300;
+  @include font-size(24px, 24px);
+  line-height: calc(34 / 24) + em;
 }
 
 .more-rooms-section {
@@ -1143,6 +1151,10 @@
 
   .splide {
     height: 100%;
+
+    &.is-initialized {
+      visibility: visible !important;
+    }
 
     .splide__track {
       height: 100%;

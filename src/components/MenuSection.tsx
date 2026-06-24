@@ -1,5 +1,7 @@
 "use client"
 
+import AnimateIn from './AnimateIn'
+
 /* eslint-disable @next/next/no-img-element */
 import { useState, useEffect } from 'react'
 import { PortableText, PortableTextBlock } from '@portabletext/react'
@@ -94,7 +96,7 @@ export default function MenuSection({
       {layout === 'food-menu' && foodTabs && foodTabs.length > 0 && (
         <>
           {/* Tabs Navigation */}
-          <div className="menu-tabs out-of-opacity">
+          <AnimateIn className="menu-tabs">
             {foodTabs.map((tab, tabIndex) => (
               <button
                 key={tabIndex}
@@ -104,10 +106,10 @@ export default function MenuSection({
                 {tab.tabName}
               </button>
             ))}
-          </div>
+          </AnimateIn>
         
           <div className="menu-content-wrap row-lg">
-            <div className="col-6-12_lg menu-content out-of-opacity">
+            <AnimateIn className="col-6-12_lg menu-content">
               {/* Active Tab Content */}
               {foodTabs[activeTab] && (
                 <div className="menu-tab-content">
@@ -161,10 +163,10 @@ export default function MenuSection({
                   )}
                 </div>
               )}
-            </div>
+            </AnimateIn>
 
             {foodTabs[activeTab]?.image && (
-              <div className="col-6-12_lg menu-image out-of-opacity">
+              <AnimateIn className="col-6-12_lg menu-image">
                 <div className="media-wrap">
                   <img 
                     key={`tab-image-${activeTab}`}
@@ -174,7 +176,7 @@ export default function MenuSection({
                   />
                   <div className="loading-overlay" />
                 </div>
-              </div>
+              </AnimateIn>
             )}
           </div>
         </>
@@ -184,7 +186,7 @@ export default function MenuSection({
       {layout === 'spa-menu' && spaTabs && spaTabs.length > 0 && (
         <>
           {/* Tabs Navigation */}
-          <div className="menu-tabs out-of-opacity">
+          <AnimateIn className="menu-tabs">
             {spaTabs.map((tab, tabIndex) => (
               <button
                 key={tabIndex}
@@ -194,10 +196,10 @@ export default function MenuSection({
                 {tab.tabName}
               </button>
             ))}
-          </div>
+          </AnimateIn>
         
           <div className="menu-content-wrap row-lg">
-            <div className="col-6-12_lg menu-content out-of-opacity">
+            <AnimateIn className="col-6-12_lg menu-content">
               {/* Active Tab Content */}
               <div className="menu-tab-header">
                 <div className="time-column">Time</div>
@@ -238,10 +240,10 @@ export default function MenuSection({
               {note && (
                 <div className="menu-note">{note}</div>
               )}
-            </div>
+            </AnimateIn>
 
             {spaTabs[activeSpaTab]?.image && (
-              <div className="col-6-12_lg menu-image out-of-opacity">
+              <AnimateIn className="col-6-12_lg menu-image">
                 <div className="media-wrap">
                   <img 
                     key={`spa-tab-image-${activeSpaTab}`}
@@ -251,7 +253,7 @@ export default function MenuSection({
                   />
                   <div className="loading-overlay" />
                 </div>
-              </div>
+              </AnimateIn>
             )}
           </div>
         </>
@@ -261,7 +263,7 @@ export default function MenuSection({
       {layout === 'venue-menu' && venueTabs && venueTabs.length > 0 && (
         <>
           {/* Tabs Navigation */}
-          <div className="menu-tabs out-of-opacity">
+          <AnimateIn className="menu-tabs">
             {venueTabs.map((tab, tabIndex) => (
               <button
                 key={tabIndex}
@@ -271,10 +273,10 @@ export default function MenuSection({
                 {tab.areaName}
               </button>
             ))}
-          </div>
+          </AnimateIn>
         
           <div className="menu-content-wrap row-lg">
-            <div className="col-6-12_lg menu-content out-of-opacity">
+            <AnimateIn className="col-6-12_lg menu-content">
               {/* Active Tab Content */}
               {venueTabs[activeVenueTab] && (
                 <div className="menu-tab-content">
@@ -308,10 +310,10 @@ export default function MenuSection({
                   )}
                 </div>
               )}
-            </div>
+            </AnimateIn>
 
             {venueTabs[activeVenueTab]?.image && (
-              <div className="col-6-12_lg menu-image out-of-opacity">
+              <AnimateIn className="col-6-12_lg menu-image">
                 <div className="media-wrap">
                   <img 
                     key={`venue-tab-image-${activeVenueTab}`}
@@ -321,7 +323,7 @@ export default function MenuSection({
                   />
                   <div className="loading-overlay" />
                 </div>
-              </div>
+              </AnimateIn>
             )}
           </div>
         </>

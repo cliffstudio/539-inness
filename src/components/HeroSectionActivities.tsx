@@ -1,6 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 'use client'
 import { useRef, useLayoutEffect } from 'react'
+import AnimateIn from './AnimateIn'
+import { useGsapParallaxScroll } from '@/hooks/useGsapParallaxScroll'
 import { urlFor } from '../sanity/utils/imageUrlBuilder'
 import { videoUrlFor } from '../sanity/utils/videoUrlBuilder'
 import { SanityImage, SanityVideo } from '../types/sanity'
@@ -18,6 +20,12 @@ interface ActivitiesHeroProps {
 
 export default function HeroSectionActivities({ id, calendarHeading, calendarBody, calendarMediaType = 'image', calendarImages, calendarVideo }: ActivitiesHeroProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
+  const sectionRef = useRef<HTMLElement>(null)
+  const imageWrapRef = useRef<HTMLDivElement>(null)
+
+  useGsapParallaxScroll(imageWrapRef, sectionRef, {
+    enabled: calendarMediaType === 'image' && (calendarImages?.length ?? 0) === 1,
+  })
 
   useLayoutEffect(() => {
     if (calendarMediaType !== 'video' || !videoRef.current) return
@@ -39,7 +47,7 @@ export default function HeroSectionActivities({ id, calendarHeading, calendarBod
   }
 
   return (
-    <section id={id} className="hero-section layout-1 relative">
+    <section ref={sectionRef} id={id} className="hero-section layout-1 relative">
       {calendarMediaType === 'video' && calendarVideo && (
         <div className="fill-space-video-wrap media-wrap">
           <video
@@ -56,14 +64,14 @@ export default function HeroSectionActivities({ id, calendarHeading, calendarBod
       )}
       {calendarMediaType === 'image' && calendarImages && calendarImages.length > 0 && (
         calendarImages.length === 1 ? (
-          <>
+          <div ref={imageWrapRef} className="fill-space-image-wrap media-wrap">
             <img 
               data-src={urlFor(calendarImages[0]).url()} 
               alt="" 
               className="lazy full-bleed-image"
             />
             <div className="loading-overlay" />
-          </>
+          </div>
         ) : (
           <SplideCarousel 
             images={calendarImages.map(image => ({ url: urlFor(image).url(), alt: "" }))}
@@ -74,7 +82,7 @@ export default function HeroSectionActivities({ id, calendarHeading, calendarBod
       )}
 
       <div className="hero-content h-pad">
-        <div className="out-of-opacity stage-1">
+        <AnimateIn stage={1}>
           {calendarHeading && <h1>{calendarHeading}</h1>}
           
           {calendarBody && calendarBody.length > 0 && (
@@ -82,15 +90,20 @@ export default function HeroSectionActivities({ id, calendarHeading, calendarBod
               <PortableText value={calendarBody} />
             </div>
           )}
-        </div>
+        </AnimateIn>
       </div>
 
-      <div className="hero-arrow out-of-opacity stage-2" onClick={handleArrowClick} style={{ cursor: 'pointer' }}>
+      <AnimateIn
+        className="hero-arrow"
+        stage={2}
+        onClick={handleArrowClick}
+        style={{ cursor: 'pointer' }}
+      >
         <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36" fill="none">
           <circle cx="18" cy="18" r="17.5" transform="matrix(0 -1 -1 0 36 36)" stroke="#FFF9ED"/>
           <path d="M24 15.5L17.5 22L11 15.5" stroke="#FFF9ED"/>
         </svg>
-      </div>
+      </AnimateIn>
     </section>
   )
 }

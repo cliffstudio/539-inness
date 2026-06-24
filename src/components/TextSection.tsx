@@ -3,6 +3,7 @@
 import { PortableText, PortableTextBlock } from '@portabletext/react'
 import { Link } from '../types/footerSettings'
 import ButtonLink from './ButtonLink'
+import AnimateIn from './AnimateIn'
 
 interface textSectionProps {
   id?: string
@@ -21,7 +22,7 @@ export default function TextSection({
   
   return (
     <section id={id} className="text-section h-pad">
-      <div className="text-wrap out-of-view">
+      <AnimateIn variant="view" className="text-wrap">
         {heading && (
           <h4 className="text-heading">{heading}</h4>
         )}
@@ -35,7 +36,7 @@ export default function TextSection({
         {linkInfo && button && (
           <ButtonLink link={button} fallbackColor="orange" />
         )}
-      </div>
+      </AnimateIn>
     </section>
   )
 }

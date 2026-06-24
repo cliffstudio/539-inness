@@ -1,32 +1,65 @@
 /* eslint-disable @next/next/no-img-element */
-import { urlFor } from '../sanity/utils/imageUrlBuilder'
-import type { SanityImageSource } from '@sanity/image-url'
-import { PortableText, PortableTextBlock } from '@portabletext/react'
-import { Link } from '../types/footerSettings'
-import ButtonLink from './ButtonLink'
+"use client";
+
+import { useRef } from "react";
+import AnimateIn from "./AnimateIn";
+import { useGsapParallaxScroll } from "@/hooks/useGsapParallaxScroll";
+import { urlFor } from "../sanity/utils/imageUrlBuilder";
+import type { SanityImageSource } from "@sanity/image-url";
+import { PortableText, PortableTextBlock } from "@portabletext/react";
+import { Link } from "../types/footerSettings";
+import ButtonLink from "./ButtonLink";
 
 interface BreakProps {
-  id?: string
-  layout?: 'full-bleed' | 'split'
-  subHeading?: string
-  heading?: string
-  body?: PortableTextBlock[]
-  image?: SanityImageSource
-  button?: Link
-  backgroundColor?: 'black' | 'green' | 'orange'
+  id?: string;
+  layout?: "full-bleed" | "split";
+  subHeading?: string;
+  heading?: string;
+  body?: PortableTextBlock[];
+  image?: SanityImageSource;
+  button?: Link;
+  backgroundColor?: "black" | "green" | "orange";
 }
 
-export default function Hero({ id, layout = 'full-bleed', subHeading, heading, body, image, button, backgroundColor }: BreakProps) {
-  const resolvedBackgroundColor = backgroundColor ?? 'black'
+export default function Hero({
+  id,
+  layout = "full-bleed",
+  subHeading,
+  heading,
+  body,
+  image,
+  button,
+  backgroundColor,
+}: BreakProps) {
+  const resolvedBackgroundColor = backgroundColor ?? "black";
+  const sectionRef = useRef<HTMLElement>(null);
+  const imageWrapRef = useRef<HTMLDivElement>(null);
+  const scaleImageRef = useRef<HTMLImageElement>(null);
+
+  useGsapParallaxScroll(imageWrapRef, sectionRef, {
+    enabled: layout === "full-bleed" && Boolean(image),
+  });
+  useGsapParallaxScroll(scaleImageRef, sectionRef, {
+    enabled: layout === "full-bleed" && Boolean(image),
+  });
+
   return (
     <>
-      {layout === 'full-bleed' && (
-        <section id={id} className="break-section layout-1 relative scale-container">
+      {layout === "full-bleed" && (
+        <section
+          ref={sectionRef}
+          id={id}
+          className="break-section layout-1 relative scale-container"
+        >
           {image && (
-            <div className="fill-space-image-wrap media-wrap scale-element">
-              <img 
-                data-src={urlFor(image).url()} 
-                alt="" 
+            <div
+              ref={imageWrapRef}
+              className="fill-space-image-wrap media-wrap scale-element"
+            >
+              <img
+                ref={scaleImageRef}
+                data-src={urlFor(image).url()}
+                alt=""
                 className="lazy full-bleed-image scale-element"
               />
               <div className="loading-overlay" />
@@ -34,32 +67,35 @@ export default function Hero({ id, layout = 'full-bleed', subHeading, heading, b
           )}
 
           <div className="break-content h-pad">
-            <h6 className="out-of-opacity">{subHeading}</h6>
+            <AnimateIn as="h6">{subHeading}</AnimateIn>
 
             {heading && (
-              <h1 className="break-heading out-of-opacity">{heading}</h1>
+              <AnimateIn as="h1" className="break-heading">
+                {heading}
+              </AnimateIn>
             )}
 
             {body && body.length > 0 && (
-              <div className="break-body body-medium out-of-opacity">
+              <AnimateIn className="break-body body-medium">
                 <PortableText value={body} />
-              </div>
+              </AnimateIn>
             )}
           </div>
         </section>
       )}
 
-      {layout === 'split' && (
-        <section id={id} className={`break-section layout-2 row-lg h-pad background-${resolvedBackgroundColor === 'black' ? 'black' : resolvedBackgroundColor === 'green' ? 'green' : 'orange'}`}>
-          <div className="col-6-12_lg out-of-opacity">
+      {layout === "split" && (
+        <section
+          id={id}
+          className={`break-section layout-2 row-lg h-pad background-${resolvedBackgroundColor === "black" ? "black" : resolvedBackgroundColor === "green" ? "green" : "orange"}`}
+        >
+          <AnimateIn className="col-6-12_lg">
             <div className="break-content">
               <h6 className="desktop">{subHeading}</h6>
-              
+
               {subHeading && <h6 className="mobile">{subHeading}</h6>}
 
-              {heading && (
-                <h1>{heading}</h1>
-              )}
+              {heading && <h1>{heading}</h1>}
 
               {(body || button) && (
                 <div>
@@ -75,25 +111,24 @@ export default function Hero({ id, layout = 'full-bleed', subHeading, heading, b
                 </div>
               )}
             </div>
-          </div>
+          </AnimateIn>
 
           {image && (
-            <div className="col-6-12_lg out-of-opacity">
+            <AnimateIn className="col-6-12_lg">
               <div className="break-image relative">
                 <div className="fill-space-image-wrap media-wrap">
-                  <img 
-                    data-src={urlFor(image).url()} 
-                    alt="" 
+                  <img
+                    data-src={urlFor(image).url()}
+                    alt=""
                     className="lazy full-bleed-image"
                   />
                   <div className="loading-overlay" />
                 </div>
               </div>
-            </div>
+            </AnimateIn>
           )}
         </section>
       )}
     </>
-  )
+  );
 }
-

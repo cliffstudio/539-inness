@@ -1,350 +1,387 @@
-"use client"
+"use client";
+
+import AnimateIn from "./AnimateIn";
 
 /* eslint-disable @next/next/no-img-element */
-import { useEffect, useMemo, useRef, useState } from 'react'
-import { urlFor } from '../sanity/utils/imageUrlBuilder'
-import { videoUrlFor } from '../sanity/utils/videoUrlBuilder'
-import { SanityImage, SanityVideo } from '../types/sanity'
-import { PortableText, PortableTextBlock } from '@portabletext/react'
-import { Link } from '../types/footerSettings'
-import ButtonLink from './ButtonLink'
-import SplideCarousel from './SplideCarousel'
-import CalendarPage from './CalendarPage'
-import { Splide, SplideSlide } from '@splidejs/react-splide'
-import '@splidejs/splide/css'
+import { useEffect, useMemo, useRef, useState } from "react";
+import { urlFor } from "../sanity/utils/imageUrlBuilder";
+import { videoUrlFor } from "../sanity/utils/videoUrlBuilder";
+import { SanityImage, SanityVideo } from "../types/sanity";
+import { PortableText, PortableTextBlock } from "@portabletext/react";
+import { Link } from "../types/footerSettings";
+import ButtonLink from "./ButtonLink";
+import SplideCarousel from "./SplideCarousel";
+import CalendarPage from "./CalendarPage";
+import { Splide, SplideSlide } from "@splidejs/react-splide";
+import "@splidejs/splide/css";
 
 const formatDate = (dateString?: string) => {
-  if (!dateString) return ''
+  if (!dateString) return "";
 
   try {
-    const date = new Date(dateString)
-    const day = date.getDate()
-    const month = date.toLocaleString('en-US', { month: 'long' })
-    const year = date.getFullYear()
+    const date = new Date(dateString);
+    const day = date.getDate();
+    const month = date.toLocaleString("en-US", { month: "long" });
+    const year = date.getFullYear();
 
     const getOrdinalSuffix = (n: number) => {
-      const j = n % 10
-      const k = n % 100
-      if (j === 1 && k !== 11) return 'st'
-      if (j === 2 && k !== 12) return 'nd'
-      if (j === 3 && k !== 13) return 'rd'
-      return 'th'
-    }
+      const j = n % 10;
+      const k = n % 100;
+      if (j === 1 && k !== 11) return "st";
+      if (j === 2 && k !== 12) return "nd";
+      if (j === 3 && k !== 13) return "rd";
+      return "th";
+    };
 
-    return `${day}${getOrdinalSuffix(day)} ${month} ${year}`
+    return `${day}${getOrdinalSuffix(day)} ${month} ${year}`;
   } catch {
-    return dateString
+    return dateString;
   }
-}
+};
 
 const formatTime = (timeRange?: { startTime?: string; endTime?: string }) => {
-  if (!timeRange?.startTime) return ''
+  if (!timeRange?.startTime) return "";
   if (timeRange.endTime) {
-    return `${timeRange.startTime}-${timeRange.endTime}`
+    return `${timeRange.startTime}-${timeRange.endTime}`;
   }
-  return timeRange.startTime
-}
+  return timeRange.startTime;
+};
 
 interface mediaTextSectionProps {
-  id?: string
-  layout?: 'media-with-text-h5' | 'media-with-text-h4-body' | 'media-with-text-room-type' | 'media-with-text-h4-bullet-list' | 'media-with-text-h4-body-room-links' | 'media-with-text-h4-body-links' | 'media-with-text-multiple-text-blocks' | 'media-with-text-h4-body-activity-links'
-  heading?: string
-  body?: PortableTextBlock[]
-  textBlocks?: { 
-    layout?: 'h4-text' | 'h4-bullet-list'
-    header?: string
-    body?: PortableTextBlock[]
-    bulletList?: { body?: PortableTextBlock[] }[]
-  }[]
-  bulletList?: { body?: PortableTextBlock[] }[]
-  buttons?: Link[]
+  id?: string;
+  layout?:
+    | "media-with-text-h5"
+    | "media-with-text-h4-body"
+    | "media-with-text-room-type"
+    | "media-with-text-h4-bullet-list"
+    | "media-with-text-h4-body-room-links"
+    | "media-with-text-h4-body-links"
+    | "media-with-text-multiple-text-blocks"
+    | "media-with-text-h4-body-activity-links";
+  heading?: string;
+  body?: PortableTextBlock[];
+  textBlocks?: {
+    layout?: "h4-text" | "h4-bullet-list";
+    header?: string;
+    body?: PortableTextBlock[];
+    bulletList?: { body?: PortableTextBlock[] }[];
+  }[];
+  bulletList?: { body?: PortableTextBlock[] }[];
+  buttons?: Link[];
   roomLink?: {
-    _id: string
-    title: string
-    roomType: 'cabin' | 'farmhouse'
-    description?: PortableTextBlock[]
-    slug: string
-  }
+    _id: string;
+    title: string;
+    roomType: "cabin" | "farmhouse";
+    description?: PortableTextBlock[];
+    slug: string;
+  };
   activityLinks?: {
-    _id: string
-    title: string
-    description?: PortableTextBlock[]
-    slug: string
-    images?: SanityImage[]
-    date?: string
+    _id: string;
+    title: string;
+    description?: PortableTextBlock[];
+    slug: string;
+    images?: SanityImage[];
+    date?: string;
     timeRange?: {
-      startTime?: string
-      endTime?: string
-    }
-    bookingHref?: string
-  }[]
+      startTime?: string;
+      endTime?: string;
+    };
+    bookingHref?: string;
+  }[];
   activities?: {
-    _id: string
-    title?: string
-    startsAt?: string
-    endsAt?: string
-    locationAddress?: string
-    description?: string | PortableTextBlock[]
-    thumbnail?: string
-    bookingHref?: string
-    slug?: string
-    eventCategories?: string[]
-    contentBlocks?: { _type: string }[]
-  }[]
-  mediaType?: 'image' | 'video'
-  images?: SanityImage[]
-  video?: SanityVideo
-  mediaAlignment?: 'left' | 'right'
+    _id: string;
+    title?: string;
+    startsAt?: string;
+    endsAt?: string;
+    locationAddress?: string;
+    description?: string | PortableTextBlock[];
+    thumbnail?: string;
+    bookingHref?: string;
+    slug?: string;
+    eventCategories?: string[];
+    contentBlocks?: { _type: string }[];
+  }[];
+  mediaType?: "image" | "video";
+  images?: SanityImage[];
+  video?: SanityVideo;
+  mediaAlignment?: "left" | "right";
   roomLinks?: {
-    _id: string
-    title: string
-    roomType: 'cabin' | 'farmhouse'
-    description?: PortableTextBlock[]
-    slug: string
-    images?: SanityImage[]
-  }[]
+    _id: string;
+    title: string;
+    roomType: "cabin" | "farmhouse";
+    description?: PortableTextBlock[];
+    slug: string;
+    images?: SanityImage[];
+  }[];
   links?: {
-    header?: string
-    body?: PortableTextBlock[]
-    image?: SanityImage
-    buttons?: Link[]
-  }[]
+    header?: string;
+    body?: PortableTextBlock[];
+    image?: SanityImage;
+    buttons?: Link[];
+  }[];
 }
 
-export default function MediaTextSection({ 
+export default function MediaTextSection({
   id,
-  layout = 'media-with-text-h4-body', 
+  layout = "media-with-text-h4-body",
   heading,
-  body, 
+  body,
   textBlocks,
   bulletList,
-  buttons, 
+  buttons,
   roomLink,
-  mediaType = 'image',
-  images, 
+  mediaType = "image",
+  images,
   video,
-  mediaAlignment = 'right',
+  mediaAlignment = "right",
   roomLinks,
   activityLinks,
   activities = [],
   links,
 }: mediaTextSectionProps) {
-  const videoRef1 = useRef<HTMLVideoElement>(null)
-  const videoRef2 = useRef<HTMLVideoElement>(null)
-  const splideRef = useRef<{ go: (direction: string) => void } | null>(null)
-  const [currentPage, setCurrentPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
-  const [currentSlideIndex, setCurrentSlideIndex] = useState(0)
-  const [isAtEndOfRoomLinks, setIsAtEndOfRoomLinks] = useState(false)
+  const videoRef1 = useRef<HTMLVideoElement>(null);
+  const videoRef2 = useRef<HTMLVideoElement>(null);
+  const splideRef = useRef<{ go: (direction: string) => void } | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
+  const [isAtEndOfRoomLinks, setIsAtEndOfRoomLinks] = useState(false);
 
   const upcomingActivities = useMemo(() => {
-    const now = Date.now()
+    const now = Date.now();
 
     return activities
       .filter((activity) => {
-        if (!activity.startsAt) return false
-        const startsAtTime = new Date(activity.startsAt).getTime()
-        return Number.isFinite(startsAtTime) && startsAtTime >= now
+        if (!activity.startsAt) return false;
+        const startsAtTime = new Date(activity.startsAt).getTime();
+        return Number.isFinite(startsAtTime) && startsAtTime >= now;
       })
       .slice()
       .sort((a, b) => {
-        const aTime = a.startsAt ? new Date(a.startsAt).getTime() : Number.POSITIVE_INFINITY
-        const bTime = b.startsAt ? new Date(b.startsAt).getTime() : Number.POSITIVE_INFINITY
-        return aTime - bTime
+        const aTime = a.startsAt
+          ? new Date(a.startsAt).getTime()
+          : Number.POSITIVE_INFINITY;
+        const bTime = b.startsAt
+          ? new Date(b.startsAt).getTime()
+          : Number.POSITIVE_INFINITY;
+        return aTime - bTime;
       })
-      .slice(0, 4)
-  }, [activities])
+      .slice(0, 4);
+  }, [activities]);
 
   const handlePrevious = () => {
     if (splideRef.current) {
-      splideRef.current.go('<')
+      splideRef.current.go("<");
     }
-  }
+  };
 
   const handleNext = () => {
     if (splideRef.current) {
-      splideRef.current.go('>')
+      splideRef.current.go(">");
     }
-  }
+  };
 
   // Track splide carousel page changes
   useEffect(() => {
-    const splide = splideRef.current
-    if (!splide) return
+    const splide = splideRef.current;
+    if (!splide) return;
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const splideInstance = (splide as any).splide
-    if (!splideInstance) return
+    const splideInstance = (splide as any).splide;
+    if (!splideInstance) return;
 
     const updatePagination = (index?: number) => {
-      const perPage = Math.max(splideInstance.options?.perPage ?? 1, 1)
-      const slideIndex = typeof index === 'number' ? index : splideInstance.index
+      const perPage = Math.max(splideInstance.options?.perPage ?? 1, 1);
+      const slideIndex =
+        typeof index === "number" ? index : splideInstance.index;
       const slidesCount =
         (splideInstance.Components?.Slides?.getLength
           ? splideInstance.Components.Slides.getLength()
-          : splideInstance.length) ?? roomLinks?.length ?? 0
-      const totalPages = Math.max(Math.ceil(slidesCount / perPage), 1)
-      const lastStartIndex = Math.max(slidesCount - perPage, 0)
+          : splideInstance.length) ??
+        roomLinks?.length ??
+        0;
+      const totalPages = Math.max(Math.ceil(slidesCount / perPage), 1);
+      const lastStartIndex = Math.max(slidesCount - perPage, 0);
 
-      let pageIndex = 0
+      let pageIndex = 0;
       for (let page = 0; page < totalPages; page++) {
-        const boundary = page === totalPages - 1 ? lastStartIndex : page * perPage
+        const boundary =
+          page === totalPages - 1 ? lastStartIndex : page * perPage;
         if (slideIndex >= boundary) {
-          pageIndex = page
+          pageIndex = page;
         } else {
-          break
+          break;
         }
       }
 
-      const controller = splideInstance.Components?.Controller
-      const controllerEndIndex = controller?.getEnd?.()
+      const controller = splideInstance.Components?.Controller;
+      const controllerEndIndex = controller?.getEnd?.();
       const effectiveEndIndex =
-        typeof controllerEndIndex === 'number' ? controllerEndIndex : lastStartIndex
+        typeof controllerEndIndex === "number"
+          ? controllerEndIndex
+          : lastStartIndex;
 
-      setCurrentSlideIndex(slideIndex)
-      setCurrentPage(pageIndex + 1)
-      setTotalPages(totalPages)
-      setIsAtEndOfRoomLinks(slideIndex >= effectiveEndIndex)
-    }
+      setCurrentSlideIndex(slideIndex);
+      setCurrentPage(pageIndex + 1);
+      setTotalPages(totalPages);
+      setIsAtEndOfRoomLinks(slideIndex >= effectiveEndIndex);
+    };
 
-    const handleMove = (newIndex: number) => updatePagination(newIndex)
+    const handleMove = (newIndex: number) => updatePagination(newIndex);
 
-    updatePagination()
+    updatePagination();
 
-    splideInstance.on('mounted', updatePagination)
-    splideInstance.on('move', handleMove)
-    splideInstance.on('moved', updatePagination)
-    splideInstance.on('resize', updatePagination)
-    splideInstance.on('updated', updatePagination)
+    splideInstance.on("mounted", updatePagination);
+    splideInstance.on("move", handleMove);
+    splideInstance.on("moved", updatePagination);
+    splideInstance.on("resize", updatePagination);
+    splideInstance.on("updated", updatePagination);
 
     return () => {
-      splideInstance.off('mounted', updatePagination)
-      splideInstance.off('move', handleMove)
-      splideInstance.off('moved', updatePagination)
-      splideInstance.off('resize', updatePagination)
-      splideInstance.off('updated', updatePagination)
-    }
-  }, [roomLinks])
+      splideInstance.off("mounted", updatePagination);
+      splideInstance.off("move", handleMove);
+      splideInstance.off("moved", updatePagination);
+      splideInstance.off("resize", updatePagination);
+      splideInstance.off("updated", updatePagination);
+    };
+  }, [roomLinks]);
 
   // Handle video loading overlay removal for first video
   useEffect(() => {
-    if (mediaType === 'video' && videoRef1.current) {
-      const video = videoRef1.current
-      
-      const handleVideoLoaded = () => {
-        const mediaWrap = video.parentElement
-        const loadingOverlay = mediaWrap?.querySelector('.loading-overlay')
-        if (loadingOverlay && loadingOverlay instanceof HTMLElement) {
-          loadingOverlay.classList.add('hidden')
-        }
-      }
+    if (mediaType === "video" && videoRef1.current) {
+      const video = videoRef1.current;
 
-      video.addEventListener('canplaythrough', handleVideoLoaded)
-      
+      const handleVideoLoaded = () => {
+        const mediaWrap = video.parentElement;
+        const loadingOverlay = mediaWrap?.querySelector(".loading-overlay");
+        if (loadingOverlay && loadingOverlay instanceof HTMLElement) {
+          loadingOverlay.classList.add("hidden");
+        }
+      };
+
+      video.addEventListener("canplaythrough", handleVideoLoaded);
+
       if (video.readyState >= 3) {
-        handleVideoLoaded()
+        handleVideoLoaded();
       }
 
       return () => {
-        video.removeEventListener('canplaythrough', handleVideoLoaded)
-      }
+        video.removeEventListener("canplaythrough", handleVideoLoaded);
+      };
     }
-  }, [mediaType, video])
+  }, [mediaType, video]);
 
   // Handle video loading overlay removal for second video (in room-type layout)
   useEffect(() => {
-    if (mediaType === 'video' && videoRef2.current) {
-      const video = videoRef2.current
-      
-      const handleVideoLoaded = () => {
-        const mediaWrap = video.parentElement
-        const loadingOverlay = mediaWrap?.querySelector('.loading-overlay')
-        if (loadingOverlay && loadingOverlay instanceof HTMLElement) {
-          loadingOverlay.classList.add('hidden')
-        }
-      }
+    if (mediaType === "video" && videoRef2.current) {
+      const video = videoRef2.current;
 
-      video.addEventListener('canplaythrough', handleVideoLoaded)
-      
+      const handleVideoLoaded = () => {
+        const mediaWrap = video.parentElement;
+        const loadingOverlay = mediaWrap?.querySelector(".loading-overlay");
+        if (loadingOverlay && loadingOverlay instanceof HTMLElement) {
+          loadingOverlay.classList.add("hidden");
+        }
+      };
+
+      video.addEventListener("canplaythrough", handleVideoLoaded);
+
       if (video.readyState >= 3) {
-        handleVideoLoaded()
+        handleVideoLoaded();
       }
 
       return () => {
-        video.removeEventListener('canplaythrough', handleVideoLoaded)
-      }
+        video.removeEventListener("canplaythrough", handleVideoLoaded);
+      };
     }
-  }, [mediaType, video])
+  }, [mediaType, video]);
   return (
     <>
       {/* Media with Text (h5) */}
-      {(layout === 'media-with-text-h5') && (
-        <section id={id} className={`media-text-section layout-${layout} align-${mediaAlignment} row-lg h-pad`}>
-          <div className="col-6-12_lg col-1 out-of-view">
+      {layout === "media-with-text-h5" && (
+        <section
+          id={id}
+          className={`media-text-section layout-${layout} align-${mediaAlignment} row-lg h-pad`}
+        >
+          <AnimateIn variant="view" className="col-6-12_lg col-1">
             <div className="text-wrap">
               {body && body.length > 0 && (
-                <h5 className="media-text-body">
+                <div className="media-text-body media-text-body--h5">
                   <PortableText value={body ?? []} />
-                </h5>
+                </div>
               )}
 
               {bulletList && bulletList.length > 0 && (
                 <div className="media-text-bullet-list">
                   {bulletList.map((item, index) => {
-                    const bulletBody: PortableTextBlock[] = item?.body ?? []
+                    const bulletBody: PortableTextBlock[] = item?.body ?? [];
                     if (bulletBody.length === 0) {
-                      return null
+                      return null;
                     }
 
                     return (
                       <div key={index} className="media-text-bullet-list-item">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="16" viewBox="0 0 13 16">
-                          <path d="M11.8181 0.5H0.5V15.5H11.8181V0.5Z"/>
-                          <path d="M0.5 0.5L11.8181 15.5"/>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="13"
+                          height="16"
+                          viewBox="0 0 13 16"
+                        >
+                          <path d="M11.8181 0.5H0.5V15.5H11.8181V0.5Z" />
+                          <path d="M0.5 0.5L11.8181 15.5" />
                         </svg>
 
                         <div className="media-text-bullet-list-text">
                           <PortableText value={bulletBody} />
                         </div>
                       </div>
-                    )
+                    );
                   })}
                 </div>
               )}
 
               {buttons && buttons.length > 0 && (
-                <div className={`button-wrap${buttons.length > 1 ? ' button-wrap--multiple-buttons' : ''}`}>
+                <div
+                  className={`button-wrap${buttons.length > 1 ? " button-wrap--multiple-buttons" : ""}`}
+                >
                   {buttons.map((button, index) => (
-                    <ButtonLink key={index} link={button} fallbackColor="cream" />
+                    <ButtonLink
+                      key={index}
+                      link={button}
+                      fallbackColor="cream"
+                    />
                   ))}
                 </div>
               )}
             </div>
-          </div>
+          </AnimateIn>
 
-          <div className="col-6-12_lg col-2 out-of-opacity">
-            {mediaType === 'image' && images && images.length > 0 && (
+          <AnimateIn className="col-6-12_lg col-2">
+            {mediaType === "image" && images && images.length > 0 && (
               <div className="media-wrap test">
                 {images.length === 1 ? (
                   <>
-                    <img 
-                      data-src={urlFor(images[0]).url()} 
-                      alt="" 
+                    <img
+                      data-src={urlFor(images[0]).url()}
+                      alt=""
                       className="lazy full-bleed-image"
                     />
                     <div className="loading-overlay" />
                   </>
                 ) : (
-                  <SplideCarousel 
-                    images={images.map(image => ({ url: urlFor(image).url(), alt: "" }))}
+                  <SplideCarousel
+                    images={images.map((image) => ({
+                      url: urlFor(image).url(),
+                      alt: "",
+                    }))}
                     onPrevious={() => {}}
                     onNext={() => {}}
                   />
                 )}
               </div>
             )}
-            
-            {mediaType === 'video' && video && (
+
+            {mediaType === "video" && video && (
               <div className="media-wrap">
                 <video
                   ref={videoRef1}
@@ -358,23 +395,25 @@ export default function MediaTextSection({
                 <div className="loading-overlay" />
               </div>
             )}
-          </div>
+          </AnimateIn>
         </section>
       )}
 
       {/* Media with Text (h4 & body) */}
       {/* Media with Text (h4 & bullet list) */}
-      {(layout === 'media-with-text-h4-body' || layout === 'media-with-text-h4-bullet-list') && (
-        <section id={id} className={`media-text-section layout-${layout} align-${mediaAlignment} row-lg h-pad`}>
-          <div className="col-6-12_lg col-1 out-of-view">
+      {(layout === "media-with-text-h4-body" ||
+        layout === "media-with-text-h4-bullet-list") && (
+        <section
+          id={id}
+          className={`media-text-section layout-${layout} align-${mediaAlignment} row-lg h-pad`}
+        >
+          <AnimateIn variant="view" className="col-6-12_lg col-1">
             <div className="text-wrap">
-              {heading && (
-                <h4 className="media-text-heading">{heading}</h4>
-              )}
-              
+              {heading && <h4 className="media-text-heading">{heading}</h4>}
+
               {body && body.length > 0 && (
                 <>
-                  {layout === 'media-with-text-h4-body' && (
+                  {layout === "media-with-text-h4-body" && (
                     <div className="media-text-body">
                       <PortableText value={body ?? []} />
                     </div>
@@ -385,60 +424,74 @@ export default function MediaTextSection({
               {bulletList && bulletList.length > 0 && (
                 <div className="media-text-bullet-list">
                   {bulletList.map((item, index) => {
-                    const bulletBody: PortableTextBlock[] = item?.body ?? []
+                    const bulletBody: PortableTextBlock[] = item?.body ?? [];
                     if (bulletBody.length === 0) {
-                      return null
+                      return null;
                     }
 
                     return (
                       <div key={index} className="media-text-bullet-list-item">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="16" viewBox="0 0 13 16">
-                          <path d="M11.8181 0.5H0.5V15.5H11.8181V0.5Z"/>
-                          <path d="M0.5 0.5L11.8181 15.5"/>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="13"
+                          height="16"
+                          viewBox="0 0 13 16"
+                        >
+                          <path d="M11.8181 0.5H0.5V15.5H11.8181V0.5Z" />
+                          <path d="M0.5 0.5L11.8181 15.5" />
                         </svg>
 
                         <div className="media-text-bullet-list-text">
                           <PortableText value={bulletBody} />
                         </div>
                       </div>
-                    )
+                    );
                   })}
                 </div>
               )}
 
               {buttons && buttons.length > 0 && (
-                <div className={`button-wrap${buttons.length > 1 ? ' button-wrap--multiple-buttons' : ''}`}>
+                <div
+                  className={`button-wrap${buttons.length > 1 ? " button-wrap--multiple-buttons" : ""}`}
+                >
                   {buttons.map((button, index) => (
-                    <ButtonLink key={index} link={button} fallbackColor="cream" />
+                    <ButtonLink
+                      key={index}
+                      link={button}
+                      fallbackColor="cream"
+                    />
                   ))}
                 </div>
               )}
             </div>
-          </div>
+          </AnimateIn>
 
-          <div className="col-6-12_lg col-2 out-of-opacity">
-            {mediaType === 'image' && images && images.length > 0 && (
+          <AnimateIn className="col-6-12_lg col-2">
+            {mediaType === "image" && images && images.length > 0 && (
               <div className="media-wrap test">
                 {images.length === 1 ? (
                   <>
-                    <img 
-                      data-src={urlFor(images[0]).url()} 
-                      alt="" 
+                    <img
+                      data-src={urlFor(images[0]).url()}
+                      alt=""
                       className="lazy full-bleed-image"
                     />
                     <div className="loading-overlay" />
                   </>
                 ) : (
-                  <SplideCarousel 
-                    images={images.map(image => ({ url: urlFor(image).url(), alt: "" }))}
+                  <SplideCarousel
+                    images={images.map((image) => ({
+                      url: urlFor(image).url(),
+                      alt: "",
+                    }))}
                     onPrevious={() => {}}
                     onNext={() => {}}
                   />
                 )}
               </div>
             )}
-            
-            {mediaType === 'video' && video && (
+
+            {mediaType === "video" && video && (
               <div className="media-wrap">
                 <video
                   ref={videoRef1}
@@ -452,22 +505,30 @@ export default function MediaTextSection({
                 <div className="loading-overlay" />
               </div>
             )}
-          </div>
+          </AnimateIn>
         </section>
       )}
 
       {/* Media with Text (room type) */}
-      {layout === 'media-with-text-room-type' && roomLink && (
-        <section id={id} className={`media-text-section room-type layout-${mediaAlignment} align-${mediaAlignment} row-lg h-pad`}>
-          <div className="col-6-12_lg col-1 out-of-view">
+      {layout === "media-with-text-room-type" && roomLink && (
+        <section
+          id={id}
+          className={`media-text-section room-type layout-${mediaAlignment} align-${mediaAlignment} row-lg h-pad`}
+        >
+          <AnimateIn variant="view" className="col-6-12_lg col-1">
             <div className="text-wrap">
               {roomLink.roomType && (
                 <div className="media-text-room-type">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="16" viewBox="0 0 24 16">
-                    <path d="M11.8181 0.5H0.5V15.5H11.8181V0.5Z"/>
-                    <path d="M0.5 0.5L11.8181 15.5"/>
-                    <path d="M23.1365 0.5H11.8184V15.5H23.1365V0.5Z"/>
-                    <path d="M11.8184 0.5L23.1365 15.5"/>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="16"
+                    viewBox="0 0 24 16"
+                  >
+                    <path d="M11.8181 0.5H0.5V15.5H11.8181V0.5Z" />
+                    <path d="M0.5 0.5L11.8181 15.5" />
+                    <path d="M23.1365 0.5H11.8184V15.5H23.1365V0.5Z" />
+                    <path d="M11.8184 0.5L23.1365 15.5" />
                   </svg>
 
                   <div>{roomLink.roomType}</div>
@@ -475,7 +536,7 @@ export default function MediaTextSection({
               )}
 
               <h5 className="media-text-heading">{roomLink.title}</h5>
-              
+
               {roomLink.description && (
                 <div className="media-text-body">
                   <PortableText value={roomLink.description ?? []} />
@@ -483,8 +544,12 @@ export default function MediaTextSection({
               )}
 
               <div className="button-wrap button-wrap--multiple-buttons">
-                <ButtonLink 
-                  link={{ linkType: 'internal', label: 'View', pageLink: { slug: `rooms/${roomLink.slug}` } }} 
+                <ButtonLink
+                  link={{
+                    linkType: "internal",
+                    label: "View",
+                    pageLink: { slug: `rooms/${roomLink.slug}` },
+                  }}
                   fallbackColor="cream"
                 />
 
@@ -496,31 +561,34 @@ export default function MediaTextSection({
                 </button>
               </div>
             </div>
-          </div>
+          </AnimateIn>
 
-          <div className="col-6-12_lg col-2 out-of-opacity">
-            {mediaType === 'image' && images && images.length > 0 && (
+          <AnimateIn className="col-6-12_lg col-2">
+            {mediaType === "image" && images && images.length > 0 && (
               <div className="media-wrap">
                 {images.length === 1 ? (
                   <>
-                    <img 
-                      data-src={urlFor(images[0]).url()} 
-                      alt="" 
+                    <img
+                      data-src={urlFor(images[0]).url()}
+                      alt=""
                       className="lazy full-bleed-image"
                     />
                     <div className="loading-overlay" />
                   </>
                 ) : (
-                  <SplideCarousel 
-                    images={images.map(image => ({ url: urlFor(image).url(), alt: "" }))}
+                  <SplideCarousel
+                    images={images.map((image) => ({
+                      url: urlFor(image).url(),
+                      alt: "",
+                    }))}
                     onPrevious={() => {}}
                     onNext={() => {}}
                   />
                 )}
               </div>
             )}
-            
-            {mediaType === 'video' && video && (
+
+            {mediaType === "video" && video && (
               <div className="media-wrap">
                 <video
                   ref={videoRef2}
@@ -534,176 +602,215 @@ export default function MediaTextSection({
                 <div className="loading-overlay" />
               </div>
             )}
-          </div>
+          </AnimateIn>
         </section>
       )}
 
       {/* Media with Text (h4, body & links) */}
-      {(layout === 'media-with-text-h4-body-links') && links && links.length > 0 && (
-        <section id={id} className={`media-text-section layout-${layout} h-pad`}>
-          <div className={`align-${mediaAlignment} row-lg`}>
-            <div className="col-6-12_lg col-1 out-of-view">
-              <div className="text-wrap">
-                {heading && (
-                  <>
-                    <h4 className="media-text-heading">{heading}</h4>
-
-                    {body && body.length > 0 && (
-                      <div className="media-text-body">
-                        <PortableText value={body ?? []} />
-                      </div>
-                    )}
-                  </>
-                )}
-
-                {!heading && body && body.length > 0 && (
-                  <h5 className="media-text-body">
-                    <PortableText value={body ?? []} />
-                  </h5>
-                )}
-
-                {buttons && buttons.length > 0 && (
-                  <div className={`button-wrap${buttons.length > 1 ? ' button-wrap--multiple-buttons' : ''}`}>
-                    {buttons.map((button, index) => (
-                      <ButtonLink key={index} link={button} fallbackColor="cream" />
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <div className="col-6-12_lg col-2 out-of-opacity">
-              {mediaType === 'image' && images && images.length > 0 && (
-                <div className="media-wrap">
-                  {images.length === 1 ? (
+      {layout === "media-with-text-h4-body-links" &&
+        links &&
+        links.length > 0 && (
+          <section
+            id={id}
+            className={`media-text-section layout-${layout} h-pad`}
+          >
+            <div className={`align-${mediaAlignment} row-lg`}>
+              <AnimateIn variant="view" className="col-6-12_lg col-1">
+                <div className="text-wrap">
+                  {heading && (
                     <>
-                      <img 
-                        data-src={urlFor(images[0]).url()} 
-                        alt="" 
-                        className="lazy full-bleed-image"
-                      />
-                      <div className="loading-overlay" />
+                      <h4 className="media-text-heading">{heading}</h4>
+
+                      {body && body.length > 0 && (
+                        <div className="media-text-body">
+                          <PortableText value={body ?? []} />
+                        </div>
+                      )}
                     </>
-                  ) : (
-                    <SplideCarousel 
-                      images={images.map(image => ({ url: urlFor(image).url(), alt: "" }))}
-                      onPrevious={() => {}}
-                      onNext={() => {}}
-                    />
+                  )}
+
+                  {!heading && body && body.length > 0 && (
+                    <div className="media-text-body media-text-body--h5">
+                      <PortableText value={body ?? []} />
+                    </div>
+                  )}
+
+                  {buttons && buttons.length > 0 && (
+                    <div
+                      className={`button-wrap${buttons.length > 1 ? " button-wrap--multiple-buttons" : ""}`}
+                    >
+                      {buttons.map((button, index) => (
+                        <ButtonLink
+                          key={index}
+                          link={button}
+                          fallbackColor="cream"
+                        />
+                      ))}
+                    </div>
                   )}
                 </div>
-              )}
-              
-              {mediaType === 'video' && video && (
-                <div className="media-wrap">
-                  <video
-                    ref={videoRef1}
-                    src={videoUrlFor(video)}
-                    poster={
-                      typeof video === 'object' &&
-                      video !== null &&
-                      'thumbnailUrl' in video
-                        ? video.thumbnailUrl
-                        : undefined
-                    }
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                    preload="metadata"
-                  />
-                  <div className="loading-overlay" />
-                </div>
-              )}
-            </div>
-          </div>
+              </AnimateIn>
 
-          {links && links.length > 0 && (
-            <div className="media-text-links-list row-lg">
-              {links.map((link, index) => (
-                <div key={index} className={links.length === 2 ? 'col-6-12_lg two-across' : 'col-3-12_lg'}>
-                  <div className="media-text-link out-of-opacity">
-                    {link.image && (
-                      <div className="media-wrap relative">
-                        <img 
-                          data-src={urlFor(link.image).url()} 
-                          alt="" 
+              <AnimateIn className="col-6-12_lg col-2">
+                {mediaType === "image" && images && images.length > 0 && (
+                  <div className="media-wrap">
+                    {images.length === 1 ? (
+                      <>
+                        <img
+                          data-src={urlFor(images[0]).url()}
+                          alt=""
                           className="lazy full-bleed-image"
                         />
                         <div className="loading-overlay" />
-
-                        {link.buttons && link.buttons.length > 0 && (
-                          <div className={`button-wrap${link.buttons.length > 1 ? ' button-wrap--multiple-buttons' : ''} button-wrap--overlay-media`}>
-                            {link.buttons.map((button, buttonIndex) => (
-                              <ButtonLink key={buttonIndex} link={button} fallbackColor="cream" />
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    )}
-
-                    {link.header && (
-                      <h5 className="media-text-heading">{link.header}</h5>
-                    )}
-
-                    {link.body && (
-                      <div className="media-text-body">
-                        <PortableText value={link.body ?? []} />
-                      </div>
+                      </>
+                    ) : (
+                      <SplideCarousel
+                        images={images.map((image) => ({
+                          url: urlFor(image).url(),
+                          alt: "",
+                        }))}
+                        onPrevious={() => {}}
+                        onNext={() => {}}
+                      />
                     )}
                   </div>
-                </div>
-              ))}
+                )}
+
+                {mediaType === "video" && video && (
+                  <div className="media-wrap">
+                    <video
+                      ref={videoRef1}
+                      src={videoUrlFor(video)}
+                      poster={
+                        typeof video === "object" &&
+                        video !== null &&
+                        "thumbnailUrl" in video
+                          ? video.thumbnailUrl
+                          : undefined
+                      }
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      preload="metadata"
+                    />
+                    <div className="loading-overlay" />
+                  </div>
+                )}
+              </AnimateIn>
             </div>
-          )}
-        </section>
-      )}
+
+            {links && links.length > 0 && (
+              <div className="media-text-links-list row-lg">
+                {links.map((link, index) => (
+                  <div
+                    key={index}
+                    className={
+                      links.length === 2
+                        ? "col-6-12_lg two-across"
+                        : "col-3-12_lg"
+                    }
+                  >
+                    <AnimateIn className="media-text-link">
+                      {link.image && (
+                        <div className="media-wrap relative">
+                          <img
+                            data-src={urlFor(link.image).url()}
+                            alt=""
+                            className="lazy full-bleed-image"
+                          />
+                          <div className="loading-overlay" />
+
+                          {link.buttons && link.buttons.length > 0 && (
+                            <div
+                              className={`button-wrap${link.buttons.length > 1 ? " button-wrap--multiple-buttons" : ""} button-wrap--overlay-media`}
+                            >
+                              {link.buttons.map((button, buttonIndex) => (
+                                <ButtonLink
+                                  key={buttonIndex}
+                                  link={button}
+                                  fallbackColor="cream"
+                                />
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {link.header && (
+                        <h5 className="media-text-heading">{link.header}</h5>
+                      )}
+
+                      {link.body && (
+                        <div className="media-text-body">
+                          <PortableText value={link.body ?? []} />
+                        </div>
+                      )}
+                    </AnimateIn>
+                  </div>
+                ))}
+              </div>
+            )}
+          </section>
+        )}
 
       {/* Media with Text (h4, body & room links) */}
-      {(layout === 'media-with-text-h4-body-room-links') && (
-        <section id={id} className={`media-text-section layout-${layout} h-pad`}>
+      {layout === "media-with-text-h4-body-room-links" && (
+        <section
+          id={id}
+          className={`media-text-section layout-${layout} h-pad`}
+        >
           <div className={`align-${mediaAlignment} row-lg`}>
-            <div className="col-6-12_lg col-1 out-of-view">
+            <AnimateIn variant="view" className="col-6-12_lg col-1">
               <div className="text-wrap">
                 {body && body.length > 0 && (
-                  <h5 className="media-text-body">
+                  <div className="media-text-body media-text-body--h5">
                     <PortableText value={body ?? []} />
-                  </h5>
+                  </div>
                 )}
 
                 {buttons && buttons.length > 0 && (
-                  <div className={`button-wrap${buttons.length > 1 ? ' button-wrap--multiple-buttons' : ''}`}>
+                  <div
+                    className={`button-wrap${buttons.length > 1 ? " button-wrap--multiple-buttons" : ""}`}
+                  >
                     {buttons.map((button, index) => (
-                      <ButtonLink key={index} link={button} fallbackColor="cream" />
+                      <ButtonLink
+                        key={index}
+                        link={button}
+                        fallbackColor="cream"
+                      />
                     ))}
                   </div>
                 )}
               </div>
-            </div>
+            </AnimateIn>
 
-            <div className="col-6-12_lg col-2 out-of-opacity">
-              {mediaType === 'image' && images && images.length > 0 && (
+            <AnimateIn className="col-6-12_lg col-2">
+              {mediaType === "image" && images && images.length > 0 && (
                 <div className="media-wrap">
                   {images.length === 1 ? (
                     <>
-                      <img 
-                        data-src={urlFor(images[0]).url()} 
-                        alt="" 
+                      <img
+                        data-src={urlFor(images[0]).url()}
+                        alt=""
                         className="lazy full-bleed-image"
                       />
                       <div className="loading-overlay" />
                     </>
                   ) : (
-                    <SplideCarousel 
-                      images={images.map(image => ({ url: urlFor(image).url(), alt: "" }))}
+                    <SplideCarousel
+                      images={images.map((image) => ({
+                        url: urlFor(image).url(),
+                        alt: "",
+                      }))}
                       onPrevious={() => {}}
                       onNext={() => {}}
                     />
                   )}
                 </div>
               )}
-              
-              {mediaType === 'video' && video && (
+
+              {mediaType === "video" && video && (
                 <div className="media-wrap">
                   <video
                     ref={videoRef1}
@@ -717,20 +824,20 @@ export default function MediaTextSection({
                   <div className="loading-overlay" />
                 </div>
               )}
-            </div>
+            </AnimateIn>
           </div>
 
           {roomLinks && roomLinks.length > 0 && (
             <>
               {roomLinks.length > 4 ? (
-                <div className="media-text-links-carousel out-of-opacity">
+                <AnimateIn className="media-text-links-carousel">
                   <Splide
                     ref={splideRef}
                     options={{
-                      type: 'slide',
+                      type: "slide",
                       perPage: 4,
                       perMove: 1,
-                      gap: '20px',
+                      gap: "20px",
                       pagination: false,
                       arrows: false,
                       breakpoints: {
@@ -746,16 +853,20 @@ export default function MediaTextSection({
                         <div className="media-text-link">
                           {room.images?.[0] && (
                             <div className="media-wrap relative">
-                              <img 
-                                data-src={urlFor(room.images[0]).url()} 
-                                alt="" 
+                              <img
+                                data-src={urlFor(room.images[0]).url()}
+                                alt=""
                                 className="lazy full-bleed-image"
                               />
                               <div className="loading-overlay" />
 
                               <div className="button-wrap button-wrap--multiple-buttons button-wrap--overlay-media">
-                                <ButtonLink 
-                                  link={{ linkType: 'internal', label: 'View', pageLink: { slug: `rooms/${room.slug}` } }}
+                                <ButtonLink
+                                  link={{
+                                    linkType: "internal",
+                                    label: "View",
+                                    pageLink: { slug: `rooms/${room.slug}` },
+                                  }}
                                   fallbackColor="cream"
                                 />
 
@@ -782,50 +893,79 @@ export default function MediaTextSection({
                   </Splide>
 
                   <div className="media-text-links-carousel-controls">
-                    <button 
+                    <button
                       className="carousel-arrow carousel-arrow--prev"
                       onClick={handlePrevious}
                       disabled={currentSlideIndex === 0}
                     >
-                      <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36">
-                        <circle cx="18" cy="18" r="17.5"/>
-                        <path d="M20.5 12L14 18.5L20.5 25"/>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="36"
+                        height="36"
+                        viewBox="0 0 36 36"
+                      >
+                        <circle cx="18" cy="18" r="17.5" />
+                        <path d="M20.5 12L14 18.5L20.5 25" />
                       </svg>
                     </button>
 
                     <div className="carousel-pagination">
-                      <h6>{currentPage}/{totalPages}</h6>
+                      <h6>
+                        {currentPage}/{totalPages}
+                      </h6>
                     </div>
 
-                    <button 
+                    <button
                       className="carousel-arrow carousel-arrow--next"
                       onClick={handleNext}
                       disabled={isAtEndOfRoomLinks}
                     >
-                      <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36" fill="none">
-                        <circle cx="18" cy="18" r="17.5" transform="matrix(-1 0 0 1 36 0)"/>
-                        <path d="M15.5 12L22 18.5L15.5 25"/>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="36"
+                        height="36"
+                        viewBox="0 0 36 36"
+                        fill="none"
+                      >
+                        <circle
+                          cx="18"
+                          cy="18"
+                          r="17.5"
+                          transform="matrix(-1 0 0 1 36 0)"
+                        />
+                        <path d="M15.5 12L22 18.5L15.5 25" />
                       </svg>
                     </button>
                   </div>
-                </div>
+                </AnimateIn>
               ) : (
                 <div className="row-lg">
                   {roomLinks.map((room, index) => (
-                    <div key={index} className={roomLinks.length === 2 ? 'col-6-12_lg two-across' : 'col-2-12_lg'}>
-                      <div className="media-text-link out-of-opacity">
+                    <div
+                      key={index}
+                      className={
+                        roomLinks.length === 2
+                          ? "col-6-12_lg two-across"
+                          : "col-2-12_lg"
+                      }
+                    >
+                      <AnimateIn className="media-text-link">
                         {room.images?.[0] && (
                           <div className="media-wrap relative">
-                            <img 
-                              data-src={urlFor(room.images[0]).url()} 
-                              alt="" 
+                            <img
+                              data-src={urlFor(room.images[0]).url()}
+                              alt=""
                               className="lazy full-bleed-image"
                             />
                             <div className="loading-overlay" />
 
                             <div className="button-wrap button-wrap--multiple-buttons button-wrap--overlay-media">
-                              <ButtonLink 
-                                link={{ linkType: 'internal', label: 'View', pageLink: { slug: `rooms/${room.slug}` } }}
+                              <ButtonLink
+                                link={{
+                                  linkType: "internal",
+                                  label: "View",
+                                  pageLink: { slug: `rooms/${room.slug}` },
+                                }}
                                 fallbackColor="cream"
                               />
 
@@ -846,7 +986,7 @@ export default function MediaTextSection({
                             <PortableText value={room.description ?? []} />
                           </div>
                         )}
-                      </div>
+                      </AnimateIn>
                     </div>
                   ))}
                 </div>
@@ -857,50 +997,62 @@ export default function MediaTextSection({
       )}
 
       {/* Media with Text (h4, body & calendar links) */}
-      {(layout === 'media-with-text-h4-body-activity-links') && (
-        <section id={id} className={`media-text-section layout-${layout} h-pad`}>
+      {layout === "media-with-text-h4-body-activity-links" && (
+        <section
+          id={id}
+          className={`media-text-section layout-${layout} h-pad`}
+        >
           <div className={`align-${mediaAlignment} row-lg`}>
-            <div className="col-6-12_lg col-1 out-of-view">
+            <AnimateIn variant="view" className="col-6-12_lg col-1">
               <div className="text-wrap">
                 {body && body.length > 0 && (
-                  <h5 className="media-text-body">
+                  <div className="media-text-body media-text-body--h5">
                     <PortableText value={body ?? []} />
-                  </h5>
+                  </div>
                 )}
 
                 {buttons && buttons.length > 0 && (
-                  <div className={`button-wrap${buttons.length > 1 ? ' button-wrap--multiple-buttons' : ''}`}>
+                  <div
+                    className={`button-wrap${buttons.length > 1 ? " button-wrap--multiple-buttons" : ""}`}
+                  >
                     {buttons.map((button, index) => (
-                      <ButtonLink key={index} link={button} fallbackColor="cream" />
+                      <ButtonLink
+                        key={index}
+                        link={button}
+                        fallbackColor="cream"
+                      />
                     ))}
                   </div>
                 )}
               </div>
-            </div>
+            </AnimateIn>
 
-            <div className="col-6-12_lg col-2 out-of-opacity">
-              {mediaType === 'image' && images && images.length > 0 && (
+            <AnimateIn className="col-6-12_lg col-2">
+              {mediaType === "image" && images && images.length > 0 && (
                 <div className="media-wrap">
                   {images.length === 1 ? (
                     <>
-                      <img 
-                        data-src={urlFor(images[0]).url()} 
-                        alt="" 
+                      <img
+                        data-src={urlFor(images[0]).url()}
+                        alt=""
                         className="lazy full-bleed-image"
                       />
                       <div className="loading-overlay" />
                     </>
                   ) : (
-                    <SplideCarousel 
-                      images={images.map(image => ({ url: urlFor(image).url(), alt: "" }))}
+                    <SplideCarousel
+                      images={images.map((image) => ({
+                        url: urlFor(image).url(),
+                        alt: "",
+                      }))}
                       onPrevious={() => {}}
                       onNext={() => {}}
                     />
                   )}
                 </div>
               )}
-              
-              {mediaType === 'video' && video && (
+
+              {mediaType === "video" && video && (
                 <div className="media-wrap">
                   <video
                     ref={videoRef1}
@@ -914,86 +1066,112 @@ export default function MediaTextSection({
                   <div className="loading-overlay" />
                 </div>
               )}
-            </div>
+            </AnimateIn>
           </div>
 
-          <CalendarPage activities={upcomingActivities} disableCarousel={upcomingActivities.length <= 1} />
+          <CalendarPage
+            activities={upcomingActivities}
+            disableCarousel={upcomingActivities.length <= 1}
+          />
         </section>
       )}
 
       {/* Media with Text (multiple text blocks) */}
-      {layout === 'media-with-text-multiple-text-blocks' && (
+      {layout === "media-with-text-multiple-text-blocks" && (
         <>
           <div className="desktop">
-            <section id={id} className={`media-text-section layout-${layout} align-${mediaAlignment} row-lg h-pad`}>
+            <section
+              id={id}
+              className={`media-text-section layout-${layout} align-${mediaAlignment} row-lg h-pad`}
+            >
               <div className="col-6-12_lg col-1">
                 <div className="text-wrap">
                   {textBlocks && textBlocks.length > 0 && (
-                    <div className="media-text-multiple-blocks out-of-view">
+                    <AnimateIn
+                      variant="view"
+                      className="media-text-multiple-blocks"
+                    >
                       {textBlocks.map((block, index) => {
-                        const blockLayout = block.layout ?? 'h4-text'
-                        const blockBody: PortableTextBlock[] = block.body ?? []
-                        const hasBody = blockBody.length > 0
-                        const hasBulletList = block.bulletList?.some((bullet) => bullet?.body && bullet.body.length > 0)
+                        const blockLayout = block.layout ?? "h4-text";
+                        const blockBody: PortableTextBlock[] = block.body ?? [];
+                        const hasBody = blockBody.length > 0;
+                        const hasBulletList = block.bulletList?.some(
+                          (bullet) => bullet?.body && bullet.body.length > 0,
+                        );
 
                         return (
                           <div key={index} className="media-text-block">
                             {block.header && (
-                              <h5 className="media-text-heading">{block.header}</h5>
+                              <h5 className="media-text-heading">
+                                {block.header}
+                              </h5>
                             )}
 
-                            {blockLayout === 'h4-text' && hasBody && (
+                            {blockLayout === "h4-text" && hasBody && (
                               <div className="media-text-body">
                                 <PortableText value={blockBody} />
                               </div>
                             )}
 
-                            {blockLayout === 'h4-bullet-list' && hasBulletList && (
-                              <div className="media-text-bullet-list">
-                                {block.bulletList?.map((item, itemIndex) => {
-                                  const bulletBody: PortableTextBlock[] = item?.body ?? []
-                                  if (bulletBody.length === 0) {
-                                    return null
-                                  }
+                            {blockLayout === "h4-bullet-list" &&
+                              hasBulletList && (
+                                <div className="media-text-bullet-list">
+                                  {block.bulletList?.map((item, itemIndex) => {
+                                    const bulletBody: PortableTextBlock[] =
+                                      item?.body ?? [];
+                                    if (bulletBody.length === 0) {
+                                      return null;
+                                    }
 
-                                  return (
-                                    <div key={itemIndex} className="media-text-bullet-list-item">
-                                      <svg xmlns="http://www.w3.org/2000/svg" width="13" height="16" viewBox="0 0 13 16">
-                                        <path d="M11.8181 0.5H0.5V15.5H11.8181V0.5Z"/>
-                                        <path d="M0.5 0.5L11.8181 15.5"/>
-                                      </svg>
+                                    return (
+                                      <div
+                                        key={itemIndex}
+                                        className="media-text-bullet-list-item"
+                                      >
+                                        <svg
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          width="13"
+                                          height="16"
+                                          viewBox="0 0 13 16"
+                                        >
+                                          <path d="M11.8181 0.5H0.5V15.5H11.8181V0.5Z" />
+                                          <path d="M0.5 0.5L11.8181 15.5" />
+                                        </svg>
 
-                                      <div className="media-text-bullet-list-text">
-                                        <PortableText value={bulletBody} />
+                                        <div className="media-text-bullet-list-text">
+                                          <PortableText value={bulletBody} />
+                                        </div>
                                       </div>
-                                    </div>
-                                  )
-                                })}
-                              </div>
-                            )}
+                                    );
+                                  })}
+                                </div>
+                              )}
                           </div>
-                        )
+                        );
                       })}
-                    </div>
+                    </AnimateIn>
                   )}
                 </div>
               </div>
 
-              <div className="col-6-12_lg col-2 out-of-opacity">
-                {mediaType === 'image' && images && images.length > 0 && (
+              <AnimateIn className="col-6-12_lg col-2">
+                {mediaType === "image" && images && images.length > 0 && (
                   <div className="media-wrap">
                     {images.length === 1 ? (
                       <>
-                        <img 
-                          data-src={urlFor(images[0]).url()} 
-                          alt="" 
+                        <img
+                          data-src={urlFor(images[0]).url()}
+                          alt=""
                           className="lazy full-bleed-image"
                         />
                         <div className="loading-overlay" />
                       </>
                     ) : (
-                      <SplideCarousel 
-                        images={images.map(image => ({ url: urlFor(image).url(), alt: "" }))}
+                      <SplideCarousel
+                        images={images.map((image) => ({
+                          url: urlFor(image).url(),
+                          alt: "",
+                        }))}
                         onPrevious={() => {}}
                         onNext={() => {}}
                       />
@@ -1001,7 +1179,7 @@ export default function MediaTextSection({
                   </div>
                 )}
 
-                {mediaType === 'video' && video && (
+                {mediaType === "video" && video && (
                   <div className="media-wrap">
                     <video
                       ref={videoRef1}
@@ -1015,76 +1193,97 @@ export default function MediaTextSection({
                     <div className="loading-overlay" />
                   </div>
                 )}
-              </div>
+              </AnimateIn>
             </section>
           </div>
 
           <div className="mobile">
-            <section id={id} className={`media-text-section layout-${layout} h-pad`}>
+            <section
+              id={id}
+              className={`media-text-section layout-${layout} h-pad`}
+            >
               {textBlocks && textBlocks.length > 0 && (
                 <>
                   {/* First text block only */}
-                  {textBlocks[0] && (() => {
-                    const block = textBlocks[0]
-                    const blockLayout = block.layout ?? 'h4-text'
-                    const blockBody: PortableTextBlock[] = block.body ?? []
-                    const hasBody = blockBody.length > 0
-                    const hasBulletList = block.bulletList?.some((bullet) => bullet?.body && bullet.body.length > 0)
+                  {textBlocks[0] &&
+                    (() => {
+                      const block = textBlocks[0];
+                      const blockLayout = block.layout ?? "h4-text";
+                      const blockBody: PortableTextBlock[] = block.body ?? [];
+                      const hasBody = blockBody.length > 0;
+                      const hasBulletList = block.bulletList?.some(
+                        (bullet) => bullet?.body && bullet.body.length > 0,
+                      );
 
-                    return (
-                      <div className="media-text-block">
-                        {block.header && (
-                          <h5 className="media-text-heading">{block.header}</h5>
-                        )}
+                      return (
+                        <div className="media-text-block">
+                          {block.header && (
+                            <h5 className="media-text-heading">
+                              {block.header}
+                            </h5>
+                          )}
 
-                        {blockLayout === 'h4-text' && hasBody && (
-                          <div className="media-text-body">
-                            <PortableText value={blockBody} />
-                          </div>
-                        )}
+                          {blockLayout === "h4-text" && hasBody && (
+                            <div className="media-text-body">
+                              <PortableText value={blockBody} />
+                            </div>
+                          )}
 
-                        {blockLayout === 'h4-bullet-list' && hasBulletList && (
-                          <div className="media-text-bullet-list">
-                            {block.bulletList?.map((item, itemIndex) => {
-                              const bulletBody: PortableTextBlock[] = item?.body ?? []
-                              if (bulletBody.length === 0) {
-                                return null
-                              }
+                          {blockLayout === "h4-bullet-list" &&
+                            hasBulletList && (
+                              <div className="media-text-bullet-list">
+                                {block.bulletList?.map((item, itemIndex) => {
+                                  const bulletBody: PortableTextBlock[] =
+                                    item?.body ?? [];
+                                  if (bulletBody.length === 0) {
+                                    return null;
+                                  }
 
-                              return (
-                                <div key={itemIndex} className="media-text-bullet-list-item">
-                                  <svg xmlns="http://www.w3.org/2000/svg" width="13" height="16" viewBox="0 0 13 16">
-                                    <path d="M11.8181 0.5H0.5V15.5H11.8181V0.5Z"/>
-                                    <path d="M0.5 0.5L11.8181 15.5"/>
-                                  </svg>
+                                  return (
+                                    <div
+                                      key={itemIndex}
+                                      className="media-text-bullet-list-item"
+                                    >
+                                      <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="13"
+                                        height="16"
+                                        viewBox="0 0 13 16"
+                                      >
+                                        <path d="M11.8181 0.5H0.5V15.5H11.8181V0.5Z" />
+                                        <path d="M0.5 0.5L11.8181 15.5" />
+                                      </svg>
 
-                                  <div className="media-text-bullet-list-text">
-                                    <PortableText value={bulletBody} />
-                                  </div>
-                                </div>
-                              )
-                            })}
-                          </div>
-                        )}
-                      </div>
-                    )
-                  })()}
+                                      <div className="media-text-bullet-list-text">
+                                        <PortableText value={bulletBody} />
+                                      </div>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            )}
+                        </div>
+                      );
+                    })()}
 
                   {/* Media block */}
-                  {mediaType === 'image' && images && images.length > 0 && (
+                  {mediaType === "image" && images && images.length > 0 && (
                     <div className="media-wrap">
                       {images.length === 1 ? (
                         <>
-                          <img 
-                            data-src={urlFor(images[0]).url()} 
-                            alt="" 
+                          <img
+                            data-src={urlFor(images[0]).url()}
+                            alt=""
                             className="lazy full-bleed-image"
                           />
                           <div className="loading-overlay" />
                         </>
                       ) : (
-                        <SplideCarousel 
-                          images={images.map(image => ({ url: urlFor(image).url(), alt: "" }))}
+                        <SplideCarousel
+                          images={images.map((image) => ({
+                            url: urlFor(image).url(),
+                            alt: "",
+                          }))}
                           onPrevious={() => {}}
                           onNext={() => {}}
                         />
@@ -1092,7 +1291,7 @@ export default function MediaTextSection({
                     </div>
                   )}
 
-                  {mediaType === 'video' && video && (
+                  {mediaType === "video" && video && (
                     <div className="media-wrap">
                       <video
                         ref={videoRef1}
@@ -1111,48 +1310,62 @@ export default function MediaTextSection({
                   {textBlocks.length > 1 && (
                     <div className="media-text-multiple-blocks">
                       {textBlocks.slice(1).map((block, index) => {
-                        const blockLayout = block.layout ?? 'h4-text'
-                        const blockBody: PortableTextBlock[] = block.body ?? []
-                        const hasBody = blockBody.length > 0
-                        const hasBulletList = block.bulletList?.some((bullet) => bullet?.body && bullet.body.length > 0)
+                        const blockLayout = block.layout ?? "h4-text";
+                        const blockBody: PortableTextBlock[] = block.body ?? [];
+                        const hasBody = blockBody.length > 0;
+                        const hasBulletList = block.bulletList?.some(
+                          (bullet) => bullet?.body && bullet.body.length > 0,
+                        );
 
                         return (
                           <div key={index + 1} className="media-text-block">
                             {block.header && (
-                              <h5 className="media-text-heading">{block.header}</h5>
+                              <h5 className="media-text-heading">
+                                {block.header}
+                              </h5>
                             )}
 
-                            {blockLayout === 'h4-text' && hasBody && (
+                            {blockLayout === "h4-text" && hasBody && (
                               <div className="media-text-body">
                                 <PortableText value={blockBody} />
                               </div>
                             )}
 
-                            {blockLayout === 'h4-bullet-list' && hasBulletList && (
-                              <div className="media-text-bullet-list">
-                                {block.bulletList?.map((item, itemIndex) => {
-                                  const bulletBody: PortableTextBlock[] = item?.body ?? []
-                                  if (bulletBody.length === 0) {
-                                    return null
-                                  }
+                            {blockLayout === "h4-bullet-list" &&
+                              hasBulletList && (
+                                <div className="media-text-bullet-list">
+                                  {block.bulletList?.map((item, itemIndex) => {
+                                    const bulletBody: PortableTextBlock[] =
+                                      item?.body ?? [];
+                                    if (bulletBody.length === 0) {
+                                      return null;
+                                    }
 
-                                  return (
-                                    <div key={itemIndex} className="media-text-bullet-list-item">
-                                      <svg xmlns="http://www.w3.org/2000/svg" width="13" height="16" viewBox="0 0 13 16">
-                                        <path d="M11.8181 0.5H0.5V15.5H11.8181V0.5Z"/>
-                                        <path d="M0.5 0.5L11.8181 15.5"/>
-                                      </svg>
+                                    return (
+                                      <div
+                                        key={itemIndex}
+                                        className="media-text-bullet-list-item"
+                                      >
+                                        <svg
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          width="13"
+                                          height="16"
+                                          viewBox="0 0 13 16"
+                                        >
+                                          <path d="M11.8181 0.5H0.5V15.5H11.8181V0.5Z" />
+                                          <path d="M0.5 0.5L11.8181 15.5" />
+                                        </svg>
 
-                                      <div className="media-text-bullet-list-text">
-                                        <PortableText value={bulletBody} />
+                                        <div className="media-text-bullet-list-text">
+                                          <PortableText value={bulletBody} />
+                                        </div>
                                       </div>
-                                    </div>
-                                  )
-                                })}
-                              </div>
-                            )}
+                                    );
+                                  })}
+                                </div>
+                              )}
                           </div>
-                        )
+                        );
                       })}
                     </div>
                   )}
@@ -1163,5 +1376,5 @@ export default function MediaTextSection({
         </>
       )}
     </>
-  )
+  );
 }

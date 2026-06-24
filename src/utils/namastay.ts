@@ -57,10 +57,16 @@ export interface NamastayOffer {
   roomId?: string;
 }
 
+export const NAMASTAY_HOTEL_PARAMETERS: NamastayConfig = {
+  apiKey: '6e1a1ee72c854f43b9bcb4113572e824nuuwro4cfvmrd62b',
+  spreedlyApiKey: 'D1a8Zma8lZfap6nZpUjPxp6OHBV',
+  widgetButtonsClass: 'namastay-widget-button',
+  specialOfferButtonsClass: 'namastay-offer-button',
+};
+
 /**
- * Initialize Namastay SDK with hotel configuration
- * This should be called after the namastay script has loaded
- * Note: This is typically called automatically in the root layout
+ * Initialize Namastay SDK with hotel configuration.
+ * Called from NamastayInit after React hydration.
  */
 export function initNamastay(config: NamastayConfig): void {
   if (typeof window === 'undefined' || !window.initNamastay) {
@@ -125,7 +131,7 @@ export function openNamastayWithOffer(offer: NamastayOffer): void {
       promoCode?: string
       roomId?: string
     } = {
-      apiKey: '6e1a1ee72c854f43b9bcb4113572e824nuuwro4cfvmrd62b', // Include API key as per documentation
+      apiKey: NAMASTAY_HOTEL_PARAMETERS.apiKey,
     };
     
     if (offer.dates) {

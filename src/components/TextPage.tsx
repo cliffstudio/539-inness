@@ -1,6 +1,7 @@
 "use client"
 
 import React from 'react'
+import AnimateIn from './AnimateIn'
 import { PortableText, PortableTextBlock } from '@portabletext/react'
 
 type TextBlock = {
@@ -21,7 +22,7 @@ const TextPage: React.FC<TextPageProps> = ({ title, textBlocks }) => {
 
   return (
     <div className="text-page h-pad">
-      <div className="inner-wrap out-of-opacity">
+      <AnimateIn className="inner-wrap">
         {title && (
           <h4 className="text-page__title">{title}</h4>
         )}
@@ -41,10 +42,9 @@ const TextPage: React.FC<TextPageProps> = ({ title, textBlocks }) => {
             </section>
           )
         })}
-      </div>
+      </AnimateIn>
     </div>
   )
 }
 
 export default TextPage
-

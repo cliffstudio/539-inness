@@ -1,5 +1,7 @@
 'use client'
 
+import AnimateIn from './AnimateIn'
+
 import { useState, useMemo, useEffect } from 'react'
 import { PortableTextBlock } from '@portabletext/react'
 import ActivitySection from './CalendarPage'
@@ -75,9 +77,9 @@ export default function CalendarFilter({ activities, pagination }: CalendarFilte
   return (
     <>
       <div className="calendar-filter h-pad">
-        <div className="calendar-filter-label out-of-opacity">Filter</div>
+        <AnimateIn className="calendar-filter-label">Filter</AnimateIn>
 
-        <div className="calendar-filter-options out-of-opacity">
+        <AnimateIn className="calendar-filter-options">
           <button
             className={`calendar-filter-option ${activeFilter === 'all' ? 'active' : ''}`}
             onClick={() => setActiveFilter('all')}
@@ -103,7 +105,7 @@ export default function CalendarFilter({ activities, pagination }: CalendarFilte
               </button>
             )
           })}
-        </div>
+        </AnimateIn>
       </div>
 
       <ActivitySection
@@ -111,7 +113,7 @@ export default function CalendarFilter({ activities, pagination }: CalendarFilte
         disableCarousel={true}
         topSlot={
           pagination ? (
-            <div className="calendar-pagination out-of-opacity">
+            <AnimateIn className="calendar-pagination">
               {pagination.currentPage > 1 ? (
                 <Link
                   className="calendar-pagination__link"
@@ -141,7 +143,7 @@ export default function CalendarFilter({ activities, pagination }: CalendarFilte
                   Next
                 </span>
               )}
-            </div>
+            </AnimateIn>
           ) : null
         }
       />

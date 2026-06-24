@@ -1,55 +1,65 @@
 /* eslint-disable @next/next/no-img-element */
-'use client'
+"use client";
 
-import type { SanityImageSource } from '@sanity/image-url'
-import { urlFor } from '../sanity/utils/imageUrlBuilder'
-import { PortableText, PortableTextBlock } from '@portabletext/react'
-import SplideCarousel from './SplideCarousel'
-import { openNamastayWidget } from '../utils/namastay'
+import type { SanityImageSource } from "@sanity/image-url";
+import AnimateIn from "./AnimateIn";
+import { urlFor } from "../sanity/utils/imageUrlBuilder";
+import { PortableText, PortableTextBlock } from "@portabletext/react";
+import SplideCarousel from "./SplideCarousel";
+import { openNamastayWidget } from "../utils/namastay";
 
 interface Spec {
-  body?: string
+  body?: string;
 }
 
 interface HeroProps {
-  id?: string
-  title?: string
-  images?: SanityImageSource[]
-  description?: PortableTextBlock[]
-  specs?: Spec[]
+  id?: string;
+  title?: string;
+  images?: SanityImageSource[];
+  description?: PortableTextBlock[];
+  specs?: Spec[];
 }
 
-export default function Hero({ id, title, images, description, specs }: HeroProps) {
+export default function Hero({
+  id,
+  title,
+  images,
+  description,
+  specs,
+}: HeroProps) {
   return (
     <section id={id} className="hero-section layout-2 h-pad">
-      {images && images.length > 0 && (
-        images.length === 1 ? (
-          <div className="hero-image relative out-of-opacity">
+      {images &&
+        images.length > 0 &&
+        (images.length === 1 ? (
+          <AnimateIn className="hero-image relative">
             <div className="media-wrap">
-              <img 
-                data-src={urlFor(images[0]).url()} 
-                alt="" 
+              <img
+                data-src={urlFor(images[0]).url()}
+                alt=""
                 className="lazy full-bleed-image"
               />
               <div className="loading-overlay" />
             </div>
-          </div>
+          </AnimateIn>
         ) : (
-          <div className="hero-image relative out-of-opacity">
-            <SplideCarousel 
-              images={images.map(image => ({ url: urlFor(image).url(), alt: "" }))}
+          <AnimateIn className="hero-image relative">
+            <SplideCarousel
+              images={images.map((image) => ({
+                url: urlFor(image).url(),
+                alt: "",
+              }))}
               onPrevious={() => {}}
               onNext={() => {}}
             />
-          </div>
-        )
-      )}
+          </AnimateIn>
+        ))}
 
-      <div className="hero-content out-of-opacity">
+      <AnimateIn className="hero-content">
         {(title || description) && (
           <div className="row-1">
             {title && <h3>{title}</h3>}
-            
+
             {description && description.length > 0 && (
               <div className="hero-body">
                 <PortableText value={description} />
@@ -77,8 +87,7 @@ export default function Hero({ id, title, images, description, specs }: HeroProp
             Book
           </button>
         </div>
-      </div>
+      </AnimateIn>
     </section>
-  )
+  );
 }
-
