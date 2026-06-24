@@ -608,7 +608,6 @@ export const productQuery = groq`
   *[_type == "product" && store.slug.current == $slug][0] {
     _id,
     seo ${seoFragment},
-    body,
     store {
       title,
       slug {

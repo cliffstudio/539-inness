@@ -221,6 +221,13 @@ export async function POST(request: NextRequest) {
       const productId = extractIdFromGid(product.id);
       const sanityProductDocId = `shopifyProduct-${productId}`;
 
+      let existingProduct: {store?: Record<string, unknown>} | null = null;
+      try {
+        existingProduct = await sanity.getDocument(sanityProductDocId);
+      } catch {
+        console.log(`Product ${sanityProductDocId} doesn't exist yet, will create`);
+      }
+
       // Build product patch from payload
       const productPatch: Record<string, unknown> = {};
 
@@ -333,14 +340,25 @@ export async function POST(request: NextRequest) {
         productPatch["store.descriptionHtml"] = product.descriptionHtml;
       }
 
+      const existingStore = existingProduct?.store;
       const resolvedTitle =
-        typeof product.title === "string" ? product.title : "";
+        typeof product.title === "string"
+          ? product.title
+          : typeof existingStore?.title === "string"
+            ? existingStore.title
+            : "";
       const resolvedDescriptionHtml =
         typeof product.descriptionHtml === "string"
           ? product.descriptionHtml
-          : "";
+          : typeof existingStore?.descriptionHtml === "string"
+            ? existingStore.descriptionHtml
+            : "";
       const resolvedPreviewImageUrl =
-        typeof previewImageUrl === "string" ? previewImageUrl : "";
+        typeof previewImageUrl === "string"
+          ? previewImageUrl
+          : typeof existingStore?.previewImageUrl === "string"
+            ? existingStore.previewImageUrl
+            : "";
 
       productPatch["seo"] = {
         _type: "seo",
@@ -422,19 +440,13 @@ export async function POST(request: NextRequest) {
       }
 
       // Process variants for this product
-      // First, fetch existing variants from Sanity to ensure we don't lose any
+      // Use existing variants from Sanity to ensure we don't lose any
       // when building the variants array (Sanity Connect may only send changed variants)
       let existingVariantIds: string[] = [];
-      try {
-        const existingProduct = await sanity.getDocument(sanityProductDocId);
-        if (existingProduct?.store?.variants && Array.isArray(existingProduct.store.variants)) {
-          existingVariantIds = existingProduct.store.variants
-            .map((ref: { _ref?: string }) => ref?._ref)
-            .filter((id: string | undefined): id is string => !!id);
-        }
-      } catch {
-        // Product doesn't exist yet, that's fine
-        console.log(`Product ${sanityProductDocId} doesn't exist yet, will create`);
+      if (existingProduct?.store?.variants && Array.isArray(existingProduct.store.variants)) {
+        existingVariantIds = existingProduct.store.variants
+          .map((ref: { _ref?: string }) => ref?._ref)
+          .filter((id: string | undefined): id is string => !!id);
       }
 
       // Collect variant document IDs to update product's variants array

@@ -8,10 +8,6 @@ export const GROUPS = [
     hidden: true,
   },
   {
-    name: 'editorial',
-    title: 'Editorial',
-  },
-  {
     name: 'shopifySync',
     title: 'Shopify',
   },

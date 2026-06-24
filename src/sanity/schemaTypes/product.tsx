@@ -1,6 +1,7 @@
 import {TagIcon} from '@sanity/icons'
 import pluralize from 'pluralize-esm'
 import ProductHiddenInput from '../components/ProductHidden'
+import ProxySeoInput from '../components/inputs/ProxySeoInput'
 import ShopifyDocumentStatus from '../components/ShopifyDocumentStatus'
 import {defineField, defineType} from 'sanity'
 import {getPriceRange} from '../utils/getPriceRange'
@@ -39,11 +40,6 @@ export const productType = defineType({
       options: {field: 'store.slug.current'},
     }),
     defineField({
-      name: 'body',
-      type: 'richPortableText',
-      group: 'editorial',
-    }),
-    defineField({
       name: 'store',
       type: 'shopifyProduct',
       description: 'Product data from Shopify (read-only)',
@@ -54,6 +50,9 @@ export const productType = defineType({
       title: 'SEO',
       type: 'seo',
       readOnly: true,
+      components: {
+        input: ProxySeoInput,
+      },
       description:
         'Auto-generated from Shopify: title -> meta title, description HTML -> meta description, preview image URL -> social image URL.',
       group: 'seo',

@@ -4,7 +4,6 @@
 import AnimateIn from './AnimateIn'
 
 import React, { useState, useMemo, useEffect } from 'react'
-import { PortableTextBlock } from '@portabletext/react'
 import * as Select from '@radix-ui/react-select'
 import { getPriceRange } from '../sanity/utils/getPriceRange'
 import { useBasket } from '../contexts/BasketContext'
@@ -44,7 +43,6 @@ interface ProductVariant {
 
 interface Product {
   _id: string
-  body?: PortableTextBlock[]
   store?: {
     title?: string
     slug?: {

@@ -5587,14 +5587,6 @@
           "type": "boolean"
         },
         "optional": true
-      },
-      "seo": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "inline",
-          "name": "seo"
-        },
-        "optional": true
       }
     }
   },
@@ -5743,14 +5735,6 @@
         "value": {
           "type": "inline",
           "name": "proxyString"
-        },
-        "optional": true
-      },
-      "body": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "inline",
-          "name": "richPortableText"
         },
         "optional": true
       },
