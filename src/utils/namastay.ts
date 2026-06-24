@@ -82,10 +82,10 @@ export function initNamastay(config: NamastayConfig): void {
 }
 
 /**
- * Get or create a permanent Namastay button that the SDK can detect
- * This button stays in the DOM so the SDK can find it during initialization
+ * Get or create a permanent Namastay button that the SDK can detect.
+ * Must exist before initNamastay() runs so the SDK finds widget buttons on every page.
  */
-function getOrCreateNamastayButton(): HTMLButtonElement {
+export function ensureNamastayTriggerButton(): HTMLButtonElement {
   let button = document.getElementById('namastay-trigger-button') as HTMLButtonElement;
   
   if (!button) {
@@ -181,7 +181,7 @@ export function openNamastayWithOffer(offer: NamastayOffer): void {
     }
 
     // Use the permanent button that the SDK should have detected during initialization
-    const button = getOrCreateNamastayButton();
+    const button = ensureNamastayTriggerButton();
     
     // Update the data-offer attribute with the new offer data
     const offerJson = JSON.stringify(offerData);
@@ -279,9 +279,8 @@ export function openNamastayWidget(): void {
       window.namastay.openWidget()
       return
     }
-    // Fallback: click the first SDK-registered button (e.g. the hidden one in BookingSection)
-    const button = document.querySelector('.namastay-widget-button') as HTMLButtonElement
-    if (button) button.click()
+    // Fallback: click the permanent hidden trigger button registered during init
+    ensureNamastayTriggerButton().click()
   } catch (error) {
     console.error('Error opening Namastay widget:', error)
   }

@@ -80,6 +80,8 @@ export default function Hero({
                 <PortableText value={body} />
               </AnimateIn>
             )}
+
+            {!body && <div />}
           </div>
         </section>
       )}

@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState, ReactNode } from "react";
+import { openNamastayWidget } from "../utils/namastay";
 
 export type BookingTab = "room" | "table" | "golf" | "spa";
 
@@ -29,21 +30,7 @@ export function BookingProvider({ children }: { children: ReactNode }) {
   };
 
   const openNamastayDrawer = () => {
-    const namastayButton = document.querySelector(
-      ".namastay-widget-button",
-    ) as HTMLButtonElement;
-    if (namastayButton) {
-      namastayButton.click();
-    } else {
-      const tempButton = document.createElement("button");
-      tempButton.className = "namastay-widget-button";
-      tempButton.style.position = "fixed";
-      tempButton.style.left = "-9999px";
-      tempButton.style.opacity = "0";
-      document.body.appendChild(tempButton);
-      tempButton.click();
-      setTimeout(() => document.body.removeChild(tempButton), 100);
-    }
+    openNamastayWidget();
   };
 
   return (

@@ -1,4 +1,4 @@
-@use '00_mixins' as *;
+@use "00_mixins" as *;
 
 // UTILITY CLASSES ------------------
 
@@ -42,7 +42,7 @@
     width: 100%;
     opacity: 0;
     will-change: opacity;
-    @include transition (opacity 500ms cubic-bezier(0.25,0.1,0.25,1));
+    @include transition(opacity 500ms cubic-bezier(0.25, 0.1, 0.25, 1));
 
     @media only screen and (max-width: 820px) {
       opacity: 1;
@@ -61,12 +61,18 @@
 
 .carousel-hover-left {
   left: 0;
-  cursor: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72' fill='none'%3E%3Ccircle cx='36' cy='36' r='35' stroke='%23FFF9ED' style='stroke:%23FFF9ED;stroke:color(display-p3 1.0000 0.9751 0.9290);stroke-opacity:1;' stroke-width='1'/%3E%3Cpath d='M41 24L28 37L41 50' stroke='%23FFF9ED' style='stroke:%23FFF9ED;stroke:color(display-p3 1.0000 0.9751 0.9290);stroke-opacity:1;' stroke-width='1'/%3E%3C/svg%3E") 36 36, auto;
+  cursor:
+    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72' fill='none'%3E%3Ccircle cx='36' cy='36' r='35' stroke='%23FFF9ED' style='stroke:%23FFF9ED;stroke:color(display-p3 1.0000 0.9751 0.9290);stroke-opacity:1;' stroke-width='1'/%3E%3Cpath d='M41 24L28 37L41 50' stroke='%23FFF9ED' style='stroke:%23FFF9ED;stroke:color(display-p3 1.0000 0.9751 0.9290);stroke-opacity:1;' stroke-width='1'/%3E%3C/svg%3E")
+      36 36,
+    auto;
 }
 
 .carousel-hover-right {
   right: 0;
-  cursor: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72' fill='none'%3E%3Ccircle cx='36' cy='36' r='35' transform='matrix(-1 -8.74228e-08 -8.74228e-08 1 72 6.29444e-06)' stroke='%23FFF9ED' style='stroke:%23FFF9ED;stroke:color(display-p3 1.0000 0.9751 0.9290);stroke-opacity:1;' stroke-width='1'/%3E%3Cpath d='M31 24L44 37L31 50' stroke='%23FFF9ED' style='stroke:%23FFF9ED;stroke:color(display-p3 1.0000 0.9751 0.9290);stroke-opacity:1;' stroke-width='1'/%3E%3C/svg%3E") 36 36, auto;
+  cursor:
+    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72' fill='none'%3E%3Ccircle cx='36' cy='36' r='35' transform='matrix(-1 -8.74228e-08 -8.74228e-08 1 72 6.29444e-06)' stroke='%23FFF9ED' style='stroke:%23FFF9ED;stroke:color(display-p3 1.0000 0.9751 0.9290);stroke-opacity:1;' stroke-width='1'/%3E%3Cpath d='M31 24L44 37L31 50' stroke='%23FFF9ED' style='stroke:%23FFF9ED;stroke:color(display-p3 1.0000 0.9751 0.9290);stroke-opacity:1;' stroke-width='1'/%3E%3C/svg%3E")
+      36 36,
+    auto;
 }
 
 .media-text-link,
@@ -86,7 +92,11 @@
   padding: get-rem-desktop(10.5) get-rem-desktop(16);
   min-width: get-rem-desktop(144);
   will-change: background-color, border-color, color;
-  @include transition-multiple(background-color 500ms cubic-bezier(0.25,0.1,0.25,1), border-color 500ms cubic-bezier(0.25,0.1,0.25,1), color 500ms cubic-bezier(0.25,0.1,0.25,1));
+  @include transition-multiple(
+    background-color 500ms cubic-bezier(0.25, 0.1, 0.25, 1),
+    border-color 500ms cubic-bezier(0.25, 0.1, 0.25, 1),
+    color 500ms cubic-bezier(0.25, 0.1, 0.25, 1)
+  );
   text-align: center;
   cursor: pointer;
 
@@ -215,9 +225,9 @@
     text-align: center;
   }
 
-  .loading-overlay {
-    background-color: $colour-beige;
-  }
+  // .loading-overlay {
+  //   background-color: $colour-beige;
+  // }
 }
 
 .hero-section.layout-1 {
@@ -366,7 +376,7 @@
         @include justify-content(center);
         column-gap: get-rem-desktop(36);
       }
-  
+
       .button {
         @media only screen and (min-width: 821px) {
           min-width: get-rem-desktop(376);
@@ -379,7 +389,7 @@
         &--outline {
           border-color: $colour-cream;
           color: $colour-cream;
-  
+
           @media (hover: hover) {
             &:hover {
               color: $colour-black;
@@ -513,7 +523,7 @@
     @media only screen and (max-width: 820px) {
       aspect-ratio: 3 / 4;
     }
-    
+
     .carousel-container {
       position: relative;
 
@@ -556,13 +566,18 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        @include transition-multiple(background-color 500ms cubic-bezier(0.25,0.1,0.25,1), transform 500ms cubic-bezier(0.25,0.1,0.25,1));
+        @include transition-multiple(
+          background-color 500ms cubic-bezier(0.25, 0.1, 0.25, 1),
+          transform 500ms cubic-bezier(0.25, 0.1, 0.25, 1)
+        );
 
         svg {
           width: get-rem-desktop(24);
           height: get-rem-desktop(24);
           color: $colour-black;
-          margin-left: get-rem-desktop(3); // Slight offset to center the triangle
+          margin-left: get-rem-desktop(
+            3
+          ); // Slight offset to center the triangle
         }
 
         @media (hover: hover) {
@@ -608,7 +623,6 @@
   }
 }
 
-
 .media-text-section.room-type {
   .text-wrap {
     max-width: get-rem-desktop(376);
@@ -622,7 +636,6 @@
     }
   }
 }
-
 
 .media-text-section.layout-media-with-text-h4-body {
   .text-wrap {
@@ -705,7 +718,7 @@
       }
     }
   }
-  
+
   .col-1 {
     .button-wrap {
       margin-top: get-rem-desktop(24);
@@ -783,7 +796,7 @@
 }
 
 .media-text-body--h5 {
-  font-family: 'ABC Arizona Flare';
+  font-family: "ABC Arizona Flare";
   font-weight: 300;
   @include font-size(24px, 24px);
   line-height: calc(34 / 24) + em;
@@ -908,7 +921,7 @@
       }
     }
   }
-  
+
   .col-1 {
     .button-wrap {
       margin-top: get-rem-desktop(24);
@@ -993,7 +1006,7 @@
       row-gap: get-rem-mobile(48);
     }
   }
-  
+
   .col-2 {
     height: fit-content;
     position: sticky;
@@ -1017,7 +1030,7 @@
     @include justify-content(space-between);
     @include align-items(center);
     text-align: center;
-  
+
     .button {
       width: fit-content;
       min-width: get-rem-desktop(376);
@@ -1070,7 +1083,7 @@
   @media only screen and (max-width: 820px) {
     padding-top: get-rem-mobile(48);
     padding-bottom: get-rem-mobile(48);
-    
+
     .break-image {
       aspect-ratio: 3 / 4;
     }
@@ -1212,7 +1225,7 @@
         transform-origin: 100%;
         background: $colour-orange;
         height: 1px;
-        @include transition(transform 500ms cubic-bezier(0.25,0.1,0.25,1));
+        @include transition(transform 500ms cubic-bezier(0.25, 0.1, 0.25, 1));
         position: absolute;
         bottom: get-rem-desktop(-5);
         left: 0;
@@ -1431,33 +1444,33 @@
       @include align-items(center);
       cursor: pointer;
       column-gap: get-rem-desktop(8);
-      @include transition(all 500ms cubic-bezier(0.25,0.1,0.25,1));
+      @include transition(all 500ms cubic-bezier(0.25, 0.1, 0.25, 1));
 
       .calendar-filter-box {
         width: get-rem-desktop(28);
         height: get-rem-desktop(28);
         border: 1px solid $colour-black;
         padding: get-rem-desktop(5);
-        @include transition(all 500ms cubic-bezier(0.25,0.1,0.25,1));
+        @include transition(all 500ms cubic-bezier(0.25, 0.1, 0.25, 1));
 
         .calendar-filter-box-inner {
           width: 100%;
           height: 100%;
           background-color: transparent;
-          @include transition(all 500ms cubic-bezier(0.25,0.1,0.25,1));
+          @include transition(all 500ms cubic-bezier(0.25, 0.1, 0.25, 1));
         }
       }
 
       span:not(.calendar-filter-box) {
         color: $colour-black;
         text-transform: capitalize;
-        @include transition(all 500ms cubic-bezier(0.25,0.1,0.25,1));
+        @include transition(all 500ms cubic-bezier(0.25, 0.1, 0.25, 1));
       }
 
       &.active {
         .calendar-filter-box {
           border-color: $colour-orange;
-          
+
           .calendar-filter-box-inner {
             background-color: $colour-orange;
           }
@@ -1697,8 +1710,11 @@ body.page-type-calendar {
     width: 100%;
     z-index: 1000;
     opacity: 1;
-    transform: translate3d(0,0,0);
-    @include transition-multiple(opacity 300ms cubic-bezier(.23,1,.32,1), transform 300ms cubic-bezier(.23,1,.32,1));
+    transform: translate3d(0, 0, 0);
+    @include transition-multiple(
+      opacity 300ms cubic-bezier(0.23, 1, 0.32, 1),
+      transform 300ms cubic-bezier(0.23, 1, 0.32, 1)
+    );
     pointer-events: auto;
     background-color: $colour-white;
     @include flex;
@@ -1733,7 +1749,7 @@ body.page-type-calendar {
         }
       }
 
-      input[type=number] {
+      input[type="number"] {
         @include reset-input;
         width: get-rem-desktop(38);
         text-align: center;
@@ -1751,8 +1767,8 @@ body.page-type-calendar {
         border-bottom-left-radius: 0;
       }
 
-      input[type=number]::-webkit-outer-spin-button,
-      input[type=number]::-webkit-inner-spin-button {
+      input[type="number"]::-webkit-outer-spin-button,
+      input[type="number"]::-webkit-inner-spin-button {
         -webkit-appearance: none;
         margin: 0;
       }
@@ -1779,13 +1795,12 @@ body.page-type-calendar {
       margin-top: get-rem-mobile(16);
     }
 
-
     &::after {
       display: none;
     }
 
     &:before {
-      content: '';
+      content: "";
       position: absolute;
       top: 50%;
       left: 50%;
@@ -1910,7 +1925,7 @@ body.page-type-calendar {
 
     .flatpickr-weekdaycontainer {
       padding-right: get-rem-desktop(24);
-      
+
       &:first-of-type {
         padding-left: 0;
       }
@@ -1989,59 +2004,61 @@ body.page-type-calendar {
   }
 
   // DATE ON HOVER
-  .flatpickr-day.inRange, 
-  .flatpickr-day.prevMonthDay.inRange, 
-  .flatpickr-day.nextMonthDay.inRange, 
-  .flatpickr-day.today.inRange, 
-  .flatpickr-day.prevMonthDay.today.inRange, 
-  .flatpickr-day.nextMonthDay.today.inRange, 
-  .flatpickr-day:hover, 
-  .flatpickr-day.prevMonthDay:hover, 
-  .flatpickr-day.nextMonthDay:hover, 
-  .flatpickr-day:focus, 
-  .flatpickr-day.prevMonthDay:focus, 
-  .flatpickr-day.nextMonthDay:focus, 
-  .flatpickr-day.today:hover, 
+  .flatpickr-day.inRange,
+  .flatpickr-day.prevMonthDay.inRange,
+  .flatpickr-day.nextMonthDay.inRange,
+  .flatpickr-day.today.inRange,
+  .flatpickr-day.prevMonthDay.today.inRange,
+  .flatpickr-day.nextMonthDay.today.inRange,
+  .flatpickr-day:hover,
+  .flatpickr-day.prevMonthDay:hover,
+  .flatpickr-day.nextMonthDay:hover,
+  .flatpickr-day:focus,
+  .flatpickr-day.prevMonthDay:focus,
+  .flatpickr-day.nextMonthDay:focus,
+  .flatpickr-day.today:hover,
   .flatpickr-day.today:focus,
-  .flatpickr-day.selected, 
-  .flatpickr-day.startRange, 
-  .flatpickr-day.endRange, 
-  .flatpickr-day.selected.inRange, 
-  .flatpickr-day.startRange.inRange, 
-  .flatpickr-day.endRange.inRange, 
-  .flatpickr-day.selected:focus, 
-  .flatpickr-day.startRange:focus, 
-  .flatpickr-day.endRange:focus, 
-  .flatpickr-day.selected:hover, 
-  .flatpickr-day.startRange:hover, 
-  .flatpickr-day.endRange:hover, 
-  .flatpickr-day.selected.prevMonthDay, 
-  .flatpickr-day.startRange.prevMonthDay, 
-  .flatpickr-day.endRange.prevMonthDay, 
-  .flatpickr-day.selected.nextMonthDay, 
-  .flatpickr-day.startRange.nextMonthDay, 
+  .flatpickr-day.selected,
+  .flatpickr-day.startRange,
+  .flatpickr-day.endRange,
+  .flatpickr-day.selected.inRange,
+  .flatpickr-day.startRange.inRange,
+  .flatpickr-day.endRange.inRange,
+  .flatpickr-day.selected:focus,
+  .flatpickr-day.startRange:focus,
+  .flatpickr-day.endRange:focus,
+  .flatpickr-day.selected:hover,
+  .flatpickr-day.startRange:hover,
+  .flatpickr-day.endRange:hover,
+  .flatpickr-day.selected.prevMonthDay,
+  .flatpickr-day.startRange.prevMonthDay,
+  .flatpickr-day.endRange.prevMonthDay,
+  .flatpickr-day.selected.nextMonthDay,
+  .flatpickr-day.startRange.nextMonthDay,
   .flatpickr-day.endRange.nextMonthDay {
     background: $colour-beige;
     border-color: $colour-beige;
   }
 
   // START/END DATE
-  .flatpickr-day.selected.startRange, 
-  .flatpickr-day.startRange.startRange, 
+  .flatpickr-day.selected.startRange,
+  .flatpickr-day.startRange.startRange,
   .flatpickr-day.endRange.startRange,
-  .flatpickr-day.selected.endRange, 
-  .flatpickr-day.startRange.endRange, 
+  .flatpickr-day.selected.endRange,
+  .flatpickr-day.startRange.endRange,
   .flatpickr-day.endRange.endRange {
     border-radius: 0 !important;
   }
-  
+
   // SELECTED RANGE
   .flatpickr-day.inRange {
     box-shadow: none;
   }
 
   // SELECTED RANGE
-  .flatpickr-day.selected.startRange + .endRange:not(:nth-child(7n+1)), .flatpickr-day.startRange.startRange + .endRange:not(:nth-child(7n+1)), .flatpickr-day.endRange.startRange + .endRange:not(:nth-child(7n+1)) {
+  .flatpickr-day.selected.startRange + .endRange:not(:nth-child(7n + 1)),
+  .flatpickr-day.startRange.startRange + .endRange:not(:nth-child(7n + 1)),
+  .flatpickr-day.endRange.startRange + .endRange:not(:nth-child(7n + 1)) {
     box-shadow: none;
   }
 
@@ -2086,8 +2103,11 @@ UNIFIED POPUP (Desktop only) --------------------
     width: 100%;
     z-index: 1001;
     opacity: 1;
-    transform: translate3d(0,0,0);
-    @include transition-multiple(opacity 300ms cubic-bezier(.23,1,.32,1), transform 300ms cubic-bezier(.23,1,.32,1));
+    transform: translate3d(0, 0, 0);
+    @include transition-multiple(
+      opacity 300ms cubic-bezier(0.23, 1, 0.32, 1),
+      transform 300ms cubic-bezier(0.23, 1, 0.32, 1)
+    );
     pointer-events: auto;
     background-color: $colour-beige;
     @include flex;
@@ -2097,7 +2117,7 @@ UNIFIED POPUP (Desktop only) --------------------
     &.hidden {
       opacity: 0;
       pointer-events: none;
-      transform: translate3d(0,-20px,0);
+      transform: translate3d(0, -20px, 0);
     }
 
     .unified-popup__guest {
@@ -2125,7 +2145,7 @@ UNIFIED POPUP (Desktop only) --------------------
         margin: 0;
         max-width: none !important;
         max-width: get-rem-desktop(1029) !important;
-  
+
         &:before {
           display: none;
         }
@@ -2180,7 +2200,7 @@ UNIFIED POPUP (Desktop only) --------------------
     @include align-items(flex-start);
     row-gap: get-rem-mobile(22);
   }
-  
+
   // GUEST WRAPPER
   .guest-wrapper {
     position: relative;
@@ -2196,13 +2216,13 @@ UNIFIED POPUP (Desktop only) --------------------
     padding: 0;
     cursor: pointer;
   }
-  
+
   .hidden {
     opacity: 0;
     pointer-events: none;
 
     @media screen and (min-width: 821px) {
-      transform: translate3d(0,-20px,0);
+      transform: translate3d(0, -20px, 0);
     }
 
     @media screen and (max-width: 820px) {
@@ -2215,8 +2235,10 @@ UNIFIED POPUP (Desktop only) --------------------
     opacity: 0;
     pointer-events: none;
     z-index: -1;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
   }
 
   .button {
@@ -2244,7 +2266,7 @@ UNIFIED POPUP (Desktop only) --------------------
 
   .product-item {
     cursor: pointer;
-    
+
     .media-wrap {
       aspect-ratio: 377 / 500;
       position: relative;
@@ -2258,7 +2280,7 @@ UNIFIED POPUP (Desktop only) --------------------
     // Make sold-out overlay always visible
     .button-wrap--overlay-media {
       opacity: 1;
-  
+
       .button {
         background-color: $colour-black;
         color: $colour-white;

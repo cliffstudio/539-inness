@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 import Script from 'next/script'
-import { initNamastay, NAMASTAY_HOTEL_PARAMETERS } from '../utils/namastay'
+import { ensureNamastayTriggerButton, initNamastay, NAMASTAY_HOTEL_PARAMETERS } from '../utils/namastay'
 
 const MAX_RETRIES = 20
 const RETRY_INTERVAL_MS = 200
@@ -14,6 +14,7 @@ export default function NamastayInit() {
 
     function tryInitialize() {
       if (typeof window.initNamastay === 'function') {
+        ensureNamastayTriggerButton()
         initNamastay(NAMASTAY_HOTEL_PARAMETERS)
         return
       }
