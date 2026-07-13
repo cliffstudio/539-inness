@@ -837,7 +837,7 @@ export default function MediaTextSection({
                       type: "slide",
                       perPage: 4,
                       perMove: 1,
-                      gap: "20px",
+                      gap: "40px",
                       pagination: false,
                       arrows: false,
                       breakpoints: {
