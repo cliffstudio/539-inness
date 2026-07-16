@@ -25,9 +25,15 @@ declare module '@splidejs/react-splide' {
   }
 
   export interface SplideSlideProps {
-    children?: React.ReactNode
+    children?: ReactNode
   }
 
   export const Splide: ComponentType<SplideProps>
   export const SplideSlide: ComponentType<SplideSlideProps>
 }
+
+declare module '@splidejs/splide/css'
+declare module '@splidejs/splide/css/core'
+declare module '@splidejs/splide/css/sea-green'
+declare module '@splidejs/splide/css/skyblue'
+declare module '*.css'

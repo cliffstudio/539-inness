@@ -108,6 +108,7 @@ const mediaTextSectionFragment = groq`{
   images[] ${imageFragment},
   video,
   mediaAlignment,
+  mediaOrientation,
   roomLink-> {
     _id,
     title,

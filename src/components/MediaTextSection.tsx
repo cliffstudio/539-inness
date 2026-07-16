@@ -105,6 +105,7 @@ interface mediaTextSectionProps {
   images?: SanityImage[];
   video?: SanityVideo;
   mediaAlignment?: "left" | "right";
+  mediaOrientation?: "landscape" | "portrait";
   roomLinks?: {
     _id: string;
     title: string;
@@ -134,6 +135,7 @@ export default function MediaTextSection({
   images,
   video,
   mediaAlignment = "right",
+  mediaOrientation = "landscape",
   roomLinks,
   activityLinks,
   activities = [],
@@ -358,7 +360,7 @@ export default function MediaTextSection({
 
           <AnimateIn className="col-6-12_lg col-2">
             {mediaType === "image" && images && images.length > 0 && (
-              <div className="media-wrap test">
+              <div className="media-wrap">
                 {images.length === 1 ? (
                   <>
                     <img
@@ -405,7 +407,7 @@ export default function MediaTextSection({
         layout === "media-with-text-h4-bullet-list") && (
         <section
           id={id}
-          className={`media-text-section layout-${layout} align-${mediaAlignment} row-lg h-pad`}
+          className={`media-text-section layout-${layout} align-${mediaAlignment} orientation-${mediaOrientation} row-lg h-pad`}
         >
           <AnimateIn variant="view" className="col-6-12_lg col-1">
             <div className="text-wrap">
@@ -468,7 +470,7 @@ export default function MediaTextSection({
 
           <AnimateIn className="col-6-12_lg col-2">
             {mediaType === "image" && images && images.length > 0 && (
-              <div className="media-wrap test">
+              <div className="media-wrap">
                 {images.length === 1 ? (
                   <>
                     <img
