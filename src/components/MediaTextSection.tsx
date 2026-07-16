@@ -303,7 +303,7 @@ export default function MediaTextSection({
       {layout === "media-with-text-h5" && (
         <section
           id={id}
-          className={`media-text-section layout-${layout} align-${mediaAlignment} row-lg h-pad`}
+          className={`media-text-section layout-${layout} align-${mediaAlignment} orientation-${mediaOrientation} row-lg h-pad`}
         >
           <AnimateIn variant="view" className="col-6-12_lg col-1">
             <div className="text-wrap">
@@ -515,7 +515,7 @@ export default function MediaTextSection({
       {layout === "media-with-text-room-type" && roomLink && (
         <section
           id={id}
-          className={`media-text-section room-type layout-${mediaAlignment} align-${mediaAlignment} row-lg h-pad`}
+          className={`media-text-section room-type layout-${layout} align-${mediaAlignment} orientation-${mediaOrientation} row-lg h-pad`}
         >
           <AnimateIn variant="view" className="col-6-12_lg col-1">
             <div className="text-wrap">
@@ -614,7 +614,7 @@ export default function MediaTextSection({
         links.length > 0 && (
           <section
             id={id}
-            className={`media-text-section layout-${layout} h-pad`}
+            className={`media-text-section layout-${layout} orientation-${mediaOrientation} h-pad`}
           >
             <div className={`align-${mediaAlignment} row-lg`}>
               <AnimateIn variant="view" className="col-6-12_lg col-1">
@@ -760,7 +760,7 @@ export default function MediaTextSection({
       {layout === "media-with-text-h4-body-room-links" && (
         <section
           id={id}
-          className={`media-text-section layout-${layout} h-pad`}
+          className={`media-text-section layout-${layout} orientation-${mediaOrientation} h-pad`}
         >
           <div className={`align-${mediaAlignment} row-lg`}>
             <AnimateIn variant="view" className="col-6-12_lg col-1">
@@ -1002,7 +1002,7 @@ export default function MediaTextSection({
       {layout === "media-with-text-h4-body-activity-links" && (
         <section
           id={id}
-          className={`media-text-section layout-${layout} h-pad`}
+          className={`media-text-section layout-${layout} orientation-${mediaOrientation} h-pad`}
         >
           <div className={`align-${mediaAlignment} row-lg`}>
             <AnimateIn variant="view" className="col-6-12_lg col-1">

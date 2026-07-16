@@ -44,7 +44,7 @@ export default defineType({
             value: "media-with-text-h4-body-room-links",
           },
           {
-            title: "Media with Text (big text calendar links block)",
+            title: "Media with Text (big text & calendar links block)",
             value: "media-with-text-h4-body-activity-links",
           },
           {
@@ -255,7 +255,7 @@ export default defineType({
         ],
       },
       initialValue: "landscape",
-      hidden: ({ parent }) => parent?.layout !== "media-with-text-h4-body",
+      // hidden: ({ parent }) => parent?.layout !== "media-with-text-h4-body",
     }),
     defineField({
       name: "roomLinks",
