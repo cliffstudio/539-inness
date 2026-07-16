@@ -600,8 +600,8 @@
   &.orientation-portrait {
     .media-wrap {
       aspect-ratio: 3 / 4;
-      // 3 columns + 2 gutters in a 6-column track
-      width: calc((3 * 100% - (2 * #{$gutter_lg})) / 6);
+      // 3 of 6 columns: (n * track - (N - n) gutters) / N
+      width: calc((3 * 100% - (3 * #{$gutter_lg})) / 6);
 
       @media only screen and (max-width: 820px) {
         width: 100%;

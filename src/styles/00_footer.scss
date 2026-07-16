@@ -1,4 +1,4 @@
-@use '00_mixins' as *;
+@use "00_mixins" as *;
 
 .site-footer {
   background-color: $colour-orange;
@@ -93,7 +93,7 @@
       margin-top: get-rem-mobile(80);
       row-gap: get-rem-mobile(72);
     }
-    
+
     img {
       width: get-rem-desktop(184);
     }
@@ -151,8 +151,8 @@
 
   input[type="email"] {
     @include reset-input;
-    // 4 columns + 3 gutters: (4 * container_width - gutter) / 6
-    width: calc((4 * 100% - #{$gutter_lg}) / 6);
+    // 4 of 6 columns: (n * track - (N - n) gutters) / N
+    width: calc((4 * 100% - (2 * #{$gutter_lg})) / 6);
     border-bottom: 1px solid $colour-black;
 
     &.mce_inline_error {
@@ -170,8 +170,8 @@
   }
 
   button[type="submit"] {
-    // 1 column + 4 gutters: (1 * container_width - gutter) / 6
-    width: calc((100% - 4 * #{$gutter_lg}) / 6);
+    // 1 of 6 columns: (n * track - (N - n) gutters) / N
+    width: calc((100% - (5 * #{$gutter_lg})) / 6);
     min-width: get-rem-desktop(115.66);
     background-color: transparent;
     border: 1px solid $colour-black;
@@ -181,7 +181,10 @@
     margin: 0;
     padding: get-rem-desktop(10.5) get-rem-desktop(16) !important;
     will-change: background-color, border-color, color;
-    transition: background-color 500ms cubic-bezier(0.25,0.1,0.25,1), border-color 500ms cubic-bezier(0.25,0.1,0.25,1), color 500ms cubic-bezier(0.25,0.1,0.25,1) !important;
+    transition:
+      background-color 500ms cubic-bezier(0.25, 0.1, 0.25, 1),
+      border-color 500ms cubic-bezier(0.25, 0.1, 0.25, 1),
+      color 500ms cubic-bezier(0.25, 0.1, 0.25, 1) !important;
     @include font-size(14px, 14px);
     line-height: normal;
     cursor: pointer;
@@ -217,7 +220,7 @@
 
     .credit-toggle {
       cursor: pointer;
-      @include transition(opacity 500ms cubic-bezier(0.25,0.1,0.25,1));
+      @include transition(opacity 500ms cubic-bezier(0.25, 0.1, 0.25, 1));
 
       @media (hover: hover) {
         &:hover {
@@ -244,7 +247,7 @@
       z-index: 1;
       pointer-events: none;
       white-space: nowrap;
-      @include transition(opacity 500ms cubic-bezier(0.25,0.1,0.25,1));
+      @include transition(opacity 500ms cubic-bezier(0.25, 0.1, 0.25, 1));
 
       @media only screen and (max-width: 820px) {
         position: absolute;
