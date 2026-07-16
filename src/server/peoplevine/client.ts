@@ -1,12 +1,12 @@
 import type { NextRequest } from 'next/server'
 
-export type PeoplevineAuthResponse = {
+type PeoplevineAuthResponse = {
   access_token: string
   expires_in?: number
   token_type?: string
 }
 
-export type PeoplevinePagination = {
+type PeoplevinePagination = {
   pageNumber: number
   pageSize: number
   totalPages?: number
@@ -62,7 +62,7 @@ export class PeoplevineError extends Error {
   }
 }
 
-export function parsePaginationHeader(headerValue: string | null): PeoplevinePagination | undefined {
+function parsePaginationHeader(headerValue: string | null): PeoplevinePagination | undefined {
   if (!headerValue) return undefined
   try {
     // Peoplevine docs mention "pagination" header – assume JSON payload.
@@ -119,7 +119,7 @@ function htmlToPlainText(html: string): string {
     .trim()
 }
 
-export function mapPeoplevineEventToNormalized(event: any): NormalizedPeoplevineEvent | null {
+function mapPeoplevineEventToNormalized(event: any): NormalizedPeoplevineEvent | null {
   if (!event) return null
 
   const isEventPublished = (ev: any): boolean => {
@@ -237,7 +237,7 @@ export function mapPeoplevineEventToNormalized(event: any): NormalizedPeoplevine
   }
 }
 
-export async function getAccessToken(fetchImpl: FetchImpl = fetch): Promise<string> {
+async function getAccessToken(fetchImpl: FetchImpl = fetch): Promise<string> {
   if (!PEOPLEVINE_BASE_URL || !PEOPLEVINE_USERNAME || !PEOPLEVINE_PASSWORD || !PEOPLEVINE_COMPANY_ID) {
     throw new PeoplevineError(
       'Peoplevine credentials are not configured. Please set PEOPLEVINE_BASE_URL, PEOPLEVINE_USERNAME, PEOPLEVINE_PASSWORD and PEOPLEVINE_COMPANY_ID.',
@@ -286,7 +286,7 @@ export async function getAccessToken(fetchImpl: FetchImpl = fetch): Promise<stri
   return json.access_token
 }
 
-export async function getEventsPage(
+async function getEventsPage(
   accessToken: string,
   pageNumber: number,
   pageSize: number,

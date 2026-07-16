@@ -8,7 +8,7 @@ const PEOPLEVINE_USERNAME = process.env.PEOPLEVINE_USERNAME
 const PEOPLEVINE_PASSWORD = process.env.PEOPLEVINE_PASSWORD
 const PEOPLEVINE_REGION = process.env.PEOPLEVINE_REGION ?? 'uk'
 
-export type PeoplevineTokenResponse = {
+type PeoplevineTokenResponse = {
   access_token: string
   refresh_token?: string
   expires_in?: number
@@ -23,7 +23,7 @@ export type PeoplevineCompany = {
 
 type FetchImpl = typeof fetch
 
-export async function getUserToken(
+async function getUserToken(
   fetchImpl: FetchImpl = fetch
 ): Promise<PeoplevineTokenResponse> {
   if (!PEOPLEVINE_BASE_URL || !PEOPLEVINE_USERNAME || !PEOPLEVINE_PASSWORD) {
@@ -105,7 +105,7 @@ export async function getUserToken(
   }
 }
 
-export async function getCompanies(
+async function getCompanies(
   accessToken: string,
   fetchImpl: FetchImpl = fetch
 ): Promise<PeoplevineCompany[]> {

@@ -436,26 +436,6 @@ export const linksQuery = groq`
   }
 `
 
-// Query to get all upcoming Peoplevine-backed calendar events
-export const allCalendarQuery = groq`
-  *[_type == "calendar" && isActive == true && defined(startsAt) && startsAt >= now()] | order(startsAt asc) {
-    _id,
-    title,
-    startsAt,
-    endsAt,
-    locationName,
-    locationAddress,
-    description,
-    thumbnail,
-    bookingHref,
-    eventCategories,
-    contentBlocks[] {
-      _type
-    },
-    "slug": slug.current
-  }
-`
-
 // Paginated calendar queries (for calendar page pagination)
 export const calendarCountQuery = groq`
   count(*[_type == "calendar" && isActive == true && defined(startsAt) && startsAt >= now()])
@@ -682,9 +662,3 @@ export const siteSettingsQuery = groq`
   }
 `
 
-// Export fragments for reuse in other queries if needed
-export const fragments = {
-  imageFragment,
-  linkFragment,
-  heroSectionFragment
-}

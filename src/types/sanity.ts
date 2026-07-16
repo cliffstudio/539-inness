@@ -28,15 +28,3 @@ export type SanityVideo =
       thumbnailUrl?: string
     }
 
-export type PortableTextBlock = {
-  _type: string
-  children: Array<{
-    _type: string
-    text: string
-    marks?: string[]
-  }>
-  markDefs?: Array<{
-    _type: string
-    _key: string
-  }>
-}
