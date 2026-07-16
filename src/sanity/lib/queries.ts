@@ -92,14 +92,6 @@ const mediaTextSectionFragment = groq`{
   layout,
   heading,
   body,
-  textBlocks[] {
-    layout,
-    header,
-    body,
-    bulletList[] {
-      body
-    }
-  },
   bulletList[] {
     body
   },

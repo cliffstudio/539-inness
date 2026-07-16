@@ -47,10 +47,6 @@ export default defineType({
             title: "Media with Text (big text & calendar links block)",
             value: "media-with-text-h4-body-activity-links",
           },
-          {
-            title: "Media with Text (multiple text blocks w/ sticky image)",
-            value: "media-with-text-multiple-text-blocks",
-          },
         ],
       },
       initialValue: "media-with-text-h4-body",
@@ -71,86 +67,7 @@ export default defineType({
       of: [{ type: "block" }],
       hidden: ({ parent }) =>
         parent?.layout === "media-with-text-room-type" ||
-        parent?.layout === "media-with-text-h4-bullet-list" ||
-        parent?.layout === "media-with-text-multiple-text-blocks",
-    }),
-    defineField({
-      name: "textBlocks",
-      title: "Text Blocks",
-      type: "array",
-      of: [
-        {
-          type: "object",
-          name: "textBlock",
-          fields: [
-            {
-              name: "layout",
-              title: "Layout",
-              type: "string",
-              options: {
-                list: [
-                  { title: "H4 with Text", value: "h4-text" },
-                  { title: "H4 with Bullet List", value: "h4-bullet-list" },
-                ],
-              },
-              initialValue: "h4-text",
-            },
-            { name: "header", title: "Header", type: "string" },
-            {
-              name: "body",
-              title: "Body",
-              type: "array",
-              of: [{ type: "block" }],
-              hidden: ({ parent }) => parent?.layout === "h4-bullet-list",
-            },
-            {
-              name: "bulletList",
-              title: "Bullet List",
-              type: "array",
-              description: "Add each bullet as a separate list item.",
-              of: [
-                {
-                  type: "object",
-                  name: "bulletItem",
-                  fields: [
-                    {
-                      name: "body",
-                      title: "Body",
-                      type: "array",
-                      of: [{ type: "block" }],
-                    },
-                  ],
-                  preview: {
-                    select: {
-                      body: "body",
-                    },
-                    prepare({ body }) {
-                      const firstBlock = body?.[0];
-                      const text = firstBlock?.children?.[0]?.text;
-                      return {
-                        title: text || "Bullet Item",
-                      };
-                    },
-                  },
-                },
-              ],
-              hidden: ({ parent }) => parent?.layout !== "h4-bullet-list",
-            },
-          ],
-          preview: {
-            select: { title: "header", layout: "layout" },
-            prepare({ title, layout }) {
-              const layoutLabel =
-                layout === "h4-bullet-list" ? "H4 + Bullet List" : "H4 + Text";
-              return {
-                title: `${title || "Untitled Text Block"} (${layoutLabel})`,
-              };
-            },
-          },
-        },
-      ],
-      hidden: ({ parent }) =>
-        parent?.layout !== "media-with-text-multiple-text-blocks",
+        parent?.layout === "media-with-text-h4-bullet-list",
     }),
     defineField({
       name: "bulletList",
@@ -296,15 +213,11 @@ export default defineType({
     select: {
       media: "images",
       mediaType: "mediaType",
-      heading: "heading",
-      layout: "layout",
-      body: "body",
     },
-    prepare({ media, mediaType, heading, layout, body }) {
+    prepare({ media, mediaType }) {
       return {
         title: "Media & Text Section",
         media: mediaType === "video" ? undefined : media?.[0],
-        // subtitle: layout === 'media-with-text-room-type' ? 'Room Type' : layout === 'media-with-text-h5' ? body?.[0]?.children?.[0]?.text || 'No Body' : layout === 'media-with-text-multiple-text-blocks' ? 'Multiple Text Blocks' : heading || 'No Heading',
       };
     },
   },

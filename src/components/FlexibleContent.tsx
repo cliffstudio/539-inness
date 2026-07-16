@@ -14,7 +14,7 @@ import ProductSection from './ProductSection'
 interface ContentBlock {
   _type: string
   hide?: boolean
-  layout?: 'media-with-text-h5' | 'media-with-text-h4-body' | 'media-with-text-room-type' | 'media-with-text-h4-bullet-list' | 'media-with-text-h4-body-room-links' | 'media-with-text-h4-body-activity-links' | 'media-with-text-h4-body-links' | 'media-with-text-multiple-text-blocks' | 'split' | 'full-bleed' | 'text-section' | 'carousel-section' | 'food-menu' | 'spa-menu' | 'venue-menu' | 'single-activity' | '2-activities' | '4-activities' | 'single-feature' | '2-features' | '4-features'
+  layout?: 'media-with-text-h5' | 'media-with-text-h4-body' | 'media-with-text-room-type' | 'media-with-text-h4-bullet-list' | 'media-with-text-h4-body-room-links' | 'media-with-text-h4-body-activity-links' | 'media-with-text-h4-body-links' | 'split' | 'full-bleed' | 'text-section' | 'carousel-section' | 'food-menu' | 'spa-menu' | 'venue-menu' | 'single-activity' | '2-activities' | '4-activities' | 'single-feature' | '2-features' | '4-features'
   [key: string]: unknown
 }
 
@@ -53,7 +53,7 @@ const FlexibleContent: React.FC<FlexibleContentProps> = ({ contentBlocks }) => {
           case 'textSection':
             return <TextSection key={index} {...(block as ContentBlock & { layout?: 'text-section' })} />
           case 'mediaTextSection':
-            return <MediaTextSection key={index} {...(block as ContentBlock & { layout?: 'media-with-text-h5' | 'media-with-text-h4-body' | 'media-with-text-room-type' | 'media-with-text-h4-bullet-list' | 'media-with-text-h4-body-room-links' | 'media-with-text-h4-body-activity-links' | 'media-with-text-h4-body-links' | 'media-with-text-multiple-text-blocks' })} />
+            return <MediaTextSection key={index} {...(block as ContentBlock & { layout?: 'media-with-text-h5' | 'media-with-text-h4-body' | 'media-with-text-room-type' | 'media-with-text-h4-bullet-list' | 'media-with-text-h4-body-room-links' | 'media-with-text-h4-body-activity-links' | 'media-with-text-h4-body-links' })} />
           case 'breakSection':
             return <BreakSection key={index} {...(block as ContentBlock & { layout?: 'split' | 'full-bleed' })} />
           case 'carouselSection':
