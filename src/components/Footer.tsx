@@ -13,7 +13,7 @@ interface FooterProps {
 }
 
 export default function Footer({ footer }: FooterProps) {
-  const { openBooking, openNamastayDrawer } = useBooking()
+  const { openBooking, openRoomBookingDrawer } = useBooking()
   const [revinateSuccess, setRevinateSuccess] = useState(false)
   const [creditExpanded, setCreditExpanded] = useState(false)
 
@@ -62,9 +62,9 @@ export default function Footer({ footer }: FooterProps) {
         if (bookingTab === 'spa' || bookingTab === 'table' || bookingTab === 'golf' || link.bookingTab === 'events') return
         if (!isPlainLeftClick(event)) return
         event.preventDefault()
-        // Book a room opens Namastay drawer directly, not the booking overlay
+        // Book a room opens the room booking destination directly.
         if (bookingTab === 'room') {
-          openNamastayDrawer()
+          openRoomBookingDrawer()
         } else {
           openBooking(bookingTab)
         }

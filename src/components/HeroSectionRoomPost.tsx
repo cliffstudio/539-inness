@@ -6,7 +6,7 @@ import AnimateIn from "./AnimateIn";
 import { urlFor } from "../sanity/utils/imageUrlBuilder";
 import { PortableText, PortableTextBlock } from "@portabletext/react";
 import SplideCarousel from "./SplideCarousel";
-import { openNamastayWidget } from "../utils/namastay";
+import { openRoomBooking } from "../utils/booking";
 
 interface Spec {
   body?: string;
@@ -81,8 +81,8 @@ export default function Hero({
 
           <button
             type="button"
-            className="button button--orange namastay-widget-button"
-            onClick={() => openNamastayWidget()}
+            className="button button--orange"
+            onClick={() => openRoomBooking()}
           >
             Book
           </button>

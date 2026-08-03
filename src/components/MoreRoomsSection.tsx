@@ -11,6 +11,7 @@ import ButtonLink from "./ButtonLink";
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import "@splidejs/splide/css";
 import mediaLazyloading from "../utils/lazyLoad";
+import { openRoomBooking } from "../utils/booking";
 
 interface OtherRoom {
   _id: string;
@@ -175,7 +176,8 @@ export default function MoreRoomsSection({
 
             <button
               type="button"
-              className="button button--orange namastay-widget-button"
+              className="button button--orange"
+              onClick={() => openRoomBooking()}
             >
               Book
             </button>

@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState, ReactNode } from "react";
-import { openNamastayWidget } from "../utils/namastay";
+import { openRoomBooking } from "../utils/booking";
 
 export type BookingTab = "room" | "table" | "golf" | "spa";
 
@@ -11,7 +11,7 @@ interface BookingContextType {
   openBooking: (tab?: BookingTab) => void;
   closeBooking: () => void;
   setActiveTab: (tab: BookingTab) => void;
-  openNamastayDrawer: () => void;
+  openRoomBookingDrawer: () => void;
 }
 
 const BookingContext = createContext<BookingContextType | undefined>(undefined);
@@ -29,8 +29,8 @@ export function BookingProvider({ children }: { children: ReactNode }) {
     setIsOpen(false);
   };
 
-  const openNamastayDrawer = () => {
-    openNamastayWidget();
+  const openRoomBookingDrawer = () => {
+    openRoomBooking();
   };
 
   return (
@@ -41,7 +41,7 @@ export function BookingProvider({ children }: { children: ReactNode }) {
         openBooking,
         closeBooking,
         setActiveTab,
-        openNamastayDrawer,
+        openRoomBookingDrawer,
       }}
     >
       {children}

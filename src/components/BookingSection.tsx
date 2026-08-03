@@ -4,7 +4,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import flatpickr from "flatpickr";
 import type { Instance } from "flatpickr/dist/types/instance";
 import "flatpickr/dist/flatpickr.min.css";
-import { formatDateForNamastay } from "../utils/namastay";
+import { formatDateForBooking, openRoomBooking } from "../utils/booking";
 import AnimateIn from "./AnimateIn";
 
 interface BookingSectionProps {
@@ -218,8 +218,8 @@ export default function BookingSection({
     threeDaysLater.setDate(threeDaysLater.getDate() + 3);
 
     // Set default dates
-    const defaultStartDate = formatDateForNamastay(today);
-    const defaultEndDate = formatDateForNamastay(threeDaysLater);
+    const defaultStartDate = formatDateForBooking(today);
+    const defaultEndDate = formatDateForBooking(threeDaysLater);
     setCheckInDate(defaultStartDate);
     setCheckOutDate(defaultEndDate);
     setCheckInDisplay(formatDateDisplay(today));
@@ -314,8 +314,8 @@ export default function BookingSection({
           const startDate = selectedDates[0];
           const endDate = selectedDates[1];
 
-          const startDateStr = formatDateForNamastay(startDate);
-          const endDateStr = formatDateForNamastay(endDate);
+          const startDateStr = formatDateForBooking(startDate);
+          const endDateStr = formatDateForBooking(endDate);
 
           setCheckInDate(startDateStr);
           setCheckOutDate(endDateStr);
@@ -323,7 +323,7 @@ export default function BookingSection({
           updateCustomDisplay("end", "end-display", endDate);
         } else if (selectedDates.length === 1) {
           const startDate = selectedDates[0];
-          const startDateStr = formatDateForNamastay(startDate);
+          const startDateStr = formatDateForBooking(startDate);
 
           setCheckInDate(startDateStr);
           updateCustomDisplay("start", "start-display", startDate);
@@ -569,67 +569,26 @@ export default function BookingSection({
     }
   };
 
-  // Build initial offer data for the button (used in JSX and updated dynamically)
-  const buildOfferData = useCallback(() => {
-    const offerData: {
-      apiKey: string;
-      startDate?: string;
-      endDate?: string;
-      adult?: number;
-      child?: number;
-      rooms?: number;
-    } = {
-      apiKey: "6e1a1ee72c854f43b9bcb4113572e824nuuwro4cfvmrd62b",
-      rooms: 2,
-    };
+  const buildBookingPayload = useCallback(
+    () => ({
+      checkIn: checkInDate || undefined,
+      checkOut: checkOutDate || undefined,
+      adults: adultCount,
+      children: childCount,
+    }),
+    [adultCount, childCount, checkInDate, checkOutDate],
+  );
 
-    // Add dates if they are set
-    if (checkInDate) {
-      offerData.startDate = checkInDate;
-    }
-    if (checkOutDate) {
-      offerData.endDate = checkOutDate;
-    }
-
-    // Add guest counts
-    if (adultCount > 0) {
-      offerData.adult = adultCount;
-    }
-    if (childCount > 0) {
-      offerData.child = childCount;
-    }
-
-    return offerData;
-  }, [adultCount, childCount, checkInDate, checkOutDate]);
-
-  // Handle button click - update hidden button and trigger it
+  // Keep this button-driven flow so the booking form can be wired elsewhere.
   const handleButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-
-    // Get the hidden button that the SDK detected during initialization
-    const hiddenButton = document.getElementById(
-      "namastay-trigger-button",
-    ) as HTMLButtonElement;
-
-    if (hiddenButton) {
-      // Update the hidden button's data-offer with our form values
-      const offerData = buildOfferData();
-      const offerJson = JSON.stringify(offerData);
-      hiddenButton.setAttribute("data-offer", offerJson);
-
-      // Small delay to ensure attribute is set, then trigger the button
-      setTimeout(() => {
-        hiddenButton.click();
-      }, 50);
-    } else {
-      console.error("Namastay hidden button not found");
-    }
+    openRoomBooking(buildBookingPayload());
   };
 
-  // Handle form submission - prevent default form submission
+  // Prevent default submit and use the same booking action as the CTA button.
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // The SDK will handle the button click automatically
+    openRoomBooking(buildBookingPayload());
   };
 
   // Calculate total guests for display
@@ -768,15 +727,12 @@ export default function BookingSection({
         </div>
 
         <button
-          className="namastay-offer-button button button--orange"
+          className="button button--orange"
           type="button"
-          data-offer={JSON.stringify(buildOfferData())}
           onClick={handleButtonClick}
         >
           Check Availability
         </button>
-
-        <div className="namastay-widget-button"></div>
       </form>
 
       {/* Desktop: unified popup containing both guest popup and calendar */}

@@ -6,7 +6,6 @@ import { siteSettingsQuery } from "../sanity/lib/queries";
 import { urlFor } from "../sanity/utils/imageUrlBuilder";
 import BodyFadeIn from "../components/BodyFadeIn";
 import PageAnimations from "../components/PageAnimations";
-import NamastayInit from "../components/NamastayInit";
 
 export const revalidate = 0;
 
@@ -114,7 +113,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 History.prototype.pushState = function(state, title, url) {
                   const safeState = normalizeState(state);
                   
-                  // Validate URL - catch Namastay SDK invalid URLs like //apiKey?params
+                  // Validate URL - catch malformed third-party SDK URLs like //apiKey?params
                   if (url && typeof url === 'string') {
                     // Invalid: starts with // but isn't a proper protocol-relative URL
                     if (url.startsWith('//') && !url.startsWith('//www.') && !url.startsWith('//cdn.')) {
@@ -206,7 +205,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             `,
           }}
         />
-        <NamastayInit />
         <BodyFadeIn />
         <PageAnimations />
         {children}

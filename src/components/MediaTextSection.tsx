@@ -14,6 +14,7 @@ import SplideCarousel from "./SplideCarousel";
 import CalendarPage from "./CalendarPage";
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import "@splidejs/splide/css";
+import { openRoomBooking } from "../utils/booking";
 
 const formatDate = (dateString?: string) => {
   if (!dateString) return "";
@@ -549,7 +550,8 @@ export default function MediaTextSection({
 
                 <button
                   type="button"
-                  className="button button--orange namastay-widget-button"
+                  className="button button--orange"
+                  onClick={() => openRoomBooking()}
                 >
                   Book
                 </button>
@@ -866,7 +868,8 @@ export default function MediaTextSection({
 
                                 <button
                                   type="button"
-                                  className="button button--orange namastay-widget-button"
+                                  className="button button--orange"
+                                  onClick={() => openRoomBooking()}
                                 >
                                   Book
                                 </button>
@@ -965,7 +968,8 @@ export default function MediaTextSection({
 
                               <button
                                 type="button"
-                                className="button button--orange namastay-widget-button"
+                                className="button button--orange"
+                                onClick={() => openRoomBooking()}
                               >
                                 Book
                               </button>

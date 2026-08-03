@@ -12,7 +12,7 @@ import bookTableImage from '@/app/images/book-table-image.jpg'
 
 
 export default function BookingOverlay() {
-  const { isOpen, closeBooking, openNamastayDrawer } = useBooking()
+  const { isOpen, closeBooking, openRoomBookingDrawer } = useBooking()
   const overlayRef = useRef<HTMLDivElement>(null)
   const innerWrapRef = useRef<HTMLDivElement>(null)
   const animationFrameRef = useRef<number | null>(null)
@@ -135,7 +135,7 @@ export default function BookingOverlay() {
   }, [isOpen])
 
   const handleRoomClick = () => {
-    openNamastayDrawer()
+    openRoomBookingDrawer()
     closeBooking()
   }
 
