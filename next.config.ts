@@ -4,6 +4,8 @@ import path from "path";
 const nextConfig: NextConfig = {
   reactCompiler: false,
   turbopack: {
+    // Next.js walks up to find lockfiles; a package-lock.json in ~ incorrectly becomes the root
+    root: path.resolve(__dirname),
     // Use pre-built dist so Bunny plugin's .jsx components resolve (package "development" entry points at raw src)
     // Turbopack requires project-relative paths, not absolute
     resolveAlias: {
