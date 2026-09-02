@@ -453,37 +453,6 @@ export const paginatedCalendarQuery = groq`
     }
 `
 
-export const siteSearchQuery = groq`
-  {
-    "activities": *[_type == "calendar" && isActive == true && defined(startsAt) && startsAt >= now() && (
-      title match $wildcardTerm ||
-      locationName match $wildcardTerm ||
-      locationAddress match $wildcardTerm
-    )] | order(startsAt asc) {
-      _id,
-      title,
-      "slug": slug.current,
-      startsAt,
-      endsAt,
-      locationName,
-      "descriptionPlain": coalesce(locationName, locationAddress, ""),
-      "resultType": "activity"
-    },
-    "pages": *[_type == "page" && defined(slug.current) && (
-      title match $wildcardTerm ||
-      slug.current match $wildcardTerm ||
-      pageType match $wildcardTerm
-    )] | order(title asc) {
-      _id,
-      title,
-      "slug": slug.current,
-      pageType,
-      "descriptionPlain": coalesce(pt::text(contentBlocks[_type == "heroSection"][0].body), ""),
-      "resultType": "page"
-    }
-  }
-`
-
 // Footer and menu queries
 export const footerQuery = groq`
   *[_type == "siteSettings"][0] {
