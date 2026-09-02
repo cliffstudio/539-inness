@@ -2,16 +2,14 @@
 
 @font-face {
   font-family: 'ABC Arizona Flare';
-  src: url('./fonts/ABCArizonaFlare-Thin-Trial.woff') format('woff'),
-       url('./fonts/ABCArizonaFlare-Thin-Trial.woff2') format('woff2');
+  src: url('./fonts/ABCArizonaFlare-Thin.woff2') format('woff2');
   font-weight: 100;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'ABC Arizona Flare';
-  src: url('./fonts/ABCArizonaFlare-Light-Trial.woff') format('woff'),
-       url('./fonts/ABCArizonaFlare-Light-Trial.woff2') format('woff2');
+  src: url('./fonts/ABCArizonaFlare-Light.woff2') format('woff2');
   font-weight: 300;
   font-style: normal;
 }
