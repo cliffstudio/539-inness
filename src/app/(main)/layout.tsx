@@ -10,6 +10,7 @@ import BookingOverlay from '../../components/BookingOverlay'
 import BasketDrawer from '../../components/BasketDrawer'
 import AnnouncementPopupSection from '../../components/AnnouncementPopupSection'
 import CookieConsent from '../../components/CookieConsent'
+import GoogleTagManager from '../../components/GoogleTagManager'
 
 export default async function MainLayout({
   children,
@@ -24,6 +25,7 @@ export default async function MainLayout({
 
   return (
     <Providers>
+      <GoogleTagManager />
       <LazyLoadInitializer />
       <OverflowController />
       {menu && <Header menu={menu} />}

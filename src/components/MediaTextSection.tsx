@@ -4,7 +4,7 @@ import AnimateIn from "./AnimateIn";
 
 /* eslint-disable @next/next/no-img-element */
 import { useEffect, useMemo, useRef, useState } from "react";
-import { urlFor } from "../sanity/utils/imageUrlBuilder";
+import { urlFor, hasImageAsset } from "../sanity/utils/imageUrlBuilder";
 import { videoUrlFor } from "../sanity/utils/videoUrlBuilder";
 import { SanityImage, SanityVideo } from "../types/sanity";
 import { PortableText, PortableTextBlock } from "@portabletext/react";
@@ -134,6 +134,10 @@ export default function MediaTextSection({
   activities = [],
   links,
 }: mediaTextSectionProps) {
+  const validImages = useMemo(
+    () => images?.filter(hasImageAsset) ?? [],
+    [images]
+  );
   const videoRef1 = useRef<HTMLVideoElement>(null);
   const videoRef2 = useRef<HTMLVideoElement>(null);
   const splideRef = useRef<{ go: (direction: string) => void } | null>(null);
@@ -352,12 +356,12 @@ export default function MediaTextSection({
           </AnimateIn>
 
           <AnimateIn className="col-6-12_lg col-2">
-            {mediaType === "image" && images && images.length > 0 && (
+            {mediaType === "image" && validImages.length > 0 && (
               <div className="media-wrap">
-                {images.length === 1 ? (
+                {validImages.length === 1 ? (
                   <>
                     <img
-                      data-src={urlFor(images[0]).url()}
+                      data-src={urlFor(validImages[0]).url()}
                       alt=""
                       className="lazy full-bleed-image"
                     />
@@ -365,7 +369,7 @@ export default function MediaTextSection({
                   </>
                 ) : (
                   <SplideCarousel
-                    images={images.map((image) => ({
+                    images={validImages.map((image) => ({
                       url: urlFor(image).url(),
                       alt: "",
                     }))}
@@ -462,12 +466,12 @@ export default function MediaTextSection({
           </AnimateIn>
 
           <AnimateIn className="col-6-12_lg col-2">
-            {mediaType === "image" && images && images.length > 0 && (
+            {mediaType === "image" && validImages.length > 0 && (
               <div className="media-wrap">
-                {images.length === 1 ? (
+                {validImages.length === 1 ? (
                   <>
                     <img
-                      data-src={urlFor(images[0]).url()}
+                      data-src={urlFor(validImages[0]).url()}
                       alt=""
                       className="lazy full-bleed-image"
                     />
@@ -475,7 +479,7 @@ export default function MediaTextSection({
                   </>
                 ) : (
                   <SplideCarousel
-                    images={images.map((image) => ({
+                    images={validImages.map((image) => ({
                       url: urlFor(image).url(),
                       alt: "",
                     }))}
@@ -560,12 +564,12 @@ export default function MediaTextSection({
           </AnimateIn>
 
           <AnimateIn className="col-6-12_lg col-2">
-            {mediaType === "image" && images && images.length > 0 && (
+            {mediaType === "image" && validImages.length > 0 && (
               <div className="media-wrap">
-                {images.length === 1 ? (
+                {validImages.length === 1 ? (
                   <>
                     <img
-                      data-src={urlFor(images[0]).url()}
+                      data-src={urlFor(validImages[0]).url()}
                       alt=""
                       className="lazy full-bleed-image"
                     />
@@ -573,7 +577,7 @@ export default function MediaTextSection({
                   </>
                 ) : (
                   <SplideCarousel
-                    images={images.map((image) => ({
+                    images={validImages.map((image) => ({
                       url: urlFor(image).url(),
                       alt: "",
                     }))}
@@ -648,12 +652,12 @@ export default function MediaTextSection({
               </AnimateIn>
 
               <AnimateIn className="col-6-12_lg col-2">
-                {mediaType === "image" && images && images.length > 0 && (
+                {mediaType === "image" && validImages.length > 0 && (
                   <div className="media-wrap">
-                    {images.length === 1 ? (
+                    {validImages.length === 1 ? (
                       <>
                         <img
-                          data-src={urlFor(images[0]).url()}
+                          data-src={urlFor(validImages[0]).url()}
                           alt=""
                           className="lazy full-bleed-image"
                         />
@@ -661,7 +665,7 @@ export default function MediaTextSection({
                       </>
                     ) : (
                       <SplideCarousel
-                        images={images.map((image) => ({
+                        images={validImages.map((image) => ({
                           url: urlFor(image).url(),
                           alt: "",
                         }))}
@@ -782,12 +786,12 @@ export default function MediaTextSection({
             </AnimateIn>
 
             <AnimateIn className="col-6-12_lg col-2">
-              {mediaType === "image" && images && images.length > 0 && (
+              {mediaType === "image" && validImages.length > 0 && (
                 <div className="media-wrap">
-                  {images.length === 1 ? (
+                  {validImages.length === 1 ? (
                     <>
                       <img
-                        data-src={urlFor(images[0]).url()}
+                        data-src={urlFor(validImages[0]).url()}
                         alt=""
                         className="lazy full-bleed-image"
                       />
@@ -795,7 +799,7 @@ export default function MediaTextSection({
                     </>
                   ) : (
                     <SplideCarousel
-                      images={images.map((image) => ({
+                      images={validImages.map((image) => ({
                         url: urlFor(image).url(),
                         alt: "",
                       }))}
@@ -847,7 +851,7 @@ export default function MediaTextSection({
                     {roomLinks.map((room, index) => (
                       <SplideSlide key={index}>
                         <div className="media-text-link">
-                          {room.images?.[0] && (
+                          {room.images?.[0] && hasImageAsset(room.images[0]) && (
                             <div className="media-wrap relative">
                               <img
                                 data-src={urlFor(room.images[0]).url()}
@@ -947,7 +951,7 @@ export default function MediaTextSection({
                       }
                     >
                       <AnimateIn className="media-text-link">
-                        {room.images?.[0] && (
+                        {room.images?.[0] && hasImageAsset(room.images[0]) && (
                           <div className="media-wrap relative">
                             <img
                               data-src={urlFor(room.images[0]).url()}
@@ -1026,12 +1030,12 @@ export default function MediaTextSection({
             </AnimateIn>
 
             <AnimateIn className="col-6-12_lg col-2">
-              {mediaType === "image" && images && images.length > 0 && (
+              {mediaType === "image" && validImages.length > 0 && (
                 <div className="media-wrap">
-                  {images.length === 1 ? (
+                  {validImages.length === 1 ? (
                     <>
                       <img
-                        data-src={urlFor(images[0]).url()}
+                        data-src={urlFor(validImages[0]).url()}
                         alt=""
                         className="lazy full-bleed-image"
                       />
@@ -1039,7 +1043,7 @@ export default function MediaTextSection({
                     </>
                   ) : (
                     <SplideCarousel
-                      images={images.map((image) => ({
+                      images={validImages.map((image) => ({
                         url: urlFor(image).url(),
                         alt: "",
                       }))}
