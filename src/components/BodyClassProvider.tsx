@@ -38,6 +38,14 @@ export default function BodyClassProvider({
       if (pageType === 'heritage') {
         document.body.classList.add('page-heritage')
       }
+
+      const main = document.querySelector('main')
+      if (main) {
+        Array.from(main.classList)
+          .filter((cls) => cls.startsWith('page-template-'))
+          .forEach((cls) => main.classList.remove(cls))
+        main.classList.add(`page-template-${pageType}`)
+      }
     }
     
     if (slug) {
@@ -64,6 +72,12 @@ export default function BodyClassProvider({
         if (pageType === 'carousel') {
           document.body.classList.remove('page-carousel')
         }
+        if (pageType === 'heritage') {
+          document.body.classList.remove('page-heritage')
+        }
+
+        const main = document.querySelector('main')
+        main?.classList.remove(`page-template-${pageType}`)
       }
       if (slug) {
         const slugClass = slug.replace(/[^a-zA-Z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '')

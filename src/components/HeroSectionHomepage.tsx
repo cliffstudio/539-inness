@@ -2,7 +2,7 @@
 'use client'
 
 import { useEffect, useLayoutEffect, useRef } from 'react'
-import { urlFor } from '../sanity/utils/imageUrlBuilder'
+import { urlForHero } from '../sanity/utils/imageUrlBuilder'
 import { videoUrlFor } from '../sanity/utils/videoUrlBuilder'
 import { SanityImage, SanityVideo } from '../types/sanity'
 import SplideCarousel from './SplideCarousel'
@@ -185,7 +185,7 @@ export default function HeroSectionHomepage({
         homepageImages.length === 1 ? (
           <div className="fill-space-image-wrap media-wrap">
             <img 
-              data-src={urlFor(homepageImages[0]).url()} 
+              data-src={urlForHero(homepageImages[0])} 
               alt="" 
               className="lazy full-bleed-image"
             />
@@ -193,7 +193,7 @@ export default function HeroSectionHomepage({
           </div>
         ) : (
           <SplideCarousel 
-            images={homepageImages.map(image => ({ url: urlFor(image).url(), alt: "" }))}
+            images={homepageImages.map(image => ({ url: urlForHero(image), alt: "" }))}
             onPrevious={() => {}}
             onNext={() => {}}
           />

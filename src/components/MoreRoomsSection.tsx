@@ -4,7 +4,7 @@ import AnimateIn from "./AnimateIn";
 
 /* eslint-disable @next/next/no-img-element */
 import { useEffect, useRef, useState } from "react";
-import { urlFor } from "../sanity/utils/imageUrlBuilder";
+import { urlForCard } from "../sanity/utils/imageUrlBuilder";
 import { SanityImage } from "../types/sanity";
 import { PortableText, PortableTextBlock } from "@portabletext/react";
 import ButtonLink from "./ButtonLink";
@@ -158,7 +158,7 @@ export default function MoreRoomsSection({
       {room.image && (
         <div className="media-wrap relative">
           <img
-            data-src={urlFor(room.image).url()}
+            data-src={urlForCard(room.image)}
             alt=""
             className="lazy full-bleed-image"
           />

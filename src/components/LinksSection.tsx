@@ -1,7 +1,7 @@
 "use client";
 
 /* eslint-disable @next/next/no-img-element */
-import { urlFor } from "../sanity/utils/imageUrlBuilder";
+import { urlForCard } from "../sanity/utils/imageUrlBuilder";
 import { SanityImage } from "../types/sanity";
 import { PortableText, PortableTextBlock } from "@portabletext/react";
 import { Link } from "../types/footerSettings";
@@ -67,7 +67,7 @@ export default function LinksSection({ id, links }: LinksSectionProps) {
               {link.image && (
                 <div className="media-wrap">
                   <img
-                    data-src={urlFor(link.image).url()}
+                    data-src={urlForCard(link.image)}
                     alt=""
                     className="lazy full-bleed-image"
                   />

@@ -3,7 +3,7 @@
 import { useRef, useLayoutEffect } from 'react'
 import AnimateIn from './AnimateIn'
 import { useGsapParallaxScroll } from '@/hooks/useGsapParallaxScroll'
-import { urlFor } from '../sanity/utils/imageUrlBuilder'
+import { urlForHero } from '../sanity/utils/imageUrlBuilder'
 import { videoUrlFor } from '../sanity/utils/videoUrlBuilder'
 import { SanityImage, SanityVideo } from '../types/sanity'
 import { PortableText, PortableTextBlock } from '@portabletext/react'
@@ -66,7 +66,7 @@ export default function HeroSectionActivities({ id, calendarHeading, calendarBod
         calendarImages.length === 1 ? (
           <div ref={imageWrapRef} className="fill-space-image-wrap media-wrap">
             <img 
-              data-src={urlFor(calendarImages[0]).url()} 
+              data-src={urlForHero(calendarImages[0])} 
               alt="" 
               className="lazy full-bleed-image"
             />
@@ -74,7 +74,7 @@ export default function HeroSectionActivities({ id, calendarHeading, calendarBod
           </div>
         ) : (
           <SplideCarousel 
-            images={calendarImages.map(image => ({ url: urlFor(image).url(), alt: "" }))}
+            images={calendarImages.map(image => ({ url: urlForHero(image), alt: "" }))}
             onPrevious={() => {}}
             onNext={() => {}}
           />

@@ -4,7 +4,7 @@
 import { useEffect, useState, useRef } from 'react'
 import { Splide, SplideSlide } from '@splidejs/react-splide'
 import '@splidejs/splide/css'
-import { urlFor } from '@/sanity/utils/imageUrlBuilder'
+import { urlForCard } from '@/sanity/utils/imageUrlBuilder'
 import { SanityImage } from '../types/sanity'
 import ButtonLink from './ButtonLink'
 import { Link } from '../types/footerSettings'
@@ -138,12 +138,7 @@ export default function AnnouncementPopupSection({ enabled, slides }: Announceme
           className="announcement-popup__carousel"
         >
           {filteredSlides.map((slide, index) => {
-              const imageUrl = urlFor(slide.image!.asset)
-                .width(800)
-                .height(600)
-                .fit('crop')
-                .quality(85)
-                .url()
+              const imageUrl = urlForCard(slide.image!.asset)
 
               return (
                 <SplideSlide key={index}>

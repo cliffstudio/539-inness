@@ -3,7 +3,7 @@
 
 import type { SanityImageSource } from "@sanity/image-url";
 import AnimateIn from "./AnimateIn";
-import { urlFor } from "../sanity/utils/imageUrlBuilder";
+import { urlForHero } from "../sanity/utils/imageUrlBuilder";
 import { PortableText, PortableTextBlock } from "@portabletext/react";
 import SplideCarousel from "./SplideCarousel";
 import { openRoomBooking } from "../utils/booking";
@@ -35,7 +35,7 @@ export default function Hero({
           <AnimateIn className="hero-image relative">
             <div className="media-wrap">
               <img
-                data-src={urlFor(images[0]).url()}
+                data-src={urlForHero(images[0])}
                 alt=""
                 className="lazy full-bleed-image"
               />
@@ -46,7 +46,7 @@ export default function Hero({
           <AnimateIn className="hero-image relative">
             <SplideCarousel
               images={images.map((image) => ({
-                url: urlFor(image).url(),
+                url: urlForHero(image),
                 alt: "",
               }))}
               onPrevious={() => {}}

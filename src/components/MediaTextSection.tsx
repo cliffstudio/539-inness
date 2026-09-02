@@ -4,7 +4,7 @@ import AnimateIn from "./AnimateIn";
 
 /* eslint-disable @next/next/no-img-element */
 import { useEffect, useMemo, useRef, useState } from "react";
-import { urlFor, hasImageAsset } from "../sanity/utils/imageUrlBuilder";
+import { urlForContent, urlForCard, hasImageAsset } from "../sanity/utils/imageUrlBuilder";
 import { videoUrlFor } from "../sanity/utils/videoUrlBuilder";
 import { SanityImage, SanityVideo } from "../types/sanity";
 import { PortableText, PortableTextBlock } from "@portabletext/react";
@@ -361,7 +361,7 @@ export default function MediaTextSection({
                 {validImages.length === 1 ? (
                   <>
                     <img
-                      data-src={urlFor(validImages[0]).url()}
+                      data-src={urlForContent(validImages[0])}
                       alt=""
                       className="lazy full-bleed-image"
                     />
@@ -370,7 +370,7 @@ export default function MediaTextSection({
                 ) : (
                   <SplideCarousel
                     images={validImages.map((image) => ({
-                      url: urlFor(image).url(),
+                      url: urlForContent(image),
                       alt: "",
                     }))}
                     onPrevious={() => {}}
@@ -471,7 +471,7 @@ export default function MediaTextSection({
                 {validImages.length === 1 ? (
                   <>
                     <img
-                      data-src={urlFor(validImages[0]).url()}
+                      data-src={urlForContent(validImages[0])}
                       alt=""
                       className="lazy full-bleed-image"
                     />
@@ -480,7 +480,7 @@ export default function MediaTextSection({
                 ) : (
                   <SplideCarousel
                     images={validImages.map((image) => ({
-                      url: urlFor(image).url(),
+                      url: urlForContent(image),
                       alt: "",
                     }))}
                     onPrevious={() => {}}
@@ -569,7 +569,7 @@ export default function MediaTextSection({
                 {validImages.length === 1 ? (
                   <>
                     <img
-                      data-src={urlFor(validImages[0]).url()}
+                      data-src={urlForContent(validImages[0])}
                       alt=""
                       className="lazy full-bleed-image"
                     />
@@ -578,7 +578,7 @@ export default function MediaTextSection({
                 ) : (
                   <SplideCarousel
                     images={validImages.map((image) => ({
-                      url: urlFor(image).url(),
+                      url: urlForContent(image),
                       alt: "",
                     }))}
                     onPrevious={() => {}}
@@ -657,7 +657,7 @@ export default function MediaTextSection({
                     {validImages.length === 1 ? (
                       <>
                         <img
-                          data-src={urlFor(validImages[0]).url()}
+                          data-src={urlForContent(validImages[0])}
                           alt=""
                           className="lazy full-bleed-image"
                         />
@@ -666,7 +666,7 @@ export default function MediaTextSection({
                     ) : (
                       <SplideCarousel
                         images={validImages.map((image) => ({
-                          url: urlFor(image).url(),
+                          url: urlForContent(image),
                           alt: "",
                         }))}
                         onPrevious={() => {}}
@@ -715,7 +715,7 @@ export default function MediaTextSection({
                       {link.image && (
                         <div className="media-wrap relative">
                           <img
-                            data-src={urlFor(link.image).url()}
+                            data-src={urlForCard(link.image)}
                             alt=""
                             className="lazy full-bleed-image"
                           />
@@ -791,7 +791,7 @@ export default function MediaTextSection({
                   {validImages.length === 1 ? (
                     <>
                       <img
-                        data-src={urlFor(validImages[0]).url()}
+                        data-src={urlForContent(validImages[0])}
                         alt=""
                         className="lazy full-bleed-image"
                       />
@@ -800,7 +800,7 @@ export default function MediaTextSection({
                   ) : (
                     <SplideCarousel
                       images={validImages.map((image) => ({
-                        url: urlFor(image).url(),
+                        url: urlForContent(image),
                         alt: "",
                       }))}
                       onPrevious={() => {}}
@@ -854,7 +854,7 @@ export default function MediaTextSection({
                           {room.images?.[0] && hasImageAsset(room.images[0]) && (
                             <div className="media-wrap relative">
                               <img
-                                data-src={urlFor(room.images[0]).url()}
+                                data-src={urlForCard(room.images[0])}
                                 alt=""
                                 className="lazy full-bleed-image"
                               />
@@ -954,7 +954,7 @@ export default function MediaTextSection({
                         {room.images?.[0] && hasImageAsset(room.images[0]) && (
                           <div className="media-wrap relative">
                             <img
-                              data-src={urlFor(room.images[0]).url()}
+                              data-src={urlForCard(room.images[0])}
                               alt=""
                               className="lazy full-bleed-image"
                             />
@@ -1035,7 +1035,7 @@ export default function MediaTextSection({
                   {validImages.length === 1 ? (
                     <>
                       <img
-                        data-src={urlFor(validImages[0]).url()}
+                        data-src={urlForContent(validImages[0])}
                         alt=""
                         className="lazy full-bleed-image"
                       />
@@ -1044,7 +1044,7 @@ export default function MediaTextSection({
                   ) : (
                     <SplideCarousel
                       images={validImages.map((image) => ({
-                        url: urlFor(image).url(),
+                        url: urlForContent(image),
                         alt: "",
                       }))}
                       onPrevious={() => {}}

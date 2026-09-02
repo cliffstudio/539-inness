@@ -3,7 +3,7 @@
 import { useRef, useLayoutEffect } from "react";
 import AnimateIn from "./AnimateIn";
 import { useGsapParallaxScroll } from "@/hooks/useGsapParallaxScroll";
-import { urlFor } from "../sanity/utils/imageUrlBuilder";
+import { urlForHero } from "../sanity/utils/imageUrlBuilder";
 import { SanityImage } from "../types/sanity";
 import { PortableText, PortableTextBlock } from "@portabletext/react";
 import { Link } from "../types/footerSettings";
@@ -107,7 +107,7 @@ export default function Hero({
                 className="fill-space-image-wrap media-wrap"
               >
                 <img
-                  data-src={urlFor(images[0]).url()}
+                  data-src={urlForHero(images[0])}
                   alt=""
                   className="lazy full-bleed-image"
                 />
@@ -116,7 +116,7 @@ export default function Hero({
             ) : (
               <SplideCarousel
                 images={images.map((image) => ({
-                  url: urlFor(image).url(),
+                  url: urlForHero(image),
                   alt: "",
                 }))}
                 onPrevious={() => {}}
@@ -183,7 +183,7 @@ export default function Hero({
               {images.length === 1 ? (
                 <div className="fill-space-image-wrap media-wrap">
                   <img
-                    data-src={urlFor(images[0]).url()}
+                    data-src={urlForHero(images[0])}
                     alt=""
                     className="lazy full-bleed-image"
                   />
@@ -192,7 +192,7 @@ export default function Hero({
               ) : (
                 <SplideCarousel
                   images={images.map((image) => ({
-                    url: urlFor(image).url(),
+                    url: urlForHero(image),
                     alt: "",
                   }))}
                   onPrevious={() => {}}

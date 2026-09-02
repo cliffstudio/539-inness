@@ -1,9 +1,9 @@
-import {DEFAULT_CURRENCY_CODE} from '../constants'
-
 type PriceObject = {
   minVariantPrice: number
   maxVariantPrice: number
 }
+
+const DEFAULT_CURRENCY_CODE = 'USD'
 
 const formatNumber = (val: number) => {
   return new Intl.NumberFormat('en', {

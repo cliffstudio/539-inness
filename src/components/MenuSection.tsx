@@ -5,7 +5,7 @@ import AnimateIn from './AnimateIn'
 /* eslint-disable @next/next/no-img-element */
 import { useState, useEffect } from 'react'
 import { PortableText, PortableTextBlock } from '@portabletext/react'
-import { urlFor } from '../sanity/utils/imageUrlBuilder'
+import { urlForContent } from '../sanity/utils/imageUrlBuilder'
 import type { SanityImageSource } from '@sanity/image-url'
 import mediaLazyloading from '../utils/lazyLoad'
 
@@ -170,7 +170,7 @@ export default function MenuSection({
                 <div className="media-wrap">
                   <img 
                     key={`tab-image-${activeTab}`}
-                    data-src={urlFor(foodTabs[activeTab].image!).url()} 
+                    data-src={urlForContent(foodTabs[activeTab].image!)} 
                     alt="" 
                     className="lazy full-bleed-image"
                   />
@@ -247,7 +247,7 @@ export default function MenuSection({
                 <div className="media-wrap">
                   <img 
                     key={`spa-tab-image-${activeSpaTab}`}
-                    data-src={urlFor(spaTabs[activeSpaTab].image!).url()} 
+                    data-src={urlForContent(spaTabs[activeSpaTab].image!)} 
                     alt="" 
                     className="lazy full-bleed-image"
                   />
@@ -317,7 +317,7 @@ export default function MenuSection({
                 <div className="media-wrap">
                   <img 
                     key={`venue-tab-image-${activeVenueTab}`}
-                    data-src={urlFor(venueTabs[activeVenueTab].image!).url()} 
+                    data-src={urlForContent(venueTabs[activeVenueTab].image!)} 
                     alt="" 
                     className="lazy full-bleed-image"
                   />

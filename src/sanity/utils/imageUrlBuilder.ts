@@ -25,3 +25,35 @@ export const hasImageAsset = (source: SanityImageSource | null | undefined): sou
 export const urlFor = (source: SanityImageSource) => {
   return builder.image(source).auto('format')
 }
+
+type ImageFit = 'crop' | 'max' | 'clip' | 'fill' | 'scale' | 'min'
+
+interface SizedImageOptions {
+  width: number
+  height?: number
+  quality?: number
+  fit?: ImageFit
+}
+
+function sizedImage(source: SanityImageSource, options: SizedImageOptions) {
+  const { width, height, quality = 85, fit = 'crop' } = options
+  let img = urlFor(source).width(width).quality(quality).fit(fit)
+  if (height) img = img.height(height)
+  return img
+}
+
+/** Full-bleed heroes and break sections — max ~2400px covers 2x retina on large screens */
+export const urlForHero = (source: SanityImageSource) =>
+  sizedImage(source, { width: 2400 }).url()
+
+/** Primary content images in sections and media blocks */
+export const urlForContent = (source: SanityImageSource) =>
+  sizedImage(source, { width: 1600 }).url()
+
+/** Cards, thumbnails, and grid items */
+export const urlForCard = (source: SanityImageSource) =>
+  sizedImage(source, { width: 800 }).url()
+
+/** Carousel slides */
+export const urlForCarousel = (source: SanityImageSource) =>
+  sizedImage(source, { width: 1200, height: 800 }).url()

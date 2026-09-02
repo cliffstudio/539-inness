@@ -2,7 +2,7 @@
 
 /* eslint-disable @next/next/no-img-element */
 import { useLayoutEffect, useMemo, useRef } from 'react'
-import { urlFor } from '@/sanity/utils/imageUrlBuilder'
+import { urlForCarousel } from '@/sanity/utils/imageUrlBuilder'
 import mediaLazyloading from '../utils/lazyLoad'
 import Splide from '@splidejs/splide'
 import { AutoScroll } from '@splidejs/splide-extension-auto-scroll'
@@ -70,12 +70,7 @@ export default function CarouselSection({ images }: CarouselSectionProps) {
         <div className="splide__track">
           <ul className="splide__list">
             {validImages.map((image, index) => {
-              const imageUrl = urlFor(image)
-                .width(1200)
-                .height(800)
-                .fit('crop')
-                .quality(85)
-                .url()
+              const imageUrl = urlForCarousel(image)
 
               return (
                 <li key={index} className="splide__slide">

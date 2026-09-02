@@ -1,7 +1,7 @@
 "use client"
 
 /* eslint-disable @next/next/no-img-element */
-import { urlFor } from '../sanity/utils/imageUrlBuilder'
+import { urlForContent } from '../sanity/utils/imageUrlBuilder'
 import type { SanityImageSource } from '@sanity/image-url'
 import { PortableText, PortableTextBlock } from '@portabletext/react'
 import { Link } from '../types/footerSettings'
@@ -96,7 +96,7 @@ export default function FeatureSection({
               {feature.image && (
                 <div className="media-wrap">
                   <img 
-                    data-src={urlFor(feature.image).url()} 
+                    data-src={urlForContent(feature.image)} 
                     alt="" 
                     className="lazy full-bleed-image"
                   />

@@ -2,7 +2,7 @@
 'use client'
 import { useRef, useLayoutEffect } from 'react'
 import AnimateIn from './AnimateIn'
-import { urlFor } from '../sanity/utils/imageUrlBuilder'
+import { urlForHero } from '../sanity/utils/imageUrlBuilder'
 import { videoUrlFor } from '../sanity/utils/videoUrlBuilder'
 import { SanityImage, SanityVideo } from '../types/sanity'
 import { PortableText, PortableTextBlock } from '@portabletext/react'
@@ -56,7 +56,7 @@ export default function HeroSectionLinks({ id, heading, body, mediaType = 'image
           <AnimateIn className="hero-image relative">
             <div className="fill-space-image-wrap media-wrap">
               <img 
-                data-src={urlFor(images[0]).url()} 
+                data-src={urlForHero(images[0])} 
                 alt="" 
                 className="lazy full-bleed-image"
               />
@@ -66,7 +66,7 @@ export default function HeroSectionLinks({ id, heading, body, mediaType = 'image
         ) : (
           <AnimateIn className="hero-image relative">
             <SplideCarousel 
-              images={images.map(image => ({ url: urlFor(image).url(), alt: "" }))}
+              images={images.map(image => ({ url: urlForHero(image), alt: "" }))}
               onPrevious={() => {}}
               onNext={() => {}}
             />
