@@ -320,7 +320,10 @@ TABLET HEADER ------------------
     margin-top: get-rem-desktop(16.5);
     margin-bottom: get-rem-desktop(16.5);
     height: get-rem-desktop(31);
-    position: relative;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    @include transform(translateX(-50%));
 
     .logo-text,
     .logo-icon {
@@ -479,7 +482,10 @@ MOBILE HEADER ------------------
     margin-top: get-rem-mobile(16);
     margin-bottom: get-rem-mobile(16);
     height: get-rem-mobile(31);
-    position: relative;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    @include transform(translateX(-50%));
 
     .logo-text,
     .logo-icon {
