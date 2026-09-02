@@ -100,22 +100,8 @@ export default function HeroSectionHomepage({
     const initialDelay = 500
     const stepDelay = 500
 
-    // Step 1: Hero content fades in
-    const heroContentStart = initialDelay
-    setTimer(() => {
-      if (heroContent) {
-        heroContent.classList.add('is-visible')
-      }
-    }, heroContentStart)
-
-    // Step 2: Hero arrow fades in (500ms after hero content)
-    const heroArrowStart = heroContentStart + stepDelay
-    setTimer(() => {
-      heroArrow.classList.add('is-visible')
-    }, heroArrowStart)
-
-    // Step 3: Site header translates down and gradient overlay fades in together (500ms after arrow)
-    const headerGradientStart = heroArrowStart + stepDelay
+    // Step 1: Site header translates down and gradient overlay fades in together
+    const headerGradientStart = initialDelay
     setTimer(() => {
       siteHeaders.forEach(header => {
         header.classList.remove('is-translated-up')
@@ -123,8 +109,22 @@ export default function HeroSectionHomepage({
       gradientOverlay.classList.add('is-visible')
     }, headerGradientStart)
 
+    // Step 2: Hero content fades in (500ms after header)
+    const heroContentStart = headerGradientStart + stepDelay
+    setTimer(() => {
+      if (heroContent) {
+        heroContent.classList.add('is-visible')
+      }
+    }, heroContentStart)
+
+    // Step 3: Hero arrow fades in (500ms after hero content)
+    const heroArrowStart = heroContentStart + stepDelay
+    setTimer(() => {
+      heroArrow.classList.add('is-visible')
+    }, heroArrowStart)
+
     // Re-enable scroll after animations complete
-    const reenableScrollStart = headerGradientStart + 400 // Wait for transition to complete
+    const reenableScrollStart = heroArrowStart + 400 // Wait for transition to complete
     setTimer(() => {
       if (overflowRef.current) {
         body.style.overflow = overflowRef.current.body
