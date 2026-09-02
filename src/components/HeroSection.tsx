@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import { useRef, useLayoutEffect } from "react";
+import { useRef } from "react";
 import AnimateIn from "./AnimateIn";
 import { useGsapParallaxScroll } from "@/hooks/useGsapParallaxScroll";
 import { urlForHero } from "../sanity/utils/imageUrlBuilder";
@@ -9,8 +9,8 @@ import { PortableText, PortableTextBlock } from "@portabletext/react";
 import { Link } from "../types/footerSettings";
 import ButtonLink from "./ButtonLink";
 import SplideCarousel from "./SplideCarousel";
-import { videoUrlFor } from "@/sanity/utils/videoUrlBuilder";
 import type { SanityVideo } from "@/types/sanity";
+import BackgroundVideo from "./BackgroundVideo";
 import { getLinkInfo } from "../utils/linkHelpers";
 
 interface Spec {
@@ -40,7 +40,6 @@ export default function Hero({
   specs,
   button,
 }: HeroProps) {
-  const videoRef = useRef<HTMLVideoElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
   const imageWrapRef = useRef<HTMLDivElement>(null);
 
@@ -50,19 +49,6 @@ export default function Hero({
       mediaType === "image" &&
       (images?.length ?? 0) === 1,
   });
-
-  useLayoutEffect(() => {
-    if (mediaType !== "video" || !videoRef.current) return;
-    const el = videoRef.current;
-    const hideOverlay = () => {
-      const overlay = el.nextElementSibling;
-      if (overlay && overlay instanceof HTMLElement)
-        overlay.classList.add("hidden");
-    };
-    el.addEventListener("canplaythrough", hideOverlay);
-    if (el.readyState >= 3) hideOverlay();
-    return () => el.removeEventListener("canplaythrough", hideOverlay);
-  }, [mediaType]);
 
   const handleArrowClick = () => {
     window.scrollBy({
@@ -85,16 +71,7 @@ export default function Hero({
         >
           {mediaType === "video" && video && (
             <div className="fill-space-video-wrap media-wrap">
-              <video
-                ref={videoRef}
-                src={videoUrlFor(video)}
-                autoPlay
-                muted
-                loop
-                playsInline
-                preload="metadata"
-              />
-              <div className="loading-overlay" />
+              <BackgroundVideo video={video} />
             </div>
           )}
 
@@ -165,16 +142,7 @@ export default function Hero({
           {mediaType === "video" && video && (
             <AnimateIn className="hero-image relative">
               <div className="fill-space-video-wrap media-wrap">
-                <video
-                  ref={videoRef}
-                  src={videoUrlFor(video)}
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  preload="metadata"
-                />
-                <div className="loading-overlay" />
+                <BackgroundVideo video={video} />
               </div>
             </AnimateIn>
           )}

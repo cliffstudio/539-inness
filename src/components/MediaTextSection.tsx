@@ -5,7 +5,7 @@ import AnimateIn from "./AnimateIn";
 /* eslint-disable @next/next/no-img-element */
 import { useEffect, useMemo, useRef, useState } from "react";
 import { urlForContent, urlForCard, hasImageAsset } from "../sanity/utils/imageUrlBuilder";
-import { videoUrlFor } from "../sanity/utils/videoUrlBuilder";
+import BackgroundVideo from "./BackgroundVideo";
 import { SanityImage, SanityVideo } from "../types/sanity";
 import { PortableText, PortableTextBlock } from "@portabletext/react";
 import { Link } from "../types/footerSettings";
@@ -138,8 +138,6 @@ export default function MediaTextSection({
     () => images?.filter(hasImageAsset) ?? [],
     [images]
   );
-  const videoRef1 = useRef<HTMLVideoElement>(null);
-  const videoRef2 = useRef<HTMLVideoElement>(null);
   const splideRef = useRef<{ go: (direction: string) => void } | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -245,55 +243,6 @@ export default function MediaTextSection({
     };
   }, [roomLinks]);
 
-  // Handle video loading overlay removal for first video
-  useEffect(() => {
-    if (mediaType === "video" && videoRef1.current) {
-      const video = videoRef1.current;
-
-      const handleVideoLoaded = () => {
-        const mediaWrap = video.parentElement;
-        const loadingOverlay = mediaWrap?.querySelector(".loading-overlay");
-        if (loadingOverlay && loadingOverlay instanceof HTMLElement) {
-          loadingOverlay.classList.add("hidden");
-        }
-      };
-
-      video.addEventListener("canplaythrough", handleVideoLoaded);
-
-      if (video.readyState >= 3) {
-        handleVideoLoaded();
-      }
-
-      return () => {
-        video.removeEventListener("canplaythrough", handleVideoLoaded);
-      };
-    }
-  }, [mediaType, video]);
-
-  // Handle video loading overlay removal for second video (in room-type layout)
-  useEffect(() => {
-    if (mediaType === "video" && videoRef2.current) {
-      const video = videoRef2.current;
-
-      const handleVideoLoaded = () => {
-        const mediaWrap = video.parentElement;
-        const loadingOverlay = mediaWrap?.querySelector(".loading-overlay");
-        if (loadingOverlay && loadingOverlay instanceof HTMLElement) {
-          loadingOverlay.classList.add("hidden");
-        }
-      };
-
-      video.addEventListener("canplaythrough", handleVideoLoaded);
-
-      if (video.readyState >= 3) {
-        handleVideoLoaded();
-      }
-
-      return () => {
-        video.removeEventListener("canplaythrough", handleVideoLoaded);
-      };
-    }
-  }, [mediaType, video]);
   return (
     <>
       {/* Media with Text (h5) */}
@@ -382,16 +331,7 @@ export default function MediaTextSection({
 
             {mediaType === "video" && video && (
               <div className="media-wrap">
-                <video
-                  ref={videoRef1}
-                  src={videoUrlFor(video)}
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  preload="metadata"
-                />
-                <div className="loading-overlay" />
+                <BackgroundVideo video={video} loadStrategy="visible" />
               </div>
             )}
           </AnimateIn>
@@ -492,16 +432,7 @@ export default function MediaTextSection({
 
             {mediaType === "video" && video && (
               <div className="media-wrap">
-                <video
-                  ref={videoRef1}
-                  src={videoUrlFor(video)}
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  preload="metadata"
-                />
-                <div className="loading-overlay" />
+                <BackgroundVideo video={video} loadStrategy="visible" />
               </div>
             )}
           </AnimateIn>
@@ -590,16 +521,7 @@ export default function MediaTextSection({
 
             {mediaType === "video" && video && (
               <div className="media-wrap">
-                <video
-                  ref={videoRef2}
-                  src={videoUrlFor(video)}
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  preload="metadata"
-                />
-                <div className="loading-overlay" />
+                <BackgroundVideo video={video} loadStrategy="visible" />
               </div>
             )}
           </AnimateIn>
@@ -678,23 +600,7 @@ export default function MediaTextSection({
 
                 {mediaType === "video" && video && (
                   <div className="media-wrap">
-                    <video
-                      ref={videoRef1}
-                      src={videoUrlFor(video)}
-                      poster={
-                        typeof video === "object" &&
-                        video !== null &&
-                        "thumbnailUrl" in video
-                          ? video.thumbnailUrl
-                          : undefined
-                      }
-                      autoPlay
-                      muted
-                      loop
-                      playsInline
-                      preload="metadata"
-                    />
-                    <div className="loading-overlay" />
+                    <BackgroundVideo video={video} loadStrategy="visible" />
                   </div>
                 )}
               </AnimateIn>
@@ -812,16 +718,7 @@ export default function MediaTextSection({
 
               {mediaType === "video" && video && (
                 <div className="media-wrap">
-                  <video
-                    ref={videoRef1}
-                    src={videoUrlFor(video)}
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                    preload="metadata"
-                  />
-                  <div className="loading-overlay" />
+                  <BackgroundVideo video={video} loadStrategy="visible" />
                 </div>
               )}
             </AnimateIn>
@@ -1056,16 +953,7 @@ export default function MediaTextSection({
 
               {mediaType === "video" && video && (
                 <div className="media-wrap">
-                  <video
-                    ref={videoRef1}
-                    src={videoUrlFor(video)}
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                    preload="metadata"
-                  />
-                  <div className="loading-overlay" />
+                  <BackgroundVideo video={video} loadStrategy="visible" />
                 </div>
               )}
             </AnimateIn>

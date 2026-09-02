@@ -3,8 +3,8 @@
 
 import { useEffect, useLayoutEffect, useRef } from 'react'
 import { urlForHero } from '../sanity/utils/imageUrlBuilder'
-import { videoUrlFor } from '../sanity/utils/videoUrlBuilder'
 import { SanityImage, SanityVideo } from '../types/sanity'
+import BackgroundVideo from './BackgroundVideo'
 import SplideCarousel from './SplideCarousel'
 
 interface HomepageHeroProps {
@@ -20,34 +20,8 @@ export default function HeroSectionHomepage({
   homepageImages, 
   homepageVideo
 }: HomepageHeroProps) {
-  const videoRef = useRef<HTMLVideoElement>(null)
   const heroSectionRef = useRef<HTMLElement>(null)
   const overflowRef = useRef<{ body: string; html: string } | null>(null)
-
-  useLayoutEffect(() => {
-    if (homepageMediaType === 'video' && videoRef.current) {
-      const video = videoRef.current
-      
-      const handleVideoLoaded = () => {
-        const loadingOverlay = video.nextElementSibling
-        if (loadingOverlay && loadingOverlay instanceof HTMLElement) {
-          loadingOverlay.classList.add('hidden')
-        }
-      }
-
-      // Listen for when the video can play through
-      video.addEventListener('canplaythrough', handleVideoLoaded)
-      
-      // If already loaded, remove overlay immediately
-      if (video.readyState >= 3) {
-        handleVideoLoaded()
-      }
-
-      return () => {
-        video.removeEventListener('canplaythrough', handleVideoLoaded)
-      }
-    }
-  }, [homepageMediaType])
 
   useLayoutEffect(() => {
     const body = document.body
@@ -161,23 +135,7 @@ export default function HeroSectionHomepage({
     <section ref={heroSectionRef} className="hero-section layout-1 relative">
       {homepageMediaType === 'video' && homepageVideo && (
         <div className="fill-space-video-wrap media-wrap">
-          <video
-            ref={videoRef}
-            src={videoUrlFor(homepageVideo)}
-            poster={
-              typeof homepageVideo === 'object' &&
-              homepageVideo !== null &&
-              'thumbnailUrl' in homepageVideo
-                ? homepageVideo.thumbnailUrl
-                : undefined
-            }
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
-          />
-          <div className="loading-overlay" />
+          <BackgroundVideo video={homepageVideo} />
         </div>
       )}
 

@@ -1,11 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
 'use client'
-import { useRef, useLayoutEffect } from 'react'
+import { useRef } from 'react'
 import AnimateIn from './AnimateIn'
 import { useGsapParallaxScroll } from '@/hooks/useGsapParallaxScroll'
 import { urlForHero } from '../sanity/utils/imageUrlBuilder'
-import { videoUrlFor } from '../sanity/utils/videoUrlBuilder'
 import { SanityImage, SanityVideo } from '../types/sanity'
+import BackgroundVideo from './BackgroundVideo'
 import { PortableText, PortableTextBlock } from '@portabletext/react'
 import SplideCarousel from './SplideCarousel'
 
@@ -19,25 +19,12 @@ interface ActivitiesHeroProps {
 }
 
 export default function HeroSectionActivities({ id, calendarHeading, calendarBody, calendarMediaType = 'image', calendarImages, calendarVideo }: ActivitiesHeroProps) {
-  const videoRef = useRef<HTMLVideoElement>(null)
   const sectionRef = useRef<HTMLElement>(null)
   const imageWrapRef = useRef<HTMLDivElement>(null)
 
   useGsapParallaxScroll(imageWrapRef, sectionRef, {
     enabled: calendarMediaType === 'image' && (calendarImages?.length ?? 0) === 1,
   })
-
-  useLayoutEffect(() => {
-    if (calendarMediaType !== 'video' || !videoRef.current) return
-    const el = videoRef.current
-    const hideOverlay = () => {
-      const overlay = el.nextElementSibling
-      if (overlay && overlay instanceof HTMLElement) overlay.classList.add('hidden')
-    }
-    el.addEventListener('canplaythrough', hideOverlay)
-    if (el.readyState >= 3) hideOverlay()
-    return () => el.removeEventListener('canplaythrough', hideOverlay)
-  }, [calendarMediaType])
 
   const handleArrowClick = () => {
     window.scrollBy({
@@ -50,16 +37,7 @@ export default function HeroSectionActivities({ id, calendarHeading, calendarBod
     <section ref={sectionRef} id={id} className="hero-section layout-1 relative">
       {calendarMediaType === 'video' && calendarVideo && (
         <div className="fill-space-video-wrap media-wrap">
-          <video
-            ref={videoRef}
-            src={videoUrlFor(calendarVideo)}
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
-          />
-          <div className="loading-overlay" />
+          <BackgroundVideo video={calendarVideo} />
         </div>
       )}
       {calendarMediaType === 'image' && calendarImages && calendarImages.length > 0 && (

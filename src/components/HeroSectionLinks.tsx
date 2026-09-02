@@ -1,10 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
 'use client'
-import { useRef, useLayoutEffect } from 'react'
 import AnimateIn from './AnimateIn'
 import { urlForHero } from '../sanity/utils/imageUrlBuilder'
-import { videoUrlFor } from '../sanity/utils/videoUrlBuilder'
 import { SanityImage, SanityVideo } from '../types/sanity'
+import BackgroundVideo from './BackgroundVideo'
 import { PortableText, PortableTextBlock } from '@portabletext/react'
 import SplideCarousel from './SplideCarousel'
 
@@ -18,35 +17,12 @@ interface LinksHeroProps {
 }
 
 export default function HeroSectionLinks({ id, heading, body, mediaType = 'image', images, video }: LinksHeroProps) {
-  const videoRef = useRef<HTMLVideoElement>(null)
-
-  useLayoutEffect(() => {
-    if (mediaType !== 'video' || !videoRef.current) return
-    const el = videoRef.current
-    const hideOverlay = () => {
-      const overlay = el.nextElementSibling
-      if (overlay && overlay instanceof HTMLElement) overlay.classList.add('hidden')
-    }
-    el.addEventListener('canplaythrough', hideOverlay)
-    if (el.readyState >= 3) hideOverlay()
-    return () => el.removeEventListener('canplaythrough', hideOverlay)
-  }, [mediaType])
-
   return (
     <section id={id} className="hero-section layout-2 h-pad">
       {mediaType === 'video' && video && (
         <AnimateIn className="hero-image relative">
           <div className="fill-space-video-wrap media-wrap">
-            <video
-              ref={videoRef}
-              src={videoUrlFor(video)}
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="metadata"
-            />
-            <div className="loading-overlay" />
+            <BackgroundVideo video={video} />
           </div>
         </AnimateIn>
       )}
