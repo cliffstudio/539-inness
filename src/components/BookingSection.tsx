@@ -727,7 +727,7 @@ export default function BookingSection({
         </div>
 
         <button
-          className="button button--orange"
+          className="button button--orange link--alias"
           type="button"
           onClick={handleButtonClick}
         >

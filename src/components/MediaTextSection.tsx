@@ -554,7 +554,7 @@ export default function MediaTextSection({
 
                 <button
                   type="button"
-                  className="button button--orange"
+                  className="button button--orange link--alias"
                   onClick={() => openRoomBooking()}
                 >
                   Book
@@ -872,7 +872,7 @@ export default function MediaTextSection({
 
                                 <button
                                   type="button"
-                                  className="button button--orange"
+                                  className="button button--orange link--alias"
                                   onClick={() => openRoomBooking()}
                                 >
                                   Book
@@ -972,7 +972,7 @@ export default function MediaTextSection({
 
                               <button
                                 type="button"
-                                className="button button--orange"
+                                className="button button--orange link--alias"
                                 onClick={() => openRoomBooking()}
                               >
                                 Book

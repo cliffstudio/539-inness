@@ -56,9 +56,9 @@ export default function Footer({ footer }: FooterProps) {
     if (link.linkType === "booking") {
       const bookingTab = (link.bookingTab || "room") as BookingTab;
       const bookingHref = href || "#booking";
-      const isExternalBooking = ["table", "golf", "spa", "events"].includes(
-        link.bookingTab || "",
-      );
+      const isExternalBooking =
+        bookingTab === "room" ||
+        ["table", "golf", "spa", "events"].includes(link.bookingTab || "");
       // Spa/events bookings should open mailto link, not booking overlay
       // Table bookings should open Resy URL, not booking overlay
       // Golf bookings should open Chronogolf URL, not booking overlay

@@ -25,7 +25,9 @@ export default function ButtonLink({ link, className = '', fallbackColor = 'crea
     'button--cream'
 
   const bookingTab = (link.bookingTab || 'room') as BookingTab
-  const isExternalBooking = link.linkType === 'booking' && ['table', 'golf', 'spa', 'events'].includes(link.bookingTab || '')
+  const isExternalBooking =
+    link.linkType === 'booking' &&
+    (bookingTab === 'room' || ['table', 'golf', 'spa', 'events'].includes(link.bookingTab || ''))
   const handleClick = (event: MouseEvent<HTMLAnchorElement>) => {
     if (link.linkType !== 'booking') return
     // Spa/events bookings should open mailto link, not booking overlay
