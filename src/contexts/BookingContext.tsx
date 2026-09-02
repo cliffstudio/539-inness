@@ -56,3 +56,7 @@ export function useBooking() {
   }
   return context;
 }
+
+export function useBookingOptional() {
+  return useContext(BookingContext);
+}

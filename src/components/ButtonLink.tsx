@@ -3,7 +3,7 @@
 import { MouseEvent } from 'react'
 import { Link as SanityLink } from '../types/footerSettings'
 import { getLinkInfo } from '../utils/linkHelpers'
-import { BookingTab, useBooking } from '../contexts/BookingContext'
+import { BookingTab, useBookingOptional } from '../contexts/BookingContext'
 
 type ButtonLinkProps = {
   link: SanityLink
@@ -12,7 +12,7 @@ type ButtonLinkProps = {
 }
 
 export default function ButtonLink({ link, className = '', fallbackColor = 'cream' }: ButtonLinkProps) {
-  const { openBooking, openRoomBookingDrawer } = useBooking()
+  const booking = useBookingOptional()
   const { href, text } = getLinkInfo(link)
   if (!href || !text) return null
 
@@ -35,12 +35,13 @@ export default function ButtonLink({ link, className = '', fallbackColor = 'crea
     // Golf bookings should open Chronogolf URL, not booking overlay
     if (bookingTab === 'golf') return
     if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
+    if (!booking) return
     event.preventDefault()
     // Book a room opens the room booking destination directly.
     if (bookingTab === 'room') {
-      openRoomBookingDrawer()
+      booking.openRoomBookingDrawer()
     } else {
-      openBooking(bookingTab)
+      booking.openBooking(bookingTab)
     }
   }
 
