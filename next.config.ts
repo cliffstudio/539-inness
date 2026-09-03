@@ -13,11 +13,6 @@ const nextConfig: NextConfig = {
         "./node_modules/@cliff-studio/sanity-plugin-bunny-input/dist/index.js",
     },
   },
-  async redirects() {
-    return [
-      { source: '/shop', destination: '/', permanent: false },
-    ]
-  },
   images: {
     remotePatterns: [
       {
